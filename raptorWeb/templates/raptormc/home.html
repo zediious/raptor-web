@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html lang="en" dir="ltr">
 
   <head>
@@ -15,6 +18,7 @@
     <div class="p-5 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">ShadowRaptor</h1>
+        <img src="{% static 'image/letters.png' %}"></img>
         <p class="col-md-8 fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
           illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
         <i class="display-5">Players Online: {{ player_count }}</i>
