@@ -3,12 +3,12 @@ from django.urls import path
 
 from . import views
 
-SR = views.ShadowRaptor.Info
+SR = views.ShadowRaptor
 
 urlpatterns = [
 
-    path('', SR.home_servers, name="home"),
-    path('rules/', SR.rules, name="rules"),
-    path('banneditems/', SR.banned_items, name="banned_items")
+    path('', SR.Info.home_servers, name="home"),
+    path('rules/', SR.Info.rules, name="rules"),
+    path('banneditems/', SR.Info.banned_items, name="banned_items")
 
 ]
