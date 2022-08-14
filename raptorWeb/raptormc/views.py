@@ -45,7 +45,6 @@ class ShadowRaptor():
 
             # Dict to track player counts and names in each server
             currentPlayers = {
-
                 "totalCount": 0,
                 "nomi": {
                     "count": 0,
@@ -83,7 +82,6 @@ class ShadowRaptor():
                 to values gathered from an API request "ADDRESS" parameter. The "count" key
                 is an integer, the "names" key is a List of strings.
                 """
-
                 if type(ADDRESS) == type("") and type(KEY) == type(""):
 
                     serverJSON = json.loads(requests.get(ADDRESS).text)
@@ -110,8 +108,7 @@ class ShadowRaptor():
                 """
                 Return a dictionary containing total player count, as well as nested dictionaries
                 with specific counts and player names for each server
-                """
-                
+                """  
                 self.request_info(self.NOMI_ADDRESS, self.parse_key(self.NOMI_ADDRESS))
                 self.request_info(self.FTBU_ADDRESS, self.parse_key(self.FTBU_ADDRESS))
                 self.request_info(self.OB_ADDRESS, self.parse_key(self.OB_ADDRESS))

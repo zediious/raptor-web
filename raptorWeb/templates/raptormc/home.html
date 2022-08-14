@@ -95,35 +95,37 @@
       </div>
     </div>
     
+    {% comment %} Particles {% endcomment %}
+    <div id="particles-js"></div>
 
     <div id="headerBox" class="container">
-        
+      
       <header class="container-fluid row mt-3">
 
-          <section class="col fs-2 d-flex align-items-start flex-column">
+        <section class="col fs-2 d-flex align-items-start flex-column">
 
-            <i class="mt-auto"><span id="totalPlayers">Currently Playing: {{ player_count }}</span></i>
+          <i class="mt-auto"><span id="totalPlayers">Currently Playing: {{ player_count }}</span></i>
 
-            <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" >View Players</button>
+          <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" >View Players</button>
 
-          </section>
+        </section>
 
-          <section class="col fs-4">
+        <section class="col fs-4">
 
-            <i class="row">
+          <i id="copyAddress" class="row">
 
-              <button class="cols-12 m-2 btn btn-dark fs-4">Nomifactory</button>
-              <button class="cols-12 m-2 btn btn-dark fs-4">Enigmatica 6: Expert</button>
-              <button class="cols-12 m-2 btn btn-dark fs-4">Chroma Technology 2</button>
-              <button class="cols-12 m-2 btn btn-dark fs-4">FTB Ultimate: Anniversary</button>
-              <button class="cols-12 m-2 btn btn-dark fs-4">FTB OceanBlock</button>
-              <button class="cols-12 m-2 btn btn-dark fs-4">Hexxit II</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">Nomifactory</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">Enigmatica 6: Expert</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">Chroma Technology 2</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">FTB Ultimate: Anniversary</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">FTB OceanBlock</button>
+            <button class="cols-12 mt-2 btn btn-dark fs-4">Hexxit II</button>
 
-            </i>
+          </i>
 
-          </section>
+        </section>
 
-        </header>
+      </header>
 
     </div>
 
@@ -218,12 +220,6 @@
       </section>
 
     </main>
-
-    <!-- <div id="particles-js"></div>
-
-    <div class="count-particles">
-      <span class="js-count-particles">--</span> particles
-    </div> -->
 
     <!-- Own JS -->
     <script src="{% static 'javascript/raptormc.js' %}"></script>
