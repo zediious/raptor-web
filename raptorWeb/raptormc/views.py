@@ -16,9 +16,12 @@ class ShadowRaptor():
 
         async def home_servers(request):
             
-            player_getter = ShadowRaptor.Tool.PlayerCounts()
+            # player_getter = ShadowRaptor.Tool.PlayerCounts()
             
-            home_servers_data = {"player_count": player_getter.get_total_count()}
+            # home_servers_data = {"player_count": player_getter.get_total_count()}
+            # return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = home_servers_data)
+
+            home_servers_data = {"player_count": 7}
             return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = home_servers_data)
         
         def rules(request):

@@ -8,26 +8,220 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ShadowRaptor</title>
+    <!-- Own CSS -->
+    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   </head>
+  <!-- Yes, the body tag is valid -->
+  <body style="background-image: url({% static 'image/srbackground.jpg' %});">
 
-  <body class="p-5 mb-4 bg-dark bg-opacity-75">
+    <nav class="navbar navbar-expand-lg bg-dark opacity-75">
+      <div class="container-fluid">
+        <a class="navbar-brand active mw-50" href="#"><img class="image-size-half" src="{% static 'image/letters.png' %}"></img></a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-      <div class="container py-5">
+            <li class="nav-item"> 
+              <a class="nav-link text-white" href="/rules">Rules</a> 
+            </li>
 
-        <img src="{% static 'image/letters.png' %}"></img>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/banneditems">Banned Items</a>
+            </li>
 
-        <div class="card bg-light p-3 mt-3">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="#">How to Join</a>
+            </li>
 
-          <h3 class="display-4 fw-bold">Welcome to ShadowRaptor</h3>
-          <p class="col-md-8 fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-            illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          <i class="display-5">Players Online: {{ player_count }}</i>
+            <li class="nav-item dropend">
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Donate</a>
+              <ul class="dropdown-menu bg-dark">
+                <li><a class="dropdown-item text-white" href="https://donate.shadowraptor.net/">Packages</a></li>
+                <li><a class="dropdown-item text-white" href="https://www.patreon.com/shadowraptornetwork">Patreon</a></li>
+              </ul>
+            </li>
 
+            <li class="nav-item dropend">
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
+              <ul class="dropdown-menu bg-dark">
+                <li><a class="dropdown-item text-white" href="#">Vote for Us</a></li>
+                <li><a class="dropdown-item text-white" href="#">Staff Applications</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/">Punishments</a></li>
+                <li><a class="dropdown-item text-white" href="https://hexxitmap.shadowraptor.net/">Hexxit Map</a></li>
+
+              </ul>
+            </li>
+
+          </ul>
         </div>
       </div>
+    </nav>
 
+    <!-- Online Player Names Modal -->
+    <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">Online Players</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5>Nomifactory</h5>
+            <span>...</span>
+            <hr>
+            <h5>Enigmatica 6: Expert</h5>
+            <span>...</span>
+            <hr>
+            <h5>Chroma Technology 2</h5>
+            <span>...</span>
+            <hr>
+            <h5>FTB Ultimate: Anniversary</h5>
+            <span>...</span>
+            <hr>
+            <h5>FTB OceanBlock</h5>
+            <span>...</span>
+            <hr>
+            <h5>Hexxit II</h5>
+            <span>...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div id="headerBox" class="container">
+        
+      <header class="container-fluid row mt-3">
+
+          <section class="col fs-2 d-flex align-items-start flex-column">
+
+            <i class="mt-auto"><span id="totalPlayers">Currently Playing: {{ player_count }}</span></i>
+
+            <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" >View Players</button>
+
+          </section>
+
+          <section class="col fs-4">
+
+            <i class="row">
+
+              <button class="cols-12 m-2 btn btn-dark fs-4">Nomifactory</button>
+              <button class="cols-12 m-2 btn btn-dark fs-4">Enigmatica 6: Expert</button>
+              <button class="cols-12 m-2 btn btn-dark fs-4">Chroma Technology 2</button>
+              <button class="cols-12 m-2 btn btn-dark fs-4">FTB Ultimate: Anniversary</button>
+              <button class="cols-12 m-2 btn btn-dark fs-4">FTB OceanBlock</button>
+              <button class="cols-12 m-2 btn btn-dark fs-4">Hexxit II</button>
+
+            </i>
+
+          </section>
+
+        </header>
+
+    </div>
+
+    <main id="home" class="container-flex m-5">
+
+      <section id="welcome" class="container">
+        <header class="card bg-transparent border-white text-white p-3 mt-3">
+
+
+          <h3 class="display-4 fw-bold text-center">Welcome to ShadowRaptor</h3>
+          <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+            illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+
+        </header>
+
+      </section>
+
+      <section id="serverBoxes" class="row mt-3">
+      
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">Nomifactory</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">Enigmatica 6: Expert</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">Chroma Technology 2</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">FTB Ultimate: Anniversary</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">FTB OceanBlock</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+        <div class="col-12 col-md-6">
+
+          <div class="card bg-light p-3 mt-4 opacity-75">
+
+            <h3 class="display-4 fw-bold text-center text-break">Hexxit II</h3>
+            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+  
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- <div id="particles-js"></div>
+
+    <div class="count-particles">
+      <span class="js-count-particles">--</span> particles
+    </div> -->
+
+    <!-- Own JS -->
+    <script src="{% static 'javascript/raptormc.js' %}"></script>
     <!-- Bootstrap JS -->
     <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
   </body>
