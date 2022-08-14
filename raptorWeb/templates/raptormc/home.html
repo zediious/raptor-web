@@ -16,9 +16,14 @@
   <!-- Yes, the body tag is valid -->
   <body style="background-image: url({% static 'image/srbackground.jpg' %});">
 
-    <nav class="navbar navbar-expand-lg bg-dark opacity-75">
-      <div class="container-fluid">
-        <a class="navbar-brand active mw-50" href="#"><img class="image-size-half" src="{% static 'image/letters.png' %}"></img></a>
+    <nav class="navbar navbar-expand-md bg-dark opacity-75">
+      <div class="container">
+        <div class="navbar-header d-flex">
+          <a class="navbar-brand active float-start align-middle" href="#"><img class="image-size-half" src="{% static 'image/letters.png' %}"></img></a>
+          <button class="navbar-toggler float-end align-middle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon bg-dark"></span>
+          </button>
+        </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
@@ -34,7 +39,7 @@
               <a class="nav-link text-white" href="#">How to Join</a>
             </li>
 
-            <li class="nav-item dropend">
+            <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Donate</a>
               <ul class="dropdown-menu bg-dark">
                 <li><a class="dropdown-item text-white" href="https://donate.shadowraptor.net/">Packages</a></li>
@@ -42,7 +47,7 @@
               </ul>
             </li>
 
-            <li class="nav-item dropend">
+            <li class="nav-item dropdrown">
               <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
               <ul class="dropdown-menu bg-dark">
                 <li><a class="dropdown-item text-white" href="#">Vote for Us</a></li>

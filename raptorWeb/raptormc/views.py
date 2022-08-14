@@ -70,21 +70,19 @@ class ShadowRaptor():
 
             }            
 
-            def parse_key (ADDRESS):
+            def parse_key (self, ADDRESS):
                 """
                 Returns a string that represents a key in the "currentPlayers" 
                 Dictionary, gathered from API request "ADDRESS" parameter.
                 """
                 return str(ADDRESS.split(".")[1].split("=")[1])
 
-            def request_info(ADDRESS, KEY):
+            def request_info(self, ADDRESS, KEY):
                 """
                 Sets the "count" and "names" keys within the provided "KEY" parameter
                 to values gathered from an API request "ADDRESS" parameter. The "count" key
                 is an integer, the "names" key is a List of strings.
                 """
-
-                currentPlayers = ShadowRaptor.Tool.PlayerCounts.currentPlayers
 
                 if type(ADDRESS) == type("") and type(KEY) == type(""):
 
@@ -92,13 +90,13 @@ class ShadowRaptor():
 
                     if serverJSON["status"] != "error" and serverJSON["online"]:
 
-                        currentPlayers[KEY]["count"] += serverJSON["players"]["now"]
+                        self.currentPlayers[KEY]["count"] += serverJSON["players"]["now"]
 
-                        currentPlayers["totalCount"] += serverJSON["players"]["now"]
+                        self.currentPlayers["totalCount"] += serverJSON["players"]["now"]
 
                         for player in serverJSON["players"]["sample"]:
 
-                            currentPlayers[KEY]["names"].append(player["name"])
+                            self.currentPlayers[KEY]["names"].append(player["name"])
 
                     else:
 
@@ -108,27 +106,26 @@ class ShadowRaptor():
                     
                     raise TypeError
 
-            def get_current_players():
+            def get_current_players(self):
                 """
                 Return a dictionary containing total player count, as well as nested dictionaries
                 with specific counts and player names for each server
                 """
-                SR = ShadowRaptor.Tool.PlayerCounts
                 
-                SR.request_info(SR.NOMI_ADDRESS, SR.parse_key(SR.NOMI_ADDRESS))
-                SR.request_info(SR.FTBU_ADDRESS, SR.parse_key(SR.FTBU_ADDRESS))
-                SR.request_info(SR.OB_ADDRESS, SR.parse_key(SR.OB_ADDRESS))
-                SR.request_info(SR.CT2_ADDRESS, SR.parse_key(SR.CT2_ADDRESS))
-                SR.request_info(SR.E6E_ADDRESS, SR.parse_key(SR.E6E_ADDRESS))
+                self.request_info(self.NOMI_ADDRESS, self.parse_key(self.NOMI_ADDRESS))
+                self.request_info(self.FTBU_ADDRESS, self.parse_key(self.FTBU_ADDRESS))
+                self.request_info(self.OB_ADDRESS, self.parse_key(self.OB_ADDRESS))
+                self.request_info(self.CT2_ADDRESS, self.parse_key(self.CT2_ADDRESS))
+                self.request_info(self.E6E_ADDRESS, self.parse_key(self.E6E_ADDRESS))
 
-                return dict(SR.currentPlayers)
+                return dict(self.currentPlayers)
 
             def get_total_count(self):
                 """
                 Return the integer of "totalCount" key from currentPlayers dict, after returning get_current_players() internally
                 """
-                ShadowRaptor.Tool.PlayerCounts.currentPlayers["totalCount"] = 0
+                self.currentPlayers["totalCount"] = 0
+                self.get_current_players()
 
-                dict = ShadowRaptor.Tool.PlayerCounts.get_current_players()
-                return int(dict["totalCount"])
+                return int(self.currentPlayers["totalCount"])
 
