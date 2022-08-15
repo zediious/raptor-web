@@ -1,18 +1,20 @@
-.image-size-half {
+body {
 
-    width: 40%;
+    background-size: cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+
+}
+
+.navbar {
+
+    opacity: 0.95;
 
 }
 
 .btn-dark {
 
     opacity: 0.75;
-
-}
-
-#totalPlayers {
-
-    color: rgb(9, 164, 230);
 
 }
 
