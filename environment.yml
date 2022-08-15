@@ -1,0 +1,6 @@
+name: djangoWork
+dependencies:
+  - python=3.10.4
+  - django=3.2.5
+  - requests=2.28.1
+  
