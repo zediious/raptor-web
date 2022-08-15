@@ -8,9 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ShadowRaptor</title>
-    <!-- Own CSS -->
+    {% comment %} Own CSS {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
-    <!-- Bootstrap CSS -->
+    {% comment %} Bootstrap CSS {% endcomment %}
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   </head>
 
@@ -69,7 +69,7 @@
       </div>
     </nav>
 
-    <!-- Online Player Names Modal -->
+    {% comment %} Online Player Names Modal {% endcomment %}
     <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
@@ -100,10 +100,9 @@
       </div>
     </div>
     
-    {% comment %} Particles {% endcomment %}
     <div id="particles-js"></div>
 
-    <details id="headerBox" class="container">
+    <div id="headerBox" class="container">
 
       <header class="container-fluid row mt-3">
 
@@ -132,7 +131,7 @@
 
       </header>
       
-    </details>
+    </div>
 
     <main id="home" class="container-flex m-5">
 
@@ -201,10 +200,12 @@
 
     </main>
 
-    <!-- Own JS -->
-    <script src="{% static 'javascript/raptormc.js' %}"></script>
-    <!-- Bootstrap JS -->
-    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} Bootstrap JS {% endcomment %}
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} particles.js {% endcomment %}
+    <script src="{% static 'javascript/src/dep/particles.js' %}"></script>
+    {% comment %} Own JS {% endcomment %}
+    <script src="{% static 'javascript/src/raptormc.js' %}"></script>
   </body>
 
 </html>
