@@ -97,8 +97,8 @@ def updateData(home_servers_data):
     nomiNames = str(ShadowRaptor.NOMI)[3:].replace('[','').replace(']','')
     e6eNames = str(ShadowRaptor.E6E)[3:].replace('[','').replace(']','')
     ct2Names = str(ShadowRaptor.CT2)[3:].replace('[','').replace(']','')
-    ftbuNames = str(ShadowRaptor.FTBUA)[3:].replace('[','').replace(']','')
-    obNames = str(ShadowRaptor.OB)[3:].replace('[','').replace(']','')
+    ftbuNames = str(ShadowRaptor.FTBUA)[2:].replace('[','').replace(']','')
+    obNames = str(ShadowRaptor.OB)[2:].replace('[','').replace(']','')
     hexxitNames = str(ShadowRaptor.HEXXIT)[3:].replace('[','').replace(']','')
 
     ShadowRaptor.LOGGER.error("playerCounts.py ran")
