@@ -26,7 +26,7 @@ class ShadowRaptor():
         
         def rules(request):
 
-            return HttpResponse("Rules")
+            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'))
             
         def banned_items(request):
 

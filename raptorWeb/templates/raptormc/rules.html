@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ShadowRaptor | Home</title>
+    <title>ShadowRaptor | Rules</title>
     {% comment %} Own CSS {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     {% comment %} Bootstrap CSS {% endcomment %}
@@ -19,7 +19,7 @@
     <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container">
         <div class="navbar-header d-flex">
-          <a class="navbar-brand active float-start align-middle" href="#">
+          <a class="navbar-brand float-start align-middle" href="/">
             <img class="w-25" src="{% static 'image/letters.png' %}"></img>
           </a>
           <button id="navToggle" class="navbar-toggler float-end align-middle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -30,7 +30,7 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
             <li class="nav-item"> 
-              <a class="nav-link text-white text-nowrap" href="/rules">Rules</a> 
+              <a class="nav-link active text-white text-nowrap" href="/rules">Rules</a> 
             </li>
 
             <li class="nav-item">
@@ -142,61 +142,21 @@
 
     <main id="home" class="container-flex m-5 mt-3">
 
-      <section id="welcome" class="container">
+      <section id="ruleIntro" class="container">
 
         <header class="card bg-transparent border-white text-white p-3 mt-3">
-          <h3 class="display-4 fw-bold text-center">Welcome to ShadowRaptor</h3>
+          <h3 class="display-4 fw-bold text-center">ShadowRaptor Rules</h3>
           <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
             illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
         </header>
 
       </section>
 
-      <section id="serverBoxes" class="row mt-3">
+      <section id="ruleBoxes" class="row mt-3">
       
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">Nomifactory</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">Enigmatica 6: Expert</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">Chroma Technology 2</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">FTB Ultimate: Anniversary</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">FTB OceanBlock</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <div class="card bg-light p-3 mt-4 opacity-75">
-            <h3 class="display-6 fw-bold text-center text-break">Hexxit II</h3>
+        <div class="col-12 col-md-12">
+          <div class="card bg-light p-3 mt-4 opacity-75 container">
+            <h3 class="display-6 fw-bold text-center text-break">Network-Wide Rules</h3>
             <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
               illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
           </div>
@@ -205,6 +165,7 @@
       </section>
 
     </main>
+
     {% comment %} Bootstrap JS {% endcomment %}
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     {% comment %} particles.js {% endcomment %}
@@ -212,7 +173,7 @@
     {% comment %} Own JS {% endcomment %}
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
     <script>
-      particlesJS.load('particles-js', 'static/asset/particles.json', function() {
+      particlesJS.load('particles-js', '../static/asset/particles.json', function() {
         console.log('Particles loaded');
       });
     </script>
