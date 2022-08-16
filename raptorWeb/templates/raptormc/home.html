@@ -16,7 +16,7 @@
 
   <body style="background-image: url({% static 'image/background.png' %}); background-color: rgba(0,13,33,255);">
 
-    <nav class="navbar navbar-expand-md bg-dark">
+    <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container">
         <div class="navbar-header d-flex">
           <a class="navbar-brand active float-start align-middle" href="#">
@@ -107,23 +107,33 @@
 
         <section class="col fs-2 d-flex align-items-start flex-column">
 
-          <i class="mt-auto card p-3 bg-dark opacity-75 text-white">
-            <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">Currently Playing: {{ player_count }}</button>
-            <aside class="fs-5 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
-          </i>
+          <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
+            <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: {{ player_count }}</aside>
+            <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
+          </button>
           <span id="spacer" class="mt-auto"></span>
+
+          {% comment %} card p-3 bg-dark opacity-75 text-white {% endcomment %}
 
         </section>
 
         <section class="col fs-4">
 
           <i id="copyAddress" class="row">
-            <button class="cols-12 mt-2 btn btn-dark fs-4">Nomifactory</button>
-            <button class="cols-12 mt-2 btn btn-dark fs-4">Enigmatica 6: Expert</button>
-            <button class="cols-12 mt-2 btn btn-dark fs-4">Chroma Technology 2</button>
-            <button class="cols-12 mt-2 btn btn-dark fs-4">FTB Ultimate: Anniversary</button>
-            <button class="cols-12 mt-2 btn btn-dark fs-4">FTB OceanBlock</button>
-            <button class="cols-12 mt-2 btn btn-dark fs-4">Hexxit II</button>
+
+            <div class="col-xl-4 col-0">
+              <span></span>
+            </div>
+
+            <div class="col-xl-8 col-12 row">
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/nomi.png' %}" alt="Nomifactory"></button>
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/e6e.png' %}" alt="Enigmatica 6: Expert"></button>
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/ct2.png' %}" alt="Chroma Technology 2"></button>
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/ftbua.png' %}" alt="FTBU Anniversary"></button>
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/oceanblock.png' %}" alt="FTB OceanBlock"></button>
+              <button class="col-xl-12 col-6 mt-2 btn btn-dark fs-4"><img class="w-75" src="{% static 'image/packs/hexxit.png' %}" alt="Hexxit II"></button>
+            </div>
+
           </i>
 
         </section>
@@ -132,7 +142,7 @@
       
     </div>
 
-    <main id="home" class="container-flex m-5">
+    <main id="home" class="container-flex m-5 mt-3">
 
       <section id="welcome" class="container">
 
