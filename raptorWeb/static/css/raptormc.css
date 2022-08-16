@@ -18,6 +18,13 @@ body {
 
 }
 
+#serverBoxes div {
+
+    height: 500px;
+    margin-top: 20px;
+
+}
+
 #particles-js {
 
     position: absolute;
