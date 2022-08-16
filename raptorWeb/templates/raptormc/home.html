@@ -10,6 +10,7 @@
     <title>ShadowRaptor | Home</title>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
   </head>
 
   <body style="background-image: url({% static 'image/background.png' %}); background-color: rgba(0,13,33,255);">
@@ -75,23 +76,20 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <h5>Nomifactory</h5>
-            <span>...</span>
+            <h5>Nomifactory / Hexxit II</h5>
+            <p>{{ nomi_names }}</p>
             <hr>
             <h5>Enigmatica 6: Expert</h5>
-            <span>...</span>
+            <p>{{ e6e_names }}</p>
             <hr>
             <h5>Chroma Technology 2</h5>
-            <span>...</span>
+            <p>{{ ct2_names }}</p>
             <hr>
             <h5>FTB Ultimate: Anniversary</h5>
-            <span>...</span>
+            <p>{{ ftbu_names }}</p>
             <hr>
             <h5>FTB OceanBlock</h5>
-            <span>...</span>
-            <hr>
-            <h5>Hexxit II</h5>
-            <span>...</span>
+            <p>{{ ob_names }}</p>
           </div>
         </div>
       </div>
@@ -196,7 +194,7 @@
         <section class="col-md col-12 fs-2 d-flex align-items-center flex-column">
 
           <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
-            <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: {{ player_count }}</aside>
+            <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span class="fs-1">{{ player_count }}</span></aside>
             <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
           </button>
           <span id="spacer" class="mt-auto"></span>

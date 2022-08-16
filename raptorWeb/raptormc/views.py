@@ -1,10 +1,13 @@
+import asyncio
+from turtle import home, update
 from django.shortcuts import render
-from django.http import HttpResponse
-from raptorWeb import settings
-
+from asgiref.sync import sync_to_async
 from os.path import join
-import json
-import requests
+import logging
+
+from raptorWeb import settings
+from raptormc.util.playerCounts import PlayerCounts
+from raptormc.models import PlayerData
 
 # Create your views here.
 
@@ -12,117 +15,127 @@ TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
 class ShadowRaptor():
 
+    LOGGER = logging.getLogger(__name__)
+    
+    NOMI = PlayerData.objects.get(pk=1)
+    E6E = PlayerData.objects.get(pk=2)
+    CT2 = PlayerData.objects.get(pk=3)
+    FTBUA = PlayerData.objects.get(pk=4)
+    OB = PlayerData.objects.get(pk=5)
+    HEXXIT = PlayerData.objects.get(pk=6)
+    NETWORK = PlayerData.objects.get(pk=7)
+
+    SERVERS = [NOMI, E6E, CT2, FTBUA, OB, HEXXIT, NETWORK]
+
+    PLAYER_DATA = PlayerData.objects
+
     class Info():
 
-        async def home_servers(request):
-            
-            # player_getter = ShadowRaptor.Tool.PlayerCounts()
-            
-            # home_servers_data = {"player_count": player_getter.get_total_count()}
-            # return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = home_servers_data)
+        def home_servers(request):
 
-            home_servers_data = {"player_count": 7}
+            home_servers_data = updateData(buffer())
+            
             return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = home_servers_data)
         
         def rules(request):
 
-            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'))
+            home_servers_data = updateData(buffer())
+
+            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context= home_servers_data)
             
         def banned_items(request):
 
-            return HttpResponse("Banned Items")
+            home_servers_data = updateData(buffer())
 
-    class Tool():
+            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context= home_servers_data)
 
-        class PlayerCounts():
-            
-            # MCAPI request URLs for each server
-            NOMI_ADDRESS = "https://mcapi.us/server/status?ip=nomi.shadowraptor.net";
-            OB_ADDRESS = "https://mcapi.us/server/status?ip=ob.shadowraptor.net";
-            FTBU_ADDRESS = "https://mcapi.us/server/status?ip=ftbu.shadowraptor.net";
-            CT2_ADDRESS = "https://mcapi.us/server/status?ip=ct2.shadowraptor.net";
-            E6E_ADDRESS = "https://mcapi.us/server/status?ip=e6e.shadowraptor.net";
+# def update():
+#     """
+#     MCAPI request and database updates encapsulated in async coroutine
+#     """
+#     player_poller = PlayerCounts()
+#     player_data = player_poller.get_current_players()
 
-            # Dict to track player counts and names in each server
-            currentPlayers = {
-                "totalCount": 0,
-                "nomi": {
-                    "count": 0,
-                    "names": []
-                },
-                "ob": {
-                    "count": 0,
-                    "names": []
-                },
-                "ftbu": {
-                    "count": 0,
-                    "names": []
-                },
-                "ct2": {
-                    "count": 0,
-                    "names": []
-                },
-                "e6e": {
-                    "count": 0,
-                    "names": []
-                }
+#     ShadowRaptor.NETWORK.player_count = player_data.get_total_count()
+#     ShadowRaptor.NOMI.player_count = player_data["nomi"]["count"]
+#     ShadowRaptor.NOMI.player_names = player_data["nomi"]["names"]
+#     ShadowRaptor.E6E.player_count = player_data["e6e"]["count"]
+#     ShadowRaptor.E6E.player_names = player_data["e6e"]["names"]
+#     ShadowRaptor.CT2.player_count = player_data["ct2"]["count"]
+#     ShadowRaptor.CT2.player_names = player_data["ct2"]["names"]
+#     ShadowRaptor.FTBUA.player_count = player_data["ftbu"]["count"]
+#     ShadowRaptor.FTBUA.player_names = player_data["ftbu"]["names"]
+#     ShadowRaptor.OB.player_count = player_data["ob"]["count"]
+    
+#     ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.SERVERS, ['player_count'])
+#     ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.SERVERS, ['player_names'])
 
-            }            
+#     totalCount = str(ShadowRaptor.NETWORK)[0]
+#     nomiNames = str(ShadowRaptor.NOMI)[3:].replace('[','').replace(']','')
+#     e6eNames = str(ShadowRaptor.E6E)[3:].replace('[','').replace(']','')
+#     ct2Names = str(ShadowRaptor.CT2)[3:].replace('[','').replace(']','')
+#     ftbuNames = str(ShadowRaptor.FTBUA)[3:].replace('[','').replace(']','')
+#     obNames = str(ShadowRaptor.OB)[3:].replace('[','').replace(']','')
+#     hexxitNames = str(ShadowRaptor.HEXXIT)[3:].replace('[','').replace(']','')
 
-            def parse_key (self, ADDRESS):
-                """
-                Returns a string that represents a key in the "currentPlayers" 
-                Dictionary, gathered from API request "ADDRESS" parameter.
-                """
-                return str(ADDRESS.split(".")[1].split("=")[1])
+#     return dict({"player_count": totalCount,
+#             "nomi_names": nomiNames,
+#             "e6e_names": e6eNames,
+#             "ct2_names": ct2Names,
+#             "ftbu_names": ftbuNames,
+#             "ob_names": obNames,
+#             "hexxit_names": hexxitNames})
 
-            def request_info(self, ADDRESS, KEY):
-                """
-                Sets the "count" and "names" keys within the provided "KEY" parameter
-                to values gathered from an API request "ADDRESS" parameter. The "count" key
-                is an integer, the "names" key is a List of strings.
-                """
-                if type(ADDRESS) == type("") and type(KEY) == type(""):
+def updateData(home_servers_data):
+    """
+    Save changes to database and return template dictionary
+    """
+    ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.SERVERS, ['player_count'])
+    ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.SERVERS, ['player_names'])
+    
+    totalCount = str(ShadowRaptor.NETWORK)[0]
+    nomiNames = str(ShadowRaptor.NOMI)[3:].replace('[','').replace(']','')
+    e6eNames = str(ShadowRaptor.E6E)[3:].replace('[','').replace(']','')
+    ct2Names = str(ShadowRaptor.CT2)[3:].replace('[','').replace(']','')
+    ftbuNames = str(ShadowRaptor.FTBUA)[3:].replace('[','').replace(']','')
+    obNames = str(ShadowRaptor.OB)[3:].replace('[','').replace(']','')
+    hexxitNames = str(ShadowRaptor.HEXXIT)[3:].replace('[','').replace(']','')
 
-                    serverJSON = json.loads(requests.get(ADDRESS).text)
+    ShadowRaptor.LOGGER.error("playerCounts.py ran")
 
-                    if serverJSON["status"] != "error" and serverJSON["online"]:
+    return dict({"player_count": totalCount,
+            "nomi_names": nomiNames,
+            "e6e_names": e6eNames,
+            "ct2_names": ct2Names,
+            "ftbu_names": ftbuNames,
+            "ob_names": obNames,
+            "hexxit_names": hexxitNames})
 
-                        self.currentPlayers[KEY]["count"] += serverJSON["players"]["now"]
+def buffer():
+    """
+    Keep async operation away from database save
+    """
+    return asyncio.run(playerPoll())
 
-                        self.currentPlayers["totalCount"] += serverJSON["players"]["now"]
+async def playerPoll():
+    """
+    Asynchronously request Player data From MCAPI and make
+    changes to the database
+    """
+    # home_servers_data = sync_to_async(update, thread_sensitive=False) 
 
-                        for player in serverJSON["players"]["sample"]:
+    player_poller = PlayerCounts()
+    player_data = player_poller.get_current_players()
 
-                            self.currentPlayers[KEY]["names"].append(player["name"])
-
-                    else:
-
-                        pass
-
-                else:
-                    
-                    raise TypeError
-
-            def get_current_players(self):
-                """
-                Return a dictionary containing total player count, as well as nested dictionaries
-                with specific counts and player names for each server
-                """  
-                self.request_info(self.NOMI_ADDRESS, self.parse_key(self.NOMI_ADDRESS))
-                self.request_info(self.FTBU_ADDRESS, self.parse_key(self.FTBU_ADDRESS))
-                self.request_info(self.OB_ADDRESS, self.parse_key(self.OB_ADDRESS))
-                self.request_info(self.CT2_ADDRESS, self.parse_key(self.CT2_ADDRESS))
-                self.request_info(self.E6E_ADDRESS, self.parse_key(self.E6E_ADDRESS))
-
-                return dict(self.currentPlayers)
-
-            def get_total_count(self):
-                """
-                Return the integer of "totalCount" key from currentPlayers dict, after returning get_current_players() internally
-                """
-                self.currentPlayers["totalCount"] = 0
-                self.get_current_players()
-
-                return int(self.currentPlayers["totalCount"])
-
+    ShadowRaptor.NETWORK.player_count = player_data["totalCount"]
+    ShadowRaptor.NOMI.player_count = player_data["nomi"]["count"]
+    ShadowRaptor.NOMI.player_names = player_data["nomi"]["names"]
+    ShadowRaptor.E6E.player_count = player_data["e6e"]["count"]
+    ShadowRaptor.E6E.player_names = player_data["e6e"]["names"]
+    ShadowRaptor.CT2.player_count = player_data["ct2"]["count"]
+    ShadowRaptor.CT2.player_names = player_data["ct2"]["names"]
+    ShadowRaptor.FTBUA.player_count = player_data["ftbu"]["count"]
+    ShadowRaptor.FTBUA.player_names = player_data["ftbu"]["names"]
+    ShadowRaptor.OB.player_count = player_data["ob"]["count"]
+    
+    

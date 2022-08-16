@@ -24,6 +24,8 @@
 
 5) In the same terminal, ater creating the `djangoWork` environment from the configuration, run the following command; `conda activate djangoWork`. This will activate the created virtual environment. __You need to run this command each time you begin work.__
 
+6) `python manage.py migrate` `python manage.py makemigrations <app>` `python manage.py migrate` `python manage.py shell`
+
 ### NPM
 
 - **Incomplete**
