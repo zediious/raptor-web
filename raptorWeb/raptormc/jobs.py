@@ -1,8 +1,3 @@
-import logging
-
-from raptormc.util.playerCounts import PlayerCounts
-from raptormc.models import Server, PlayerData
-
 class RaptorWare:
 
     def __init__(self, get_response):

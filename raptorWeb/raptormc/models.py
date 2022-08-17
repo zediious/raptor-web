@@ -7,6 +7,8 @@ class Server(models.Model):
 
     server_name = models.CharField(max_length=50, default="none", unique=True)
 
+    server_state = models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return self.server_name
 
@@ -29,3 +31,7 @@ class PlayerData(models.Model):
     def get_names(self):
 
         return self.player_names
+
+    def get_state(self):
+
+        return self.server_state

@@ -1,6 +1,5 @@
-from json import loads
+from json import loads, dump
 from requests import get
-
 
 class PlayerCounts():
             
@@ -10,32 +9,50 @@ class PlayerCounts():
     FTBU_ADDRESS = "https://mcapi.us/server/status?ip=ftbu.shadowraptor.net";
     CT2_ADDRESS = "https://mcapi.us/server/status?ip=ct2.shadowraptor.net";
     E6E_ADDRESS = "https://mcapi.us/server/status?ip=e6e.shadowraptor.net";
-
-    # Dict to track player counts and names in each server
+    # Dict to track player counts and names in each server internally
     currentPlayers = {
         "totalCount": 0,
         "nomi": {
             "count": 0,
-            "names": []
+            "names": [],
+            "online": False
         },
         "ob": {
             "count": 0,
-            "names": []
+            "names": [],
+            "online": False
         },
         "ftbu": {
             "count": 0,
-            "names": []
+            "names": [],
+            "online": False
         },
         "ct2": {
             "count": 0,
-            "names": []
+            "names": [],
+            "online": False
         },
         "e6e": {
             "count": 0,
-            "names": []
+            "names": [],
+            "online": False
         }
 
-    }            
+    }
+    # Template Variable Dictionary
+    currentPlayers_DB = {"player_count": 0,
+                        "nomi_names": "",
+                        "nomi_state": False,
+                        "e6e_names": "e6eNames",
+                        "e6e_state": False,
+                        "ct2_names": "ct2Names",
+                        "ct2_state": False,
+                        "ftbu_names": "ftbuNames",
+                        "ftbu_state": False,
+                        "ob_names": "obNames",
+                        "ob_state": False,
+                        "hexxit_names": "hexxitNames",
+                        "hexxit_state": False}     
 
     def parse_key (self, ADDRESS):
         """
@@ -56,6 +73,8 @@ class PlayerCounts():
 
             if serverJSON["status"] != "error" and serverJSON["online"]:
 
+                self.currentPlayers[KEY]["online"] = True
+                
                 self.currentPlayers[KEY]["count"] += serverJSON["players"]["now"]
 
                 self.currentPlayers["totalCount"] += serverJSON["players"]["now"]
@@ -64,13 +83,12 @@ class PlayerCounts():
 
                     self.currentPlayers[KEY]["names"].append(player["name"])
 
-            else:
-
-                pass
-
         else:
             
             raise TypeError
+        
+        with open('playerCounts.LOCK', 'w') as lock_file:
+            dump(serverJSON, lock_file)
 
     def get_current_players(self):
         """
@@ -81,23 +99,28 @@ class PlayerCounts():
             "totalCount": 0,
             "nomi": {
                 "count": 0,
-                "names": []
+                "names": [],
+                "online": False
             },
             "ob": {
                 "count": 0,
-                "names": []
+                "names": [],
+                "online": False
             },
             "ftbu": {
                 "count": 0,
-                "names": []
+                "names": [],
+                "online": False
             },
             "ct2": {
                 "count": 0,
-                "names": []
+                "names": [],
+                "online": False
             },
             "e6e": {
                 "count": 0,
-                "names": []
+                "names": [],
+                "online": False
             }
 
         }
@@ -109,9 +132,3 @@ class PlayerCounts():
         self.request_info(self.E6E_ADDRESS, self.parse_key(self.E6E_ADDRESS))
 
         return dict(self.currentPlayers)
-
-    def get_total_count(self):
-        """
-        Return the integer of "totalCount" key from currentPlayers dict
-        """
-        return int(self.currentPlayers["totalCount"])
