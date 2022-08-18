@@ -52,7 +52,7 @@ class ShadowRaptor():
             playerPoll()
 
             PlayerData.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
-            PlayerData.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context = player_poller.currentPlayers_DB)
             
@@ -61,7 +61,7 @@ class ShadowRaptor():
             playerPoll()
 
             PlayerData.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
-            PlayerData.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context = player_poller.currentPlayers_DB)
 
