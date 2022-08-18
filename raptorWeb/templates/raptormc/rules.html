@@ -219,9 +219,9 @@
 
     <div id="headerBox" class="container">
 
-      <header class="container-fluid row mt-3">
+      <header class="container-fluid row m-2 mt-3">
 
-        <section class="col-md col-12 fs-2 d-flex align-items-center flex-column">
+        <section class="col-lg col-12 fs-2 d-flex align-items-center flex-column">
 
           <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
             <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span class="fs-1">{{ player_count }}</span></aside>
@@ -231,55 +231,55 @@
 
         </section>
 
-        <section class="col-md col-12 fs-4">
+        <section class="col-lg col-12 fs-4">
 
           <i id="copyAddress" class="row">
 
-            <div class="col-xl-4 col-0">
+            <div id="spacer" class="col-xl-4 col-0">
               <span></span>
             </div>
 
             <div class="col-xl-8 col-12 row">
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-75" src="{% static 'image/packs/nomi.png' %}" alt="Nomifactory">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-100" src="{% static 'image/packs/nomi.png' %}" alt="Nomifactory">
                 {% if nomi_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-75" src="{% static 'image/packs/e6e.png' %}" alt="Enigmatica 6: Expert">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-100" src="{% static 'image/packs/e6e.png' %}" alt="Enigmatica 6: Expert">
                 {% if e6e_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-75" src="{% static 'image/packs/ct2.png' %}" alt="Chroma Technology 2">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-100" src="{% static 'image/packs/ct2.png' %}" alt="Chroma Technology 2">
                 {% if ct2_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-75" src="{% static 'image/packs/ftbua.png' %}" alt="FTBU Anniversary">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-100" src="{% static 'image/packs/ftbua.png' %}" alt="FTBU Anniversary">
                 {% if ftbu_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-75" src="{% static 'image/packs/oceanblock.png' %}" alt="FTB OceanBlock">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.png' %}" alt="FTB OceanBlock">
                 {% if ob_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-75" src="{% static 'image/packs/hexxit.png' %}" alt="Hexxit II">
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-100" src="{% static 'image/packs/hexxit.png' %}" alt="Hexxit II">
                 {% if hexxit_state %}
-                <img class="" src="{% static 'image/online_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/online_indicator.png' %}">
                 {% else %}
-                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                <img class="w-25" src="{% static 'image/offline_indicator.png' %}">
                 {% endif %}
               </button></span>
             </div>
