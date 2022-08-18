@@ -1,92 +1,110 @@
-import asyncio
 from django.shortcuts import render
 from os.path import join, getmtime
-from time import sleep, time
+from time import time
 import logging
 
 from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
+from raptormc.util import checkDatabase
 from raptormc.models import PlayerData, Server
-
 # Create your views here.
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
 player_poller = PlayerCounts()
 
-loop = asyncio.get_event_loop()
-
 class ShadowRaptor():
 
     LOGGER = logging.getLogger(__name__)
-    
-    NOMI = PlayerData.objects.get(pk=1)
-    NOMI_STATE = Server.objects.get(pk=1)
-    E6E = PlayerData.objects.get(pk=2)
-    E6E_STATE = Server.objects.get(pk=2)
-    CT2 = PlayerData.objects.get(pk=3)
-    CT2_STATE = Server.objects.get(pk=3)
-    FTBUA = PlayerData.objects.get(pk=4)
-    FTBUA_STATE = Server.objects.get(pk=4)
-    OB = PlayerData.objects.get(pk=5)
-    OB_STATE = Server.objects.get(pk=5)
-    HEXXIT = PlayerData.objects.get(pk=6)
-    HEXXIT_STATE = Server.objects.get(pk=6)
-    NETWORK = PlayerData.objects.get(pk=7)
 
-    PLAYER_STATS = [NOMI, E6E, CT2, FTBUA, OB, HEXXIT, NETWORK]
+    NOMI = None
+    NOMI_STATE = None
+    E6E = None
+    E6E_STATE = None
+    CT2 = None
+    CT2_STATE = None
+    FTBUA = None
+    FTBUA_STATE = None
+    OB = None
+    OB_STATE = None
+    HEXXIT = None
+    HEXXIT_STATE = None
+    NETWORK = None
 
-    SERVER_STATES = [NOMI_STATE, E6E_STATE, CT2_STATE, FTBUA_STATE, OB_STATE, HEXXIT_STATE]
-
-    PLAYER_DATA = PlayerData.objects
-
-    SERVER_DATA = Server.objects
+    PLAYER_STATS = []
+    SERVER_STATES = []
+    PLAYER_DATA = None
+    SERVER_DATA = None
 
     class Info():
 
         def home_servers(request):
-
-            task = loop.create_task(playerPoll())
-            loop.run_until_complete(task)
+            
+            playerPoll()
         
-            ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
-            ShadowRaptor.SERVER_DATA.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            PlayerData.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
+            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = player_poller.currentPlayers_DB)
         
         def rules(request):
 
-            task = loop.create_task(playerPoll())
-            loop.run_until_complete(task)
+            playerPoll()
 
-            ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
-            ShadowRaptor.SERVER_DATA.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            PlayerData.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
+            PlayerData.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context = player_poller.currentPlayers_DB)
             
         def banned_items(request):
 
-            task = loop.create_task(playerPoll())
-            loop.run_until_complete(task)
+            playerPoll()
 
-            ShadowRaptor.PLAYER_DATA.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
-            ShadowRaptor.SERVER_DATA.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            PlayerData.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count', 'player_names'])
+            PlayerData.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context = player_poller.currentPlayers_DB)
 
-async def playerPoll():
+def after_integrity():
     """
-    Asynchronously request Player data From MCAPI and make
+    Gets server and playerdata objects from the database, only to be run
+    after database integrity has been confirmed.
+    """
+    ShadowRaptor.NOMI = PlayerData.objects.get(pk=1)
+    ShadowRaptor.NOMI_STATE = Server.objects.get(server_name="nomi")
+    ShadowRaptor.E6E = PlayerData.objects.get(pk=2)
+    ShadowRaptor.E6E_STATE = Server.objects.get(pk=2)
+    ShadowRaptor.CT2 = PlayerData.objects.get(pk=3)
+    ShadowRaptor.CT2_STATE = Server.objects.get(pk=3)
+    ShadowRaptor.FTBUA = PlayerData.objects.get(pk=4)
+    ShadowRaptor.FTBUA_STATE = Server.objects.get(pk=4)
+    ShadowRaptor.OB = PlayerData.objects.get(pk=5)
+    ShadowRaptor.OB_STATE = Server.objects.get(pk=5)
+    ShadowRaptor.HEXXIT = PlayerData.objects.get(pk=6)
+    ShadowRaptor.HEXXIT_STATE = Server.objects.get(pk=6)
+    ShadowRaptor.NETWORK = PlayerData.objects.get(pk=7)
+
+    ShadowRaptor.PLAYER_STATS = [ShadowRaptor.NOMI, ShadowRaptor.E6E, ShadowRaptor.CT2, ShadowRaptor.FTBUA, ShadowRaptor.OB, ShadowRaptor.HEXXIT, ShadowRaptor.NETWORK]
+    ShadowRaptor.SERVER_STATES = [ShadowRaptor.NOMI_STATE, ShadowRaptor.E6E_STATE, ShadowRaptor.CT2_STATE, ShadowRaptor.FTBUA_STATE, ShadowRaptor.OB_STATE, ShadowRaptor.HEXXIT_STATE]
+
+def playerPoll():
+    """
+    Request Player data From MCAPI and make
     changes to the database. Will only run if created
-    .LOCK file hasn't been written to in 2 minutes
+    .LOCK file hasn't been written to in 2 minutes. Will confirm
+    that database objects are created, before getting them.
     """
     try:
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
 
         if  lock_time >= 120:
-        
+            
             player_data = player_poller.get_current_players()
+
+            checkDatabase.confirm_database_integrity()
+
+            after_integrity()
 
             ShadowRaptor.NETWORK.player_count = player_data["totalCount"]
             ShadowRaptor.NOMI.player_count = player_data["nomi"]["count"]
@@ -126,11 +144,11 @@ async def playerPoll():
                                             "ob_state": ShadowRaptor.OB_STATE.server_state,
                                             "hexxit_names": hexxitNames}
 
-            ShadowRaptor.LOGGER.error("playerCounts.py ran")
+            ShadowRaptor.LOGGER.error("[INFO] Request made, playerCounts.py ran")
 
         else:
 
-            ShadowRaptor.LOGGER.error("Not enough time has passed to run playerCounts.py")
+            ShadowRaptor.LOGGER.error("[INFO] Request made, not enough time has passed to run playerCounts.py")
 
     except FileNotFoundError as e:
 

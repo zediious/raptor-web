@@ -5,20 +5,20 @@ from django.db import models
 
 class Server(models.Model):
 
-    server_name = models.CharField(max_length=50, default="none", unique=True)
+    server_name = models.CharField(max_length=50, default="none", unique=True, null=True, blank=True)
 
-    server_state = models.BooleanField(default=False)
+    server_state = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.server_name
 
 class PlayerData(models.Model):
 
-    server = models.ForeignKey(Server, default=0, on_delete=models.CASCADE)
+    server = models.ForeignKey(Server, default=0, null=True, blank=True, on_delete=models.CASCADE)
     
-    player_count = models.IntegerField(unique=False)
+    player_count = models.IntegerField(unique=False, null=True, blank=True)
 
-    player_names = models.TextField(max_length=1500, unique=False)
+    player_names = models.TextField(max_length=1500, unique=False, null=True, blank=True)
 
     def __str__(self) -> str:
         
