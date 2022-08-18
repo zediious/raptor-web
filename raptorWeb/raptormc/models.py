@@ -1,5 +1,3 @@
-from http import server
-from tkinter import CASCADE
 from django.db import models
 
 class Server(models.Model):
