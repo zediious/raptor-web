@@ -14,29 +14,10 @@ player_poller = PlayerCounts()
 
 class ShadowRaptor():
     """
-    Object containing information regarding database objects, as well
-    as different categories of views.
+    Object containing different categories of views that are used
+    across the website/application.
     """
     LOGGER = logging.getLogger(__name__)
-
-    NOMI = None
-    NOMI_STATE = None
-    E6E = None
-    E6E_STATE = None
-    CT2 = None
-    CT2_STATE = None
-    FTBU = None
-    FTBU_STATE = None
-    OB = None
-    OB_STATE = None
-    HEXXIT = None
-    HEXXIT_STATE = None
-    NETWORK = None
-
-    PLAYER_STATS = []
-    SERVER_STATES = []
-    PLAYER_DATA = None
-    SERVER_DATA = None
 
     class Info():
         """
