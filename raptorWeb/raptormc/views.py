@@ -13,7 +13,10 @@ TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 player_poller = PlayerCounts()
 
 class ShadowRaptor():
-
+    """
+    Object containing information regarding database objects, as well
+    as different categories of views.
+    """
     LOGGER = logging.getLogger(__name__)
 
     NOMI = None
@@ -22,8 +25,8 @@ class ShadowRaptor():
     E6E_STATE = None
     CT2 = None
     CT2_STATE = None
-    FTBUA = None
-    FTBUA_STATE = None
+    FTBU = None
+    FTBU_STATE = None
     OB = None
     OB_STATE = None
     HEXXIT = None
@@ -36,65 +39,48 @@ class ShadowRaptor():
     SERVER_DATA = None
 
     class Info():
-
+        """
+        Views that act as static pages of information
+        """
         def home_servers(request):
             
             playerPoll()
-        
-            PlayerCount.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count'])
-            PlayerName.objects.bulk_update(PlayerName.objects.all(), ['name'])
-            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = player_poller.currentPlayers_DB)
         
         def rules(request):
 
             playerPoll()
-
-            PlayerCount.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count'])
-            PlayerName.objects.bulk_update(PlayerName.objects.all(), ['name'])
-            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context = player_poller.currentPlayers_DB)
             
         def banned_items(request):
 
             playerPoll()
-
-            PlayerCount.objects.bulk_update(ShadowRaptor.PLAYER_STATS, ['player_count'])
-            PlayerName.objects.bulk_update(PlayerName.objects.all(), ['name'])
-            Server.objects.bulk_update(ShadowRaptor.SERVER_STATES, ['server_state'])
+            save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context = player_poller.currentPlayers_DB)
 
 def after_integrity():
     """
-    Gets server and playercount objects from the database, only to be run
+    Gets server objects from the database, only to be run
     after database integrity has been confirmed.
     """
-    ShadowRaptor.NOMI = PlayerCount.objects.get(server=Server.objects.get(server_name="nomi"))
     ShadowRaptor.NOMI_STATE = Server.objects.get(server_name="nomi")
-    ShadowRaptor.E6E = PlayerCount.objects.get(server=Server.objects.get(server_name="e6e"))
     ShadowRaptor.E6E_STATE = Server.objects.get(server_name="e6e")
-    ShadowRaptor.CT2 = PlayerCount.objects.get(server=Server.objects.get(server_name="ct2"))
     ShadowRaptor.CT2_STATE = Server.objects.get(server_name="ct2")
-    ShadowRaptor.FTBUA = PlayerCount.objects.get(server=Server.objects.get(server_name="ftbua"))
-    ShadowRaptor.FTBUA_STATE = Server.objects.get(server_name="ftbua")
-    ShadowRaptor.OB = PlayerCount.objects.get(server=Server.objects.get(server_name="ob"))
+    ShadowRaptor.FTBU_STATE = Server.objects.get(server_name="ftbu")
     ShadowRaptor.OB_STATE = Server.objects.get(server_name="ob")
-    ShadowRaptor.HEXXIT = PlayerCount.objects.get(server=Server.objects.get(server_name="hexxit"))
     ShadowRaptor.HEXXIT_STATE = Server.objects.get(server_name="hexxit")
-    ShadowRaptor.NETWORK = PlayerCount.objects.get(server=Server.objects.get(server_name="network"))
-
-    ShadowRaptor.PLAYER_STATS = [ShadowRaptor.NOMI, ShadowRaptor.E6E, ShadowRaptor.CT2, ShadowRaptor.FTBUA, ShadowRaptor.OB, ShadowRaptor.HEXXIT, ShadowRaptor.NETWORK]
-    ShadowRaptor.SERVER_STATES = [ShadowRaptor.NOMI_STATE, ShadowRaptor.E6E_STATE, ShadowRaptor.CT2_STATE, ShadowRaptor.FTBUA_STATE, ShadowRaptor.OB_STATE, ShadowRaptor.HEXXIT_STATE]
 
 def playerPoll():
     """
-    Request Player data From MCAPI and make
-    changes to the database. Will only run if created
-    .LOCK file hasn't been written to in 2 minutes. Will confirm
-    that database objects are created, before getting them.
+    Request Player data From MCAPI and add PlayerName and PlayerCount
+    objects to the database with a foreign key for each server. Will 
+    only run if created .LOCK file hasn't been written to in 2 minutes. 
+    Will confirm that Server objects exist, before getting them.
     """
     try:
 
@@ -108,41 +94,24 @@ def playerPoll():
 
             after_integrity()
 
-            ShadowRaptor.NETWORK.player_count = player_data["totalCount"]
-            ShadowRaptor.NOMI.player_count = player_data["nomi"]["count"]
-            ShadowRaptor.NOMI_STATE.server_state = player_data["nomi"]["online"]
-            ShadowRaptor.E6E.player_count = player_data["e6e"]["count"]
-            ShadowRaptor.E6E_STATE.server_state = player_data["e6e"]["online"]
-            ShadowRaptor.CT2.player_count = player_data["ct2"]["count"]
-            ShadowRaptor.CT2_STATE.server_state = player_data["ct2"]["online"]
-            ShadowRaptor.FTBUA.player_count = player_data["ftbu"]["count"]
-            ShadowRaptor.FTBUA_STATE.server_state = player_data["ftbu"]["online"]
-            ShadowRaptor.OB.player_count = player_data["ob"]["count"]
-            ShadowRaptor.OB_STATE.server_state = player_data["ob"]["online"]
-
+            PlayerCount.objects.all().delete()
             PlayerName.objects.all().delete()
 
-            totalCount = str(ShadowRaptor.NETWORK.player_count)
-            
-            for player in player_data["nomi"]["names"]:
+            PlayerCount.objects.create(server=Server.objects.get(server_name="network"), player_count=player_data["totalCount"])
 
-                PlayerName.objects.create(server=Server.objects.get(server_name="nomi") , name=player)
-            
-            for player in player_data["e6e"]["names"]:
+            totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
 
-                PlayerName.objects.create(server=Server.objects.get(server_name="e6e") , name=player)
+            for key in player_data:
 
-            for player in player_data["ct2"]["names"]:
+                if key == "totalCount":
 
-                PlayerName.objects.create(server=Server.objects.get(server_name="ct2") , name=player)
+                    continue
 
-            for player in player_data["ftbu"]["names"]:
+                for player in player_data[key]["names"]:
 
-                PlayerName.objects.create(server=Server.objects.get(server_name="ftbua"), name=player)
+                    PlayerName.objects.create(server=Server.objects.get(server_name=key) , name=player)
 
-            for player in player_data["ob"]["names"]:
-
-                PlayerName.objects.create(server=Server.objects.get(server_name="ob") , name=player)
+                PlayerCount.objects.create(server=Server.objects.get(server_name=key), player_count=player_data[key]["count"])
 
             player_names = PlayerName.objects.all()
             
@@ -153,8 +122,8 @@ def playerPoll():
                                             "e6e_state": ShadowRaptor.E6E_STATE.server_state,
                                             "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
                                             "ct2_state": ShadowRaptor.CT2_STATE.server_state,
-                                            "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbua")),
-                                            "ftbu_state": ShadowRaptor.FTBUA_STATE.server_state,
+                                            "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
+                                            "ftbu_state": ShadowRaptor.FTBU_STATE.server_state,
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
                                             "ob_state": ShadowRaptor.OB_STATE.server_state,
                                             "hexxit_names": "not implemented"}
@@ -169,3 +138,12 @@ def playerPoll():
 
         ShadowRaptor.LOGGER.error(e)
         ShadowRaptor.LOGGER.error("[ERROR] playerCounts.LOCK file not present. Please create the file at the above path.")
+
+def save_models():
+    """
+    Bulk update PlayerCount, PlayerName, and Server objects, specifically
+    attributes from them that were modified while running playerPoll().
+    """
+    PlayerCount.objects.bulk_update(PlayerCount.objects.all(), ['player_count'])
+    PlayerName.objects.bulk_update(PlayerName.objects.all(), ['name'])
+    Server.objects.bulk_update(Server.objects.all(), ['server_state'])

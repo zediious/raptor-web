@@ -2,7 +2,10 @@ from json import loads, dump
 from requests import get
 
 class PlayerCounts():
-            
+    """
+    Object containing data structures and methods used for polling
+    mcapi.us for information about Minecraft Servers.
+    """ 
     # MCAPI request URLs for each server
     NOMI_ADDRESS = "https://mcapi.us/server/status?ip=nomi.shadowraptor.net";
     OB_ADDRESS = "https://mcapi.us/server/status?ip=ob.shadowraptor.net";
@@ -63,9 +66,8 @@ class PlayerCounts():
 
     def request_info(self, ADDRESS, KEY):
         """
-        Sets the "count" and "names" keys within the provided "KEY" parameter
-        to values gathered from an API request "ADDRESS" parameter. The "count" key
-        is an integer, the "names" key is a List of strings.
+        Sets the "count", "names" and "online" keys within the provided "KEY" parameter
+        to values gathered from an API request "ADDRESS" parameter.
         """
         if type(ADDRESS) == type("") and type(KEY) == type(""):
 
@@ -93,7 +95,7 @@ class PlayerCounts():
     def get_current_players(self):
         """
         Return a dictionary containing total player count, as well as nested dictionaries
-        with specific counts and player names for each server
+        with specific counts, player names and states for each server
         """
         self.currentPlayers = {
             "totalCount": 0,

@@ -1,15 +1,22 @@
 import logging
 
-from raptormc.models import PlayerCount, Server
+from raptormc.models import Server
 
 def confirm_database_integrity():
-
+    """
+    Checks that Server objects exist. If not, they will be created.
+    """
     LOGGER = logging.getLogger(__name__)
     
     try:
 
-        test_server = Server.objects.get(server_name="nomi")
-        PlayerCount.objects.get(server=test_server)
+        Server.objects.get(server_name="nomi")
+        Server.objects.get(server_name="e6e")
+        Server.objects.get(server_name="ct2")
+        Server.objects.get(server_name="ftbu")
+        Server.objects.get(server_name="ob")
+        Server.objects.get(server_name="hexxit")
+        Server.objects.get(server_name="network")
         
         LOGGER.error("[INFO] Tested for needed database objects, all good")
 
@@ -20,7 +27,7 @@ def confirm_database_integrity():
         nomi = Server.objects.create(server_name="nomi")
         e6e = Server.objects.create(server_name="e6e")
         ct2 = Server.objects.create(server_name="ct2")
-        ftbua = Server.objects.create(server_name="ftbua")
+        ftbu = Server.objects.create(server_name="ftbu")
         ob = Server.objects.create(server_name="ob")
         hexxit = Server.objects.create(server_name="hexxit")
         network = Server.objects.create(server_name="network")
@@ -28,23 +35,7 @@ def confirm_database_integrity():
         nomi.save()
         e6e.save()
         ct2.save()
-        ftbua.save()
+        ftbu.save()
         ob.save()
         hexxit.save()
         network.save()
-
-        n_players = PlayerCount.objects.create(server=nomi, player_count=0)
-        e_players = PlayerCount.objects.create(server=e6e, player_count=0)
-        c_players = PlayerCount.objects.create(server=ct2, player_count=0)
-        f_players = PlayerCount.objects.create(server=ftbua, player_count=0)
-        o_players = PlayerCount.objects.create(server=ob, player_count=0)
-        h_players = PlayerCount.objects.create(server=hexxit, player_count=0)
-        total_players = PlayerCount.objects.create(server=network, player_count=0)
-
-        n_players.save()
-        e_players.save()
-        c_players.save()
-        f_players.save()
-        o_players.save()
-        h_players.save()
-        total_players.save()

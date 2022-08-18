@@ -1,7 +1,9 @@
 from django.db import models
 
 class Server(models.Model):
-
+    """
+    Represents a Minecraft Server
+    """
     server_name = models.CharField(max_length=50, default="none", unique=True)
 
     server_state = models.BooleanField(default=False)
@@ -10,7 +12,10 @@ class Server(models.Model):
         return self.server_name
 
 class PlayerCount(models.Model):
-
+    """
+    Represents a count of players on a Minecraft Server.
+    Takes a Server as a Foreign Key.
+    """
     server = models.ForeignKey(Server, default=0, on_delete=models.CASCADE)
     
     player_count = models.IntegerField(default=0, unique=False)
@@ -28,7 +33,10 @@ class PlayerCount(models.Model):
         return self.server_state
 
 class PlayerName(models.Model):
-
+    """
+    Represents the name of a player that is on a Minecraft Server.
+    Takes a Server as a Foreign Key.
+    """
     server = models.ForeignKey(Server, default=0, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=50, unique=True)
