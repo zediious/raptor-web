@@ -72,19 +72,19 @@ def after_integrity():
     Gets server and playercount objects from the database, only to be run
     after database integrity has been confirmed.
     """
-    ShadowRaptor.NOMI = PlayerCount.objects.get(pk=1)
+    ShadowRaptor.NOMI = PlayerCount.objects.get(server=Server.objects.get(server_name="nomi"))
     ShadowRaptor.NOMI_STATE = Server.objects.get(server_name="nomi")
-    ShadowRaptor.E6E = PlayerCount.objects.get(pk=2)
-    ShadowRaptor.E6E_STATE = Server.objects.get(pk=2)
-    ShadowRaptor.CT2 = PlayerCount.objects.get(pk=3)
-    ShadowRaptor.CT2_STATE = Server.objects.get(pk=3)
-    ShadowRaptor.FTBUA = PlayerCount.objects.get(pk=4)
-    ShadowRaptor.FTBUA_STATE = Server.objects.get(pk=4)
-    ShadowRaptor.OB = PlayerCount.objects.get(pk=5)
-    ShadowRaptor.OB_STATE = Server.objects.get(pk=5)
-    ShadowRaptor.HEXXIT = PlayerCount.objects.get(pk=6)
-    ShadowRaptor.HEXXIT_STATE = Server.objects.get(pk=6)
-    ShadowRaptor.NETWORK = PlayerCount.objects.get(pk=7)
+    ShadowRaptor.E6E = PlayerCount.objects.get(server=Server.objects.get(server_name="e6e"))
+    ShadowRaptor.E6E_STATE = Server.objects.get(server_name="e6e")
+    ShadowRaptor.CT2 = PlayerCount.objects.get(server=Server.objects.get(server_name="ct2"))
+    ShadowRaptor.CT2_STATE = Server.objects.get(server_name="ct2")
+    ShadowRaptor.FTBUA = PlayerCount.objects.get(server=Server.objects.get(server_name="ftbua"))
+    ShadowRaptor.FTBUA_STATE = Server.objects.get(server_name="ftbua")
+    ShadowRaptor.OB = PlayerCount.objects.get(server=Server.objects.get(server_name="ob"))
+    ShadowRaptor.OB_STATE = Server.objects.get(server_name="ob")
+    ShadowRaptor.HEXXIT = PlayerCount.objects.get(server=Server.objects.get(server_name="hexxit"))
+    ShadowRaptor.HEXXIT_STATE = Server.objects.get(server_name="hexxit")
+    ShadowRaptor.NETWORK = PlayerCount.objects.get(server=Server.objects.get(server_name="network"))
 
     ShadowRaptor.PLAYER_STATS = [ShadowRaptor.NOMI, ShadowRaptor.E6E, ShadowRaptor.CT2, ShadowRaptor.FTBUA, ShadowRaptor.OB, ShadowRaptor.HEXXIT, ShadowRaptor.NETWORK]
     ShadowRaptor.SERVER_STATES = [ShadowRaptor.NOMI_STATE, ShadowRaptor.E6E_STATE, ShadowRaptor.CT2_STATE, ShadowRaptor.FTBUA_STATE, ShadowRaptor.OB_STATE, ShadowRaptor.HEXXIT_STATE]
