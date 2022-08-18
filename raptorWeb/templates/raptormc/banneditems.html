@@ -77,19 +77,54 @@
           </div>
           <div class="modal-body">
             <h5>Nomifactory / Hexxit II</h5>
-            <p>{{ nomi_names }}</p>
+            {% if nomi_names %}
+            {% for player in nomi_names %}
+            <span>{{ player.name }}, </span
+            {% endfor %}
+            {% else %}
+            <span>No players online</span
+            <hr>
+            {% endif %}
             <hr>
             <h5>Enigmatica 6: Expert</h5>
-            <p>{{ e6e_names }}</p>
+            {% if e6e_names %}
+            {% for player in e6e_names %}
+            <span>{{ player.name }}, </span
+            {% endfor %}
+            {% else %}
+            <span>No players online</span
+            {% endif %}
+            <hr>
             <hr>
             <h5>Chroma Technology 2</h5>
-            <p>{{ ct2_names }}</p>
+            {% if ct2_names %}
+            {% for player in ct2_names %}
+            <span>{{ player.name }}, </span
+            {% endfor %}
+            {% else %}
+            <span>No players online</span
+            {% endif %}
+            <hr>
             <hr>
             <h5>FTB Ultimate: Anniversary</h5>
-            <p>{{ ftbu_names }}</p>
+            {% if ftbu_names %}
+            {% for player in ftbu_names %}
+            <span>{{ player.name }}, </span
+            {% endfor %}
+            {% else %}
+            <span>No players online</span
+            {% endif %}
+            <hr>
             <hr>
             <h5>FTB OceanBlock</h5>
-            <p>{{ ob_names }}</p>
+            {% if ob_names %}
+            {% for player in ob_names %}
+            <span>{{ player.name }}, </span
+            {% endfor %}
+            {% else %}
+            <span>No players online</span
+            {% endif %}
+            <hr>
           </div>
         </div>
       </div>
@@ -103,7 +138,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Server is {{ nomi_state }}</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
                Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
           </div>
@@ -119,7 +153,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Server is {{ e6e_state }}</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
                Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
           </div>
@@ -135,7 +168,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Server is {{ ct2_state }}</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
                Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
           </div>
@@ -151,7 +183,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Server is {{ ftbu_state }}</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
                Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
           </div>
@@ -167,7 +198,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Server is {{ ob_state }}</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
                Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
           </div>
@@ -215,12 +245,48 @@
             </div>
 
             <div class="col-xl-8 col-12 row">
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-75" src="{% static 'image/packs/nomi.png' %}" alt="Nomifactory"></button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-75" src="{% static 'image/packs/e6e.png' %}" alt="Enigmatica 6: Expert"></button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-75" src="{% static 'image/packs/ct2.png' %}" alt="Chroma Technology 2"></button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-75" src="{% static 'image/packs/ftbua.png' %}" alt="FTBU Anniversary"></button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-75" src="{% static 'image/packs/oceanblock.png' %}" alt="FTB OceanBlock"></button></span>
-              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-75" src="{% static 'image/packs/hexxit.png' %}" alt="Hexxit II"></button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-75" src="{% static 'image/packs/nomi.png' %}" alt="Nomifactory">
+                {% if nomi_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-75" src="{% static 'image/packs/e6e.png' %}" alt="Enigmatica 6: Expert">
+                {% if e6e_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-75" src="{% static 'image/packs/ct2.png' %}" alt="Chroma Technology 2">
+                {% if ct2_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-75" src="{% static 'image/packs/ftbua.png' %}" alt="FTBU Anniversary">
+                {% if ftbu_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-75" src="{% static 'image/packs/oceanblock.png' %}" alt="FTB OceanBlock">
+                {% if ob_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
+              <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-75" src="{% static 'image/packs/hexxit.png' %}" alt="Hexxit II">
+                {% if hexxit_state %}
+                <img class="" src="{% static 'image/online_indicator.png' %}">
+                {% else %}
+                <img class="" src="{% static 'image/offline_indicator.png' %}">
+                {% endif %}
+              </button></span>
             </div>
 
           </i>

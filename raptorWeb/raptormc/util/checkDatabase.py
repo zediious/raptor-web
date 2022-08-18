@@ -1,6 +1,6 @@
 import logging
 
-from raptormc.models import PlayerData, Server
+from raptormc.models import PlayerCount, Server
 
 def confirm_database_integrity():
 
@@ -9,7 +9,7 @@ def confirm_database_integrity():
     try:
 
         test_server = Server.objects.get(server_name="nomi")
-        PlayerData.objects.get(server=test_server)
+        PlayerCount.objects.get(server=test_server)
         
         LOGGER.error("[INFO] Tested for needed database objects, all good")
 
@@ -33,13 +33,13 @@ def confirm_database_integrity():
         hexxit.save()
         network.save()
 
-        n_players = PlayerData.objects.create(server=nomi, player_count=0)
-        e_players = PlayerData.objects.create(server=e6e, player_count=0)
-        c_players = PlayerData.objects.create(server=ct2, player_count=0)
-        f_players = PlayerData.objects.create(server=ftbua, player_count=0)
-        o_players = PlayerData.objects.create(server=ob, player_count=0)
-        h_players = PlayerData.objects.create(server=hexxit, player_count=0)
-        total_players = PlayerData.objects.create(server=network, player_count=0)
+        n_players = PlayerCount.objects.create(server=nomi, player_count=0)
+        e_players = PlayerCount.objects.create(server=e6e, player_count=0)
+        c_players = PlayerCount.objects.create(server=ct2, player_count=0)
+        f_players = PlayerCount.objects.create(server=ftbua, player_count=0)
+        o_players = PlayerCount.objects.create(server=ob, player_count=0)
+        h_players = PlayerCount.objects.create(server=hexxit, player_count=0)
+        total_players = PlayerCount.objects.create(server=network, player_count=0)
 
         n_players.save()
         e_players.save()
