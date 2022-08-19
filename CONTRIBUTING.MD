@@ -26,6 +26,10 @@
 
 6) `python manage.py migrate` `python manage.py makemigrations <app>` `python manage.py migrate` `python manage.py shell`
 
+7) Within the path `djangoWork/lib/python3.10/site-packages/mcstatus/protocol` open the file `connection.py` Find the method `close` of the `SocketConnection` class.
+
+8) Comment out the following line in the above method `self.socket.shutdown(socket.SHUT_RDWR)`. The sockets we open never have more than one handle, as such this `shutdown()` causes an error, albeit it being non-critical.
+
 ### NPM
 
 - **Incomplete**

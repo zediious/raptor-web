@@ -1,17 +1,18 @@
-from json import loads, dump
-from requests import get
-
+from multiprocessing import connection
+from sqlite3 import Time
+from mcstatus import JavaServer
+            
 class PlayerCounts():
     """
     Object containing data structures and methods used for polling
     mcapi.us for information about Minecraft Servers.
     """ 
-    # MCAPI request URLs for each server
-    NOMI_ADDRESS = "https://mcapi.us/server/status?ip=nomi.shadowraptor.net";
-    OB_ADDRESS = "https://mcapi.us/server/status?ip=ob.shadowraptor.net";
-    FTBU_ADDRESS = "https://mcapi.us/server/status?ip=ftbu.shadowraptor.net";
-    CT2_ADDRESS = "https://mcapi.us/server/status?ip=ct2.shadowraptor.net";
-    E6E_ADDRESS = "https://mcapi.us/server/status?ip=e6e.shadowraptor.net";
+    # Domain names for servers
+    NOMI_ADDRESS = "nomi.shadowraptor.net"
+    OB_ADDRESS = "ob.shadowraptor.net"
+    FTBU_ADDRESS = "ftbu.shadowraptor.net"
+    CT2_ADDRESS = "ct2.shadowraptor.net"
+    E6E_ADDRESS = "e6e.shadowraptor.net"
     # Dict to track player counts and names in each server internally
     currentPlayers = {
         "totalCount": 0,
@@ -62,35 +63,36 @@ class PlayerCounts():
         Returns a string that represents a key in the "currentPlayers" 
         Dictionary, gathered from API request "ADDRESS" parameter.
         """
-        return str(ADDRESS.split(".")[1].split("=")[1])
+        return str(ADDRESS.split(".")[0])
 
-    def request_info(self, ADDRESS, KEY):
+    def request_info(self, ADDRESS, PORT, KEY):
         """
         Sets the "count", "names" and "online" keys within the provided "KEY" parameter
         to values gathered from an API request "ADDRESS" parameter.
         """
         if type(ADDRESS) == type("") and type(KEY) == type(""):
 
-            serverJSON = loads(get(ADDRESS).text)
+            try:
 
-            if serverJSON["status"] != "error" and serverJSON["online"]:
+                serverJSON = JavaServer(ADDRESS, PORT).query()
 
                 self.currentPlayers[KEY]["online"] = True
-                
-                self.currentPlayers[KEY]["count"] += serverJSON["players"]["now"]
+            
+                self.currentPlayers[KEY]["count"] += serverJSON.players.online
 
-                self.currentPlayers["totalCount"] += serverJSON["players"]["now"]
+                self.currentPlayers["totalCount"] += serverJSON.players.online
 
-                for player in serverJSON["players"]["sample"]:
+                for player in serverJSON.players.names:
 
-                    self.currentPlayers[KEY]["names"].append(player["name"])
+                    self.currentPlayers[KEY]["names"].append(player)
+
+            except TimeoutError:
+
+                self.currentPlayers[KEY]["online"] = False
 
         else:
             
             raise TypeError
-        
-        with open('playerCounts.LOCK', 'w') as lock_file:
-            dump(serverJSON, lock_file)
 
     def get_current_players(self):
         """
@@ -127,10 +129,13 @@ class PlayerCounts():
 
         }
 
-        self.request_info(self.NOMI_ADDRESS, self.parse_key(self.NOMI_ADDRESS))
-        self.request_info(self.FTBU_ADDRESS, self.parse_key(self.FTBU_ADDRESS))
-        self.request_info(self.OB_ADDRESS, self.parse_key(self.OB_ADDRESS))
-        self.request_info(self.CT2_ADDRESS, self.parse_key(self.CT2_ADDRESS))
-        self.request_info(self.E6E_ADDRESS, self.parse_key(self.E6E_ADDRESS))
+        self.request_info(self.NOMI_ADDRESS, 25566, self.parse_key(self.NOMI_ADDRESS))
+        self.request_info(self.FTBU_ADDRESS, 25568, self.parse_key(self.FTBU_ADDRESS))
+        self.request_info(self.OB_ADDRESS, 25567, self.parse_key(self.OB_ADDRESS))
+        self.request_info(self.CT2_ADDRESS, 25569, self.parse_key(self.CT2_ADDRESS))
+        self.request_info(self.E6E_ADDRESS, 25570, self.parse_key(self.E6E_ADDRESS))
+
+        with open('playerCounts.LOCK', 'w') as lock_file:
+            lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")
 
         return dict(self.currentPlayers)

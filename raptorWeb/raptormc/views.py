@@ -107,7 +107,8 @@ def playerPoll():
                                             "ftbu_state": ShadowRaptor.FTBU_STATE.server_state,
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
                                             "ob_state": ShadowRaptor.OB_STATE.server_state,
-                                            "hexxit_names": "not implemented"}
+                                            "hexxit_names": "not implemented",
+                                            "hexxit_state": False}
 
             ShadowRaptor.LOGGER.error("[INFO] Request made, playerCounts.py ran")
 

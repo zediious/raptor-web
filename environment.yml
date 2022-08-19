@@ -3,4 +3,7 @@ dependencies:
   - python=3.10.4
   - django=3.2.5
   - requests=2.28.1
+  - mcstatus=9.3.0
+  - dnspython=2.2.1
+  - asyncio-dgram-2.1.2
   
