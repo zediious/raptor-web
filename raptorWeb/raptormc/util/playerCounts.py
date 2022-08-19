@@ -88,7 +88,7 @@ class PlayerCounts():
 
             except TimeoutError:
 
-                self.currentPlayers[KEY]["online"] = False
+                pass
 
         else:
             

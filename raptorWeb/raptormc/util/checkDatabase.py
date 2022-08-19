@@ -23,6 +23,8 @@ def confirm_database_integrity():
     except:
         
         LOGGER.error("[WARN] Needed database entries for playerCounts.py not present. Creating them now.")
+
+        Server.objects.all().delete()
         
         nomi = Server.objects.create(server_name="nomi")
         e6e = Server.objects.create(server_name="e6e")

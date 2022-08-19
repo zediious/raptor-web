@@ -98,15 +98,15 @@ def playerPoll():
             
             player_poller.currentPlayers_DB = {"player_count": totalCount,
                                             "nomi_names": player_names.filter(server=Server.objects.get(server_name="nomi")),
-                                            "nomi_state": ShadowRaptor.NOMI_STATE.server_state,
+                                            "nomi_state": player_data["nomi"]["online"],
                                             "e6e_names": player_names.filter(server=Server.objects.get(server_name="e6e")),
-                                            "e6e_state": ShadowRaptor.E6E_STATE.server_state,
+                                            "e6e_state": player_data["e6e"]["online"],
                                             "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
-                                            "ct2_state": ShadowRaptor.CT2_STATE.server_state,
+                                            "ct2_state": player_data["ct2"]["online"],
                                             "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
-                                            "ftbu_state": ShadowRaptor.FTBU_STATE.server_state,
+                                            "ftbu_state": player_data["ftbu"]["online"],
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
-                                            "ob_state": ShadowRaptor.OB_STATE.server_state,
+                                            "ob_state": player_data["ob"]["online"],
                                             "hexxit_names": "not implemented",
                                             "hexxit_state": False}
 
