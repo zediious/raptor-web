@@ -16,6 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
+RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
+APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 STATIC_DIR = join(BASE_DIR, "static")
 
 # Quick-start development settings - unsuitable for production

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ShadowRaptor | Rules</title>
+    <title>ShadowRaptor | Home</title>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
@@ -25,7 +25,7 @@
             <img class="w-25" src="{% static 'image/letters.png' %}">
           </a>
         </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse mt-3 mb-2" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
             <li class="nav-item"> 
@@ -33,7 +33,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link active text-white text-nowrap fs-5" href="#">Banned Items</a>
+              <a class="nav-link text-white text-nowrap fs-5" href="/banneditems">Banned Items</a>
             </li>
 
             <li class="nav-item">
@@ -56,7 +56,7 @@
               <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,400">More</a>
               <ul class="dropdown-menu dropdown-menu-start bg-dark">
                 <li><a class="dropdown-item text-white" href="#">Vote for Us</a></li>
-                <li><a class="dropdown-item text-white" href="/applications">Staff Applications</a></li>
+                <li><a class="dropdown-item active text-white" href="#">Staff Applications</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments</a></li>
                 <li><a class="dropdown-item text-white" href="https://hexxitmap.shadowraptor.net/" target="_blank">Hexxit Map</a></li>
@@ -292,36 +292,56 @@
       
     </div>
 
-    <main id="home" class="container-flex m-5 mt-3">
+    <main id="home" class="container-flex m-5 mt-4">
 
-      <section id="ruleIntro" class="container">
+      <section id="welcome" class="container">
 
-        <header class="card bg-transparent border-white text-white p-3 mt-3">
-          <h3 class="display-4 fw-bold text-center">ShadowRaptor Banned Items</h3>
+        <header class="card bg-transparent border-white text-white p-3 mt-4">
+          <h3 class="display-4 fw-bold text-center">ShadowRaptor Staff Applications</h3>
           <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
             illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
         </header>
 
       </section>
-
-      <section id="ruleBoxes" class="row mt-3">
       
-        <div class="col-12 col-md-12">
-          <div class="card bg-light p-3 mt-4 opacity-75 container">
-            <h3 class="display-6 fw-bold text-center text-break">Nomifactory</h3>
-            <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-              illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
-          </div>
+      <section class="container">
+
+        <div class="row">
+
+            <a href="/applications/modapp/">
+                <div class="col-12 mt-2 p-3">
+
+                    <div class="card m-5 mt-0 mb-0 opacity-75">
+    
+                        <p class="display-5 text-black text-center">Moderator Application</p>
+    
+                    </div>
+    
+                </div>
+            </a>
+    
+            <a href="/applications/adminapp/">
+                <div class="col-12 mt-2 p-3">
+
+                    <div class="card m-5 mt-0 mb-0 opacity-75">
+    
+                        <p class="display-5 text-black text-center" >Admin Application</p>
+    
+                    </div>
+    
+                </div>
+            </a>
+
         </div>
-  
+
       </section>
 
     </main>
 
-    <footer class="opacity-25">
+    <footer>
 
       <div class="container">
-        <p class="text-center m-0">
+        <p class="text-center">
           <a class="text-white" href="https://github.com/zediious">Web App/Front-end created by Zediious</a>
         </p>
         <p class="text-center">
@@ -330,7 +350,7 @@
       </div>
 
     </footer>
-
+    
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/particles.js' %}"></script>
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
@@ -340,7 +360,7 @@
         console.log('Particles loaded');
       });
     </script>
-
+    
   </body>
 
 </html>

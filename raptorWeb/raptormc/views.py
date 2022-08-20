@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render
 from os.path import join, getmtime
 from time import time
@@ -7,6 +8,7 @@ from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
 from raptormc.util import checkDatabase
 from raptormc.models import PlayerCount, PlayerName, Server
+from raptormc.forms import AdminApp, ModApp
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
@@ -24,25 +26,86 @@ class ShadowRaptor():
         Views that act as static pages of information
         """
         def home_servers(request):
-            
+            """
+            Homepage with general information
+            """
             playerPoll()
             save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = player_poller.currentPlayers_DB)
         
         def rules(request):
-
+            """
+            Rules page containing general and server-specific rules
+            """
             playerPoll()
             save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context = player_poller.currentPlayers_DB)
             
         def banned_items(request):
-
+            """
+            Contains lists of items that are banned on each server
+            """
             playerPoll()
             save_models()
 
             return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context = player_poller.currentPlayers_DB)
+
+        def apps(request):
+            """
+            Provide links to each staff application
+            """
+            playerPoll()
+            save_models()
+
+            return render(request, join(settings.APPLICATIONS_DIR, 'staffapps.html'), context=player_poller.currentPlayers_DB)
+        
+    class Application():
+        """
+        Views that contain forms and applications
+        """
+        def mod_app(request):
+            """
+            Moderator Application
+            """
+            playerPoll()
+            save_models()
+            
+            mod_app = ModApp()
+
+            player_poller.currentPlayers_DB["mod_form"] = mod_app
+
+            if request.method == "POST":
+
+                mod_app = ModApp(request.POST)
+
+                if mod_app.is_valid():
+
+                    ShadowRaptor.LOGGER.error("Mod Application IS VALID!")
+
+            return render(request, join(settings.APPLICATIONS_DIR, 'modapp.html'), context=player_poller.currentPlayers_DB)
+            
+        def admin_app(request):
+            """
+            Admin Application
+            """
+            playerPoll()
+            save_models()
+            
+            admin_app = AdminApp()
+
+            player_poller.currentPlayers_DB["admin_form"] = admin_app
+
+            if request.method == "POST":
+
+                admin_app = ModApp(request.POST)
+
+                if admin_app.is_valid():
+
+                    ShadowRaptor.LOGGER.error("Admin Application IS VALID!")
+
+            return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=player_poller.currentPlayers_DB)
 
 def after_integrity():
     """
