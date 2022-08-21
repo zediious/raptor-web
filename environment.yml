@@ -5,6 +5,6 @@ dependencies:
   - requests=2.28.1
   - mcstatus=9.3.0
   - dnspython=2.2.1
-  - asyncio-dgram-2.1.2
+  - asyncio-dgram=2.1.2
   - django-bootstrap5=22.1
   
