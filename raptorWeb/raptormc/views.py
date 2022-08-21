@@ -73,7 +73,9 @@ class ShadowRaptor():
             
             mod_app = ModApp()
 
-            player_poller.currentPlayers_DB["modform"] = mod_app
+            dictionary = player_poller.currentPlayers_DB
+
+            dictionary["modform"] = mod_app
 
             if request.method == "POST":
 
@@ -84,7 +86,7 @@ class ShadowRaptor():
                     ShadowRaptor.LOGGER.error("[INFO] Mod Application submitted!")
                     ShadowRaptor.LOGGER.error("[INFO] {}".format(mod_app.cleaned_data))
                     new_app = mod_app.save()
-                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=player_poller.currentPlayers_DB)
+                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
                 else:
 
@@ -101,7 +103,9 @@ class ShadowRaptor():
                         
             admin_app = AdminApp()
 
-            player_poller.currentPlayers_DB["admin_form"] = admin_app
+            dictionary = player_poller.currentPlayers_DB
+
+            dictionary["admin_form"] = admin_app
 
             if request.method == "POST":
 
@@ -112,7 +116,7 @@ class ShadowRaptor():
                     ShadowRaptor.LOGGER.error("[INFO] Admin Application submitted.!")
                     ShadowRaptor.LOGGER.error("[INFO] {}".format(admin_app.cleaned_data))
                     new_app = admin_app.save()
-                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=player_poller.currentPlayers_DB)
+                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
                 else:
 
