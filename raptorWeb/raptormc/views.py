@@ -83,6 +83,7 @@ class ShadowRaptor():
 
                     ShadowRaptor.LOGGER.error("[INFO] Mod Application submitted!")
                     ShadowRaptor.LOGGER.error("[INFO] {}".format(mod_app.cleaned_data))
+                    new_app = mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=player_poller.currentPlayers_DB)
 
                 else:
@@ -110,6 +111,7 @@ class ShadowRaptor():
 
                     ShadowRaptor.LOGGER.error("[INFO] Admin Application submitted.!")
                     ShadowRaptor.LOGGER.error("[INFO] {}".format(admin_app.cleaned_data))
+                    new_app = admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=player_poller.currentPlayers_DB)
 
                 else:
