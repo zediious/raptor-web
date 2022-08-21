@@ -118,18 +118,6 @@ class ShadowRaptor():
 
             return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=player_poller.currentPlayers_DB)
 
-def after_integrity():
-    """
-    Gets server objects from the database, only to be run
-    after database integrity has been confirmed.
-    """
-    ShadowRaptor.NOMI_STATE = Server.objects.get(server_name="nomi")
-    ShadowRaptor.E6E_STATE = Server.objects.get(server_name="e6e")
-    ShadowRaptor.CT2_STATE = Server.objects.get(server_name="ct2")
-    ShadowRaptor.FTBU_STATE = Server.objects.get(server_name="ftbu")
-    ShadowRaptor.OB_STATE = Server.objects.get(server_name="ob")
-    ShadowRaptor.HEXXIT_STATE = Server.objects.get(server_name="hexxit")
-
 def playerPoll():
     """
     Request Player data From MCAPI and add PlayerName and PlayerCount
@@ -146,8 +134,6 @@ def playerPoll():
             player_data = player_poller.get_current_players()
 
             checkDatabase.confirm_database_integrity()
-
-            after_integrity()
 
             PlayerCount.objects.all().delete()
             PlayerName.objects.all().delete()
