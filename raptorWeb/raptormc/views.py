@@ -100,7 +100,7 @@ class ShadowRaptor():
 
             if request.method == "POST":
 
-                admin_app = ModApp(request.POST)
+                admin_app = AdminApp(request.POST)
 
                 if admin_app.is_valid():
 
