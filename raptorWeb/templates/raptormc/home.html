@@ -172,19 +172,19 @@
             <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
               <span class="navbar-toggler-icon" ></span>
             </button>
-            <a class="navbar-brand active float-start m-3 mt-0 mb-0" href="#">
+            <a class="navbar-brand float-start m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
               <img class="w-25" src="{% static 'image/letters.webp' %}">
             </a>
           </div>
-          <div class="collapse navbar-collapse mt-3 mb-2" id="navbarSupportedContent">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
   
               <li class="nav-item"> 
-                <a class="nav-link text-white text-nowrap fs-5" href="/rules">Rules</a> 
+                <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
               </li>
   
               <li class="nav-item">
-                <a class="nav-link text-white text-nowrap fs-5" href="/banneditems">Banned Items</a>
+                <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
               </li>
   
               <li class="nav-item">
@@ -207,7 +207,7 @@
                 <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,400">More</a>
                 <ul class="dropdown-menu dropdown-menu-start bg-dark">
                   <li><a class="dropdown-item text-white" href="#">Vote for Us</a></li>
-                  <li><a class="dropdown-item text-white" href="/applications">Staff Applications</a></li>
+                  <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments</a></li>
                   <li><a class="dropdown-item text-white" href="https://hexxitmap.shadowraptor.net/" target="_blank">Hexxit Map</a></li>
@@ -331,7 +331,7 @@
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
 
     <script>
-      particlesJS.load('particles-js', 'static/asset/particles.json', function() {
+      particlesJS.load('particles-js', '{% static 'asset/particles.json' %}', function() {
         console.log('Particles loaded');
       });
     </script>

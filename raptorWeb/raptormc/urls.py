@@ -4,6 +4,8 @@ from . import views
 
 SR = views.ShadowRaptor
 
+app_name = "raptormc"
+
 urlpatterns = [
 
     path('', SR.Info.home_servers, name="home"),
