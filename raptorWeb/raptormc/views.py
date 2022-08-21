@@ -83,6 +83,7 @@ class ShadowRaptor():
                 if mod_app.is_valid():
 
                     ShadowRaptor.LOGGER.error("Mod Application IS VALID!")
+                    ShadowRaptor.LOGGER.error(mod_app.cleaned_data)
 
             return render(request, join(settings.APPLICATIONS_DIR, 'modapp.html'), context=player_poller.currentPlayers_DB)
             
@@ -104,6 +105,7 @@ class ShadowRaptor():
                 if admin_app.is_valid():
 
                     ShadowRaptor.LOGGER.error("Admin Application IS VALID!")
+                    ShadowRaptor.LOGGER.error(admin_app.cleaned_data)
 
             return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=player_poller.currentPlayers_DB)
 

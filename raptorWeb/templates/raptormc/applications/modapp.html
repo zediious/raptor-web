@@ -297,7 +297,7 @@
       <section id="welcome" class="container">
 
         <header class="card bg-transparent border-white text-white p-3 mt-4">
-          <h3 class="display-4 fw-bold text-center">ShadowRaptor Staff Applications</h3>
+          <h3 class="display-4 fw-bold text-center">Moderator Application</h3>
           <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
             illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
         </header>
@@ -306,15 +306,15 @@
       
       <section>
 
-        <div class="container mt-5 p-3 border">
+        <div class="container card opacity-75 mt-4 p-3 border">
 
-            <form method="POST">
+          <form method="POST">
 
-                {{ mod_form.as_p }}
-                {% csrf_token %}
-                <input id="adminSubmit" type="submit" class="btn btn-primary" value="Submit Application">
+              {{ mod_form.as_p }}
+              {% csrf_token %}
+              <input id="adminSubmit" type="submit" class="btn btn-primary" value="Submit Application">
 
-            </form>
+          </form>
 
         </div>
 
