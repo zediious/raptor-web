@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_bootstrap5',
     'raptormc',
 ]
 
@@ -138,3 +139,10 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BACKGROUND_TASK_RUN_ASYNC = True
+
+BOOTSTRAP5 = {
+
+    # Set placeholder attributes to label if no placeholder is provided.
+    'set_placeholder': False,
+
+}

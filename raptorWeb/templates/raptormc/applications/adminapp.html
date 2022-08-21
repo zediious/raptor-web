@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 {% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_messages %}
 
 <html lang="en" dir="ltr">
 
@@ -315,11 +317,12 @@
 
         <div class="container card opacity-75 mt-4 p-3">
 
-          <form method="POST">
+          <form class="form p-3" method="POST">
 
-              {{ admin_form.as_p }}
-              {% csrf_token %}
-              <input id="adminSubmit" type="submit" class="btn btn-primary" value="Submit Application">
+            {% csrf_token %}  
+            {% bootstrap_form admin_form %}
+            {% bootstrap_button button_type="submit" content="Submit Application" %}
+            {% bootstrap_button button_type="reset" content="Reset" %}
 
           </form>
 
