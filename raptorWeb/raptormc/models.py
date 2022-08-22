@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Server(models.Model):
     """
@@ -101,3 +102,16 @@ class ModeratorApplication(models.Model):
     class Meta:
         verbose_name = 'Moderator Application'
         verbose_name_plural = 'Moderator Applications'
+
+class UserProfileInfo(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
+    minecraft_username = models.CharField(max_length=50)
+    discord_username = models.CharField(max_length=50, blank=True)
+    favorite_modpack = models.CharField(max_length=80, blank=True)
+
+    def __str__(self):
+
+        return self.user.username

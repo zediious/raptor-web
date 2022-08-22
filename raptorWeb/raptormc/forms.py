@@ -1,9 +1,10 @@
 from turtle import position
 from django import forms
 from django.core import validators
+from django.contrib.auth.models import User
 import logging
 
-from raptormc.models import AdminApplication, ModeratorApplication
+from raptormc.models import AdminApplication, ModeratorApplication, UserProfileInfo
 
 LOGGER = logging.Logger("form_validator_logger")
 
@@ -118,3 +119,19 @@ class ModApp(forms.ModelForm):
         if not(discord == v_discord):
 
             raise forms.ValidationError("Discord username fields must match.")
+
+class UserForm(forms.ModelForm):
+
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta():
+
+        model = User
+        fields = ('username', 'email', 'password')
+
+class UserProfileInfo(forms.ModelForm):
+
+    class Meta():
+
+        model = UserProfileInfo
+        fields = ('profile_picture', 'minecraft_username', 'discord_username', 'favorite_modpack')

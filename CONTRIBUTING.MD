@@ -1,5 +1,7 @@
 # Environment setup
 
+### This is currently haphazard, mostly just putting reference for a later data, when I will format this well.
+
 ## **Requirements**
 
 - [Visual Studio Code](https://code.visualstudio.com/) (*Highly reccomended for this stack*)
@@ -30,6 +32,7 @@
 
 8) Comment out the following line in the above method `self.socket.shutdown(socket.SHUT_RDWR)`. The sockets we open never have more than one handle, as such this `shutdown()` causes an error, albeit it being non-critical.
 
+9) Generate `environment.yml` file from environment packages. Use within top level of project: `conda env export > environment.yml`
 ### NPM
 
-- **Incomplete**
+- **Front end tooling not established**

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms import TextInput, Textarea
 from django.db import models
-from raptormc.models import Server, PlayerCount, PlayerName, AdminApplication, ModeratorApplication
+from raptormc.models import Server, PlayerCount, PlayerName, AdminApplication, ModeratorApplication, UserProfileInfo
 
 class AdminApplicationAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -20,3 +20,4 @@ admin.site.register(PlayerCount)
 admin.site.register(PlayerName)
 admin.site.register(AdminApplication, AdminApplicationAdmin)
 admin.site.register(ModeratorApplication, ModeratorApplicationAdmin)
+admin.site.register(UserProfileInfo)
