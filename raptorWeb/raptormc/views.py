@@ -84,7 +84,7 @@ class ShadowRaptor():
                 if mod_app.is_valid():
 
                     ShadowRaptor.LOGGER.error("[INFO] Mod Application submitted!")
-                    ShadowRaptor.LOGGER.error("[INFO] {}".format(mod_app.cleaned_data))
+                    ShadowRaptor.LOGGER.error("[INFO] Discord ID of applicant: {}".format(mod_app.cleaned_data["discord_name"]))
                     new_app = mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
@@ -114,7 +114,7 @@ class ShadowRaptor():
                 if admin_app.is_valid():
 
                     ShadowRaptor.LOGGER.error("[INFO] Admin Application submitted.!")
-                    ShadowRaptor.LOGGER.error("[INFO] {}".format(admin_app.cleaned_data))
+                    ShadowRaptor.LOGGER.error("[INFO] Discord ID of applicant: {}".format(admin_app.cleaned_data["discord_name"]))
                     new_app = admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
