@@ -23,7 +23,9 @@
     <section>
 
       {% if registered %}
-        <p class="fs-4">You have registered<p>
+        <div class="card bg-light p-3 mt-4 opacity-75 container">
+          <h3 class="display-4 fw-bold text-center">Thank you for creating an account!</h3>
+        </div>
       {% else %}
         <div class="card bg-light p-3 mt-4 opacity-75 container">
           <form method="POST" enctype="multipart/form-data">

@@ -59,6 +59,7 @@ class ShadowRaptor():
             extra_form = UserProfileInfoForm()
 
             dictionary = player_poller.currentPlayers_DB
+            dictionary["registered"] = registered
             dictionary["register_form"] = register_form
             dictionary["extra_form"] = extra_form
 
@@ -88,8 +89,9 @@ class ShadowRaptor():
                     new_user_extra.save()
 
                     registered = True
+                    dictionary["registered"] = registered
 
-                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
+                    return render(request, join(settings.APPLICATIONS_DIR, 'registration.html'), context=dictionary)
 
                 else:
 
