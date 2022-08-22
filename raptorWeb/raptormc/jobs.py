@@ -18,6 +18,9 @@ class RaptorWare:
         """
         One-time configuration and initialization.
         """
+        playerPoll()
+        save_models()
+
         self.get_response = get_response
 
     def __call__(self, request):
