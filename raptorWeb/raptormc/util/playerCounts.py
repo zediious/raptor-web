@@ -5,7 +5,7 @@ from mcstatus import JavaServer
 class PlayerCounts():
     """
     Object containing data structures and methods used for polling
-    mcapi.us for information about Minecraft Servers.
+    ShadowRaptor Minecraft servers for state and player information.
     """ 
     # Domain names for servers
     NOMI_ADDRESS = "nomi.shadowraptor.net"
@@ -61,14 +61,14 @@ class PlayerCounts():
     def parse_key (self, ADDRESS):
         """
         Returns a string that represents a key in the "currentPlayers" 
-        Dictionary, gathered from API request "ADDRESS" parameter.
+        Dictionary, gathered from domain name "ADDRESS" parameter.
         """
         return str(ADDRESS.split(".")[0])
 
     def request_info(self, ADDRESS, PORT, KEY):
         """
         Sets the "count", "names" and "online" keys within the provided "KEY" parameter
-        to values gathered from an API request "ADDRESS" parameter.
+        to values gathered from a domain name "ADDRESS" parameter.
         """
         if type(ADDRESS) == type("") and type(KEY) == type(""):
 

@@ -8,25 +8,33 @@ from raptormc.models import AdminApplication, ModeratorApplication
 LOGGER = logging.Logger("form_validator_logger")
 
 def check_for_hash(value):
-
+    """
+    Ensure Discord name value contains a '#' symbol
+    """
     if value.find("#") < 0:
 
         raise forms.ValidationError("Format your Discord Username as indicated in the help text.")
 
 def validate_age(value):
-
+    """
+    Ensure age value is at least 10
+    """
     if value < 10:
 
         raise forms.ValidationError("You must be at least ten years old to apply for staff")
 
 def validate_admin_age(value):
-
+    """
+    Ensure age value is at least 18
+    """
     if value < 18:
 
         raise forms.ValidationError("You must be at least 18 years old to apply directly for Admin. One can still be promoted from a lower rank.")
 
 class AdminApp(forms.ModelForm):
-
+    """
+    ModelForm for an Admin Application
+    """
     position = forms.CharField(required=True, widget=forms.HiddenInput, initial="Admin")
     age = forms.IntegerField(label="How old are you?", max_value=99 , validators=[validate_admin_age])
     time = forms.CharField(label="What Timezone do you live in? How often and at what time of the day will you be available?", max_length=150)
@@ -51,7 +59,10 @@ class AdminApp(forms.ModelForm):
         exclude = ['verify_mc', 'verify_discord', 'trap']
 
     def clean(self):
-
+        """
+        Overrides default clean, while calling the superclass clean()
+        Ensures MC and Discord names are the same in validation fields.
+        """
         clean_data = super().clean()
         discord = clean_data.get("discord_name")
         v_discord = clean_data.get("verify_discord")
@@ -67,7 +78,9 @@ class AdminApp(forms.ModelForm):
             raise forms.ValidationError("Discord username fields must match.")
 
 class ModApp(forms.ModelForm):
-
+    """
+    ModelForm for a Moderator Application
+    """
     position = forms.CharField(required=True, widget=forms.HiddenInput, initial="Mod")
     age = forms.IntegerField(label="How old are you?", max_value=99 , validators=[validate_age])
     time = forms.CharField(label="What Timezone do you live in? How often and at what time of the day will you be available?", max_length=150)
@@ -88,7 +101,10 @@ class ModApp(forms.ModelForm):
         exclude = ['verify_mc', 'verify_discord', 'trap']
     
     def clean(self):
-
+        """
+        Overrides default clean, while calling the superclass clean()
+        Ensures MC and Discord names are the same in validation fields.
+        """
         clean_data = super().clean()
         discord = clean_data.get("discord_name")
         v_discord = clean_data.get("verify_discord")
