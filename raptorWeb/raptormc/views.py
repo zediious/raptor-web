@@ -146,8 +146,6 @@ def playerPoll():
 
             PlayerCount.objects.create(server=Server.objects.get(server_name="network"), player_count=player_data["totalCount"])
 
-            totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
-
             for key in player_data:
 
                 if key == "totalCount":
@@ -160,6 +158,7 @@ def playerPoll():
 
                 PlayerCount.objects.create(server=Server.objects.get(server_name=key), player_count=player_data[key]["count"])
 
+            totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
             player_names = PlayerName.objects.all()
             
             player_poller.currentPlayers_DB = {"player_count": totalCount,
