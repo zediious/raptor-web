@@ -90,9 +90,9 @@ class ShadowRaptor():
 
                 else:
 
-                    player_poller.currentPlayers_DB["modform"] = mod_app
+                    dictionary["modform"] = mod_app
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'modapp.html'), context=player_poller.currentPlayers_DB)
+            return render(request, join(settings.APPLICATIONS_DIR, 'modapp.html'), context=dictionary)
             
         def admin_app(request):
             """
@@ -120,9 +120,9 @@ class ShadowRaptor():
 
                 else:
 
-                    player_poller.currentPlayers_DB["admin_form"] = admin_app
+                    dictionary["admin_form"] = admin_app
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=player_poller.currentPlayers_DB)
+            return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=dictionary)
 
 def playerPoll():
     """
