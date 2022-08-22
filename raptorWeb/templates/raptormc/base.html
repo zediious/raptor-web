@@ -179,13 +179,25 @@
 
       <nav class="navbar bg-dark">
         <div class="container">
-          <div class="navbar-header d-flex">
-            <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
-              <span class="navbar-toggler-icon" ></span>
-            </button>
-            <a class="navbar-brand float-start m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
-              <img class="w-25" src="{% static 'image/letters.webp' %}">
-            </a>
+          <div class="d-flex">
+            <div class="navbar-header d-flex">
+              <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon" ></span>
+              </button>
+              <a class="navbar-brand w-25 m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
+                <img id="navImage" class="w-75" src="{% static 'image/letters.webp' %}">
+              </a>
+            </div>
+            <div class="navbar-header d-flex">
+              <p id="loginRegister" class="mt-2 p-0 m-2 w-75 row">
+                <a class="col btn btn-dark fs-4 border border-2 w-50" href="#" role="button">
+                  <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
+                </a></span>
+                <a class="col btn btn-dark fs-4 border border-2 w-50" href="#" role="button">
+                  <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
+                </a></span>
+              </p>
+            </div>
           </div>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">

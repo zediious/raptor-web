@@ -33,3 +33,22 @@ body {
     background-position: top center;
 
 }
+
+@media (max-width: 991px) {
+    #navImage {
+
+        width: 100%;
+        height: 75%;
+
+    }
+}
+
+@media (min-width: 992px) {
+    #navImage {
+
+        width: 50%;
+        height: 75%;
+
+    }
+}
+
