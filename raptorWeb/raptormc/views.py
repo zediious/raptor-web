@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from os.path import join
+from logging import getLogger
 
 from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
-from raptormc.forms import AdminApp, ModApp
+from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
 player_poller = PlayerCounts()
+
+LOGGER = getLogger(__name__)
 
 class ShadowRaptor():
     """
@@ -46,6 +49,55 @@ class ShadowRaptor():
         """
         Views that contain forms and applications
         """
+        def register(request):
+            """
+            User Registration form
+            """
+            registered = False
+
+            register_form = UserForm()
+            extra_form = UserProfileInfoForm()
+
+            dictionary = player_poller.currentPlayers_DB
+            dictionary["register_form"] = register_form
+            dictionary["extra_form"] = extra_form
+
+            if request.method == "POST":
+
+                register_form = UserForm(request.POST)
+
+                extra_form = UserProfileInfoForm(request.POST)
+
+                dictionary["register_form"] = register_form
+                dictionary["extra_form"] = extra_form
+
+                if register_form.is_valid() and extra_form.is_valid():
+
+                    LOGGER.error("[INFO] A new User has been registered!")
+                    new_user = register_form.save()
+                    new_user.set_password(new_user.password)
+                    new_user.save()
+
+                    new_user_extra = extra_form.save(commit=False)
+                    new_user_extra.user = new_user
+
+                    if "profile_picture" in request.FILES:
+
+                        new_user_extra.profile_picture = request.FILES["profile_picture"]
+
+                    new_user_extra.save()
+
+                    registered = True
+
+                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
+
+                else:
+
+                    dictionary["register_form"] = register_form
+                    dictionary["extra_form"] = extra_form
+
+            return render(request, join(settings.APPLICATIONS_DIR, 'registration.html'), context=dictionary)
+        
         def mod_app(request):
             """
             Moderator Application
@@ -62,8 +114,8 @@ class ShadowRaptor():
 
                 if mod_app.is_valid():
 
-                    ShadowRaptor.LOGGER.error("[INFO] Mod Application submitted!")
-                    ShadowRaptor.LOGGER.error("[INFO] Discord ID of applicant: {}".format(mod_app.cleaned_data["discord_name"]))
+                    LOGGER.error("[INFO] Mod Application submitted!")
+                    LOGGER.error("[INFO] Discord ID of applicant: {}".format(mod_app.cleaned_data["discord_name"]))
                     new_app = mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
@@ -89,8 +141,8 @@ class ShadowRaptor():
 
                 if admin_app.is_valid():
 
-                    ShadowRaptor.LOGGER.error("[INFO] Admin Application submitted.!")
-                    ShadowRaptor.LOGGER.error("[INFO] Discord ID of applicant: {}".format(admin_app.cleaned_data["discord_name"]))
+                    LOGGER.error("[INFO] Admin Application submitted.!")
+                    LOGGER.error("[INFO] Discord ID of applicant: {}".format(admin_app.cleaned_data["discord_name"]))
                     new_app = admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 

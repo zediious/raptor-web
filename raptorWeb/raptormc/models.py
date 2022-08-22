@@ -115,3 +115,7 @@ class UserProfileInfo(models.Model):
     def __str__(self):
 
         return self.user.username
+
+    class Meta:
+        verbose_name = "User - Extra Information"
+        verbose_name_plural = "Users - Extra Information"

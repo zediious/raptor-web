@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+{% extends 'raptormc/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | Register
+  
+</title>
+{% endblock %}
+
+{% block main_block %}
+<section id="register" class="container">
+
+    <header class="card bg-transparent border-white text-white p-3 mt-4">
+      <h3 class="display-4 fw-bold text-center">Register</h3>
+      <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+        illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+    </header>
+
+    <section>
+
+      {% if registered %}
+        <p class="fs-4">You have registered<p>
+      {% else %}
+        <div class="card bg-light p-3 mt-4 opacity-75 container">
+          <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            {% bootstrap_form register_form %}
+            {% bootstrap_form extra_form %}
+            {% bootstrap_button button_type="submit" content="Create Account" %}
+            {% bootstrap_button button_type="reset" content="Reset" %}
+
+          </form>
+        </div>
+      {% endif %}
+
+    </section>
+  
+  </section>
+{% endblock %}
