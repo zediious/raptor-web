@@ -151,6 +151,7 @@ class ShadowRaptor():
             Log out the signed in user
             """
             logout(request)
+            LOGGER.error("[INFO] User logged out!")
             return HttpResponseRedirect('..')
         
         def mod_app(request):
