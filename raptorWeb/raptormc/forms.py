@@ -123,14 +123,30 @@ class ModApp(forms.ModelForm):
 class UserForm(forms.ModelForm):
 
     password = forms.CharField(widget=forms.PasswordInput())
+    password_v = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
 
     class Meta():
 
         model = User
         fields = ('username', 'email', 'password')
 
+    def clean(self):
+        """
+        Overrides default clean, while calling the superclass clean()
+        Ensures password fields are the same.
+        """
+        clean_data = super().clean()
+        password = clean_data.get("password")
+        v_password = clean_data.get("password_v")
+
+        if not(password == v_password):
+
+            raise forms.ValidationError("Password fields must match")
+
 class UserProfileInfoForm(forms.ModelForm):
 
+    discord_username = forms.CharField(max_length=50, validators=[check_for_hash])
+    
     class Meta():
 
         model = UserProfileInfo
