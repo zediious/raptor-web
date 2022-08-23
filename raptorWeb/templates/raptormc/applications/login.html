@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% extends 'raptormc/base.html' %}
+{% load django_bootstrap5 %}
 
 {% block page_title %}
 <title>
@@ -11,4 +12,27 @@
 {% endblock %}
 
 {% block main_block %}
+<section id="login" class="container">
+
+    <header class="card bg-transparent border-white text-white p-3 mt-4">
+      <h3 class="display-4 fw-bold text-center">Login</h3>
+      <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
+        illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+    </header>
+
+    <section>
+
+      <div class="card bg-light p-3 mt-4 opacity-75 container">
+        <form action="{% url 'raptormc:login' %}" method="POST">
+
+          {% csrf_token %}
+          {% bootstrap_form login_form %}
+          {% bootstrap_button button_type="submit" content="Login" %}
+
+        </form>
+      </div>
+
+    </section>
+  
+  </section>
 {% endblock %}

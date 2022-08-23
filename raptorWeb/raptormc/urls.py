@@ -15,8 +15,8 @@ urlpatterns = [
     path('applications/', SR.Info.apps, name="staff_apps"),
     path('applications/mod/', SR.Application.mod_app, name="mod_app"),
     path('applications/admin/', SR.Application.admin_app, name="admin_app"),
-    path('register/', SR.Application.register, name="register")
-    # path('login/', SR.Application.login, name="login")
-
+    path('register/', SR.Application.register, name="register"),
+    path('login/', SR.Application.user_login, name="login"),
+    path('logout/', SR.Application.user_logout, name="logout")
 
 ]

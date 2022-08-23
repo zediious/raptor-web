@@ -1,10 +1,14 @@
 from django.shortcuts import render
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
 from os.path import join
 from logging import getLogger
 
 from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
-from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm
+from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
@@ -99,6 +103,55 @@ class ShadowRaptor():
                     dictionary["extra_form"] = extra_form
 
             return render(request, join(settings.APPLICATIONS_DIR, 'registration.html'), context=dictionary)
+        
+        def user_login(request):
+            """
+            User Login form
+            """
+            login_form = UserLoginForm()
+
+            dictionary = player_poller.currentPlayers_DB
+
+            dictionary["login_form"] = login_form
+
+            if request.method == "POST":
+
+                login_form = UserLoginForm(request.POST)
+
+                if login_form.is_valid():
+
+                    username = login_form.cleaned_data["username"]
+                    password = login_form.cleaned_data["password"]
+
+                    user = authenticate(username=username, password=password)
+
+                    if user:
+
+                        if user.is_active:
+
+                            LOGGER.error("[INFO] User logged in!")
+                            login(request, user)
+                            return HttpResponseRedirect('..')
+
+                        else:
+
+                            return HttpResponse("Account not active")
+
+                    else:
+
+                        LOGGER.error("[INFO] User login attempt failed")
+                        LOGGER.error("[INFO] Attempted User: {}".format(username))
+                        dictionary["login_form"] = login_form
+
+            return render(request, join(settings.APPLICATIONS_DIR, 'login.html'), context=dictionary)
+
+        @login_required
+        def user_logout(request):
+            """
+            Log out the signed in user
+            """
+            logout(request)
+            return HttpResponseRedirect('..')
         
         def mod_app(request):
             """
