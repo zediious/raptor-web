@@ -13,7 +13,7 @@ dependencies:
     - django-bootstrap5==22.1
     - djangorestframework==3.13.1
     - dnspython==2.2.1
-    - mcstatus==9.3.1
+    - mcstatus==9.4.0
     - pillow==9.2.0
     - prompt-toolkit==3.0.30
     - wcwidth==0.2.5
