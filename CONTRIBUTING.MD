@@ -26,13 +26,10 @@
 
 5) In the same terminal, ater creating the `djangoWork` environment from the configuration, run the following command; `conda activate djangoWork`. This will activate the created virtual environment. __You need to run this command each time you begin work.__
 
-6) `python manage.py migrate` `python manage.py makemigrations <app>` `python manage.py migrate` `python manage.py shell`
+6) Run the following commands in sequence to initialize the database; `python manage.py migrate, python manage.py makemigrations raptormc, python manage.py migrate, python manage.py shell`. Run these commands again any time you make changes to Models.
 
-7) Within the path `djangoWork/lib/python3.10/site-packages/mcstatus/protocol` open the file `connection.py` Find the method `close` of the `SocketConnection` class.
+7) If you ever install a new module, use `pip`, and add it to the `environment.yml` file under the `pip:` category, in the same format as the other packages. `<package-name>=<version>`.
 
-8) Comment out the following line in the above method `self.socket.shutdown(socket.SHUT_RDWR)`. The sockets we open never have more than one handle, as such this `shutdown()` causes an error, albeit it being non-critical.
-
-9) Generate `environment.yml` file from environment packages. Use within top level of project: `conda env export > environment.yml`
 ### NPM
 
 - **Front end tooling not established**
