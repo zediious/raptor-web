@@ -26,9 +26,9 @@ with open(join(BASE_DIR, 'key.txt')) as key:
     SECRET_KEY =  key.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['raptorapp']
+ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
 
 # Application definition
 
