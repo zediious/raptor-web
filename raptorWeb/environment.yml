@@ -17,4 +17,6 @@ dependencies:
     - pillow==9.2.0
     - prompt-toolkit==3.0.30
     - wcwidth==0.2.5
+    - gunicorn==19.6.0
+    - whitenoise==6.2.0
 prefix: /home/jack/software/anaconda3/envs/djangoWork

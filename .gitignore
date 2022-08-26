@@ -130,3 +130,6 @@ dmypy.json
 
 # playerCounts.py LOCK
 playerCounts.LOCK
+
+# Key
+key.txt

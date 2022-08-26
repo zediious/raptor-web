@@ -8,8 +8,12 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 """
 
 import os
+from os.path import join
+from whitenoise import WhiteNoise
 
 from django.core.wsgi import get_wsgi_application
+
+from raptorWeb import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'raptorWeb.settings')
 
