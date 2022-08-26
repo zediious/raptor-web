@@ -1,3 +1,4 @@
+from http import server
 from raptormc.views import player_poller
 from os.path import join, getmtime
 from logging import getLogger
@@ -5,7 +6,7 @@ from time import time
 
 from raptorWeb import settings
 from raptormc.util import checkDatabase
-from raptormc.models import PlayerCount, PlayerName, Server
+from raptormc.models import PlayerCount, PlayerName, Server, ServerInformation
 
 LOGGER = getLogger(__name__)
 
@@ -71,20 +72,56 @@ def playerPoll():
 
             totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
             player_names = PlayerName.objects.all()
+            nomi_info = ServerInformation.objects.get(server=Server.objects.get(server_name="nomi"))
+            e6e_info = ServerInformation.objects.get(server=Server.objects.get(server_name="e6e"))
+            ct2_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ct2"))
+            ftbu_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ftbu"))
+            ob_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ob"))
+            hexxit_info = ServerInformation.objects.get(server=Server.objects.get(server_name="hexxit"))
             
             player_poller.currentPlayers_DB = {"player_count": totalCount,
                                             "nomi_names": player_names.filter(server=Server.objects.get(server_name="nomi")),
                                             "nomi_state": player_data["nomi"]["online"],
+                                            "nomi_info": {
+                                                "address": nomi_info.server_address,
+                                                "description": nomi_info.description,
+                                                "modpack": nomi_info.modpack_url
+                                            },
                                             "e6e_names": player_names.filter(server=Server.objects.get(server_name="e6e")),
                                             "e6e_state": player_data["e6e"]["online"],
+                                            "e6e_info": {
+                                                "address": e6e_info.server_address,
+                                                "description": e6e_info.description,
+                                                "modpack": e6e_info.modpack_url
+                                            },
                                             "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
                                             "ct2_state": player_data["ct2"]["online"],
+                                            "ct2_info": {
+                                                "address": ct2_info.server_address,
+                                                "description": ct2_info.description,
+                                                "modpack": ct2_info.modpack_url
+                                            },
                                             "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
                                             "ftbu_state": player_data["ftbu"]["online"],
+                                            "ftbu_info": {
+                                                "address": ftbu_info.server_address,
+                                                "description": ftbu_info.description,
+                                                "modpack": ftbu_info.modpack_url
+                                            },
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
                                             "ob_state": player_data["ob"]["online"],
+                                            "ob_info": {
+                                                "address": ob_info.server_address,
+                                                "description": ob_info.description,
+                                                "modpack": ob_info.modpack_url
+                                            },
                                             "hexxit_names": "not implemented",
-                                            "hexxit_state": False}
+                                            "hexxit_state": False,
+                                            "hexxit_info": {
+                                                "address": hexxit_info.server_address,
+                                                "description": hexxit_info.description,
+                                                "modpack": hexxit_info.modpack_url
+                                            }}
 
             LOGGER.error("[INFO] Request made, playerCounts.py ran")
 
