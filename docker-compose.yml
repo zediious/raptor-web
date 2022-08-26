@@ -1,20 +1,17 @@
 version: '3'
 
 services:
-  raptor_app:
+  raptorapp:
     image: raptorweb:latest
     command: sh -c "cd raptorWeb &&
                     conda run -n djangoWork python manage.py makemigrations &&
                     conda run -n djangoWork python manage.py migrate &&
-                    conda run -n djangoWork gunicorn raptorWeb.wsgi:application --bind 127.0.0.1:9096"
-    container_name: raptor_app
+                    conda run -n djangoWork gunicorn raptorWeb.wsgi:application --bind 0.0.0.0:80"
+    container_name: raptorapp
     # env_file:
-    #   - ./config/web/web-variables.env
-    # volumes:
-    #   - ./server/raptorWeb:/raptorWeb
-    #   - ./server/config/:/etc
+    #   - ./config/variables.env
     expose:
-      - 9096
+      - 80
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -23,4 +20,4 @@ services:
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d/
     depends_on:
-      - raptor_app
+      - raptorapp

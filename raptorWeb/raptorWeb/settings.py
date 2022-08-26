@@ -23,16 +23,12 @@ MEDIA_DIR = join(BASE_DIR, "media")
 
 with open(join(BASE_DIR, 'key.txt')) as key:
 
-    SECRET_KEY = key
+    SECRET_KEY =  key.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [
-    'http://raptor_app',
-    'http://172.19.0.2:80',
-    'http://172.19.0.2'
-]
+ALLOWED_HOSTS = ['raptorapp']
 
 # Application definition
 
@@ -163,6 +159,10 @@ LOGIN_URL = 'raptormc/applications/login'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BACKGROUND_TASK_RUN_ASYNC = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
 
 BOOTSTRAP5 = {
 
