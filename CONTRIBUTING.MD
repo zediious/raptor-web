@@ -8,6 +8,9 @@
 
 - [anaconda3 Distribution](https://www.anaconda.com/products/distribution)
 
+- [Docker](https://www.docker.com/)
+    - I recommend you utilize VSCode's Docker extension, to easily build and compose containers from within Code.
+
 - ~~[NPM via node.js](https://nodejs.org/en/download/)~~
 
 ## **Steps**
@@ -29,6 +32,15 @@
 6) Run the following commands in sequence to initialize the database; `python manage.py migrate, python manage.py makemigrations raptormc, python manage.py migrate, python manage.py shell`. Run these commands again any time you make changes to Models.
 
 7) If you ever install a new module, use `pip`, and add it to the `environment.yml` file under the `pip:` category, in the same format as the other packages. `<package-name>=<version>`.
+
+### Running dockerized environment
+
+1) Build a docker image from the `Dockerfile` located at the top level of the project directory.
+
+2) `compose up` the `docker-compose.yml` file located in the same directory. This will do the following
+    - Build a container of the RaptorMC website/application, running on `gunicorn`. This container servers `http` over port 80 in the docker network.
+    - Build an nginx container. This container binds to port 443 on the host, and proxies `https` requests to the RaptorMC/django application
+    - (TODO) A MariaDB/SQL database. This will be for development purposes. The actual database for the production site will be operated differently.
 
 ### NPM
 
