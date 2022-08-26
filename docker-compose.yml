@@ -6,6 +6,7 @@ services:
     command: sh -c "cd raptorWeb &&
                     conda run -n djangoWork python manage.py makemigrations &&
                     conda run -n djangoWork python manage.py migrate &&
+                    conda run -n djangoWork python manage.py collectstatic --noinput &&
                     conda run -n djangoWork gunicorn raptorWeb.wsgi:application --bind 0.0.0.0:80"
     container_name: raptorapp
     # env_file:
