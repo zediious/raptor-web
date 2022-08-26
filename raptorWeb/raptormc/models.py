@@ -33,6 +33,11 @@ class PlayerCount(models.Model):
 
         return self.server_state
 
+    class Meta:
+
+        verbose_name = "Player Count"
+        verbose_name_plural = "Player Counts"
+
 class PlayerName(models.Model):
     """
     Represents the name of a player that is on a Minecraft Server.
@@ -52,6 +57,29 @@ class PlayerName(models.Model):
     def get_server(self):
 
         return self.server
+
+    class Meta:
+
+        verbose_name = "Player Name"
+        verbose_name_plural = "Player Names"
+
+class ServerInformation(models.Model):
+    """
+    Contains descriptive elements of a Server.
+    Has a OneToOne relation with a Server
+    """
+    server = models.OneToOneField(Server, on_delete=models.CASCADE)
+    server_address = models.CharField(max_length=50)
+    description = models.TextField(max_length=1500, verbose_name="Server Description")
+    modpack_url = models.URLField(max_length=200, verbose_name="Link to Modpack")
+
+    def __str__(self):
+        return str("Server Information for: {}".format(self.server.server_name))
+
+    class Meta:
+
+        verbose_name = "Server - Information"
+        verbose_name_plural = "Servers - Information"
 
 class AdminApplication(models.Model):
     """
