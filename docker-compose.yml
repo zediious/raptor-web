@@ -16,7 +16,7 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - 80:80
+      - 443:443
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d/
     depends_on:

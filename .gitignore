@@ -133,3 +133,6 @@ playerCounts.LOCK
 
 # Key
 key.txt
+
+# Collected static files
+/config/static/*

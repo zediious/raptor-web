@@ -26,7 +26,7 @@ with open(join(BASE_DIR, 'key.txt')) as key:
     SECRET_KEY =  key.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['raptorapp']
 
@@ -136,6 +136,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = join(join(BASE_DIR, '..'), join('config', 'static'))
 
 # THIS MUST BE NAMED `STATICFILES_DIRS`
 STATICFILES_DIRS = [
