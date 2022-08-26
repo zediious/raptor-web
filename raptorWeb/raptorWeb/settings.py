@@ -74,7 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'raptorWeb.wsgi.application'
-ASGI_APPLICATION = 'raptorweb.asgi.application'
+ASGI_APPLICATION = 'raptorWeb.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
