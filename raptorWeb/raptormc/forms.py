@@ -145,7 +145,7 @@ class UserForm(forms.ModelForm):
 
 class UserProfileInfoForm(forms.ModelForm):
 
-    discord_username = forms.CharField(max_length=50, validators=[check_for_hash])
+    discord_username = forms.CharField(max_length=50, help_text="Format it as such: Zediious#1234", validators=[check_for_hash])
     
     class Meta():
 

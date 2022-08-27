@@ -26,9 +26,9 @@ with open(join(BASE_DIR, 'key.txt')) as key:
     SECRET_KEY =  key.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['raptorapp']
+ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
 
 # Application definition
 
@@ -74,7 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'raptorWeb.wsgi.application'
-ASGI_APPLICATION = 'raptorweb.asgi.application'
+ASGI_APPLICATION = 'raptorWeb.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

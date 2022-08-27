@@ -11,6 +11,8 @@ services:
     container_name: raptorapp
     # env_file:
     #   - ./config/variables.env
+    volumes:
+      - ./raptorWeb/db.sqlite3:/raptorWeb/db.sqlite3
     expose:
       - 80
   nginx:
