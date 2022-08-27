@@ -10,15 +10,22 @@ def confirm_database_integrity():
     
     try:
 
-        Server.objects.get(server_name="nomi")
-        Server.objects.get(server_name="e6e")
-        Server.objects.get(server_name="ct2")
-        Server.objects.get(server_name="ftbu")
-        Server.objects.get(server_name="ob")
-        Server.objects.get(server_name="hexxit")
+        nomi = Server.objects.get(server_name="nomi")
+        e6e = Server.objects.get(server_name="e6e")
+        ct2 = Server.objects.get(server_name="ct2")
+        ftbu = Server.objects.get(server_name="ftbu")
+        ob = Server.objects.get(server_name="ob")
+        hexxit = Server.objects.get(server_name="hexxit")
         Server.objects.get(server_name="network")
+
+        ServerInformation.objects.get(server=nomi)
+        ServerInformation.objects.get(server=e6e)
+        ServerInformation.objects.get(server=ct2)
+        ServerInformation.objects.get(server=ftbu)
+        ServerInformation.objects.get(server=ob)
+        ServerInformation.objects.get(server=hexxit)
         
-        LOGGER.error("[INFO] Tested for needed database objects, all good")
+        LOGGER.error("[INFO] Tested for needed database objects, all are present")
 
     except:
         

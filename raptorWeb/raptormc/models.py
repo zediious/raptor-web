@@ -70,7 +70,8 @@ class ServerInformation(models.Model):
     """
     server = models.OneToOneField(Server, on_delete=models.CASCADE)
     server_address = models.CharField(max_length=50)
-    description = models.TextField(max_length=1500, verbose_name="Server Description")
+    modpack_description = models.TextField(max_length=1500, verbose_name="Modpack Description", default="Modpack Description")
+    server_description = models.TextField(max_length=1500, verbose_name="Server Description", default="Server Description")
     modpack_url = models.URLField(max_length=200, verbose_name="Link to Modpack")
 
     def __str__(self):

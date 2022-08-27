@@ -87,13 +87,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="nomiInfoModal">Nomifactory</h3>
+            <h3 class="modal-title" id="nomiInfoModal"><a href="{{ nomi_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory"></a>
+            </h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p> {{ nomi_info.address }} </p>
-            <p> {{ nomi_info.description }} </p>
-            <p> {{ nomi_info.modpack }} </p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ nomi_info.address }}</span> </p>
+            <hr>
+            <p> {{ nomi_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ nomi_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
@@ -103,12 +107,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="e6eInfoModal">Enigmatica 6: Expert</h3>
+             <h3 class="modal-title" id="e6eInfoModal"><a href="{{ e6e_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert"></a>
+            </h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
-               Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ e6e_info.address }}</span> </p>
+            <hr>
+            <p> {{ e6e_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ e6e_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
@@ -118,12 +127,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="ct2InfoModal">Chroma Technology 2</h3>
+            <h3 class="modal-title" id="ct2InfoModal"><a href="{{ ct2_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2"></a>
+            </h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
-               Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ct2_info.address }}</span> </p>
+            <hr>
+            <p> {{ ct2_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ ct2_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
@@ -133,12 +147,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="ftbuInfoModal">FTB Ultimate: Anniversary</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           <h3 class="modal-title" id="ftbuInfoModal"><a href="{{ ftbu_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTB Ultimate: Anniversary"></a>
+           </h3>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
-               Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ftbu_info.address }}</span> </p>
+            <hr>
+            <p> {{ ftbu_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ ftbu_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
@@ -148,12 +167,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="obInfoModal">FTB OceanBlock</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           <h3 class="modal-title" id="obInfoModal"><a href="{{ ftbu_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock"></a>
+           </h3>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
-               Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ob_info.address }}</span> </p>
+            <hr>
+            <p> {{ ob_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ ob_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
@@ -163,12 +187,17 @@
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
-            <h3 class="modal-title" id="hexxitInfoModal">Hexxit II</h3>
+            <h3 class="modal-title" id="hexxitInfoModal"><a href="{{ hexxit_info.modpack }}" target="_blank">
+              <img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II"></a>
+            </h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem ad sit similique odit ut molestias?
-               Consequatur, omnis? Officia cupiditate quos rem adipisci obcaecati fugit maiores atque, numquam quis autem quam!</p>
+            <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ hexxit_info.address }}</span> </p>
+            <hr>
+            <p> {{ hexxit_info.modpack_description|linebreaks }} </p>
+            <hr>
+            <p> {{ hexxit_info.server_description|linebreaks }} </p>
           </div>
         </div>
       </div>
