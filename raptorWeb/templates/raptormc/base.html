@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block page_title %}
     {% endblock %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
   </head>
 
@@ -95,9 +95,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ nomi_info.address }}</span> </p>
             <hr>
-            <p> {{ nomi_info.modpack_description|linebreaks }} </p>
+            {{ nomi_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ nomi_info.server_description|linebreaks }} </p>
+            {{ nomi_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -115,9 +115,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ e6e_info.address }}</span> </p>
             <hr>
-            <p> {{ e6e_info.modpack_description|linebreaks }} </p>
+            {{ e6e_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ e6e_info.server_description|linebreaks }} </p>
+            {{ e6e_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -135,9 +135,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ct2_info.address }}</span> </p>
             <hr>
-            <p> {{ ct2_info.modpack_description|linebreaks }} </p>
+            {{ ct2_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ ct2_info.server_description|linebreaks }} </p>
+            {{ ct2_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -155,9 +155,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ftbu_info.address }}</span> </p>
             <hr>
-            <p> {{ ftbu_info.modpack_description|linebreaks }} </p>
+            {{ ftbu_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ ftbu_info.server_description|linebreaks }} </p>
+            {{ ftbu_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -175,9 +175,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ob_info.address }}</span> </p>
             <hr>
-            <p> {{ ob_info.modpack_description|linebreaks }} </p>
+            {{ ob_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ ob_info.server_description|linebreaks }} </p>
+            {{ ob_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -195,9 +195,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ hexxit_info.address }}</span> </p>
             <hr>
-            <p> {{ hexxit_info.modpack_description|linebreaks }} </p>
+            {{ hexxit_info.modpack_description|linebreaks }}
             <hr>
-            <p> {{ hexxit_info.server_description|linebreaks }} </p>
+            {{ hexxit_info.server_description|linebreaks }}
           </div>
         </div>
       </div>
@@ -223,7 +223,7 @@
                 {% if user.is_authenticated %}
                 <a class="col btn btn-dark fs-4 border border-2 w-50" href="{% url 'raptormc:logout' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/logout.webp' %}">
-                </a></span>
+                </a>
                 {% else %}
                 <a class="col btn btn-dark fs-4 border border-2 w-50" href="{% url 'raptormc:login' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
@@ -231,7 +231,7 @@
                 {% endif %}
                 <a class="col btn btn-dark fs-4 border border-2 w-50" href="{% url 'raptormc:register' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
-                </a></span>
+                </a>
               </p>
             </div>
           </div>
@@ -355,8 +355,7 @@
       
     </div>
 
-    <div id="placeholdersoyoucanscroll">
-    </div>
+    <div id="scrollStopper"></div>
 
     <main id="home" class="container-flex m-5 mt-4">
       {% block main_block %}
@@ -367,7 +366,7 @@
 
       <div class="container">
         <p class="text-center">
-          <a class="text-white" href="https://github.com/zediious">Web App/Front-end created by Zediious</a>
+          <a class="text-white" href="https://github.com/zediious">Website created by Zediious</a>
         </p>
         <p class="text-center">
           <a class="text-white" href="mailto:shadowraptormc@gmail.com">Contact</a>
