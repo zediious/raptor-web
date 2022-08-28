@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.urls import reverse
+from django.views.generic import View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
@@ -25,54 +25,77 @@ class ShadowRaptor():
         """
         Views that act as static pages of information
         """
-        def home_servers(request):
+        class HomeServers(TemplateView):
             """
             Homepage with general information
             """
-            return render(request, join(TEMPLATE_DIR_RAPTORMC, "home.html"), context = player_poller.currentPlayers_DB)
-        
-        def rules(request):
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'home.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return context
+
+        class Rules(TemplateView):
             """
             Rules page containing general and server-specific rules
             """
-            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'rules.html'), context = player_poller.currentPlayers_DB)
-            
-        def banned_items(request):
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'rules.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return context
+
+        class BannedItems(TemplateView):
             """
             Contains lists of items that are banned on each server
             """
-            return render(request, join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html'), context = player_poller.currentPlayers_DB)
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html')
 
-        def apps(request):
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return context
+
+        class StaffApps(TemplateView):
             """
             Provide links to each staff application
             """
-            return render(request, join(settings.APPLICATIONS_DIR, 'staffapps.html'), context=player_poller.currentPlayers_DB)
+            template_name = join(settings.APPLICATIONS_DIR, 'staffapps.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return context
         
     class Application():
         """
         Views that contain forms and applications
         """
-        def register(request):
-            """
-            User Registration form
-            """
-            registered = False
+        class RegisterUser(TemplateView):
 
+            template_name = join(settings.APPLICATIONS_DIR, 'registration.html')
+            registered = False
             register_form = UserForm()
             extra_form = UserProfileInfoForm()
 
-            dictionary = player_poller.currentPlayers_DB
-            dictionary["registered"] = registered
-            dictionary["register_form"] = register_form
-            dictionary["extra_form"] = extra_form
+            def get(self, request):
 
-            if request.method == "POST":
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["registered"] = self.registered
+                dictionary["register_form"] = self.register_form
+                dictionary["extra_form"] = self.extra_form
+                
+                return render(request, self.template_name, context=dictionary)
+
+            def post(self,request):
 
                 register_form = UserForm(request.POST)
-
                 extra_form = UserProfileInfoForm(request.POST)
 
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["registered"] = self.registered
                 dictionary["register_form"] = register_form
                 dictionary["extra_form"] = extra_form
 
@@ -82,7 +105,6 @@ class ShadowRaptor():
                     new_user = register_form.save()
                     new_user.set_password(new_user.password)
                     new_user.save()
-
                     new_user_extra = extra_form.save(commit=False)
                     new_user_extra.user = new_user
 
@@ -91,32 +113,38 @@ class ShadowRaptor():
                         new_user_extra.profile_picture = request.FILES["profile_picture"]
 
                     new_user_extra.save()
-
                     registered = True
                     dictionary["registered"] = registered
 
-                    return render(request, join(settings.APPLICATIONS_DIR, 'registration.html'), context=dictionary)
+                    return render(request, self.template_name, context=dictionary)
 
                 else:
 
                     dictionary["register_form"] = register_form
                     dictionary["extra_form"] = extra_form
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'registration.html'), context=dictionary)
-        
-        def user_login(request):
+                    return render(request, self.template_name, context=dictionary)
+
+        class UserLogin(TemplateView):
             """
             User Login form
             """
+            template_name = join(settings.APPLICATIONS_DIR, 'login.html')
             login_form = UserLoginForm()
 
-            dictionary = player_poller.currentPlayers_DB
+            def get(self, request):
 
-            dictionary["login_form"] = login_form
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["login_form"] = self.login_form
+                
+                return render(request, self.template_name, context=dictionary)      
 
-            if request.method == "POST":
+            def post(self, request):
 
                 login_form = UserLoginForm(request.POST)
+
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["login_form"] = self.login_form
 
                 if login_form.is_valid():
 
@@ -143,30 +171,27 @@ class ShadowRaptor():
                         LOGGER.error("[INFO] Attempted User: {}".format(username))
                         dictionary["login_form"] = login_form
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'login.html'), context=dictionary)
+                        return render(request, self.template_name, context=dictionary)
 
-        @login_required
-        def user_logout(request):
-            """
-            Log out the signed in user
-            """
-            logout(request)
-            LOGGER.error("[INFO] User logged out!")
-            return HttpResponseRedirect('..')
-        
-        def mod_app(request):
+        class ModApp(TemplateView):
             """
             Moderator Application
             """
+            template_name = join(settings.APPLICATIONS_DIR, 'modapp.html')
             mod_app = ModApp()
 
-            dictionary = player_poller.currentPlayers_DB
+            def get(self, request):
 
-            dictionary["modform"] = mod_app
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["modform"] = self.mod_app
 
-            if request.method == "POST":
+                return render(request, self.template_name, context=dictionary)
+
+            def post(self, request):
 
                 mod_app = ModApp(request.POST)
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["modform"] = mod_app
 
                 if mod_app.is_valid():
 
@@ -179,21 +204,27 @@ class ShadowRaptor():
 
                     dictionary["modform"] = mod_app
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'modapp.html'), context=dictionary)
-            
-        def admin_app(request):
+                    return render(request, self.template_name, context=dictionary)
+
+        class AdminApp(TemplateView):
             """
             Admin Application
-            """         
+            """
+            template_name = join(settings.APPLICATIONS_DIR, 'adminapp.html')
             admin_app = AdminApp()
 
-            dictionary = player_poller.currentPlayers_DB
+            def get(self, request):
 
-            dictionary["admin_form"] = admin_app
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["admin_form"] = self.admin_app
 
-            if request.method == "POST":
+                return render(request, self.template_name, context=dictionary)
+
+            def post(self, request):
 
                 admin_app = AdminApp(request.POST)
+                dictionary = player_poller.currentPlayers_DB
+                dictionary["admin_form"] = admin_app
 
                 if admin_app.is_valid():
 
@@ -206,4 +237,14 @@ class ShadowRaptor():
 
                     dictionary["admin_form"] = admin_app
 
-            return render(request, join(settings.APPLICATIONS_DIR, 'adminapp.html'), context=dictionary)
+                    return render(request, self.template_name, context=dictionary)
+
+        @login_required
+        def user_logout(request):
+            """
+            Log out the signed in user
+            """
+            logout(request)
+            LOGGER.error("[INFO] User logged out!")
+            return HttpResponseRedirect('..')
+            
