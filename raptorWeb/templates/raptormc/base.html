@@ -95,9 +95,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ nomi_info.address }}</span> </p>
             <hr>
-            {{ nomi_info.modpack_description|linebreaks }}
+            {{ nomi_info.modpack_description|safe }}
             <hr>
-            {{ nomi_info.server_description|linebreaks }}
+            {{ nomi_info.server_description|safe }}
           </div>
         </div>
       </div>
@@ -115,9 +115,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ e6e_info.address }}</span> </p>
             <hr>
-            {{ e6e_info.modpack_description|linebreaks }}
+            {{ e6e_info.modpack_description|safe }}
             <hr>
-            {{ e6e_info.server_description|linebreaks }}
+            {{ e6e_info.server_description|safe }}
           </div>
         </div>
       </div>
@@ -135,9 +135,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ct2_info.address }}</span> </p>
             <hr>
-            {{ ct2_info.modpack_description|linebreaks }}
+            {{ ct2_info.modpack_description|safe }}
             <hr>
-            {{ ct2_info.server_description|linebreaks }}
+            {{ ct2_info.server_description|safe }}
           </div>
         </div>
       </div>
@@ -155,9 +155,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ftbu_info.address }}</span> </p>
             <hr>
-            {{ ftbu_info.modpack_description|linebreaks }}
+            {{ ftbu_info.modpack_description|safe }}
             <hr>
-            {{ ftbu_info.server_description|linebreaks }}
+            {{ ftbu_info.server_description|safe }}
           </div>
         </div>
       </div>
@@ -175,9 +175,9 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ ob_info.address }}</span> </p>
             <hr>
-            {{ ob_info.modpack_description|linebreaks }}
+            {{ ob_info.modpack_description|safe }}
             <hr>
-            {{ ob_info.server_description|linebreaks }}
+            {{ ob_info.server_description|safe }}
           </div>
         </div>
       </div>
@@ -195,15 +195,13 @@
           <div class="modal-body">
             <p class="fs-4"> Join at: <span class="fs-2 fw-semibold">{{ hexxit_info.address }}</span> </p>
             <hr>
-            {{ hexxit_info.modpack_description|linebreaks }}
+            {{ hexxit_info.modpack_description|safe }}
             <hr>
-            {{ hexxit_info.server_description|linebreaks }}
+            {{ hexxit_info.server_description|safe }}
           </div>
         </div>
       </div>
     </div>
-    
-    <div id="particles-js"></div>
 
     <div id="headerBox" class="container-flex" style="background-image: url({% static 'image/background.webp' %}); background-color: rgba(0,13,33,255); background-position: top center; background-attachment: scroll;">
 
@@ -220,6 +218,7 @@
             </div>
             <div class="navbar-header d-flex">
               <p id="loginRegister" class="mt-2 mb-2 p-0 w-75 row">
+
                 {% if user.is_authenticated %}
                 <a class="col btn btn-dark fs-4 border border-2 w-50" href="{% url 'raptormc:logout' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/logout.webp' %}">
@@ -232,6 +231,7 @@
                 <a class="col btn btn-dark fs-4 border border-2 w-50" href="{% url 'raptormc:register' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
                 </a>
+                
               </p>
             </div>
           </div>
@@ -296,53 +296,60 @@
   
             <i id="copyAddress" class="row">
   
-              <div id="spacer" class="col-xl-4 col-0">
+              <div id="spacer" class="col-lg-4 col-0">
                 <span></span>
               </div>
   
-              <div class="col-xl-8 col-12 row">
-                <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory">
+              <div class="col-lg-8 col-12 row">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory">
                   {% if nomi_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
-                <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert">
                   {% if e6e_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
-                <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2">
                   {% if ct2_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
-                <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTBU Anniversary">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTBU Anniversary">
                   {% if ftbu_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
-                <span id="serverButton" class="col-xl-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock">
                   {% if ob_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
-                <span id="serverButton" class="col-xl-12 col-6 mt-2 mb-3"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II">
+
+                <span id="serverButton" class="col-lg-12 col-6 mt-2 mb-3"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II">
                   {% if hexxit_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
                   {% endif %}
                 </button></span>
+
               </div>
   
             </i>
@@ -376,14 +383,7 @@
     </footer>
     
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/particles.js' %}"></script>
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
-
-    <script>
-      particlesJS.load('particles-js', '{% static 'asset/particles.json' %}', function() {
-        console.log('Particles loaded');
-      });
-    </script>
     
   </body>
 

@@ -9,6 +9,7 @@ from logging import getLogger
 from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
+from raptormc.models import InformativeText
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
@@ -34,6 +35,14 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "home_info": InformativeText.objects.get(name="Homepage Information")
+                    })
+                except:
+                    context.update({
+                        "home_info": InformativeText.objects.create(name="Homepage Information", content="Update 'Homepage Information' Model to change this text")
+                    })
                 return context
 
         class Rules(TemplateView):
@@ -45,6 +54,16 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "rules_info": InformativeText.objects.get(name="Rules Information"),
+                        "network_rules": InformativeText.objects.get(name="Network Rules")
+                    })
+                except:
+                    context.update({
+                        "rules_info": InformativeText.objects.create(name="Rules Information", content="Update 'Rules Information' Model to change this text"),
+                        "network_rules": InformativeText.objects.create(name="Network Rules", content="Update 'Network Rules' Model to change this text")
+                    })
                 return context
 
         class BannedItems(TemplateView):

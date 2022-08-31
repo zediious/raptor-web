@@ -19,4 +19,6 @@ dependencies:
     - wcwidth==0.2.5
     - gunicorn==19.6.0
     - whitenoise==6.2.0
+    - django-ckeditor==6.5.0 
+    - django-js-asset==2.0.0
 prefix: /home/jack/software/anaconda3/envs/djangoWork

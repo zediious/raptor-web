@@ -12,9 +12,18 @@
 <section id="ruleIntro" class="container">
 
   <header class="card bg-transparent border-white text-white p-3 mt-3">
-    <h3 class="display-4 fw-bold text-center">ShadowRaptor Rules</h3>
-    <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-      illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+    <div id="contentwrap m-4 mb-1 mt-1">
+      <h3 class="display-4 fw-bold text-center">ShadowRaptor Rules</h3>
+      {% if rules_info %}
+      <p class="m-5 mt-1 mb-1 p-3 fs-4">
+        {{ rules_info.content|safe }}
+      </p>
+      {% else %}
+      <p class="fs-4">
+        Model content not loaded
+      </p>
+      {% endif %}
+    </div>
   </header>
 
 </section>
@@ -24,8 +33,16 @@
   <div class="col-12 col-md-12">
     <div class="card bg-light p-3 mt-4 opacity-75 container">
       <h3 class="display-6 fw-bold text-center text-break">Network-Wide Rules</h3>
-      <p class="fs-4 text-break">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-        illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+      <h4 class="text-center text-break">The below rules apply to all servers we host.</h3>
+      {% if network_rules %}
+    <p class="m-5 mt-1 mb-1 p-3 fs-4">
+      {{ network_rules.content|safe }}
+    </p>
+    {% else %}
+    <p class="fs-4">
+      Model content not loaded
+    </p>
+    {% endif %}
     </div>
   </div>
 

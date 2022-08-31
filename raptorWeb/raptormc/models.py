@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from ckeditor.fields import RichTextField
+
 class UserProfileInfo(models.Model):
     """
     Extra User profile information
@@ -114,23 +116,23 @@ class ServerInformation(models.Model):
     server_address = models.CharField(
         max_length=50)
 
-    modpack_description = models.TextField(
-        max_length=1500, 
+    modpack_description = RichTextField(
+        max_length=1500,
         verbose_name="Modpack Description", 
         default="Modpack Description")
 
-    server_description = models.TextField(
+    server_description = RichTextField(
         max_length=1500, 
         verbose_name="Server Description", 
         default="Server Description")
 
-    server_rules = models.TextField(
+    server_rules = RichTextField(
         max_length=1500,
         verbose_name="Server-Specific Rules",
         default="Server-specific Rules"
     )
 
-    server_banned_items = models.TextField(
+    server_banned_items = RichTextField(
         max_length=500,
         verbose_name="Server-specific Banned Items",
         default="Server-specific Banned Items"
@@ -154,11 +156,24 @@ class InformativeText(models.Model):
     Represents a general block of information 
     which is placed in the website.
     """
-    content = models.TextField(
-        max_length=1000,
+    name = models.CharField(
+        max_length=50,
+        default="Default",
+        verbose_name="Content Name"
+    )
+
+    content = RichTextField(
+        max_length=15000,
         default = "",
         verbose_name="Content"
     )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Informative Text",
+        verbose_name_plural = "Informative Texts"
 
 class AdminApplication(models.Model):
     """

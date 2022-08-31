@@ -13,8 +13,15 @@
 
   <header class="card bg-transparent border-white text-white p-3 mt-4">
     <h3 class="display-4 fw-bold text-center">Welcome to ShadowRaptor</h3>
-    <p class="fs-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum cum, amet quas exercitationem tempore voluptatum 
-      illum magni dolores dicta enim consequuntur eaque, blanditiis accusantium deserunt. Consectetur quas ratione et cum!</p>
+    {% if home_info %}
+    <p class="m-5 mt-1 mb-1 p-3 fs-4">
+      {{ home_info.content|safe }}
+    </p>
+    {% else %}
+    <p class="fs-4">
+      Model content not loaded
+    </p>
+    {% endif %}
   </header>
 
 </section>
