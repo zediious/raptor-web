@@ -75,6 +75,14 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "banneditems_info": InformativeText.objects.get(name="Banned Items Information"),
+                    })
+                except:
+                    context.update({
+                        "banneditems_info": InformativeText.objects.create(name="Banned Items Information", content="Update 'Banned Items Information' Model to change this text"),
+                    })
                 return context
 
         class StaffApps(TemplateView):
