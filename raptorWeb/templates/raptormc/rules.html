@@ -11,15 +11,17 @@
 {% block main_block %}
 <section id="ruleIntro" class="container">
 
-  <header class="card bg-dark opacity-75 text-white p-3 mt-3 m-5">
-      <h3 class="display-4 fw-bold text-center mb-5">ShadowRaptor Rules</h3>
-      {% if rules_info %}
+  <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+    <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Rules</h3>
+    {% if rules_info %}
+      <div class="pageContent">
         {{ rules_info.content|safe }}
-      {% else %}
-      <p class="fs-4">
-        Model content not loaded
-      </p>
-      {% endif %}
+      </div>
+    {% else %}
+    <p class="pageContent">
+      Model content not loaded
+    </p>
+    {% endif %}
   </header>
 
 </section>
@@ -27,13 +29,15 @@
 <section id="ruleBoxes" class="row mt-3">
 
   <div class="col-12 col-md-12">
-    <div class="card bg-light p-5 mt-4 opacity-75 container">
-      <h3 class="display-6 fw-bold text-center text-break">Network-Wide Rules</h3>
-      <h4 class="text-center text-break mb-5">The below rules apply to all servers we host.</h3>
+    <div class="card bg-light p-4 mt-4 opacity-75 container">
+      <h3 class="pageHeader fw-bold text-center text-break">Network-Wide Rules</h3>
+      <h4 class="pageHeader text-center text-break mb-5">The below rules apply to all servers we host.</h3>
       {% if network_rules %}
-      {{ network_rules.content|safe }}
+      <div class="pageContent">
+        {{ network_rules.content|safe }}
+      </div>
     {% else %}
-    <p class="fs-4">
+    <p class="pageContent">
       Model content not loaded
     </p>
     {% endif %}

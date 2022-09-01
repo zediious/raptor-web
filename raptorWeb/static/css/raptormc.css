@@ -26,6 +26,38 @@ body {
 
 }
 
+@media (min-width: 768px) {
+
+    .pageHeader {
+
+        font-size: xx-large;
+    
+    }
+
+    .pageContent > * {
+
+        font-size: large;
+
+    }
+    
+}
+
+@media (max-width: 767px) {
+
+    .pageHeader {
+
+        font-size: medium;
+    
+    }
+
+    .pageContent > * {
+
+        font-size: small;
+
+    }
+    
+}
+
 @media (max-width: 991px) {
     #navImage {
 
@@ -33,6 +65,7 @@ body {
         height: 75%;
 
     }
+
 }
 
 @media (min-width: 992px) {
@@ -40,6 +73,12 @@ body {
 
         width: 50%;
         height: 75%;
+
+    }
+
+    .navbar-brand {
+
+        width: 25%;
 
     }
 }

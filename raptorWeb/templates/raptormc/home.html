@@ -11,12 +11,14 @@
 {% block main_block %}
 <section id="welcome" class="container">
 
-  <header class="card bg-dark opacity-75 text-white p-5 mt-4">
-    <h3 class="display-4 fw-bold text-center mb-5">Welcome to ShadowRaptor</h3>
+  <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+    <h3 class="pageHeader fw-bold text-center mb-5">Welcome to ShadowRaptor</h3>
     {% if home_info %}
-      {{ home_info.content|safe }}
+      <div class="pageContent">
+        {{ home_info.content|safe }}
+      </div>
     {% else %}
-    <p class="fs-4">
+    <p class="pageContent">
       Model content not loaded
     </p>
     {% endif %}
