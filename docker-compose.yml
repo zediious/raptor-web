@@ -1,20 +1,20 @@
 version: '3'
 
 services:
+
   raptorapp:
     image: raptorweb:latest
+    container_name: raptorapp
+    expose:
+      - 80
+    volumes:
+      - ./raptorWeb/db.sqlite3:/raptorWeb/db.sqlite3
     command: sh -c "cd raptorWeb &&
                     conda run -n djangoWork python manage.py makemigrations &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
-                    conda run -n djangoWork gunicorn raptorWeb.wsgi:application --bind 0.0.0.0:80"
-    container_name: raptorapp
-    # env_file:
-    #   - ./config/variables.env
-    volumes:
-      - ./raptorWeb/db.sqlite3:/raptorWeb/db.sqlite3
-    expose:
-      - 80
+                    conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
+
   nginx:
     image: nginx:latest
     container_name: nginx
