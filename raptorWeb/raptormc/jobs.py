@@ -4,6 +4,8 @@ from os.path import join, getmtime
 from logging import getLogger
 from time import time
 
+from django.utils import timezone
+
 from raptorWeb import settings
 from raptormc.util import checkDatabase
 from raptormc.models import PlayerCount, PlayerName, Server, ServerInformation
@@ -141,16 +143,16 @@ def playerPoll():
                                                 "server_banned_items": hexxit_info.server_banned_items
                                             }}
 
-            LOGGER.error("[INFO] Request made, playerCounts.py ran")
+            LOGGER.error("[INFO][{}] Request made, playerCounts.py ran".format(timezone.now().isoformat()))
 
         else:
 
-            LOGGER.error("[INFO] Request made, not enough time has passed to run playerCounts.py")
+            LOGGER.error("[INFO][{}] Request made, not enough time has passed to run playerCounts.py".format(timezone.now().isoformat()))
 
     except FileNotFoundError as e:
 
         LOGGER.error(e)
-        LOGGER.error("[ERROR] playerCounts.LOCK file not present. Please create the file at the above path.")
+        LOGGER.error("[ERROR][{}] playerCounts.LOCK file not present. Please create the file at the above path.".format(timezone.now().isoformat()))
 
 def save_models():
     """

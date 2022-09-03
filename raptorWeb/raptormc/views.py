@@ -3,6 +3,7 @@ from django.views.generic import View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
+from django.utils import timezone
 from os.path import join
 from logging import getLogger
 
@@ -128,7 +129,7 @@ class ShadowRaptor():
 
                 if register_form.is_valid() and extra_form.is_valid():
 
-                    LOGGER.error("[INFO] A new User has been registered!")
+                    LOGGER.error("[INFO][{}] A new User has been registered!".format(timezone.now().isoformat()))
                     new_user = register_form.save()
                     new_user.set_password(new_user.password)
                     new_user.save()
@@ -184,7 +185,7 @@ class ShadowRaptor():
 
                         if user.is_active:
 
-                            LOGGER.error("[INFO] User logged in!")
+                            LOGGER.error("[INFO][{}] User logged in!".format(timezone.now().isoformat()))
                             login(request, user)
                             return HttpResponseRedirect('..')
 
@@ -194,8 +195,8 @@ class ShadowRaptor():
 
                     else:
 
-                        LOGGER.error("[INFO] User login attempt failed")
-                        LOGGER.error("[INFO] Attempted User: {}".format(username))
+                        LOGGER.error("[INFO][{}] User login attempt failed".format(timezone.now().isoformat()))
+                        LOGGER.error("[INFO][{}] Attempted User: {}".format(timezone.now().isoformat(), username))
                         dictionary["login_form"] = login_form
 
                         return render(request, self.template_name, context=dictionary)
@@ -222,8 +223,8 @@ class ShadowRaptor():
 
                 if mod_app.is_valid():
 
-                    LOGGER.error("[INFO] Mod Application submitted!")
-                    LOGGER.error("[INFO] Discord ID of applicant: {}".format(mod_app.cleaned_data["discord_name"]))
+                    LOGGER.error("[INFO][{}] Mod Application submitted!".format(timezone.now().isoformat()))
+                    LOGGER.error("[INFO][{}] Discord ID of applicant: {}".format(timezone.now().isoformat(), mod_app.cleaned_data["discord_name"]))
                     new_app = mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
@@ -255,8 +256,8 @@ class ShadowRaptor():
 
                 if admin_app.is_valid():
 
-                    LOGGER.error("[INFO] Admin Application submitted.!")
-                    LOGGER.error("[INFO] Discord ID of applicant: {}".format(admin_app.cleaned_data["discord_name"]))
+                    LOGGER.error("[INFO][{}] Admin Application submitted.!".format(timezone.now().isoformat()))
+                    LOGGER.error("[INFO][{}] Discord ID of applicant: {}".format(timezone.now().isoformat(), admin_app.cleaned_data["discord_name"]))
                     new_app = admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
 
@@ -272,6 +273,6 @@ class ShadowRaptor():
             Log out the signed in user
             """
             logout(request)
-            LOGGER.error("[INFO] User logged out!")
+            LOGGER.error("[INFO][{}] User logged out!".format(timezone.now().isoformat()))
             return HttpResponseRedirect('..')
             
