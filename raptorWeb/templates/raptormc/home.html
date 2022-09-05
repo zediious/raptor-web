@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block main_block %}
-<section id="welcome" class="container">
+<section id="welcome" class="container mb-0">
 
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">Welcome to ShadowRaptor</h3>
@@ -27,36 +27,37 @@
 
 </section>
 
-<section id="discordAnnouncements" class="container">
+<section id="discordAnnouncements" class="container mt-0">
 
-  <header class="card bg-light opacity-75 p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-5">Announcements</h3>
+  <header class="p-4 mt-4">
+    <div class="card bg-dark opacity-75 p-3 mt-0">
+      <h3 class="pageHeader fw-bold text-white text-center mt-2">Announcements</h3>
+    </div>
     {% if message1 %}
-      <div class="pageContent">
-        <p>{{ message0.author }}</p>
-        <p>{{ message0.message|strip_markdown|strip_discord }}</p>
+      <div class="pageContent card bg-light opacity-75 p-4 mt-4">
+        <p class="pageHeader fw-bold">{{ message0.author }}</p>
+        <p class="pageContent">{{ message0.message|strip_markdown|strip_discord }}</p>
       </div>
-      <hr>
-      <div class="pageContent">
-        <p>{{ message1.author }}</p>
-        <p>{{ message1.message|strip_markdown|strip_discord }}</p>
+
+      <div class="pageContent card bg-light opacity-75 p-4 mt-4">
+        <p class="pageHeader fw-bold">{{ message1.author }}</p>
+        <p class="pageContent">{{ message1.message|strip_markdown|strip_discord }}</p>
       </div>
-      <hr>
-      <div class="pageContent">
-        <p>{{ message2.author }}</p>
-        <p>{{ message2.message|strip_markdown|strip_discord }}</p>
+
+      <div class="pageContent card bg-light opacity-75 p-4 mt-4">
+        <p class="pageHeader fw-bold">{{ message2.author }}</p>
+        <p class="pageContent">{{ message2.message|strip_markdown|strip_discord }}</p>
       </div>
-      <hr>
-      <div class="pageContent">
-        <p>{{ message3.author }}</p>
-        <p>{{ message3.message|strip_markdown|strip_discord }}</p>
+
+      <div class="pageContent card bg-light opacity-75 p-4 mt-4">
+        <p class="pageHeader fw-bold">{{ message3.author }}</p>
+        <p class="pageContent">{{ message3.message|strip_markdown|strip_discord }}</p>
       </div>
-      <hr>
-      <div class="pageContent">
-        <p>{{ message4.author }}</p>
-        <p>{{ message4.message|strip_markdown|strip_discord }}</p>
+
+      <div class="pageContent card bg-light opacity-75 p-4 mt-4">
+        <p class="pageHeader fw-bold">{{ message4.author }}</p>
+        <p class="pageContent">{{ message4.message|strip_markdown|strip_discord }}</p>
       </div>
-      <hr>
       
     {% else %}
     <p class="pageContent">
