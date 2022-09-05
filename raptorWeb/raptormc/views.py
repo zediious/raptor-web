@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import timezone
 from os.path import join
 from logging import getLogger
+from json import load
 
 from raptorWeb import settings
 from raptormc.util.playerCounts import PlayerCounts
@@ -44,6 +45,11 @@ class ShadowRaptor():
                     context.update({
                         "home_info": InformativeText.objects.create(name="Homepage Information", content="Update 'Homepage Information' Model to change this text")
                     })
+                try:
+                    announcementsJSON = open(join(settings.BASE_DIR, 'announcements.json'), "r")
+                    context.update(load(announcementsJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] announcements.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class Rules(TemplateView):

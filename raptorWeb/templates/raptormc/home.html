@@ -1,4 +1,5 @@
 {% extends 'raptormc/base.html' %}
+{% load markdownStrip %}
 
 {% block page_title %}
 <title>
@@ -20,6 +21,46 @@
     {% else %}
     <p class="pageContent">
       Model content not loaded
+    </p>
+    {% endif %}
+  </header>
+
+</section>
+
+<section id="discordAnnouncements" class="container">
+
+  <header class="card bg-light opacity-75 p-4 mt-4">
+    <h3 class="pageHeader fw-bold text-center mb-5">Announcements</h3>
+    {% if message1 %}
+      <div class="pageContent">
+        <p>{{ message0.author }}</p>
+        <p>{{ message0.message|strip_markdown|strip_discord }}</p>
+      </div>
+      <hr>
+      <div class="pageContent">
+        <p>{{ message1.author }}</p>
+        <p>{{ message1.message|strip_markdown|strip_discord }}</p>
+      </div>
+      <hr>
+      <div class="pageContent">
+        <p>{{ message2.author }}</p>
+        <p>{{ message2.message|strip_markdown|strip_discord }}</p>
+      </div>
+      <hr>
+      <div class="pageContent">
+        <p>{{ message3.author }}</p>
+        <p>{{ message3.message|strip_markdown|strip_discord }}</p>
+      </div>
+      <hr>
+      <div class="pageContent">
+        <p>{{ message4.author }}</p>
+        <p>{{ message4.message|strip_markdown|strip_discord }}</p>
+      </div>
+      <hr>
+      
+    {% else %}
+    <p class="pageContent">
+      announcements.json missing
     </p>
     {% endif %}
   </header>

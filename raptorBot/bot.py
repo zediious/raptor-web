@@ -6,7 +6,7 @@ from json import dumps
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-ANNOUNCEMENT_CHANNEL = 1015531603969196063
+ANNOUNCEMENT_CHANNEL = 741015006480564254
 
 class RaptorClient(discord.Client):
 
@@ -33,7 +33,12 @@ class RaptorClient(discord.Client):
 
             key = 0
             for message in messages:
-                announcements.update({key: {str(message.author): message.content}})
+                announcements.update({
+                    "message{}".format(key): {
+                        "author": str(message.author),
+                        "message": message.content
+                        }
+                })
                 key += 1
 
             announcementsJSON = open("../raptorWeb/announcements.json", "w")
