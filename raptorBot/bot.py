@@ -23,18 +23,21 @@ class RaptorClient(discord.Client):
         places their content in a Dictionary, nested in another
         dictionary keyed by a counteryed number. The nested 
         dictionary containing the message is keyed by the author.
+        Data is saved to an announcements.json each iteration.
         """
         channel = client.get_channel(ANNOUNCEMENT_CHANNEL)
-        messages = [message async for message in channel.history(limit=5)]
-        announcements = {}
+        if message.channel == channel:
 
-        key = 0
-        for message in messages:
-            announcements.update({key: {str(message.author): message.content}})
-            key += 1
+            messages = [message async for message in channel.history(limit=5)]
+            announcements = {}
 
-        announcementsJSON = open("../raptorWeb/announcements.json", "w")
-        announcementsJSON.write(dumps(announcements, indent=4))
+            key = 0
+            for message in messages:
+                announcements.update({key: {str(message.author): message.content}})
+                key += 1
+
+            announcementsJSON = open("../raptorWeb/announcements.json", "w")
+            announcementsJSON.write(dumps(announcements, indent=4))
 
 intents = discord.Intents.all()
 intents.message_content = True
