@@ -38,6 +38,7 @@ class RaptorClient(discord.Client):
 
             announcementsJSON = open("../raptorWeb/announcements.json", "w")
             announcementsJSON.write(dumps(announcements, indent=4))
+            announcementsJSON.close()
 
 intents = discord.Intents.all()
 intents.message_content = True
