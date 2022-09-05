@@ -5,6 +5,7 @@ dependencies:
   - django=3.2.5
   - python=3.10.4
   - requests=2.28.1
+  - pip
   - pip:
     - argon2-cffi==21.3.0
     - argon2-cffi-bindings==21.2.0
@@ -22,4 +23,6 @@ dependencies:
     - whitenoise==6.2.0
     - django-ckeditor==6.5.0 
     - django-js-asset==2.0.0
+    - python-dotenv==0.20.0
+    - mysqlclient==2.1.1
 prefix: /home/jack/software/anaconda3/envs/djangoWork

@@ -12,10 +12,13 @@ services:
     volumes:
       - ./raptorWeb:/raptorWeb
     command: sh -c "cd raptorWeb &&
+                    conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py makemigrations &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
                     conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
+    depends_on:
+      - mariadb
 
   raptorbot:
     build:
@@ -29,6 +32,18 @@ services:
                     conda run -n discordWork python bot.py"
     depends_on:
       - raptorapp
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    expose:
+      - 3306
+    env_file:
+    - ./config/db/.env
+    volumes:
+      # - ./raptorWeb/db:/db
+      - ./config/db/conf.d:/etc/mysql/conf.d/
+    # command: sh -c "mysql -h 0.0.0.0 -P 3306 --protocol=TCP -u root -p"
 
   nginx:
     image: nginx:latest

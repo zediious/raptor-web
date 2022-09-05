@@ -41,6 +41,10 @@
     - Run a nginx container. This container binds to port 443 on the host, and proxies `https` requests to the RaptorMC/django application
     - (TODO) A MariaDB/SQL database. This will be for development purposes. The actual database for the production site will be operated differently.
 
+## Other things
+
+- To use the MySQL/MariaDB driver, you must run `sudo apt update` and `sudo apt install libmariadb-dev`. Windows behavior here is undetermined.
+
 ### NPM
 
 - **Front end tooling not established**

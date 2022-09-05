@@ -9,7 +9,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from os.path import join
+from os import getenv
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +20,8 @@ RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
 APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 STATIC_DIR = join(BASE_DIR, "static")
 MEDIA_DIR = join(BASE_DIR, "media")
+
+load_dotenv(dotenv_path=join(BASE_DIR, '../../config/db/.env'))
 
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -87,6 +91,19 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST': 'mariadb',
+#         'PORT': '3306',
+#         'NAME': getenv('MYSQL_DATABASE'),
+#         'USER': getenv('MYSQL_USER'),
+#         'PASS': getenv('MYSQL_PASSWORD')
+#         # 'NAME': 'raptormc',
+#         # 'USER': 'raptor',
+#         # 'PASS': 'testingpass'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
