@@ -40,7 +40,7 @@ class AdminApp(forms.ModelForm):
 
     age = forms.IntegerField(
         label="How old are you?", 
-        max_value=99 , validators=[validate_admin_age])
+        help_text="You must be at least 18 years old to apply directly for admin", max_value=99 , validators=[validate_admin_age])
 
     time = forms.CharField(
         label="What Timezone do you live in? How often and at what time of the day will you be available?", 
@@ -137,7 +137,7 @@ class ModApp(forms.ModelForm):
 
     age = forms.IntegerField(
         label="How old are you?", 
-        max_value=99 , validators=[validate_age])
+        help_text="You must be at least 10 years old to apply", max_value=99 , validators=[validate_age])
 
     time = forms.CharField(
         label="What Timezone do you live in? How often and at what time of the day will you be available?", 

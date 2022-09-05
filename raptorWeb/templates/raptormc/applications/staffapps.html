@@ -11,19 +11,17 @@
 {% block main_block %}
 <section id="welcome" class="container">
 
-  <header class="card bg-transparent border-white text-white p-3 mt-4">
-    <h3 class="display-4 fw-bold text-center">ShadowRaptor Staff Applications</h3>
-    <p>
-
-      <span class="fs-2">Requirements for all staff;</span>
-      <ul class="fs-5">
-        <li>English is our main way of communicating, you must be able to communicate fluently.</li>
-        <li>You must be present. Participation is key in both moderation/administration of the server and in being friendly with new players.</li>
-        <li>Must use Discord. All of our communication is done using Discord, and part of your job would be moderating the Discord server.</li>
-      </ul>
-      <span class="fs-5">Thank you for considering a staff position on our network! If we do approve your application, you will be notified via Discord. Be sure to watch for messages from unknown users!</span>
-
+  <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+    <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Staff Applications</h3>
+    {% if staffapp_info %}
+      <div class="pageContent">
+        {{ staffapp_info.content|safe }}
+      </div>
+    {% else %}
+    <p class="pageContent">
+      Model content not loaded
     </p>
+    {% endif %}
   </header>
 
 </section>

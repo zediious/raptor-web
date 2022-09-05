@@ -92,6 +92,50 @@ class ShadowRaptor():
                     })
                 return context
 
+        class Voting(TemplateView):
+            """
+            Contains lists links for each server's voting sites
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'voting.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "voting_info": InformativeText.objects.get(name="Voting Information"),
+                    })
+                except:
+                    context.update({
+                        "voting_info": InformativeText.objects.create(name="Voting Information", content="Update 'Voting Information' Model to change this text"),
+                    })
+                return context
+
+        class HowToJoin(TemplateView):
+            """
+            Contains guides for downloading modpacks and joining servers.
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'joining.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "joining_info": InformativeText.objects.get(name="Joining Information"),
+                        "joining_curse_info": InformativeText.objects.get(name="Using the CurseForge Launcher"),
+                        "joining_ftb_info": InformativeText.objects.get(name="Using the FTB Launcher"),
+                        "joining_technic_info": InformativeText.objects.get(name="Using the Technic Launcher")
+                    })
+                except:
+                    context.update({
+                        "joining_info": InformativeText.objects.create(name="Joining Information", content="Update 'Joining Information' Model to change this text"),
+                        "joining_curse_info": InformativeText.objects.create(name="Using the CurseForge Launcher", content="Update 'Using the CurseForge Launcher' Model to change this text"),
+                        "joining_ftb_info": InformativeText.objects.create(name="Using the FTB Launcher", content="Update 'Using the FTB Launcher' Model to change this text"),
+                        "joining_technic_info": InformativeText.objects.create(name="Using the Technic Launcher", content="Update 'Using the Technic Launcher' Model to change this text")
+                    })
+                return context
+
         class StaffApps(TemplateView):
             """
             Provide links to each staff application
@@ -101,6 +145,14 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
+                try:
+                    context.update({
+                        "staffapp_info": InformativeText.objects.get(name="Staff App Information"),
+                    })
+                except:
+                    context.update({
+                        "staffapp_info": InformativeText.objects.create(name="Staff App Information", content="Update 'Staff App Information' Model to change this text"),
+                    })
                 return context
         
     class Application():

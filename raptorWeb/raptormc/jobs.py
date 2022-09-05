@@ -89,7 +89,8 @@ def playerPoll():
                                                 "server_description": nomi_info.server_description,
                                                 "modpack": nomi_info.modpack_url,
                                                 "server_rules": nomi_info.server_rules,
-                                                "server_banned_items": nomi_info.server_banned_items
+                                                "server_banned_items": nomi_info.server_banned_items,
+                                                "server_vote_links": nomi_info.server_vote_links
                                             },
                                             "e6e_names": player_names.filter(server=Server.objects.get(server_name="e6e")),
                                             "e6e_state": player_data["e6e"]["online"],
@@ -99,7 +100,8 @@ def playerPoll():
                                                 "server_description": e6e_info.server_description,
                                                 "modpack": e6e_info.modpack_url,
                                                 "server_rules": e6e_info.server_rules,
-                                                "server_banned_items": e6e_info.server_banned_items
+                                                "server_banned_items": e6e_info.server_banned_items,
+                                                "server_vote_links": e6e_info.server_vote_links
                                             },
                                             "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
                                             "ct2_state": player_data["ct2"]["online"],
@@ -109,7 +111,8 @@ def playerPoll():
                                                 "server_description": ct2_info.server_description,
                                                 "modpack": ct2_info.modpack_url,
                                                 "server_rules": ct2_info.server_rules,
-                                                "server_banned_items": ct2_info.server_banned_items
+                                                "server_banned_items": ct2_info.server_banned_items,
+                                                "server_vote_links": ct2_info.server_vote_links
                                             },
                                             "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
                                             "ftbu_state": player_data["ftbu"]["online"],
@@ -119,7 +122,8 @@ def playerPoll():
                                                 "server_description": ftbu_info.server_description,
                                                 "modpack": ftbu_info.modpack_url,
                                                 "server_rules": ftbu_info.server_rules,
-                                                "server_banned_items": ftbu_info.server_banned_items
+                                                "server_banned_items": ftbu_info.server_banned_items,
+                                                "server_vote_links": ftbu_info.server_vote_links
                                             },
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
                                             "ob_state": player_data["ob"]["online"],
@@ -129,7 +133,8 @@ def playerPoll():
                                                 "server_description": ob_info.server_description,
                                                 "modpack": ob_info.modpack_url,
                                                 "server_rules": ob_info.server_rules,
-                                                "server_banned_items": ob_info.server_banned_items
+                                                "server_banned_items": ob_info.server_banned_items,
+                                                "server_vote_links": ob_info.server_vote_links
                                             },
                                             "hexxit_names": "not implemented",
                                             "hexxit_state": False,
@@ -139,7 +144,8 @@ def playerPoll():
                                                 "server_description": hexxit_info.server_description,
                                                 "modpack": hexxit_info.modpack_url,
                                                 "server_rules": hexxit_info.server_rules,
-                                                "server_banned_items": hexxit_info.server_banned_items
+                                                "server_banned_items": hexxit_info.server_banned_items,
+                                                "server_vote_links": hexxit_info.server_vote_links
                                             }}
 
             LOGGER.error("[INFO][{}] Request made, playerCounts.py ran".format(timezone.now().isoformat()))

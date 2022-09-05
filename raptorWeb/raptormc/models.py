@@ -138,6 +138,12 @@ class ServerInformation(models.Model):
         default="Server-specific Banned Items"
     )
 
+    server_vote_links = RichTextField(
+        max_length=500,
+        verbose_name="Voting Site Links",
+        default="Server-specific Vote Links"
+    )
+
     modpack_url = models.URLField(
         max_length=200, 
         verbose_name="Link to Modpack")

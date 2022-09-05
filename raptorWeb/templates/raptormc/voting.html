@@ -3,19 +3,19 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | Rules
+  ShadowRaptor | Voting
   
 </title>
 {% endblock %}
 
 {% block main_block %}
-<section id="ruleIntro" class="container">
+<section id="votingIntro" class="container">
 
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Rules</h3>
-    {% if rules_info %}
+    <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Vote Links</h3>
+    {% if voting_info %}
       <div class="pageContent">
-        {{ rules_info.content|safe }}
+        {{ voting_info.content|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -26,30 +26,14 @@
 
 </section>
 
-<section id="ruleBoxes" class="row mt-3">
-
-  <div class="col-12 col-md-12">
-    <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Network-Wide Rules</h3>
-      <h4 class="pageHeader text-center text-break mb-5">The below rules apply to all servers we host.</h3>
-      {% if network_rules %}
-      <div class="pageContent">
-        {{ network_rules.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
+<section id="voteBoxes" class="row mt-3">
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Nomifactory Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">Nomifactory</h3>
       {% if nomi_info %}
       <div class="pageContent">
-        {{ nomi_info.server_rules|safe }}
+        {{ nomi_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -61,10 +45,10 @@
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Enigmatica 6: Expert Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">Enigmatica 6: Expert</h3>
       {% if e6e_info %}
       <div class="pageContent">
-        {{ e6e_info.server_rules|safe }}
+        {{ e6e_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -76,10 +60,10 @@
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Chroma Technology 2 Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">Chroma Technology 2</h3>
       {% if ct2_info %}
       <div class="pageContent">
-        {{ ct2_info.server_rules|safe }}
+        {{ ct2_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -91,10 +75,10 @@
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">FTBU Anniversary Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">FTBU Anniversary</h3>
       {% if ftbu_info %}
       <div class="pageContent">
-        {{ ftbu_info.server_rules|safe }}
+        {{ ftbu_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -106,10 +90,10 @@
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">FTB OceanBlock Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">FTB OceanBlock</h3>
       {% if ob_info %}
       <div class="pageContent">
-        {{ ob_info.server_rules|safe }}
+        {{ ob_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
@@ -121,10 +105,10 @@
 
   <div class="col-12 col-lg-6">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Hexxit II Rules</h3>
+      <h3 class="pageHeader fw-bold text-center text-break">Hexxit II</h3>
       {% if hexxit_info %}
       <div class="pageContent">
-        {{ hexxit_info.server_rules|safe }}
+        {{ hexxit_info.server_vote_links|safe }}
       </div>
     {% else %}
     <p class="pageContent">
