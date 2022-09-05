@@ -36,7 +36,8 @@ class RaptorClient(discord.Client):
                 announcements.update({
                     "message{}".format(key): {
                         "author": str(message.author),
-                        "message": message.content
+                        "message": message.content,
+                        "date": str(message.created_at.date().strftime('%B %d %Y'))
                         }
                 })
                 key += 1
