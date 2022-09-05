@@ -131,6 +131,9 @@ dmypy.json
 # playerCounts.py LOCK
 playerCounts.LOCK
 
+# Announcements JSON
+announcements.json
+
 # Key
 key.txt
 

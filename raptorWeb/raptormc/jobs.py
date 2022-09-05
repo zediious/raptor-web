@@ -1,4 +1,3 @@
-from http import server
 from raptormc.views import player_poller
 from os.path import join, getmtime
 from logging import getLogger

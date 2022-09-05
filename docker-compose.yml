@@ -3,17 +3,32 @@ version: '3'
 services:
 
   raptorapp:
-    image: raptorweb:latest
+    build:
+      context: raptorWeb/.
+      dockerfile: Dockerfile
     container_name: raptorapp
     expose:
       - 80
     volumes:
-      - ./raptorWeb/db.sqlite3:/raptorWeb/db.sqlite3
+      - ./raptorWeb:/raptorWeb
     command: sh -c "cd raptorWeb &&
                     conda run -n djangoWork python manage.py makemigrations &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
                     conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
+
+  raptorbot:
+    build:
+      context: raptorBot/.
+      dockerfile: Dockerfile
+    container_name: raptorbot
+    volumes:
+      - ./raptorWeb:/raptorWeb
+      - ./raptorBot:/raptorBot
+    command: sh -c "cd raptorBot &&
+                    conda run -n discordWork python bot.py"
+    depends_on:
+      - raptorapp
 
   nginx:
     image: nginx:latest

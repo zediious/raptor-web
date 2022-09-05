@@ -1,0 +1,8 @@
+name: discordWork
+channels:
+  - defaults
+dependencies:
+  - python=3.10.4
+  - pip:
+    - discord.py==2.0.1
+    - python-dotenv==0.20.0 
