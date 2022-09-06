@@ -43,7 +43,7 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "home_info": InformativeText.objects.create(name="Homepage Information", content="Update 'Homepage Information' Model to change this text")
+                        "home_info": InformativeText.objects.create(name="Homepage Information", content="Update 'Homepage Information' Model to change this text", pk=1)
                     })
                 try:
                     announcementsJSON = open(join(settings.BASE_DIR, 'announcements.json'), "r")
@@ -68,8 +68,8 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "rules_info": InformativeText.objects.create(name="Rules Information", content="Update 'Rules Information' Model to change this text"),
-                        "network_rules": InformativeText.objects.create(name="Network Rules", content="Update 'Network Rules' Model to change this text")
+                        "rules_info": InformativeText.objects.create(name="Rules Information", content="Update 'Rules Information' Model to change this text", pk=2),
+                        "network_rules": InformativeText.objects.create(name="Network Rules", content="Update 'Network Rules' Model to change this text", pk=3)
                     })
                 return context
 
@@ -88,7 +88,7 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "banneditems_info": InformativeText.objects.create(name="Banned Items Information", content="Update 'Banned Items Information' Model to change this text"),
+                        "banneditems_info": InformativeText.objects.create(name="Banned Items Information", content="Update 'Banned Items Information' Model to change this text", pk=4),
                     })
                 return context
 
@@ -107,7 +107,7 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "voting_info": InformativeText.objects.create(name="Voting Information", content="Update 'Voting Information' Model to change this text"),
+                        "voting_info": InformativeText.objects.create(name="Voting Information", content="Update 'Voting Information' Model to change this text", pk=5),
                     })
                 return context
 
@@ -129,10 +129,10 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "joining_info": InformativeText.objects.create(name="Joining Information", content="Update 'Joining Information' Model to change this text"),
-                        "joining_curse_info": InformativeText.objects.create(name="Using the CurseForge Launcher", content="Update 'Using the CurseForge Launcher' Model to change this text"),
-                        "joining_ftb_info": InformativeText.objects.create(name="Using the FTB Launcher", content="Update 'Using the FTB Launcher' Model to change this text"),
-                        "joining_technic_info": InformativeText.objects.create(name="Using the Technic Launcher", content="Update 'Using the Technic Launcher' Model to change this text")
+                        "joining_info": InformativeText.objects.create(name="Joining Information", content="Update 'Joining Information' Model to change this text", pk=6),
+                        "joining_curse_info": InformativeText.objects.create(name="Using the CurseForge Launcher", content="Update 'Using the CurseForge Launcher' Model to change this text", pk=7),
+                        "joining_ftb_info": InformativeText.objects.create(name="Using the FTB Launcher", content="Update 'Using the FTB Launcher' Model to change this text", pk=8),
+                        "joining_technic_info": InformativeText.objects.create(name="Using the Technic Launcher", content="Update 'Using the Technic Launcher' Model to change this text", pk=9)
                     })
                 return context
 
@@ -151,7 +151,7 @@ class ShadowRaptor():
                     })
                 except:
                     context.update({
-                        "staffapp_info": InformativeText.objects.create(name="Staff App Information", content="Update 'Staff App Information' Model to change this text"),
+                        "staffapp_info": InformativeText.objects.create(name="Staff App Information", content="Update 'Staff App Information' Model to change this text", pk=10),
                     })
                 return context
         

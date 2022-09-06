@@ -11,11 +11,12 @@ services:
       - 80
     volumes:
       - ./raptorWeb:/raptorWeb
+      - ./raptorWeb/raptormc/migrations:/raptorWeb/raptormc/migrations/
     command: sh -c "cd raptorWeb &&
-                    conda run -n djangoWork python manage.py migrate &&
-                    conda run -n djangoWork python manage.py makemigrations &&
+                    conda run -n djangoWork python manage.py makemigrations raptormc &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
+                    conda run -n djangoWork python manage.py createSuper &&
                     conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
     depends_on:
       - mariadb
@@ -41,9 +42,7 @@ services:
     env_file:
     - ./config/db/.env
     volumes:
-      # - ./raptorWeb/db:/db
-      - ./config/db/conf.d:/etc/mysql/conf.d/
-    # command: sh -c "mysql -h 0.0.0.0 -P 3306 --protocol=TCP -u root -p"
+      - raptor-db:/var/lib/mysql/
 
   nginx:
     image: nginx:latest
@@ -54,3 +53,6 @@ services:
       - ./config/nginx/conf.d:/etc/nginx/conf.d/
     depends_on:
       - raptorapp
+
+volumes:
+  raptor-db:

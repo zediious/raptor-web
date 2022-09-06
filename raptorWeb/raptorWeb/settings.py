@@ -21,7 +21,7 @@ APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 STATIC_DIR = join(BASE_DIR, "static")
 MEDIA_DIR = join(BASE_DIR, "media")
 
-load_dotenv(dotenv_path=join(BASE_DIR, '../../config/db/.env'))
+load_dotenv()
 
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -33,6 +33,11 @@ with open(join(BASE_DIR, 'key.txt')) as key:
 DEBUG = True
 
 ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
+
+# Create superuser on new environments. To be changed immediately after creation
+ADMINS = (
+    ('sradmin', 'sradmin@shadowraptor.net'),
+)
 
 # Application definition
 
@@ -84,26 +89,25 @@ ASGI_APPLICATION = 'raptorWeb.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# Sqlite3 database for local development only
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'HOST': 'mariadb',
-#         'PORT': '3306',
-#         'NAME': getenv('MYSQL_DATABASE'),
-#         'USER': getenv('MYSQL_USER'),
-#         'PASS': getenv('MYSQL_PASSWORD')
-#         # 'NAME': 'raptormc',
-#         # 'USER': 'raptor',
-#         # 'PASS': 'testingpass'
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': getenv('MYSQL_DATABASE'),
+        'USER': getenv('MYSQL_USER'),
+        'PASSWORD': getenv('MYSQL_PASSWORD'),
+        'HOST': 'mariadb',
+        'PORT': '3306',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

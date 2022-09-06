@@ -21,7 +21,6 @@ class RaptorWare:
         One-time configuration and initialization.
         """
         playerPoll()
-        save_models()
 
         self.get_response = get_response
 
@@ -33,7 +32,6 @@ class RaptorWare:
         response = self.get_response(request)
 
         playerPoll()
-        save_models()
         
         return response
 
@@ -57,7 +55,7 @@ def playerPoll():
             PlayerCount.objects.all().delete()
             PlayerName.objects.all().delete()
 
-            PlayerCount.objects.create(server=Server.objects.get(server_name="network"), player_count=player_data["totalCount"])
+            PlayerCount.objects.create(server=Server.objects.get(server_name="network"), player_count=player_data["totalCount"]).save()
 
             for key in player_data:
 
@@ -67,9 +65,9 @@ def playerPoll():
 
                 for player in player_data[key]["names"]:
 
-                    PlayerName.objects.create(server=Server.objects.get(server_name=key) , name=player)
+                    PlayerName.objects.create(server=Server.objects.get(server_name=key) , name=player).save()
 
-                PlayerCount.objects.create(server=Server.objects.get(server_name=key), player_count=player_data[key]["count"])
+                PlayerCount.objects.create(server=Server.objects.get(server_name=key), player_count=player_data[key]["count"]).save()
 
             totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
             player_names = PlayerName.objects.all()
@@ -158,12 +156,3 @@ def playerPoll():
 
         LOGGER.error(e)
         LOGGER.error("[ERROR][{}] playerCounts.LOCK file not present. Please create the file at the above path.".format(timezone.now().isoformat()))
-
-def save_models():
-    """
-    Bulk update PlayerCount, PlayerName, and Server objects, specifically
-    attributes from them that were modified while running playerPoll().
-    """
-    PlayerCount.objects.bulk_update(PlayerCount.objects.all(), ['player_count'])
-    PlayerName.objects.bulk_update(PlayerName.objects.all(), ['name'])
-    Server.objects.bulk_update(Server.objects.all(), ['server_state'])
