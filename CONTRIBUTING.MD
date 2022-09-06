@@ -52,7 +52,7 @@
 
 ### Other things
 
-1) To use the MySQL/MariaDB driver, you must run `sudo apt update` and `sudo apt install libmariadb-dev`. Windows behavior here is undetermined.
+1) If using Linux, you must run `sudo apt update` and `sudo apt install libmariadb-dev` to use the MySQL/MariaDB driver.
 
 2) Create a `.env` file at both `/config/db/.env` and `raptorWeb/raptorWeb/.env`. Ensure they both have the exact same content, and that they are formatted like such;
 
