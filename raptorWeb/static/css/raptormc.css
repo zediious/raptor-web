@@ -39,6 +39,19 @@ body {
         font-size: large;
 
     }
+
+    #navImage {
+
+        width: 80%;
+        height: 80%;
+
+    }
+
+    .navbar-brand {
+
+        width: 25%;
+
+    }
     
 }
 
@@ -55,31 +68,12 @@ body {
         font-size: small;
 
     }
-    
-}
 
-@media (max-width: 767px) {
     #navImage {
 
         width: 100%;
         height: 75%;
 
     }
-
+    
 }
-
-@media (min-width: 768px) {
-    #navImage {
-
-        width: 80%;
-        height: 80%;
-
-    }
-
-    .navbar-brand {
-
-        width: 25%;
-
-    }
-}
-
