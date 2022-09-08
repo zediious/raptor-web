@@ -330,15 +330,37 @@
             {{ ob_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#FTBOceanBlock">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#FTBOceanBlock">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#FTBOceanBlock">
-              Vote
-            </a>
+
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#FTBOceanBlock">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#FTBOceanBlock">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#FTBOceanBlock">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#FTBOceanBlock">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#FTBOceanBlock">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#FTBOceanBlock">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -365,15 +387,37 @@
             {{ hexxit_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#HexxitII">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#HexxitII">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#HexxitII">
-              Vote
-            </a>
+
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#HexxitII">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#HexxitII">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#HexxitII">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#HexxitII">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#HexxitII">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#HexxitII">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
