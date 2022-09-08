@@ -103,15 +103,37 @@
             {{ nomi_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#Nomifactory">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#Nomifactory">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#Nomifactory">
-              Vote
-            </a>
+
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#Nomifactory">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#Nomifactory">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#Nomifactory">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#Nomifactory">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#Nomifactory">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#Nomifactory">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -137,15 +159,37 @@
             {{ e6e_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#Enigmatica6Expert">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#Enigmatica6Expert">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#Enigmatica6Expert">
-              Vote
-            </a>
+            
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#Enigmatica6Expert">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#Enigmatica6Expert">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#Enigmatica6Expert">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#Enigmatica6Expert">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#Enigmatica6Expert">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#Enigmatica6Expert">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -172,15 +216,37 @@
             {{ ct2_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#ChromaTechnology2">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#ChromaTechnology2">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#ChromaTechnology2">
-              Vote
-            </a>
+            
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#ChromaTechnology2">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#ChromaTechnology2">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#ChromaTechnology2">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#ChromaTechnology2">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#ChromaTechnology2">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#ChromaTechnology2">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -207,15 +273,37 @@
             {{ ftbu_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:rules' %}#FTBUAnniversary">
-              Rules
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:banned_items' %}#FTBUAnniversary">
-              Banned Items
-            </a>
-            <a role="button" class="btn btn-outline-secondary" onclick="window.location.reload()" href="{% url 'raptormc:voting' %}#FTBUAnniversary">
-              Vote
-            </a>
+            
+            {% if request.path == '/rules/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#FTBUAnniversary">
+                Rules
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#FTBUAnniversary">
+                Rules
+              </a>
+            {% endif %}
+
+            {% if request.path == '/banneditems/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#FTBUAnniversary">
+                Banned Items
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#FTBUAnniversary">
+                Banned Items
+              </a>
+            {% endif %}
+
+            {% if request.path == '/voting/' %}
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#FTBUAnniversary">
+                Vote
+              </a>
+            {% else %}
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#FTBUAnniversary">
+                Vote
+              </a>
+            {% endif %}
+
           </div>
         </div>
       </div>
@@ -467,7 +555,7 @@
 
       <div class="container">
         <p class="pageContent text-center">
-          <a class="text-white" href="https://github.com/zediious">Website created by Zediious</a>
+          <a class="text-white" href="https://github.com/zediious" target="_blank">Website created by Zediious</a>
         </p>
         <p class="pageContent text-center">
           <a class="text-white" href="mailto:shadowraptormc@gmail.com">Contact</a>
