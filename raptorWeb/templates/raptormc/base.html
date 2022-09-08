@@ -88,15 +88,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-            <h3 class="modal-title" id="nomiInfoModal"><a href="{{ nomi_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory"></a>
-            </h3>
+            <div class="row">
+              <h3 class="col-12 modal-title" id="nomiInfoModal"><a href="{{ nomi_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory"></a>
+              </h3>
+              <button class="col-12 mt-3 btn btn-outline-success copyNomiAddress" data-clipboard-text={{ nomi_info.address }}>
+                <p class="fs-4"> Join at: <span id="nomiAddress" class="fs-2 fw-semibold">{{ nomi_info.address }}</span></p>
+              </button>
+            </div>
           </div>
           <div class="modal-body" id="nomiDesc">
-            <button class="btn btn-outline-success copyNomiAddress" data-clipboard-text={{ nomi_info.address }}>
-             <p class="fs-4"> Join at: <span id="nomiAddress" class="fs-2 fw-semibold">{{ nomi_info.address }}</span></p>
-            </button>
-            <hr>
             {{ nomi_info.modpack_description|safe }}
             <hr>
             {{ nomi_info.server_description|safe }}
@@ -121,15 +122,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-             <h3 class="modal-title" id="e6eInfoModal"><a href="{{ e6e_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert"></a>
-            </h3>
+            <div class="row">
+              <h3 class="col-12 modal-title" id="e6eInfoModal"><a href="{{ e6e_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert"></a>
+              </h3>
+              <button class="col-12 mt-3 btn btn-outline-success copye6eAddress" data-clipboard-text={{ e6e_info.address }}>
+                <p class="fs-4"> Join at: <span id="e6eAddress" class="fs-2 fw-semibold">{{ e6e_info.address }}</span></p>
+              </button>
+            </div>
           </div>
           <div class="modal-body" id="e6eDesc">
-            <button class="btn btn-outline-success copye6eAddress" data-clipboard-text={{ e6e_info.address }}>
-              <p class="fs-4"> Join at: <span id="e6eAddress" class="fs-2 fw-semibold">{{ e6e_info.address }}</span></p>
-             </button>
-            <hr>
             {{ e6e_info.modpack_description|safe }}
             <hr>
             {{ e6e_info.server_description|safe }}
@@ -154,14 +156,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-            <h3 class="modal-title" id="ct2InfoModal"><a href="{{ ct2_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2"></a>
-            </h3>
+            <div class="row">
+              <h3 class="col-12 modal-title" id="ct2InfoModal"><a href="{{ ct2_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2"></a>
+              </h3>
+              <button class="col-12 mt-3 btn btn-outline-success copyct2Address" data-clipboard-text={{ ct2_info.address }}>
+                <p class="fs-4"> Join at: <span id="ct2Address" class="fs-2 fw-semibold">{{ ct2_info.address }}</span></p>
+              </button>
+            </div>
           </div>
           <div class="modal-body" id="ct2Desc">
-            <button class="btn btn-outline-success copyct2Address" data-clipboard-text={{ ct2_info.address }}>
-              <p class="fs-4"> Join at: <span id="ct2Address" class="fs-2 fw-semibold">{{ ct2_info.address }}</span></p>
-             </button>
             <hr>
             {{ ct2_info.modpack_description|safe }}
             <hr>
@@ -187,14 +191,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-           <h3 class="modal-title" id="ftbuInfoModal"><a href="{{ ftbu_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTB Ultimate: Anniversary"></a>
-           </h3>
+            <div class="row">
+            <h3 class="col-12 modal-title" id="ftbuInfoModal"><a href="{{ ftbu_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTB Ultimate: Anniversary"></a>
+            </h3>
+            <button class="col-12 mt-3 btn btn-outline-success copyftbuAddress" data-clipboard-text={{ ftbu_info.address }}>
+              <p class="fs-4"> Join at: <span id="ftbuAddress" class="fs-2 fw-semibold">{{ ftbu_info.address }}</span></p>
+            </button>
+          </div>
           </div>
           <div class="modal-body" id="ftbuDesc">
-            <button class="btn btn-outline-success copyftbuAddress" data-clipboard-text={{ ftbu_info.address }}>
-              <p class="fs-4"> Join at: <span id="ftbuAddress" class="fs-2 fw-semibold">{{ ftbu_info.address }}</span></p>
-             </button>
             <hr>
             {{ ftbu_info.modpack_description|safe }}
             <hr>
@@ -220,14 +226,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-           <h3 class="modal-title" id="obInfoModal"><a href="{{ ob_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock"></a>
-           </h3>
+            <div class="row">
+            <h3 class="col-12 modal-title" id="obInfoModal"><a href="{{ ob_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock"></a>
+            </h3>
+            <button class="col-12 mt-3 btn btn-outline-success copyobAddress" data-clipboard-text={{ ob_info.address }}>
+              <p class="fs-4"> Join at: <span id="obAddress" class="fs-2 fw-semibold">{{ ob_info.address }}</span></p>
+            </button>
+          </div>
           </div>
           <div class="modal-body" id="obDesc">
-            <button class="btn btn-outline-success copyobAddress" data-clipboard-text={{ ob_info.address }}>
-              <p class="fs-4"> Join at: <span id="obAddress" class="fs-2 fw-semibold">{{ ob_info.address }}</span></p>
-             </button>
             <hr>
             {{ ob_info.modpack_description|safe }}
             <hr>
@@ -253,14 +261,16 @@
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-            <h3 class="modal-title" id="hexxitInfoModal"><a href="{{ hexxit_info.modpack }}" target="_blank">
-              <img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II"></a>
-            </h3>
+            <div class="row">
+              <h3 class="col-12 modal-title" id="hexxitInfoModal"><a href="{{ hexxit_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II"></a>
+              </h3>
+              <button class="col-12 mt-3 btn btn-outline-success copyhexxitAddress" data-clipboard-text={{ hexxit_info.address }}>
+                <p class="fs-5"> Join at: <span id="hexxitAddress" class="fs-2 fw-semibold">{{ hexxit_info.address }}</span></p>
+              </button>
+            </div>
           </div>
           <div class="modal-body" id="hexxitDesc">
-            <button class="btn btn-outline-success copyhexxitAddress" data-clipboard-text={{ hexxit_info.address }}>
-              <p class="fs-4"> Join at: <span id="hexxitAddress" class="fs-2 fw-semibold">{{ hexxit_info.address }}</span></p>
-             </button>
             <hr>
             {{ hexxit_info.modpack_description|safe }}
             <hr>
