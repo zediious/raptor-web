@@ -194,3 +194,11 @@ BOOTSTRAP5 = {
     'set_placeholder': False,
 
 }
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 450,
+        'width': 1280,
+    },
+}
