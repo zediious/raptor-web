@@ -133,13 +133,13 @@ class ServerInformation(models.Model):
     )
 
     server_banned_items = RichTextField(
-        max_length=500,
+        max_length=1500,
         verbose_name="Server-specific Banned Items",
         default="Server-specific Banned Items"
     )
 
     server_vote_links = RichTextField(
-        max_length=500,
+        max_length=1500,
         verbose_name="Voting Site Links",
         default="Server-specific Vote Links"
     )
