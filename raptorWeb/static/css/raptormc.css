@@ -12,6 +12,12 @@ body {
 
 }
 
+.navbar-toggler-icon {
+
+    opacity: 1.00;
+    
+}
+
 .btn-dark {
 
     opacity: 0.75;
