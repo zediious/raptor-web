@@ -131,8 +131,9 @@ dmypy.json
 # playerCounts.py LOCK
 playerCounts.LOCK
 
-# Announcements JSON
+# RaptorBot JSON
 announcements.json
+discordInfo.json
 
 # Key
 key.txt
