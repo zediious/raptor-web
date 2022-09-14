@@ -421,6 +421,19 @@
 
     <div id="headerBox" class="container-flex" style="background-image: url({% static 'image/background.webp' %}); background-color: rgba(0,13,33,255); background-position: top center; background-attachment: scroll;">
 
+      <nav class="navbar bg-dark opacity-100">
+        <div class="container">
+          <div class="navbar-header d-flex">
+            <div class="row p-2 pt-1 pb-1">
+              <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" 
+              data-bs-title="{{ onlineMembers }}/{{ totalMembers }} Members Online" href="https://discord.gg/GEhyhku">
+                <img id="discordBanner" src="{% static 'image/discord_banner.webp' %}" alt="Discord">
+              </a>
+            </div
+          </div>
+        </div>
+      </nav>
+      
       <nav class="navbar bg-dark">
         <div class="container">
           <div class="d-flex">

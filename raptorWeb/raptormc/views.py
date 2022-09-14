@@ -47,9 +47,11 @@ class ShadowRaptor():
                     })
                 try:
                     announcementsJSON = open(join(settings.BASE_DIR, 'announcements.json'), "r")
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
                     context.update(load(announcementsJSON))
+                    context.update(load(discordJSON))
                 except:
-                    LOGGER.error("[ERROR][{}] announcements.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
+                    LOGGER.error("[ERROR][{}] announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class Rules(TemplateView):
@@ -71,6 +73,11 @@ class ShadowRaptor():
                         "rules_info": InformativeText.objects.create(name="Rules Information", content="Update 'Rules Information' Model to change this text", pk=2),
                         "network_rules": InformativeText.objects.create(name="Network Rules", content="Update 'Network Rules' Model to change this text", pk=3)
                     })
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    context.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class BannedItems(TemplateView):
@@ -90,6 +97,11 @@ class ShadowRaptor():
                     context.update({
                         "banneditems_info": InformativeText.objects.create(name="Banned Items Information", content="Update 'Banned Items Information' Model to change this text", pk=4),
                     })
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    context.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class Voting(TemplateView):
@@ -109,6 +121,11 @@ class ShadowRaptor():
                     context.update({
                         "voting_info": InformativeText.objects.create(name="Voting Information", content="Update 'Voting Information' Model to change this text", pk=5),
                     })
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    context.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class HowToJoin(TemplateView):
@@ -134,6 +151,11 @@ class ShadowRaptor():
                         "joining_ftb_info": InformativeText.objects.create(name="Using the FTB Launcher", content="Update 'Using the FTB Launcher' Model to change this text", pk=8),
                         "joining_technic_info": InformativeText.objects.create(name="Using the Technic Launcher", content="Update 'Using the Technic Launcher' Model to change this text", pk=9)
                     })
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    context.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
 
         class StaffApps(TemplateView):
@@ -153,6 +175,11 @@ class ShadowRaptor():
                     context.update({
                         "staffapp_info": InformativeText.objects.create(name="Staff App Information", content="Update 'Staff App Information' Model to change this text", pk=10),
                     })
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    context.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 return context
         
     class Application():
@@ -172,6 +199,11 @@ class ShadowRaptor():
                 dictionary["registered"] = self.registered
                 dictionary["register_form"] = self.register_form
                 dictionary["extra_form"] = self.extra_form
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 
                 return render(request, self.template_name, context=dictionary)
 
@@ -184,6 +216,11 @@ class ShadowRaptor():
                 dictionary["registered"] = self.registered
                 dictionary["register_form"] = register_form
                 dictionary["extra_form"] = extra_form
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 if register_form.is_valid() and extra_form.is_valid():
 
@@ -222,6 +259,11 @@ class ShadowRaptor():
 
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["login_form"] = self.login_form
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
                 
                 return render(request, self.template_name, context=dictionary)      
 
@@ -231,6 +273,11 @@ class ShadowRaptor():
 
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["login_form"] = self.login_form
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 if login_form.is_valid():
 
@@ -270,6 +317,11 @@ class ShadowRaptor():
 
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = self.mod_app
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 return render(request, self.template_name, context=dictionary)
 
@@ -278,6 +330,11 @@ class ShadowRaptor():
                 mod_app = ModApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = mod_app
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 if mod_app.is_valid():
 
@@ -303,6 +360,11 @@ class ShadowRaptor():
 
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = self.admin_app
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 return render(request, self.template_name, context=dictionary)
 
@@ -311,6 +373,11 @@ class ShadowRaptor():
                 admin_app = AdminApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = admin_app
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("[ERROR][{}] discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.".format(timezone.now().isoformat()))
 
                 if admin_app.is_valid():
 
