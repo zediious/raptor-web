@@ -1,62 +1,17 @@
-from multiprocessing import connection
-from sqlite3 import Time
 from mcstatus import JavaServer
+from raptorWeb import settings
             
 class PlayerCounts():
     """
     Object containing data structures and methods used for polling
     ShadowRaptor Minecraft servers for state and player information.
-    """ 
-    # Domain names for servers
-    NOMI_ADDRESS = "nomi.shadowraptor.net"
-    OB_ADDRESS = "ob.shadowraptor.net"
-    FTBU_ADDRESS = "ftbu.shadowraptor.net"
-    CT2_ADDRESS = "ct2.shadowraptor.net"
-    E6E_ADDRESS = "e6e.shadowraptor.net"
+    """
+    # Dictionary containing address/port/key names of servers
+    SERVER_DATA = settings.SERVER_DATA
     # Dict to track player counts and names in each server internally
-    currentPlayers = {
-        "totalCount": 0,
-        "nomi": {
-            "count": 0,
-            "names": [],
-            "online": False
-        },
-        "ob": {
-            "count": 0,
-            "names": [],
-            "online": False
-        },
-        "ftbu": {
-            "count": 0,
-            "names": [],
-            "online": False
-        },
-        "ct2": {
-            "count": 0,
-            "names": [],
-            "online": False
-        },
-        "e6e": {
-            "count": 0,
-            "names": [],
-            "online": False
-        }
-
-    }
-    # Template Variable Dictionary
-    currentPlayers_DB = {"player_count": 0,
-                        "nomi_names": "",
-                        "nomi_state": False,
-                        "e6e_names": "e6eNames",
-                        "e6e_state": False,
-                        "ct2_names": "ct2Names",
-                        "ct2_state": False,
-                        "ftbu_names": "ftbuNames",
-                        "ftbu_state": False,
-                        "ob_names": "obNames",
-                        "ob_state": False,
-                        "hexxit_names": "hexxitNames",
-                        "hexxit_state": False}     
+    currentPlayers = {}
+    # Template context dictionary
+    currentPlayers_DB = {}     
 
     def parse_key (self, ADDRESS):
         """
@@ -129,11 +84,12 @@ class PlayerCounts():
 
         }
 
-        self.request_info(self.NOMI_ADDRESS, 25566, self.parse_key(self.NOMI_ADDRESS))
-        self.request_info(self.FTBU_ADDRESS, 25568, self.parse_key(self.FTBU_ADDRESS))
-        self.request_info(self.OB_ADDRESS, 25567, self.parse_key(self.OB_ADDRESS))
-        self.request_info(self.CT2_ADDRESS, 25569, self.parse_key(self.CT2_ADDRESS))
-        self.request_info(self.E6E_ADDRESS, 25570, self.parse_key(self.E6E_ADDRESS))
+        for server in self.SERVER_DATA:
+
+            self.request_info(
+                self.SERVER_DATA[server]["address"], 
+                self.SERVER_DATA[server]["port"], 
+                self.parse_key(self.SERVER_DATA[server]["address"]))
 
         with open('playerCounts.LOCK', 'w') as lock_file:
             lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")

@@ -188,6 +188,29 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
+SERVER_DATA = {
+        "nomi": {
+            "address": "nomi.shadowraptor.net",
+            "port": 25566
+        },
+        "ob": {
+            "address": "ob.shadowraptor.net",
+            "port": 25567
+        },
+        "ftbu": {
+            "address": "ftbu.shadowraptor.net",
+            "port": 25568
+        },
+        "ct2": {
+            "address": "ct2.shadowraptor.net",
+            "port": 25569
+        },
+        "e6e": {
+            "address": "e6e.shadowraptor.net",
+            "port": 25570
+        }
+    }
+
 BOOTSTRAP5 = {
 
     # Set placeholder attributes to label if no placeholder is provided.
