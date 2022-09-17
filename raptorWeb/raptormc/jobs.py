@@ -135,7 +135,7 @@ def playerPoll():
                                                 "server_vote_links": ob_info.server_vote_links
                                             },
                                             "hexxit_names": "not implemented",
-                                            "hexxit_state": player_data["nomi"]["online"],
+                                            "hexxit_state": False,
                                             "hexxit_info": {
                                                 "address": hexxit_info.server_address,
                                                 "modpack_description": hexxit_info.modpack_description,
