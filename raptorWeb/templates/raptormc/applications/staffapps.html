@@ -14,18 +14,15 @@
 {% block main_block %}
 <section id="welcome" class="container">
 
+  {% if staffapp_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Staff Applications</h3>
-    {% if staffapp_info %}
-      <div class="pageContent">
-        {{ staffapp_info.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
+    <div class="pageContent">
+      {{ staffapp_info.content|safe }}
+    </div>
   </header>
+  {% else %}
+  {% endif %}
 
 </section>
 

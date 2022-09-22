@@ -14,18 +14,15 @@
 {% block main_block %}
 <section id="votingIntro" class="container">
 
+  {% if voting_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Vote Links</h3>
-    {% if voting_info %}
-      <div class="pageContent">
-        {{ voting_info.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
+    <div class="pageContent">
+      {{ voting_info.content|safe }}
+    </div>
   </header>
+  {% else %}
+  {% endif %}
 
 </section>
 
