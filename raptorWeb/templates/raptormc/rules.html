@@ -14,38 +14,32 @@
 {% block main_block %}
 <section id="ruleIntro" class="container">
 
+  {% if rules_info.enabled %}
   <header class="card bg-dark opacity-75 text-white m-2 p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Rules</h3>
-    {% if rules_info %}
-      <div class="pageContent">
-        {{ rules_info.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
+    <div class="pageContent">
+      {{ rules_info.content|safe }}
+    </div>
   </header>
+  {% else %}
+  {% endif %}
 
 </section>
 
 <section id="ruleBoxes" class="row m-1 mb-3 mt-3">
 
+  {% if network_rules.enabled %}
   <div class="col-12 col-md-12">
     <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">
       <h3 class="pageHeader fw-bold text-center text-break">Network-Wide Rules</h3>
       <h4 class="pageHeader text-center text-break mb-5">The below rules apply to all servers we host.</h3>
-      {% if network_rules %}
       <div class="pageContent">
         {{ network_rules.content|safe }}
       </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
     </div>
   </div>
+  {% else %}
+  {% endif %}
 
   <div class="col-12 col-lg-6">
     <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">

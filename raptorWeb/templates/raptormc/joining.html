@@ -14,67 +14,55 @@
 {% block main_block %}
 <section id="joiningIntro" class="container">
 
+  {% if joining_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">Joining ShadowRaptor Servers</h3>
-    {% if joining_info %}
-      <div class="pageContent">
-        {{ joining_info.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
+    <div class="pageContent">
+      {{ joining_info.content|safe }}
+    </div>
   </header>
+  {% else %}
+  {% endif %}
 
 </section>
 
 <section id="joinBoxes" class="row mt-3">
 
+  {% if joining_curse_info.enabled %}
   <div class="col-12">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
       <h3 class="pageHeader fw-bold text-center text-break">CurseForge Launcher</h3>
-      {% if joining_curse_info %}
       <div class="pageContent">
         {{ joining_curse_info.content|safe }}
       </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
     </div>
   </div>
+  {% else %}
+  {% endif %}
 
+  {% if joining_ftb_info.enabled %}
   <div class="col-12">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
       <h3 class="pageHeader fw-bold text-center text-break">Feed the Beast App</h3>
-      {% if joining_ftb_info %}
       <div class="pageContent">
         {{ joining_ftb_info.content|safe }}
       </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
     </div>
   </div>
+  {% else %}
+  {% endif %}
 
+  {% if joining_technic_info.enabled %}
   <div class="col-12">
     <div class="card bg-light p-4 mt-4 opacity-75 container">
       <h3 class="pageHeader fw-bold text-center text-break">Technic Launcher</h3>
-      {% if joining_technic_info %}
       <div class="pageContent">
         {{ joining_technic_info.content|safe }}
       </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
     </div>
   </div>
+  {% else %}
+  {% endif %}
 
 </section>
 {% endblock %}

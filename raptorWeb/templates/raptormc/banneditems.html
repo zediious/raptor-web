@@ -14,18 +14,15 @@
 {% block main_block %}
 <section id="bannedItemsIntro" class="container">
 
+  {% if banneditems_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 m-0 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Banned Items</h3>
-    {% if banneditems_info %}
-      <div class="pageContent">
-        {{ banneditems_info.content|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
+    <div class="pageContent">
+      {{ banneditems_info.content|safe }}
+    </div>
   </header>
+  {% else %}
+  {% endif %}
 
 </section>
 

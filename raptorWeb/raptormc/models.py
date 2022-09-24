@@ -162,6 +162,11 @@ class InformativeText(models.Model):
     Represents a general block of information 
     which is placed in the website.
     """
+    enabled = models.BooleanField(
+        default=True,
+        verbose_name="Enabled"
+    )
+
     name = models.CharField(
         max_length=50,
         default="Default",
