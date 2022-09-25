@@ -13,9 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from os.path import join
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import TemplateView
 
+from raptorWeb.settings import RAPTOMC_TEMPLATE_DIR
 from raptormc import urls
 
 SR_urls = urls
@@ -23,6 +26,7 @@ SR_urls = urls
 urlpatterns = [
 
     path('admin/', admin.site.urls, name="admin"),
+    path('robots.txt', TemplateView.as_view(template_name=join(RAPTOMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
     path('', include(SR_urls), name="shadowraptormc")
 
 ]
