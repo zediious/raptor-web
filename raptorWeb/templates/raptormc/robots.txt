@@ -1,2 +1,6 @@
-User-Agent: *
-Allow: /
+User-agent: Googlebot
+Allow: *.css
+Allow: *.js
+
+User-agent: *
+Disallow: /admin/
