@@ -80,6 +80,11 @@ class PlayerCounts():
                 "count": 0,
                 "names": [],
                 "online": False
+            },
+            "atm7": {
+                "count": 0,
+                "names": [],
+                "online": False
             }
 
         }

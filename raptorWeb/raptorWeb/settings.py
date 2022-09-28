@@ -208,6 +208,10 @@ SERVER_DATA = {
         "e6e": {
             "address": "e6e.shadowraptor.net",
             "port": 25570
+        },
+        "atm7": {
+            "address": "atm7.shadowraptor.net",
+            "port": 25571
         }
     }
 

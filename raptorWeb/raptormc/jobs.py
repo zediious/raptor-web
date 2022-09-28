@@ -76,7 +76,7 @@ def playerPoll():
             ct2_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ct2"))
             ftbu_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ftbu"))
             ob_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ob"))
-            hexxit_info = ServerInformation.objects.get(server=Server.objects.get(server_name="hexxit"))
+            atm7_info = ServerInformation.objects.get(server=Server.objects.get(server_name="atm7"))
             
             player_poller.currentPlayers_DB = {"player_count": totalCount,
                                             "nomi_names": player_names.filter(server=Server.objects.get(server_name="nomi")),
@@ -134,16 +134,16 @@ def playerPoll():
                                                 "server_banned_items": ob_info.server_banned_items,
                                                 "server_vote_links": ob_info.server_vote_links
                                             },
-                                            "hexxit_names": "not implemented",
-                                            "hexxit_state": False,
-                                            "hexxit_info": {
-                                                "address": hexxit_info.server_address,
-                                                "modpack_description": hexxit_info.modpack_description,
-                                                "server_description": hexxit_info.server_description,
-                                                "modpack": hexxit_info.modpack_url,
-                                                "server_rules": hexxit_info.server_rules,
-                                                "server_banned_items": hexxit_info.server_banned_items,
-                                                "server_vote_links": hexxit_info.server_vote_links
+                                            "atm7_names": player_names.filter(server=Server.objects.get(server_name="atm7")),
+                                            "atm7_state": player_data["atm7"]["online"],
+                                            "atm7_info": {
+                                                "address": atm7_info.server_address,
+                                                "modpack_description": atm7_info.modpack_description,
+                                                "server_description": atm7_info.server_description,
+                                                "modpack": atm7_info.modpack_url,
+                                                "server_rules": atm7_info.server_rules,
+                                                "server_banned_items": atm7_info.server_banned_items,
+                                                "server_vote_links": atm7_info.server_vote_links
                                             }}
 
             LOGGER.error("[INFO][{}] Request made, playerCounts.py ran".format(timezone.now().isoformat()))

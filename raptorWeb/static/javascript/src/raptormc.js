@@ -24,8 +24,8 @@ $( document ).ready(function() {
     container: document.getElementById('obDesc')
 });
 
-  new ClipboardJS('.copyhexxitAddress', {
-    container: document.getElementById('hexxitDesc')
+  new ClipboardJS('.copyatm7Address', {
+    container: document.getElementById('atm7Desc')
 });
 });
 

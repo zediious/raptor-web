@@ -35,6 +35,17 @@
           </div>
           <div class="modal-body">
             
+            <h5>All the Mods 7 - To the Sky</h5>
+            {% if atm7_names %}
+            {% for player in atm7_names %}
+            <span>{{ player.name }}, </span>
+            {% endfor %}
+            {% else %}
+            <span>No players online</span>
+            {% endif %}
+
+            <hr>
+            
             <h5>Nomifactory</h5>
             {% if nomi_names %}
             {% for player in nomi_names %}
@@ -378,54 +389,54 @@
       </div>
     </div>
 
-    <div class="modal fade" id="hexxitInfo" tabindex="-1" aria-labelledby="Hexxit 2 Information" aria-hidden="true">
+    <div class="modal fade" id="atm7Info" tabindex="-1" aria-labelledby="All the Mods 7 - To the Sky Information" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
             <div class="row">
-              <h3 class="col-12 modal-title" id="hexxitInfoModal"><a href="{{ hexxit_info.modpack }}" target="_blank">
-                <img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II"></a>
+              <h3 class="col-12 modal-title" id="atm7InfoModal"><a href="{{ atm7_info.modpack }}" target="_blank">
+                <img class="w-100" src="{% static 'image/packs/atm7.webp' %}" alt="All the Mods 7 - To the Sky"></a>
               </h3>
-              <button class="col-12 mt-3 btn btn-outline-success copyhexxitAddress" data-clipboard-text={{ hexxit_info.address }}
+              <button class="col-12 mt-3 btn btn-outline-success copyatm7Address" data-clipboard-text={{ atm7_info.address }}
               data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                <p class="fs-5"> Join at: <span id="hexxitAddress" class="fs-2 fw-semibold">{{ hexxit_info.address }}</span></p>
+                <p class="fs-5"> Join at: <span id="atm7Address" class="fs-2 fw-semibold">{{ atm7_info.address }}</span></p>
               </button>
             </div>
           </div>
-          <div class="modal-body" id="hexxitDesc">
-            {{ hexxit_info.modpack_description|safe }}
+          <div class="modal-body" id="atm7Desc">
+            {{ atm7_info.modpack_description|safe }}
             <hr>
-            {{ hexxit_info.server_description|safe }}
+            {{ atm7_info.server_description|safe }}
           </div>
           <div class="modal-footer justify-content-center">
 
             {% if request.path == '/rules/' %}
-              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#AlltheMods7">
                 Rules
               </a>
             {% else %}
-              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:rules' %}#AlltheMods7">
                 Rules
               </a>
             {% endif %}
 
             {% if request.path == '/banneditems/' %}
-              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#AlltheMods7">
                 Banned Items
               </a>
             {% else %}
-              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#AlltheMods7">
                 Banned Items
               </a>
             {% endif %}
 
             {% if request.path == '/voting/' %}
-              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#AlltheMods7">
                 Vote
               </a>
             {% else %}
-              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#HexxitII">
+              <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#AlltheMods7">
                 Vote
               </a>
             {% endif %}
@@ -552,6 +563,14 @@
   
               <div class="col-lg-8 col-12 row">
 
+                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#atm7Info"><img class="w-100" src="{% static 'image/packs/atm7.webp' %}" alt="All the Mods 7 - To the Sky">
+                  {% if atm7_state %}
+                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% else %}
+                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                  {% endif %}
+                </button></span>
+                
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory">
                   {% if nomi_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
@@ -584,16 +603,8 @@
                   {% endif %}
                 </button></span>
 
-                <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock">
+                <span id="serverButton" class="col-lg-12 col-6 mt-2 mb-3"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock">
                   {% if ob_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
-                  {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
-                  {% endif %}
-                </button></span>
-
-                <span id="serverButton" class="col-lg-12 col-6 mt-2 mb-3"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#hexxitInfo"><img class="w-100" src="{% static 'image/packs/hexxit.webp' %}" alt="Hexxit II">
-                  {% if hexxit_state %}
                   <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
                   {% else %}
                   <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">

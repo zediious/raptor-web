@@ -15,7 +15,7 @@ def confirm_database_integrity():
         ct2 = Server.objects.get(server_name="ct2")
         ftbu = Server.objects.get(server_name="ftbu")
         ob = Server.objects.get(server_name="ob")
-        hexxit = Server.objects.get(server_name="hexxit")
+        atm7 = Server.objects.get(server_name="atm7")
         Server.objects.get(server_name="network")
 
         ServerInformation.objects.get(server=nomi)
@@ -23,7 +23,7 @@ def confirm_database_integrity():
         ServerInformation.objects.get(server=ct2)
         ServerInformation.objects.get(server=ftbu)
         ServerInformation.objects.get(server=ob)
-        ServerInformation.objects.get(server=hexxit)
+        ServerInformation.objects.get(server=atm7)
         
         LOGGER.error("[INFO] Tested for needed database objects, all are present")
 
@@ -44,8 +44,8 @@ def confirm_database_integrity():
         ftbu_info = ServerInformation.objects.create(server=ftbu, pk=4)
         ob = Server.objects.create(server_name="ob", pk=5)
         ob_info = ServerInformation.objects.create(server=ob, pk=5)
-        hexxit = Server.objects.create(server_name="hexxit", pk=6)
-        hexxit_info = ServerInformation.objects.create(server=hexxit, pk=6)
+        atm7 = Server.objects.create(server_name="atm7", pk=6)
+        atm7_info = ServerInformation.objects.create(server=atm7, pk=6)
         network = Server.objects.create(server_name="network", pk=7)
 
         nomi.save()
@@ -58,6 +58,6 @@ def confirm_database_integrity():
         ftbu_info.save()
         ob.save()
         ob_info.save()
-        hexxit.save()
-        hexxit_info.save()
+        ob.save()
+        ob_info.save()
         network.save()
