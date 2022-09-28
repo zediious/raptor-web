@@ -60,4 +60,6 @@ def confirm_database_integrity():
         ob_info.save()
         ob.save()
         ob_info.save()
+        atm7.save()
+        atm7_info.save()
         network.save()
