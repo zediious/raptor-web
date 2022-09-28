@@ -564,50 +564,74 @@
               <div class="col-lg-8 col-12 row">
 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#atm7Info"><img class="w-100" src="{% static 'image/packs/atm7.webp' %}" alt="All the Mods 7 - To the Sky">
-                  {% if atm7_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if atm7_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if atm7_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
                 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#nomiInfo"><img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="Nomifactory">
-                  {% if nomi_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if nomi_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if nomi_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#e6eInfo"><img class="w-100" src="{% static 'image/packs/e6e.webp' %}" alt="Enigmatica 6: Expert">
-                  {% if e6e_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if e6e_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if e6e_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ct2Info"><img class="w-100" src="{% static 'image/packs/ct2.webp' %}" alt="Chroma Technology 2">
-                  {% if ct2_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if ct2_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if ct2_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#ftbuInfo"><img class="w-100" src="{% static 'image/packs/ftbua.webp' %}" alt="FTBU Anniversary">
-                  {% if ftbu_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if ftbu_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if ftbu_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
 
                 <span id="serverButton" class="col-lg-12 col-6 mt-2 mb-3"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#obInfo"><img class="w-100" src="{% static 'image/packs/oceanblock.webp' %}" alt="FTB OceanBlock">
-                  {% if ob_state %}
-                  <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                  {% if ob_maintenance %}
+                    <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                   {% else %}
-                  <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% if ob_state %}
+                    <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+                    {% else %}
+                    <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+                    {% endif %}
                   {% endif %}
                 </button></span>
 

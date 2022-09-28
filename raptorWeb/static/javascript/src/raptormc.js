@@ -27,6 +27,7 @@ $( document ).ready(function() {
   new ClipboardJS('.copyatm7Address', {
     container: document.getElementById('atm7Desc')
 });
+
 });
 
 document.getElementById("body").onscroll = function myFunction() {  

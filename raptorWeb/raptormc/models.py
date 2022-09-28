@@ -113,6 +113,11 @@ class ServerInformation(models.Model):
         Server, 
         on_delete=models.CASCADE)
 
+    in_maintenance = models.BooleanField(
+        default=False,
+        verbose_name="Maintenance Mode"
+    )
+
     server_address = models.CharField(
         max_length=50)
 

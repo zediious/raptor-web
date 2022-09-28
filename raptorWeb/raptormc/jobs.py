@@ -81,6 +81,7 @@ def playerPoll():
             player_poller.currentPlayers_DB = {"player_count": totalCount,
                                             "nomi_names": player_names.filter(server=Server.objects.get(server_name="nomi")),
                                             "nomi_state": player_data["nomi"]["online"],
+                                            "nomi_maintenance": nomi_info.in_maintenance,
                                             "nomi_info": {
                                                 "address": nomi_info.server_address,
                                                 "modpack_description": nomi_info.modpack_description,
@@ -92,6 +93,7 @@ def playerPoll():
                                             },
                                             "e6e_names": player_names.filter(server=Server.objects.get(server_name="e6e")),
                                             "e6e_state": player_data["e6e"]["online"],
+                                            "e6e_maintenance": e6e_info.in_maintenance,
                                             "e6e_info": {
                                                 "address": e6e_info.server_address,
                                                 "modpack_description": e6e_info.modpack_description,
@@ -103,6 +105,7 @@ def playerPoll():
                                             },
                                             "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
                                             "ct2_state": player_data["ct2"]["online"],
+                                            "ct2_maintenance": ct2_info.in_maintenance,
                                             "ct2_info": {
                                                 "address": ct2_info.server_address,
                                                 "modpack_description": ct2_info.modpack_description,
@@ -114,6 +117,7 @@ def playerPoll():
                                             },
                                             "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
                                             "ftbu_state": player_data["ftbu"]["online"],
+                                            "ftbu_maintenance": ftbu_info.in_maintenance,
                                             "ftbu_info": {
                                                 "address": ftbu_info.server_address,
                                                 "modpack_description": ftbu_info.modpack_description,
@@ -125,6 +129,7 @@ def playerPoll():
                                             },
                                             "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
                                             "ob_state": player_data["ob"]["online"],
+                                            "ob_maintenance": ob_info.in_maintenance,
                                             "ob_info": {
                                                 "address": ob_info.server_address,
                                                 "modpack_description": ob_info.modpack_description,
@@ -136,6 +141,7 @@ def playerPoll():
                                             },
                                             "atm7_names": player_names.filter(server=Server.objects.get(server_name="atm7")),
                                             "atm7_state": player_data["atm7"]["online"],
+                                            "atm7_maintenance": atm7_info.in_maintenance,
                                             "atm7_info": {
                                                 "address": atm7_info.server_address,
                                                 "modpack_description": atm7_info.modpack_description,
