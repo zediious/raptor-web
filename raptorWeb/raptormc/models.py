@@ -121,6 +121,12 @@ class ServerInformation(models.Model):
     server_address = models.CharField(
         max_length=50)
 
+    modpack_name = models.CharField(
+        max_length=100,
+        verbose_name="Modpack Name",
+        default="Unnamed Modpack"
+    )
+
     modpack_description = RichTextField(
         max_length=1500,
         verbose_name="Modpack Description", 
