@@ -84,6 +84,7 @@ def playerPoll():
                                             "nomi_maintenance": nomi_info.in_maintenance,
                                             "nomi_info": {
                                                 "address": nomi_info.server_address,
+                                                "modpack_name": nomi_info.modpack_name,
                                                 "modpack_description": nomi_info.modpack_description,
                                                 "server_description": nomi_info.server_description,
                                                 "modpack": nomi_info.modpack_url,
@@ -96,6 +97,7 @@ def playerPoll():
                                             "e6e_maintenance": e6e_info.in_maintenance,
                                             "e6e_info": {
                                                 "address": e6e_info.server_address,
+                                                "modpack_name": e6e_info.modpack_name,
                                                 "modpack_description": e6e_info.modpack_description,
                                                 "server_description": e6e_info.server_description,
                                                 "modpack": e6e_info.modpack_url,
@@ -108,6 +110,7 @@ def playerPoll():
                                             "ct2_maintenance": ct2_info.in_maintenance,
                                             "ct2_info": {
                                                 "address": ct2_info.server_address,
+                                                "modpack_name": ct2_info.modpack_name,
                                                 "modpack_description": ct2_info.modpack_description,
                                                 "server_description": ct2_info.server_description,
                                                 "modpack": ct2_info.modpack_url,
@@ -120,6 +123,7 @@ def playerPoll():
                                             "ftbu_maintenance": ftbu_info.in_maintenance,
                                             "ftbu_info": {
                                                 "address": ftbu_info.server_address,
+                                                "modpack_name": ftbu_info.modpack_name,
                                                 "modpack_description": ftbu_info.modpack_description,
                                                 "server_description": ftbu_info.server_description,
                                                 "modpack": ftbu_info.modpack_url,
@@ -132,6 +136,7 @@ def playerPoll():
                                             "ob_maintenance": ob_info.in_maintenance,
                                             "ob_info": {
                                                 "address": ob_info.server_address,
+                                                "modpack_name": ob_info.modpack_name,
                                                 "modpack_description": ob_info.modpack_description,
                                                 "server_description": ob_info.server_description,
                                                 "modpack": ob_info.modpack_url,
@@ -144,6 +149,7 @@ def playerPoll():
                                             "atm7_maintenance": atm7_info.in_maintenance,
                                             "atm7_info": {
                                                 "address": atm7_info.server_address,
+                                                "modpack_name": atm7_info.modpack_name,
                                                 "modpack_description": atm7_info.modpack_description,
                                                 "server_description": atm7_info.server_description,
                                                 "modpack": atm7_info.modpack_url,
