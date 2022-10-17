@@ -30,6 +30,22 @@
 
   <div class="col-12 col-lg-6">
     <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">
+      <a id="AlltheMods7"></a>
+      <h3 class="pageHeader fw-bold text-center text-break">All the Mods 7 - To the Sky Banned Items</h3>
+      {% if atm7_info %}
+      <div class="pageContent">
+        {{ atm7_info.server_banned_items|safe }}
+      </div>
+    {% else %}
+    <p class="pageContent">
+      Model content not loaded
+    </p>
+    {% endif %}
+    </div>
+  </div>
+  
+  <div class="col-12 col-lg-6">
+    <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">
       <a id="Nomifactory"></a>
       <h3 class="pageHeader fw-bold text-center text-break">Nomifactory Banned Items</h3>
       {% if nomi_info %}
@@ -99,22 +115,6 @@
       {% if ob_info %}
       <div class="pageContent">
         {{ ob_info.server_banned_items|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">
-      <a id="AlltheMods7"></a>
-      <h3 class="pageHeader fw-bold text-center text-break">All the Mods 7 - To the Sky Banned Items</h3>
-      {% if atm7_info %}
-      <div class="pageContent">
-        {{ atm7_info.server_banned_items|safe }}
       </div>
     {% else %}
     <p class="pageContent">
