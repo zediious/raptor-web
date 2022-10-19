@@ -88,26 +88,32 @@ ASGI_APPLICATION = 'raptorWeb.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 # Sqlite3 database for local development only
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+USE_SQLITE = False
+DATABASES = {}
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': getenv('MYSQL_DATABASE'),
-        'USER': getenv('MYSQL_USER'),
-        'PASSWORD': getenv('MYSQL_PASSWORD'),
-        'HOST': 'mariadb',
-        'PORT': '3306',
+if USE_SQLITE:
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+else:
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': getenv('MYSQL_DATABASE'),
+            'USER': getenv('MYSQL_USER'),
+            'PASSWORD': getenv('MYSQL_PASSWORD'),
+            'HOST': 'mariadb',
+            'PORT': '3306',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
