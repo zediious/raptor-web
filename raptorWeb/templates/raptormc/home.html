@@ -17,7 +17,8 @@
 
   {% if home_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-5">Welcome to ShadowRaptor</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">Welcome to ShadowRaptor</h3>
+    <hr>
     <div class="pageContent">
       {{ home_info.content|safe }}
     </div>
@@ -30,34 +31,31 @@
 <section id="discordAnnouncements" class="container mt-0">
 
   <header class="p-0 mt-4">
-    <div class="card bg-dark opacity-75 p-3 mt-0">
-      <h3 class="pageHeader fw-bold text-white text-center mt-2">Announcements</h3>
-    </div>
     {% if message1 %}
       {% autoescape off %}
       <div class="pageContent card bg-light opacity-75 mt-4">
         <p class="pageContent p-4">{{ message0.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer mb-0 fw-bold">By: {{ message0.author }} on {{ message0.date }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message0.author }} on {{ message0.date }}</p>
       </div>
 
       <div class="pageContent card bg-light opacity-75 mt-4">
         <p class="pageContent p-4">{{ message1.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer mb-0 fw-bold">By: {{ message1.author }} on {{ message1.date }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message1.author }} on {{ message1.date }}</p>
       </div>
 
       <div class="pageContent card bg-light opacity-75 mt-4">
         <p class="pageContent p-4">{{ message2.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer mb-0 fw-bold">By: {{ message2.author }} on {{ message2.date }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message2.author }} on {{ message2.date }}</p>
       </div>
 
       <div class="pageContent card bg-light opacity-75 mt-4">
         <p class="pageContent p-4">{{ message3.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer mb-0 fw-bold">By: {{ message3.author }} on {{ message3.date }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message3.author }} on {{ message3.date }}</p>
       </div>
 
       <div class="pageContent card bg-light opacity-75 mt-4">
         <p class="pageContent p-4">{{ message4.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer mb-0 fw-bold">By: {{ message4.author }} on {{ message4.date }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message4.author }} on {{ message4.date }}</p>
       </div>
       {% endautoescape %}
       

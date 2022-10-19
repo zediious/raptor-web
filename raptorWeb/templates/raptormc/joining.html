@@ -16,7 +16,8 @@
 
   {% if joining_info.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-5">Joining ShadowRaptor Servers</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">Joining ShadowRaptor Servers</h3>
+    <hr>
     <div class="pageContent">
       {{ joining_info.content|safe }}
     </div>
@@ -30,9 +31,9 @@
 
   {% if joining_curse_info.enabled %}
   <div class="col-12">
-    <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">CurseForge Launcher</h3>
-      <div class="pageContent">
+    <div class="card bg-light mt-4 opacity-75 container">
+      <h3 class="pageHeader card-header fw-bold text-center text-break">CurseForge Launcher</h3>
+      <div class="pageContent p-4">
         {{ joining_curse_info.content|safe }}
       </div>
     </div>
@@ -42,9 +43,9 @@
 
   {% if joining_ftb_info.enabled %}
   <div class="col-12">
-    <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Feed the Beast App</h3>
-      <div class="pageContent">
+    <div class="card bg-light mt-4 opacity-75 container">
+      <h3 class="pageHeader card-header fw-bold text-center text-break">Feed the Beast App</h3>
+      <div class="pageContent p-4">
         {{ joining_ftb_info.content|safe }}
       </div>
     </div>
@@ -54,9 +55,9 @@
 
   {% if joining_technic_info.enabled %}
   <div class="col-12">
-    <div class="card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Technic Launcher</h3>
-      <div class="pageContent">
+    <div class="card bg-light mt-4 opacity-75 container">
+      <h3 class="pageHeader card-header fw-bold text-center text-break">Technic Launcher</h3>
+      <div class="pageContent p-4">
         {{ joining_technic_info.content|safe }}
       </div>
     </div>

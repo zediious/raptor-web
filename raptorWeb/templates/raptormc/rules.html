@@ -16,7 +16,8 @@
 
   {% if rules_info.enabled %}
   <header class="card bg-dark opacity-75 text-white m-2 p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-5">ShadowRaptor Rules</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">ShadowRaptor Rules</h3>
+    <hr>
     <div class="pageContent">
       {{ rules_info.content|safe }}
     </div>
@@ -30,10 +31,12 @@
 
   {% if network_rules.enabled %}
   <div class="col-12 col-md-12">
-    <div class="infoCard card bg-light p-4 mt-4 opacity-75 container">
-      <h3 class="pageHeader fw-bold text-center text-break">Network-Wide Rules</h3>
-      <h4 class="pageHeader text-center text-break mb-5">The below rules apply to all servers we host.</h3>
-      <div class="pageContent">
+    <div class="infoCard card bg-light mt-4 opacity-75 container">
+      <div class="card-header">
+        <h3 class="pageHeader fw-bold text-center text-break">Network-Wide Rules</h3>
+        <h4 class="pageHeader text-center text-break">The below rules apply to all servers we host.</h3>
+      </div>
+      <div class="pageContent p-4">
         {{ network_rules.content|safe }}
       </div>
     </div>
