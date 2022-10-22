@@ -1,19 +1,9 @@
-"""
-Django settings for the raptorWeb project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/3.2/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/3.2/ref/settings/
-"""
-
 from os.path import join
 from os import getenv
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Project directories
+# Define project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
 RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
@@ -21,26 +11,31 @@ APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 STATIC_DIR = join(BASE_DIR, "static")
 MEDIA_DIR = join(BASE_DIR, "media")
 
+# Load .env file
 load_dotenv()
 
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
+# Load key.txt for Django secret key
 with open(join(BASE_DIR, 'key.txt')) as key:
 
     SECRET_KEY =  key.read().strip()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# CSRF
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
+# SECURITY WARNING: Neither of the below two True in production!
+DEBUG = True
+USE_SQLITE = True
+
+# Addresses the Django app can be directly accessed from
 ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
 
-# Create superuser on new environments. To be changed immediately after creation
+# List of Super Users to create when no users are present. To be changed immediately after creation
 ADMINS = (
     ('sradmin', 'sradmin@shadowraptor.net'),
 )
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,10 +82,6 @@ WSGI_APPLICATION = 'raptorWeb.wsgi.application'
 ASGI_APPLICATION = 'raptorWeb.asgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-# Sqlite3 database for local development only
-
-USE_SQLITE = True
 DATABASES = {}
 
 if USE_SQLITE:
@@ -116,8 +107,6 @@ else:
     }
 
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -137,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Hashing algorithms
-
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -147,53 +135,34 @@ PASSWORD_HASHERS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'America/New_York'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
 STATIC_ROOT = join(join(BASE_DIR, '..'), join('config', 'static'))
 
 # THIS MUST BE NAMED `STATICFILES_DIRS`
 STATICFILES_DIRS = [
-
     STATIC_DIR,
-
 ]
 
 # Media files (User submitted content)
-
-MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
+MEDIA_ROOT = MEDIA_DIR
 
 # Login URL
-
 LOGIN_URL = 'raptormc/applications/login'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BACKGROUND_TASK_RUN_ASYNC = True
 
-SESSION_COOKIE_SECURE = True
-
-CSRF_COOKIE_SECURE = True
-
+# Enable/disable querying addresses provided in Server Models
 ENABLE_SERVER_QUERY = True
 
 BOOTSTRAP5 = {
@@ -203,6 +172,7 @@ BOOTSTRAP5 = {
 
 }
 
+# Configure CKEditor, Rich Text Editor plugin
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
