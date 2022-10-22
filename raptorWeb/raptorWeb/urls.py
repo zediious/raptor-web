@@ -17,8 +17,9 @@ from os.path import join
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from django.conf.urls.static import static
 
-from raptorWeb.settings import RAPTOMC_TEMPLATE_DIR
+from raptorWeb.settings import RAPTOMC_TEMPLATE_DIR, DEBUG, MEDIA_URL, MEDIA_ROOT
 from raptormc import urls
 
 SR_urls = urls
@@ -30,3 +31,6 @@ urlpatterns = [
     path('', include(SR_urls), name="shadowraptormc")
 
 ]
+# If in Debug mode, serve media files
+if DEBUG:
+    urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
