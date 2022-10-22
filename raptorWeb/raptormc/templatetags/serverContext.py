@@ -1,20 +1,17 @@
-from re import sub
-
 from django import template
-from django.utils.html import urlize
 
 from raptormc.models import Server
 
 register = template.Library()
-
-SERVER_COUNT = Server.objects.count()
 
 @register.filter
 def get_key(value):
     """
     Get key from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["key"]
@@ -27,7 +24,9 @@ def get_state(value):
     """
     Get server state from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["state"]
@@ -40,7 +39,9 @@ def get_maintenance(value):
     """
     Get maintenance status from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["maintenance"]
@@ -53,7 +54,9 @@ def get_address(value):
     """
     Get server address from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["address"]
@@ -66,7 +69,9 @@ def get_player_names(value):
     """
     Get list of player names from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["names"]
@@ -79,7 +84,9 @@ def get_modpack_name(value):
     """
     Get modpack name from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["modpack_name"]
@@ -92,7 +99,9 @@ def get_modpack_desc(value):
     """
     Get modpack description from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["modpack_description"]
@@ -105,7 +114,9 @@ def get_server_desc(value):
     """
     Get server description from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["server_description"]
@@ -118,7 +129,9 @@ def get_modpack_url(value):
     """
     Get modpack page url from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["modpack"]
@@ -127,11 +140,13 @@ def get_modpack_url(value):
             continue
 
 @register.filter
-def server_rules(value):
+def get_rules(value):
     """
     Get server rules from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["server_rules"]
@@ -140,11 +155,13 @@ def server_rules(value):
             continue
 
 @register.filter
-def server_banned_items(value):
+def get_banned_items(value):
     """
     Get server banned items from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["server_banned_items"]
@@ -153,11 +170,13 @@ def server_banned_items(value):
             continue
 
 @register.filter
-def server_vote_links(value):
+def get_vote_links(value):
     """
     Get server vote links from context dictionary.
     """
-    for number in range(0, SERVER_COUNT):
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
 
         try:
             return value[f"server{number}"]["server_vote_links"]

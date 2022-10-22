@@ -1,4 +1,5 @@
 {% extends 'raptormc/base.html' %}
+{% load serverContext %}
 
 {% block page_title %}
 <title>
@@ -29,7 +30,21 @@
 
 <section id="voteBoxes" class="row m-0 mb-3 mt-3">
 
-  <div class="col-12 col-lg-6">
+  {% for server in server_info %} 
+  
+    <div class="col-12 col-lg-6">
+      <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
+        <a id="{{ server|get_key }}"></a>
+        <h3 class="pageHeader card-header fw-bold text-center text-break">{{ server|get_modpack_name }}</h3>
+        <div class="pageContent p-4">
+          {{ server|get_vote_links|safe }}
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+  
+  {% comment %} <div class="col-12 col-lg-6">
     <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
       <a id="AlltheMods7"></a>
       {% if atm7_info %}
@@ -123,7 +138,7 @@
     </p>
     {% endif %}
     </div>
-  </div>
+  </div> {% endcomment %}
 
 </section>
 {% endblock %}
