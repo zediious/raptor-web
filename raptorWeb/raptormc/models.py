@@ -90,6 +90,10 @@ class Server(models.Model):
         default="Server-specific Vote Links"
     )
 
+    modpack_picture = models.ImageField(
+        upload_to='modpack_pictures', 
+        blank=True)
+
     modpack_url = models.URLField(
         max_length=200, 
         verbose_name="Link to Modpack")
