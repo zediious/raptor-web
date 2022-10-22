@@ -45,10 +45,6 @@ class PlayerCounts():
                     }
                 })
 
-                # for player in serverJSON.players.names:
-
-                #     self.currentPlayers[KEY]["names"].append(player)
-
             except TimeoutError:
 
                 pass
