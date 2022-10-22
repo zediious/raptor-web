@@ -1,4 +1,5 @@
 {% extends 'raptormc/base.html' %}
+{% load serverContext %}
 
 {% block page_title %}
 <title>
@@ -44,101 +45,19 @@
   {% else %}
   {% endif %}
 
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="AlltheMods7"></a>
-      {% if atm7_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ atm7_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ atm7_info.server_rules|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
+  {% for server in server_info %} 
   
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="Nomifactory"></a>
-      {% if nomi_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ nomi_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ nomi_info.server_rules|safe }}
+    <div class="col-12 col-lg-6">
+      <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
+        <a id="{{ server|get_key }}"></a>
+        <h3 class="pageHeader card-header fw-bold text-center text-break">{{ server|get_modpack_name }} Rules</h3>
+        <div class="pageContent p-4">
+          {{ server|get_rules|safe }}
+        </div>
       </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
     </div>
-  </div>
 
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="Enigmatica6Expert"></a>
-      {% if e6e_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ e6e_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ e6e_info.server_rules|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="ChromaTechnology2"></a>
-      {% if ct2_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ct2_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ ct2_info.server_rules|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="FTBUAnniversary"></a>
-      {% if ftbu_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ftbu_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ ftbu_info.server_rules|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="FTBOceanBlock"></a>
-      {% if ob_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ob_info.modpack_name }} Rules</h3>
-      <div class="pageContent p-4">
-        {{ ob_info.server_rules|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
+  {% endfor %}
 
 </section>
 {% endblock %}
