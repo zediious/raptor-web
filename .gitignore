@@ -140,3 +140,6 @@ key.txt
 
 # Collected static files
 /config/static/*
+
+# Media files
+/raptorWeb/media
