@@ -6,8 +6,7 @@ from time import time
 from django.utils import timezone
 
 from raptorWeb import settings
-from raptormc.util import checkDatabase
-from raptormc.models import PlayerCount, PlayerName, Server, ServerInformation
+from raptormc.models import PlayerCount, PlayerName, Server
 
 LOGGER = getLogger(__name__)
 
@@ -37,26 +36,41 @@ class RaptorWare:
 
 def playerPoll():
     """
-    Query ShadowRaptor servers and add PlayerName and PlayerCount
-    objects to the database with a foreign key for each server. Will 
-    only run if created .LOCK file hasn't been written to in 2 minutes. 
-    Will confirm that Server objects exist, before getting them.
+    Query addresses provided in all Server objects and add PlayerName and 
+    PlayerCount objects to the database with a foreign key for each Server. 
+    Will only run if created .LOCK file hasn't been written to in 2 minutes.
     """
     try:
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
 
-        if  lock_time >= 120:
+        if  lock_time >= 10:
+
+            server_data = Server.objects.all()
+
+            server_key = 0
+            for server in server_data:
+
+                player_poller.server_data.update({
+                    f"server{server_key}": {
+                        "address": server.server_address,
+                        "port": server.server_port
+                    }
+                })
+
+                server_key += 1
             
             player_data = player_poller.get_current_players()
-
-            checkDatabase.confirm_database_integrity()
 
             PlayerCount.objects.all().delete()
             PlayerName.objects.all().delete()
 
-            PlayerCount.objects.create(server=Server.objects.get(server_name="network"), player_count=player_data["totalCount"]).save()
-
+            player_poller.currentPlayers_DB.update({
+                "totalCount": player_data["totalCount"]
+            })
+            
+            player_poller.currentPlayers_DB["server_info"] = []
+            server_number = 0
             for key in player_data:
 
                 if key == "totalCount":
@@ -65,98 +79,30 @@ def playerPoll():
 
                 for player in player_data[key]["names"]:
 
-                    PlayerName.objects.create(server=Server.objects.get(server_name=key) , name=player).save()
+                    PlayerName.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), name=player).save()
 
-                PlayerCount.objects.create(server=Server.objects.get(server_name=key), player_count=player_data[key]["count"]).save()
+                PlayerCount.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), player_count=player_data[key]["count"]).save()
 
-            totalCount = PlayerCount.objects.get(server=Server.objects.get(server_name="network")).player_count
-            player_names = PlayerName.objects.all()
-            nomi_info = ServerInformation.objects.get(server=Server.objects.get(server_name="nomi"))
-            e6e_info = ServerInformation.objects.get(server=Server.objects.get(server_name="e6e"))
-            ct2_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ct2"))
-            ftbu_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ftbu"))
-            ob_info = ServerInformation.objects.get(server=Server.objects.get(server_name="ob"))
-            atm7_info = ServerInformation.objects.get(server=Server.objects.get(server_name="atm7"))
-            
-            player_poller.currentPlayers_DB = {"player_count": totalCount,
-                                            "nomi_names": player_names.filter(server=Server.objects.get(server_name="nomi")),
-                                            "nomi_state": player_data["nomi"]["online"],
-                                            "nomi_maintenance": nomi_info.in_maintenance,
-                                            "nomi_info": {
-                                                "address": nomi_info.server_address,
-                                                "modpack_name": nomi_info.modpack_name,
-                                                "modpack_description": nomi_info.modpack_description,
-                                                "server_description": nomi_info.server_description,
-                                                "modpack": nomi_info.modpack_url,
-                                                "server_rules": nomi_info.server_rules,
-                                                "server_banned_items": nomi_info.server_banned_items,
-                                                "server_vote_links": nomi_info.server_vote_links
-                                            },
-                                            "e6e_names": player_names.filter(server=Server.objects.get(server_name="e6e")),
-                                            "e6e_state": player_data["e6e"]["online"],
-                                            "e6e_maintenance": e6e_info.in_maintenance,
-                                            "e6e_info": {
-                                                "address": e6e_info.server_address,
-                                                "modpack_name": e6e_info.modpack_name,
-                                                "modpack_description": e6e_info.modpack_description,
-                                                "server_description": e6e_info.server_description,
-                                                "modpack": e6e_info.modpack_url,
-                                                "server_rules": e6e_info.server_rules,
-                                                "server_banned_items": e6e_info.server_banned_items,
-                                                "server_vote_links": e6e_info.server_vote_links
-                                            },
-                                            "ct2_names": player_names.filter(server=Server.objects.get(server_name="ct2")),
-                                            "ct2_state": player_data["ct2"]["online"],
-                                            "ct2_maintenance": ct2_info.in_maintenance,
-                                            "ct2_info": {
-                                                "address": ct2_info.server_address,
-                                                "modpack_name": ct2_info.modpack_name,
-                                                "modpack_description": ct2_info.modpack_description,
-                                                "server_description": ct2_info.server_description,
-                                                "modpack": ct2_info.modpack_url,
-                                                "server_rules": ct2_info.server_rules,
-                                                "server_banned_items": ct2_info.server_banned_items,
-                                                "server_vote_links": ct2_info.server_vote_links
-                                            },
-                                            "ftbu_names": player_names.filter(server=Server.objects.get(server_name="ftbu")),
-                                            "ftbu_state": player_data["ftbu"]["online"],
-                                            "ftbu_maintenance": ftbu_info.in_maintenance,
-                                            "ftbu_info": {
-                                                "address": ftbu_info.server_address,
-                                                "modpack_name": ftbu_info.modpack_name,
-                                                "modpack_description": ftbu_info.modpack_description,
-                                                "server_description": ftbu_info.server_description,
-                                                "modpack": ftbu_info.modpack_url,
-                                                "server_rules": ftbu_info.server_rules,
-                                                "server_banned_items": ftbu_info.server_banned_items,
-                                                "server_vote_links": ftbu_info.server_vote_links
-                                            },
-                                            "ob_names": player_names.filter(server=Server.objects.get(server_name="ob")),
-                                            "ob_state": player_data["ob"]["online"],
-                                            "ob_maintenance": ob_info.in_maintenance,
-                                            "ob_info": {
-                                                "address": ob_info.server_address,
-                                                "modpack_name": ob_info.modpack_name,
-                                                "modpack_description": ob_info.modpack_description,
-                                                "server_description": ob_info.server_description,
-                                                "modpack": ob_info.modpack_url,
-                                                "server_rules": ob_info.server_rules,
-                                                "server_banned_items": ob_info.server_banned_items,
-                                                "server_vote_links": ob_info.server_vote_links
-                                            },
-                                            "atm7_names": player_names.filter(server=Server.objects.get(server_name="atm7")),
-                                            "atm7_state": player_data["atm7"]["online"],
-                                            "atm7_maintenance": atm7_info.in_maintenance,
-                                            "atm7_info": {
-                                                "address": atm7_info.server_address,
-                                                "modpack_name": atm7_info.modpack_name,
-                                                "modpack_description": atm7_info.modpack_description,
-                                                "server_description": atm7_info.server_description,
-                                                "modpack": atm7_info.modpack_url,
-                                                "server_rules": atm7_info.server_rules,
-                                                "server_banned_items": atm7_info.server_banned_items,
-                                                "server_vote_links": atm7_info.server_vote_links
-                                            }}
+                server_info = Server.objects.get(server_address=player_data[key]["address"])
+                
+                player_poller.currentPlayers_DB["server_info"].append({
+                    f"server{server_number}": {
+                        "key": key,
+                        "state": player_data[key]["online"],
+                        "maintenance": server_info.in_maintenance,
+                        "address": server_info.server_address,
+                        "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
+                        "modpack_name": server_info.modpack_name,
+                        "modpack_description": server_info.modpack_description,
+                        "server_description": server_info.server_description,
+                        "modpack": server_info.modpack_url,
+                        "server_rules": server_info.server_rules,
+                        "server_banned_items": server_info.server_banned_items,
+                        "server_vote_links": server_info.server_vote_links
+                    }
+                })
+
+                server_number += 1
 
             LOGGER.error("[INFO][{}] Request made, playerCounts.py ran".format(timezone.now().isoformat()))
 
