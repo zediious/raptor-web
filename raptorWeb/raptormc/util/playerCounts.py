@@ -7,11 +7,14 @@ class PlayerCounts():
     ShadowRaptor Minecraft servers for state and player information.
     """
     # Dictionary containing address/port/key names of servers
-    SERVER_DATA = settings.SERVER_DATA
+    server_data = {}
     # Dict to track player counts and names in each server internally
     currentPlayers = {}
     # Template context dictionary
-    currentPlayers_DB = {}     
+    currentPlayers_DB = {
+        "server_info": [],
+        "totalCount": 0
+    }     
 
     def parse_key (self, ADDRESS):
         """
@@ -31,15 +34,20 @@ class PlayerCounts():
 
                 serverJSON = JavaServer(ADDRESS, PORT).query()
 
-                self.currentPlayers[KEY]["online"] = True
-            
-                self.currentPlayers[KEY]["count"] += serverJSON.players.online
-
                 self.currentPlayers["totalCount"] += serverJSON.players.online
 
-                for player in serverJSON.players.names:
+                self.currentPlayers.update({
+                    KEY: {
+                        "address": ADDRESS,
+                        "online": True,
+                        "count": serverJSON.players.online,
+                        "names": [player for player in serverJSON.players.names]
+                    }
+                })
 
-                    self.currentPlayers[KEY]["names"].append(player)
+                # for player in serverJSON.players.names:
+
+                #     self.currentPlayers[KEY]["names"].append(player)
 
             except TimeoutError:
 
@@ -55,46 +63,15 @@ class PlayerCounts():
         with specific counts, player names and states for each server
         """
         self.currentPlayers = {
-            "totalCount": 0,
-            "nomi": {
-                "count": 0,
-                "names": [],
-                "online": False
-            },
-            "ob": {
-                "count": 0,
-                "names": [],
-                "online": False
-            },
-            "ftbu": {
-                "count": 0,
-                "names": [],
-                "online": False
-            },
-            "ct2": {
-                "count": 0,
-                "names": [],
-                "online": False
-            },
-            "e6e": {
-                "count": 0,
-                "names": [],
-                "online": False
-            },
-            "atm7": {
-                "count": 0,
-                "names": [],
-                "online": False
-            }
-
+            "totalCount": 0
         }
 
-        for server in self.SERVER_DATA:
+        for server in self.server_data:
 
             self.request_info(
-                self.SERVER_DATA[server]["address"], 
-                self.SERVER_DATA[server]["port"], 
-                self.parse_key(self.SERVER_DATA[server]["address"]))
+                self.server_data[server]["address"], 
+                self.server_data[server]["port"], 
+                self.parse_key(self.server_data[server]["address"]))
 
         with open('playerCounts.LOCK', 'w') as lock_file:
             lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")

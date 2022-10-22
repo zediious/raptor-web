@@ -37,18 +37,69 @@ class UserProfileInfo(models.Model):
 class Server(models.Model):
     """
     Represents a Minecraft Server
-    Includes the name and online/offline state
+    Includes all information about a server
     """
-    server_name = models.CharField(
-        max_length=50, 
-        default="none", 
-        unique=True)
-
     server_state = models.BooleanField(
-        default=False)
+        default=False
+    )
+
+    in_maintenance = models.BooleanField(
+        default=False,
+        verbose_name="Maintenance Mode"
+    )
+
+    server_address = models.CharField(
+        default="Default",
+        max_length=50)
+        
+    server_port = models.IntegerField(
+        default=00000
+    )
+
+    modpack_name = models.CharField(
+        max_length=100,
+        verbose_name="Modpack Name",
+        default="Unnamed Modpack"
+    )
+
+    modpack_description = RichTextField(
+        max_length=1500,
+        verbose_name="Modpack Description", 
+        default="Modpack Description")
+
+    server_description = RichTextField(
+        max_length=1500, 
+        verbose_name="Server Description", 
+        default="Server Description")
+
+    server_rules = RichTextField(
+        max_length=1500,
+        verbose_name="Server-Specific Rules",
+        default="Server-specific Rules"
+    )
+
+    server_banned_items = RichTextField(
+        max_length=1500,
+        verbose_name="Server-specific Banned Items",
+        default="Server-specific Banned Items"
+    )
+
+    server_vote_links = RichTextField(
+        max_length=1500,
+        verbose_name="Voting Site Links",
+        default="Server-specific Vote Links"
+    )
+
+    modpack_url = models.URLField(
+        max_length=200, 
+        verbose_name="Link to Modpack")
 
     def __str__(self) -> str:
-        return self.server_name
+        return self.modpack_name
+
+    class Meta:
+        verbose_name = "Server"
+        verbose_name_plural = "Servers"
 
 class PlayerCount(models.Model):
     """
@@ -103,70 +154,6 @@ class PlayerName(models.Model):
     class Meta:
         verbose_name = "Player Name"
         verbose_name_plural = "Player Names"
-
-class ServerInformation(models.Model):
-    """
-    Contains descriptive elements of a Server.
-    Has a OneToOne relationship with a Server
-    """
-    server = models.OneToOneField(
-        Server, 
-        on_delete=models.CASCADE)
-
-    in_maintenance = models.BooleanField(
-        default=False,
-        verbose_name="Maintenance Mode"
-    )
-
-    server_address = models.CharField(
-        max_length=50)
-
-    modpack_name = models.CharField(
-        max_length=100,
-        verbose_name="Modpack Name",
-        default="Unnamed Modpack"
-    )
-
-    modpack_description = RichTextField(
-        max_length=1500,
-        verbose_name="Modpack Description", 
-        default="Modpack Description")
-
-    server_description = RichTextField(
-        max_length=1500, 
-        verbose_name="Server Description", 
-        default="Server Description")
-
-    server_rules = RichTextField(
-        max_length=1500,
-        verbose_name="Server-Specific Rules",
-        default="Server-specific Rules"
-    )
-
-    server_banned_items = RichTextField(
-        max_length=1500,
-        verbose_name="Server-specific Banned Items",
-        default="Server-specific Banned Items"
-    )
-
-    server_vote_links = RichTextField(
-        max_length=1500,
-        verbose_name="Voting Site Links",
-        default="Server-specific Vote Links"
-    )
-
-    modpack_url = models.URLField(
-        max_length=200, 
-        verbose_name="Link to Modpack")
-
-    def __str__(self):
-        return str(
-            "Server Information for: {}".format(self.server.server_name)
-            )
-
-    class Meta:
-        verbose_name = "Server - Information"
-        verbose_name_plural = "Servers - Information"
 
 class InformativeText(models.Model):
     """
