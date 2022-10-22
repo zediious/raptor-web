@@ -90,7 +90,7 @@ ASGI_APPLICATION = 'raptorWeb.asgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 # Sqlite3 database for local development only
 
-USE_SQLITE = False
+USE_SQLITE = True
 DATABASES = {}
 
 if USE_SQLITE:
@@ -194,32 +194,7 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
-SERVER_DATA = {
-        "nomi": {
-            "address": "nomi.shadowraptor.net",
-            "port": 25566
-        },
-        "ob": {
-            "address": "ob.shadowraptor.net",
-            "port": 25567
-        },
-        "ftbu": {
-            "address": "ftbu.shadowraptor.net",
-            "port": 25568
-        },
-        "ct2": {
-            "address": "ct2.shadowraptor.net",
-            "port": 25569
-        },
-        "e6e": {
-            "address": "e6e.shadowraptor.net",
-            "port": 25570
-        },
-        "atm7": {
-            "address": "atm7.shadowraptor.net",
-            "port": 25571
-        }
-    }
+ENABLE_SERVER_QUERY = True
 
 BOOTSTRAP5 = {
 
