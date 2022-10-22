@@ -44,13 +44,17 @@ def playerPoll():
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
 
-        if  lock_time >= 10:
+        if  settings.ENABLE_SERVER_QUERY and lock_time >= 10 and Server.objects.count() > 0:
 
             server_data = Server.objects.all()
 
             server_key = 0
             for server in server_data:
 
+                if server.server_address == "Default":
+                    LOGGER.error("[INFO][{}] A server(s) exist, however they still have the default address set.".format(timezone.now().isoformat()))
+                    break
+                
                 player_poller.server_data.update({
                     f"server{server_key}": {
                         "address": server.server_address,
