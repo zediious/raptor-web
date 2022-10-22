@@ -65,7 +65,7 @@
             <div class="modal-header">
               <div class="row">
                 <h3 class="col-12 modal-title" id="{{ server|get_key }}InfoModal"><a href="{{ server|get_modpack_url }}" target="_blank">
-                  <img class="w-100" src="{% static 'image/packs/nomi.webp' %}" alt="{{ server|get_modpack_name }}"></a>
+                  <img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}"></a>
                 </h3>
                 <button class="col-12 mt-3 btn btn-outline-success copy{{ server|get_key }}Address" data-clipboard-text={{ server|get_address }}
                 data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
@@ -224,7 +224,7 @@
   
           </section>
   
-          <section class="col-lg col-12 fs-4 mt-1">
+          <section class="col-lg col-12 fs-4 mt-2 mb-3">
   
             <i id="copyAddress" class="row">
   
@@ -239,7 +239,7 @@
                   {% if server == 'view' or server == 'totalCount' %}
                   {% else %}
                                     
-                    <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#{{ server|get_key }}Info"><img class="w-100" src="{% static "image/packs/{{ server|get_key }}.webp" %}" alt="{{ server|get_modpack_name }}">
+                    <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#{{ server|get_key }}Info"><img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}">
                       {% if server|get_maintenance %}
                         <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
                       {% else %}
