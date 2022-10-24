@@ -32,7 +32,7 @@
         <div class="modal-content bg-dark text-white">
           <div class="modal-header">
             <h3 class="modal-title" id="playerNamesModal">Online Players</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             
@@ -61,7 +61,7 @@
       <div class="modal fade" id="{{ server|get_key }}Info" tabindex="-1" aria-labelledby="{{ server|get_modpack_name }} Information" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content bg-dark text-white">
-            <button type="button" class="btn-close m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-header">
               <div class="row">
                 <h3 class="col-12 modal-title" id="{{ server|get_key }}InfoModal"><a href="{{ server|get_modpack_url }}" target="_blank">
@@ -119,7 +119,7 @@
 
     <div id="headerBox" class="container-flex" style="background-image: url({% static 'image/background.webp' %}); background-color: rgba(0,13,33,255); background-position: top center; background-attachment: scroll;">
 
-      <nav class="navbar bg-dark">
+      <nav class="navbar navbar-dark bg-dark">
         <div class="container">
           <div class="navbar-header d-flex">
             <div class="row p-2 pt-1 pb-1">
@@ -132,11 +132,11 @@
         </div>
       </nav>
       
-      <nav class="navbar bg-dark">
+      <nav class="navbar navbar-dark bg-dark">
         <div class="container">
           <div class="d-flex">
             <div class="navbar-header d-flex">
-              <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-5" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+              <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon" ></span>
               </button>
               <a class="navbar-brand m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
