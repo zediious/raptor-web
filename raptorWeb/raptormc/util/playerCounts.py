@@ -47,6 +47,15 @@ class PlayerCounts():
 
             except TimeoutError:
 
+                self.currentPlayers.update({
+                    KEY: {
+                        "address": ADDRESS,
+                        "online": False,
+                        "count": 0,
+                        "names": []
+                    }
+                })
+                
                 pass
 
         else:
