@@ -10,7 +10,8 @@
 {% endblock %}
 {% block metadata %}
 <meta property="og:title" content="ShadowRaptor | Rules" />
-<meta property="og:description" content="This page contains our Network-Wide rules, as well as rules that only apply to specific servers." />
+<meta property="og:description" content="{{ rules_info.content|striptags }}" />
+<meta property="og:url" content="https://shadowraptor.net/rules" />
 {% endblock %}
 
 {% block main_block %}
