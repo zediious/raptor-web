@@ -8,7 +8,7 @@ from django.utils import timezone
 from raptorWeb import settings
 from raptormc.models import PlayerCount, PlayerName, Server
 
-LOGGER = getLogger(__name__)
+LOGGER = getLogger('raptormc.jobs')
 
 class RaptorWare:
     """
@@ -52,7 +52,7 @@ def playerPoll():
             for server in server_data:
 
                 if server.server_address == "Default":
-                    LOGGER.error("[INFO][{}] A server(s) exist, however they still have the default address set.".format(timezone.now().isoformat()))
+                    LOGGER.error("A server(s) exist, however they still have the default address set.")
                     break
                 
                 player_poller.server_data.update({
@@ -108,13 +108,13 @@ def playerPoll():
 
                 server_number += 1
 
-            LOGGER.error("[INFO][{}] Request made, playerCounts.py ran".format(timezone.now().isoformat()))
+            LOGGER.info("Request made, playerCounts.py ran")
 
         else:
 
-            LOGGER.error("[INFO][{}] Request made, not enough time has passed to run playerCounts.py".format(timezone.now().isoformat()))
+            LOGGER.info("Request made, not enough time has passed to run playerCounts.py")
 
     except FileNotFoundError as e:
 
         LOGGER.error(e)
-        LOGGER.error("[ERROR][{}] playerCounts.LOCK file not present. Please create the file at the above path.".format(timezone.now().isoformat()))
+        LOGGER.error("playerCounts.LOCK file not present. Please create the file at the above path.")

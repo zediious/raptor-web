@@ -133,6 +133,62 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'debug': {
+            'format': '[{levelname}] [{asctime}] {module} {process:d} {thread:d} {message}',
+            'datefmt': '%H:%M:%S',
+            'style': '{',
+        },
+        'simple_time': {
+            'format': '[{levelname}] [{asctime}] {message}',
+            'datefmt': '%H:%M',
+            'style': '{',
+        },
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'datefmt': '%H:%M',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple_time'
+        },
+        'log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(BASE_DIR, 'raptorWeb.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'log_file'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console', 'log_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'raptormc.views': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'raptormc.jobs': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
+    }
+}
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
