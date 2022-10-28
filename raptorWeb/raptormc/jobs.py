@@ -44,7 +44,7 @@ def playerPoll():
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
 
-        if  settings.ENABLE_SERVER_QUERY and lock_time >= 10 and Server.objects.count() > 0:
+        if  settings.ENABLE_SERVER_QUERY and lock_time >= 120 and Server.objects.count() > 0:
 
             server_data = Server.objects.all()
 
