@@ -10,7 +10,8 @@
 {% endblock %}
 {% block metadata %}
 <meta property="og:title" content="ShadowRaptor | Voting" />
-<meta property="og:description" content="This page contains Vote Links and Forum Posts for all of our servers. Vote or leave a rating if you have enjoyed your time on our servers!" />
+<meta property="og:description" content="{{ voting_info.content|striptags }}" />
+<meta property="og:url" content="https://shadowraptor.net/voting" />
 {% endblock %}
 
 {% block main_block %}
