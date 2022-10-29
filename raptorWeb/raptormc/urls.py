@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('', SR.Info.HomeServers.as_view(), name="home"),
     path('home/', SR.Info.HomeServers.as_view(), name="home_alt"),
+    path('announcements/', SR.Info.Announcements.as_view(), name="announcements"),
     path('rules/', SR.Info.Rules.as_view(), name="rules"),
     path('banneditems/', SR.Info.BannedItems.as_view(), name="banned_items"),
     path('voting/', SR.Info.Voting.as_view(), name="voting"),
