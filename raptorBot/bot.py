@@ -1,10 +1,10 @@
-import os
 import discord
+from os import getenv
 from dotenv import load_dotenv
 from json import dumps
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = getenv('DISCORD_TOKEN')
 
 DISCORD_GUILD = 740388741079760937
 
@@ -36,7 +36,32 @@ async def update_announcements(client, message):
 
         announcementsJSON = open("../raptorWeb/announcements.json", "w")
         announcementsJSON.write(dumps(announcements, indent=4))
-        announcementsJSON.close()    
+        announcementsJSON.close()
+
+async def update_member_count(client):
+    """
+    Gets a count of total and online members on a
+    provided Discord server, and places them in
+    a dictionary. Data is saved to a "discordInfo.json"
+    on each iteration.
+    """
+    server = client.get_guild(DISCORD_GUILD)
+    member_total = len(server.members)
+    online_members = 0
+
+    for member in server.members:
+
+        if member.status != discord.Status.offline:
+            online_members += 1
+
+    discord_info = {
+        "totalMembers": member_total,
+        "onlineMembers": online_members
+    }
+
+    membersJSON = open("../raptorWeb/discordInfo.json", "w")
+    membersJSON.write(dumps(discord_info, indent=4))
+    membersJSON.close()
 
 class RaptorClient(discord.Client):
 
@@ -55,24 +80,8 @@ class RaptorClient(discord.Client):
     async def on_presence_update(self, before, after):
         """
         Triggers when a member's status on the server changes.
-        """
-        sr_guild = client.get_guild(740388741079760937)
-        member_total = len(sr_guild.members)
-        online_members = 0
-
-        for member in sr_guild.members:
-
-            if member.status != discord.Status.offline:
-                online_members += 1
-
-        discord_info = {
-            "totalMembers": member_total,
-            "onlineMembers": online_members
-        }
-
-        membersJSON = open("../raptorWeb/discordInfo.json", "w")
-        membersJSON.write(dumps(discord_info, indent=4))
-        membersJSON.close() 
+        """ 
+        await update_member_count(client)
 
 intents = discord.Intents.all()
 intents.message_content = True
