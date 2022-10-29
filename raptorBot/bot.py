@@ -18,25 +18,49 @@ async def update_announcements(client, message):
     to an "announcements.json" each iteration.
     """
     channel = client.get_channel(ANNOUNCEMENT_CHANNEL)
-    if message.channel == channel:
+    try:
 
-        messages = [message async for message in channel.history(limit=5)]
-        announcements = {}
+        if message.channel == channel:
 
-        key = 0
-        for message in messages:
-            announcements.update({
-                "message{}".format(key): {
-                    "author": str(message.author),
-                    "message": message.content,
-                    "date": str(message.created_at.date().strftime('%B %d %Y'))
-                    }
-            })
-            key += 1
+            messages = [message async for message in channel.history(limit=30)]
+            announcements = {}
 
-        announcementsJSON = open("../raptorWeb/announcements.json", "w")
-        announcementsJSON.write(dumps(announcements, indent=4))
-        announcementsJSON.close()
+            key = 0
+            for message in messages:
+                announcements.update({
+                    "message{}".format(key): {
+                        "author": str(message.author),
+                        "message": message.content,
+                        "date": str(message.created_at.date().strftime('%B %d %Y'))
+                        }
+                })
+                key += 1
+
+            announcementsJSON = open("../raptorWeb/announcements.json", "w")
+            announcementsJSON.write(dumps(announcements, indent=4))
+            announcementsJSON.close()
+
+    except AttributeError:
+
+        if message.channel_id == ANNOUNCEMENT_CHANNEL:
+
+            messages = [message async for message in channel.history(limit=30)]
+            announcements = {}
+
+            key = 0
+            for message in messages:
+                announcements.update({
+                    "message{}".format(key): {
+                        "author": str(message.author),
+                        "message": message.content,
+                        "date": str(message.created_at.date().strftime('%B %d %Y'))
+                        }
+                })
+                key += 1
+
+            announcementsJSON = open("../raptorWeb/announcements.json", "w")
+            announcementsJSON.write(dumps(announcements, indent=4))
+            announcementsJSON.close()
 
 async def update_member_count(client):
     """
@@ -74,6 +98,12 @@ class RaptorClient(discord.Client):
     async def on_message(self, message):
         """
         Triggers when a message is sent in the Discord Server.
+        """
+        await update_announcements(client, message)
+
+    async def on_raw_message_edit(client, message):
+        """
+        Triggers when a message is edited on the server.
         """
         await update_announcements(client, message)
 
