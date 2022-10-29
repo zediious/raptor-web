@@ -54,6 +54,32 @@ class ShadowRaptor():
                     LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
                 return context
 
+        class Announcements(TemplateView):
+            """
+            Page containing the last 30 announcements from Discord
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'announcements.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                try:
+                    announcement_dict = {
+                        "announcements": []
+                    }
+                    message_json = dict(load(open(join(settings.BASE_DIR, 'announcements.json'), "r")))
+                    for message in message_json:
+                        announcement_dict["announcements"].append({
+                            "author": message_json[message]["author"],
+                            "message": message_json[message]["message"],
+                            "date": message_json[message]["date"]
+                        })
+                    context.update(announcement_dict)
+                    context.update(open(join(settings.BASE_DIR, 'discordInfo.json'), "r"))
+                except:
+                    LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                return context
+
         class Rules(TemplateView):
             """
             Rules page containing general and server-specific rules

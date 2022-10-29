@@ -1,0 +1,45 @@
+{% extends 'raptormc/base.html' %}
+{% load markdownStrip %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | Announcements
+  
+</title>
+{% endblock %}
+{% block metadata %}
+<meta property="og:title" content="ShadowRaptor | Announcements" />
+<meta property="og:description" content="The last 30 announcements made by ShadowRaptor Network" />
+<meta property="og:url" content="https://shadowraptor.net/announcements" />
+{% endblock %}
+
+{% block main_block %}
+
+<section id="welcome" class="container mb-0">
+
+  <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+    <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
+    <hr>
+    <div class="pageContent">
+      This page displays the last 30 announcements from our Discord server.
+    </div>
+  </header>
+
+</section>
+
+<section id="discordAnnouncements" class="container mt-0">
+
+  <header class="p-0 mt-4">
+    {% autoescape off %}
+    {% for announcement in announcements %}
+      <div class="pageContent card bg-light opacity-75 mt-4">
+        <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
+      </div>
+    {% endfor %}
+    {% endautoescape %}
+  </header>
+
+</section>
+{% endblock %}
