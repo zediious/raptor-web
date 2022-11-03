@@ -1,23 +1,24 @@
 import discord
+from discord.ext import commands
 from os import getenv
 from dotenv import load_dotenv
-from json import dumps
+from json import dumps, load
 
 load_dotenv()
 TOKEN = getenv('DISCORD_TOKEN')
 
+DESCRIPTION = "I do work for the ShadowRaptorMC website!"
 DISCORD_GUILD = 740388741079760937
-
 ANNOUNCEMENT_CHANNEL = 741015006480564254
 
-async def update_announcements(client, message):
+async def update_announcements(message):
     """
     Gets all messages from defined "ANNOUNCEMENT_CHANNEL" and
     places their content in a Dictionary, nested in another
     dictionary keyed by a countered number. Data is saved
     to an "announcements.json" each iteration.
     """
-    channel = client.get_channel(ANNOUNCEMENT_CHANNEL)
+    channel = raptor_bot.get_channel(ANNOUNCEMENT_CHANNEL)
     try:
 
         if message.channel == channel:
@@ -62,14 +63,14 @@ async def update_announcements(client, message):
             announcementsJSON.write(dumps(announcements, indent=4))
             announcementsJSON.close()
 
-async def update_member_count(client):
+async def update_member_count():
     """
     Gets a count of total and online members on a
     provided Discord server, and places them in
     a dictionary. Data is saved to a "discordInfo.json"
     on each iteration.
     """
-    server = client.get_guild(DISCORD_GUILD)
+    server = raptor_bot.get_guild(DISCORD_GUILD)
     member_total = len(server.members)
     online_members = 0
 
@@ -87,34 +88,51 @@ async def update_member_count(client):
     membersJSON.write(dumps(discord_info, indent=4))
     membersJSON.close()
 
-class RaptorClient(discord.Client):
-
-    async def on_ready(self):
-        """
-        Triggers when the bot has logged in and is ready.
-        """
-        print(f'Logged on as {self.user}!')
-
-    async def on_message(self, message):
-        """
-        Triggers when a message is sent in the Discord Server.
-        """
-        await update_announcements(client, message)
-
-    async def on_raw_message_edit(client, message):
-        """
-        Triggers when a message is edited on the server.
-        """
-        await update_announcements(client, message)
-
-    async def on_presence_update(self, before, after):
-        """
-        Triggers when a member's status on the server changes.
-        """ 
-        await update_member_count(client)
-
+# State bot intents and declare Bot instance
 intents = discord.Intents.all()
 intents.message_content = True
+intents.members = True
+raptor_bot = commands.Bot(command_prefix='!', description=DESCRIPTION, intents=intents)
 
-client = RaptorClient(intents=intents, max_messages=20000)
-client.run(TOKEN)
+# Define events to listen to and bot commands
+@raptor_bot.event
+async def on_ready():
+    print(f'Logged in as {raptor_bot.user} (ID: {raptor_bot.user.id})')
+    try:
+        synced = await raptor_bot.tree.sync()
+        print(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        print(e)
+
+@raptor_bot.event
+async def on_message(message):
+    await update_announcements(message)
+
+@raptor_bot.event
+async def on_raw_message_edit(message):
+    await update_announcements(message)
+
+@raptor_bot.event
+async def on_presence_update(before, after):
+    await update_member_count()
+
+@raptor_bot.tree.command(name="display_server_info")
+@discord.app_commands.describe(key = "Choose a server address prefix")
+async def display_server_info(interaction: discord.Interaction, key: str):
+    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
+    for server in server_data:
+
+        if server_data[server]["address"].split(".")[0] == key:
+            server_embed = discord.Embed(title=server_data[server]["modpack_name"], description=f"Join at: ```{server_data[server]['address']}```", color=0x00ff00, url=server_data[server]["modpack_url"])
+            server_embed.add_field(name="Modpack Description", value=server_data[server]['modpack_description'], inline=False)
+            server_embed.add_field(name="Server Description", value=server_data[server]['server_description'], inline=False)
+            server_embed.add_field(name="~~~",
+            value=f"Rules: https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\nBanned Items: https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\nVote Links: https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
+            server_embed.add_field(name="~~~", value=f"The server is running ```v{server_data[server]['modpack_version']}```", inline=False)
+            server_embed.add_field(name="~~~", value="```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
+            server_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server_data[server]['address'].split('.')[0]}.webp")
+
+            await interaction.response.send_message(embed=server_embed)
+
+# Run the bot
+raptor_bot.run(TOKEN)
