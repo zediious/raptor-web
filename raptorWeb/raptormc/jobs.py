@@ -2,8 +2,9 @@ from raptormc.views import player_poller
 from os.path import join, getmtime
 from logging import getLogger
 from time import time
+from json import dumps
 
-from django.utils import timezone
+from django.utils.html import strip_tags
 
 from raptorWeb import settings
 from raptormc.models import PlayerCount, PlayerName, Server
@@ -118,3 +119,27 @@ def playerPoll():
 
         LOGGER.error(e)
         LOGGER.error("playerCounts.LOCK file not present. Please create the file at the above path.")
+
+def export_server_data():
+    """
+    Export current Server Models to a json file
+    """
+    current_servers = {}
+    server_num = 0
+
+    for server in Server.objects.all():
+
+        current_servers.update({
+            f'server{server_num}': {
+                "address": server.server_address,
+                "modpack_name": server.modpack_name,
+                "modpack_description": strip_tags(server.modpack_description),
+                "server_description": strip_tags(server.server_description),
+                "modpack_url": server.modpack_url
+            }
+        })
+        server_num += 1
+
+    server_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
+    server_json.write(dumps(current_servers, indent=4))
+    server_json.close()
