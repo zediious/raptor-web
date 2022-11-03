@@ -62,6 +62,12 @@ class Server(models.Model):
         default="Unnamed Modpack"
     )
 
+    modpack_version = models.CharField(
+        max_length=100,
+        verbose_name="Modpack Version",
+        default="1.0"
+    )
+
     modpack_description = RichTextField(
         max_length=1500,
         verbose_name="Modpack Description", 
