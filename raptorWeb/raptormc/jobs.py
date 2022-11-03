@@ -20,6 +20,7 @@ class RaptorWare:
         """
         One-time configuration and initialization.
         """
+        export_server_data()
         playerPoll()
 
         self.get_response = get_response
@@ -31,6 +32,7 @@ class RaptorWare:
         """
         response = self.get_response(request)
 
+        export_server_data()
         playerPoll()
         
         return response
@@ -133,6 +135,7 @@ def export_server_data():
             f'server{server_num}': {
                 "address": server.server_address,
                 "modpack_name": server.modpack_name,
+                "modpack_version": server.modpack_version,
                 "modpack_description": strip_tags(server.modpack_description),
                 "server_description": strip_tags(server.server_description),
                 "modpack_url": server.modpack_url
