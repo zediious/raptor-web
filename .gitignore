@@ -134,6 +134,7 @@ playerCounts.LOCK
 # RaptorBot JSON
 announcements.json
 discordInfo.json
+server_data.json
 
 # Key
 key.txt
