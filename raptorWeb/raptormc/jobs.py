@@ -2,7 +2,7 @@ from raptormc.views import player_poller
 from os.path import join, getmtime
 from logging import getLogger
 from time import time
-from json import dumps
+from json import dumps, load
 
 from django.utils.html import strip_tags
 
@@ -72,6 +72,10 @@ def playerPoll():
             PlayerCount.objects.all().delete()
             PlayerName.objects.all().delete()
 
+            announcement_dict = {}
+            with open(join(settings.BASE_DIR, 'server_announcements.json'), "r+") as announcement_json:
+                announcement_dict = load(announcement_json)
+
             player_poller.currentPlayers_DB.update({
                 "totalCount": player_data["totalCount"]
             })
@@ -92,6 +96,21 @@ def playerPoll():
 
                 server_info = Server.objects.get(server_address=player_data[key]["address"])
                 
+                announcements = {}
+                for server in server_data:
+                    announcements.update({
+                        server.server_address.split('.')[0]: {}
+                    })
+                for message in announcement_dict[key]:
+                    announcements[key].update({
+                        message: {
+                            "author": announcement_dict[key][message]["author"],
+                            "message": announcement_dict[key][message]["message"],
+                            "date": announcement_dict[key][message]["date"]
+                        }
+                    })
+                print(announcements)
+  
                 player_poller.currentPlayers_DB["server_info"].append({
                     f"server{server_number}": {
                         "key": key,
@@ -103,12 +122,13 @@ def playerPoll():
                         "modpack_description": server_info.modpack_description,
                         "server_description": server_info.server_description,
                         "modpack": server_info.modpack_url,
+                        "announcements": announcements,
                         "server_rules": server_info.server_rules,
                         "server_banned_items": server_info.server_banned_items,
                         "server_vote_links": server_info.server_vote_links
                     }
                 })
-
+                
                 server_number += 1
 
             LOGGER.info("Request made, playerCounts.py ran")
