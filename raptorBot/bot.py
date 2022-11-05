@@ -2,7 +2,9 @@ import discord
 from discord.ext import commands
 from os import getenv
 from dotenv import load_dotenv
-from json import dumps, load
+from json import dump, dumps, load
+from os.path import getmtime
+from time import time
 
 load_dotenv()
 TOKEN = getenv('DISCORD_TOKEN')
@@ -10,6 +12,7 @@ TOKEN = getenv('DISCORD_TOKEN')
 DESCRIPTION = "I do work for the ShadowRaptorMC website!"
 DISCORD_GUILD = 740388741079760937
 ANNOUNCEMENT_CHANNEL = 741015006480564254
+STAFF_ROLE_ID = 937891209291120660
 
 async def update_announcements(message):
     """
@@ -63,6 +66,76 @@ async def update_announcements(message):
             announcementsJSON.write(dumps(announcements, indent=4))
             announcementsJSON.close()
 
+async def update_server_announcements(message):
+    """
+    Get all messages mentioning roles associated with 
+    the list of Server Modals, and places them
+    in a dictionary keyed by the Server address key.
+    """
+    if message.author.get_role(STAFF_ROLE_ID) != None:
+        try:
+            lock_time = time() - getmtime('update_server_announcements.LOCK')
+        
+            if lock_time >= 10: 
+                announcement_dict = {}
+                with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
+                    announcement_dict = load(announcement_json)
+                with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
+                    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
+                    sr_guild = raptor_bot.get_guild(DISCORD_GUILD)
+                    total_role_list = await sr_guild.fetch_roles()
+                    announcement_json.seek(0)
+                    role_list = {}
+                    # Get role names and ids that match modpack names, keyed by their address key
+                    for server in server_data:
+                        for role in total_role_list:
+                            if role.name == str(f'{server_data[server]["modpack_name"]}'):
+                                role_list.update({
+                                    server_data[server]["address"].split('.')[0]: {
+                                        "id": role.id,
+                                        "name": role.name
+                                    }
+                                })
+                    # Check if message contains a mention of roles found above, if a match is found it is saved
+                    for server in server_data:
+                        for role in role_list:
+                            if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[server]["modpack_name"]:
+                                current_time = time()
+                                try:
+                                    announcement_dict[server_data[server]["address"].split('.')[0]].update({
+                                        f"message_{str(message.author)}-{str(message.created_at.date().strftime(f'{current_time}-%B-%d-%Y'))}": {
+                                            "author": str(message.author),
+                                            "message": message.content,
+                                            "date": str(message.created_at.date().strftime('%B %d %Y'))
+                                        }
+                                    })
+                                # If a dictionary keyed by server role/modpack name doesn't exist, create it first.
+                                except KeyError as e:
+                                    announcement_dict.update({
+                                        server_data[server]["address"].split('.')[0]: {}
+                                    })
+                                    announcement_dict[server_data[server]["address"].split('.')[0]].update({
+                                        f"message_{str(message.author)}-{str(message.created_at.date().strftime(f'{current_time}-%B-%d-%Y'))}": {
+                                            "author": str(message.author),
+                                            "message": message.content,
+                                            "date": str(message.created_at.date().strftime('%B %d %Y'))
+                                        }
+                                    })
+
+
+                    dump(announcement_dict, announcement_json, indent=4)
+
+                with open('update_server_announcements.LOCK', 'w') as lock_file:
+                    lock_file.write("update_server_announcements function LOCK File. Do not modify manually.")
+
+            else:
+                print("Not enough time has passed to update server announcements")
+
+        except FileNotFoundError as e:
+            print(f"{e}\n")
+            print("update_server_announcements.LOCK file not found. Create a file with this exact name in the same directory as bot.py.")
+
+
 async def update_member_count():
     """
     Gets a count of total and online members on a
@@ -107,10 +180,12 @@ async def on_ready():
 @raptor_bot.event
 async def on_message(message):
     await update_announcements(message)
+    await update_server_announcements(message)
 
 @raptor_bot.event
 async def on_raw_message_edit(message):
     await update_announcements(message)
+    await update_server_announcements(message)
 
 @raptor_bot.event
 async def on_presence_update(before, after):
