@@ -128,13 +128,15 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# playerCounts.py LOCK
+# LOCK Files
 playerCounts.LOCK
+update_server_announcements.LOCK
 
 # RaptorBot JSON
 announcements.json
 discordInfo.json
 server_data.json
+server_announcements.json
 
 # Key
 key.txt
