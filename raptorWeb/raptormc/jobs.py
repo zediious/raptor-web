@@ -109,7 +109,6 @@ def playerPoll():
                             "date": announcement_dict[key][message]["date"]
                         }
                     })
-                print(announcements)
   
                 player_poller.currentPlayers_DB["server_info"].append({
                     f"server{server_number}": {
@@ -128,7 +127,7 @@ def playerPoll():
                         "server_vote_links": server_info.server_vote_links
                     }
                 })
-                
+
                 server_number += 1
 
             LOGGER.info("Request made, playerCounts.py ran")
