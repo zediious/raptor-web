@@ -106,14 +106,17 @@ def playerPoll():
                 announcements = []
                 if do_announcement == True:
 
-                    for message in announcement_dict[key]:
-                        announcements.append({
-                            message: {
-                                "author": announcement_dict[key][message]["author"],
-                                "message": announcement_dict[key][message]["message"],
-                                "date": announcement_dict[key][message]["date"]
-                            }
-                        })
+                    try:
+                        for message in announcement_dict[key]:
+                            announcements.append({
+                                message: {
+                                    "author": announcement_dict[key][message]["author"],
+                                    "message": announcement_dict[key][message]["message"],
+                                    "date": announcement_dict[key][message]["date"]
+                                }
+                            })
+                    except KeyError as e:
+                        LOGGER.info("A Server exists, however no announcements have been made regarding it yet. Skipping.")
   
                 player_poller.currentPlayers_DB["server_info"].append({
                     f"server{server_number}": {
