@@ -73,8 +73,14 @@ def playerPoll():
             PlayerName.objects.all().delete()
 
             announcement_dict = {}
-            with open(join(settings.BASE_DIR, 'server_announcements.json'), "r+") as announcement_json:
-                announcement_dict = load(announcement_json)
+            do_announcement = False
+            try:
+                with open(join(settings.BASE_DIR, 'server_announcements.json'), "r+") as announcement_json:
+                    announcement_dict = load(announcement_json)
+                    do_announcement = True
+            except Exception as e:
+                LOGGER.info('server_announcements.json not present, allow Discord Bot to create and populate this file')
+                do_announcement = False
 
             player_poller.currentPlayers_DB.update({
                 "totalCount": player_data["totalCount"]
@@ -96,19 +102,17 @@ def playerPoll():
 
                 server_info = Server.objects.get(server_address=player_data[key]["address"])
                 
-                announcements = {}
-                for server in server_data:
-                    announcements.update({
-                        server.server_address.split('.')[0]: {}
-                    })
-                for message in announcement_dict[key]:
-                    announcements[key].update({
-                        message: {
-                            "author": announcement_dict[key][message]["author"],
-                            "message": announcement_dict[key][message]["message"],
-                            "date": announcement_dict[key][message]["date"]
-                        }
-                    })
+                announcements = []
+                if do_announcement == True:
+                    
+                    for message in announcement_dict[key]:
+                        announcements.append({
+                            message: {
+                                "author": announcement_dict[key][message]["author"],
+                                "message": announcement_dict[key][message]["message"],
+                                "date": announcement_dict[key][message]["date"]
+                            }
+                        })
   
                 player_poller.currentPlayers_DB["server_info"].append({
                     f"server{server_number}": {
@@ -118,6 +122,7 @@ def playerPoll():
                         "address": server_info.server_address,
                         "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
                         "modpack_name": server_info.modpack_name,
+                        "modpack_version": server_info.modpack_version,
                         "modpack_description": server_info.modpack_description,
                         "server_description": server_info.server_description,
                         "modpack": server_info.modpack_url,

@@ -74,7 +74,7 @@ class ShadowRaptor():
                             "date": message_json[message]["date"]
                         })
                     context.update(announcement_dict)
-                    context.update(open(join(settings.BASE_DIR, 'discordInfo.json'), "r"))
+                    context.update(load(open(join(settings.BASE_DIR, 'discordInfo.json'), "r")))
                 except:
                     LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
                 return context
