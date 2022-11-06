@@ -75,9 +75,22 @@
               {{ server|get_modpack_desc|safe }}
               <hr>
               {{ server|get_server_desc|safe }}
+              <p class="text-center">
+                <span class="pageContent">The server is running: <strong>v{{ server|get_modpack_version}}</strong></span>
+              </p>
             </div>
             <div class="modal-footer justify-content-center">
 
+              {% if request.path == '/announcements/' %}
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
+                  Announcements
+                </a>
+              {% else %}
+                <a role="button" class="btn btn-outline-secondary" onclick="nomiRule()" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
+                  Announcements
+                </a>
+              {% endif %}
+              
               {% if request.path == '/rules/' %}
                 <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server|get_key }}">
                   Rules
