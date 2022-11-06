@@ -77,7 +77,8 @@ def playerPoll():
             try:
                 with open(join(settings.BASE_DIR, 'server_announcements.json'), "r+") as announcement_json:
                     announcement_dict = load(announcement_json)
-                    do_announcement = True
+                    if announcement_dict != {}:
+                        do_announcement = True
             except Exception as e:
                 LOGGER.info('server_announcements.json not present, allow Discord Bot to create and populate this file')
                 do_announcement = False
@@ -104,7 +105,7 @@ def playerPoll():
                 
                 announcements = []
                 if do_announcement == True:
-                    
+
                     for message in announcement_dict[key]:
                         announcements.append({
                             message: {
