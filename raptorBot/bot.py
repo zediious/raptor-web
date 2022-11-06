@@ -78,8 +78,15 @@ async def update_server_announcements(message):
         
             if lock_time >= 10: 
                 announcement_dict = {}
-                with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
-                    announcement_dict = load(announcement_json)
+                try:
+                    with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
+                        announcement_dict = load(announcement_json)
+                except:
+                    with open("../raptorWeb/server_announcements.json", "w") as create_file:
+                        create_file.write('{}')
+                        print('Created empty server_announcements.json')
+                    with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
+                        announcement_dict = load(announcement_json)
                 with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
                     server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
                     sr_guild = raptor_bot.get_guild(DISCORD_GUILD)
@@ -185,7 +192,6 @@ async def on_message(message):
 @raptor_bot.event
 async def on_raw_message_edit(message):
     await update_announcements(message)
-    await update_server_announcements(message)
 
 @raptor_bot.event
 async def on_presence_update(before, after):
@@ -199,12 +205,11 @@ async def display_server_info(interaction: discord.Interaction, key: str):
 
         if server_data[server]["address"].split(".")[0] == key:
             server_embed = discord.Embed(title=server_data[server]["modpack_name"], description=f"Join at: ```{server_data[server]['address']}```", color=0x00ff00, url=server_data[server]["modpack_url"])
-            server_embed.add_field(name="Modpack Description", value=server_data[server]['modpack_description'], inline=False)
-            server_embed.add_field(name="Server Description", value=server_data[server]['server_description'], inline=False)
-            server_embed.add_field(name="~~~",
-            value=f"Rules: https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\nBanned Items: https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\nVote Links: https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
-            server_embed.add_field(name="~~~", value=f"The server is running ```v{server_data[server]['modpack_version']}```", inline=False)
-            server_embed.add_field(name="~~~", value="```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
+            server_embed.add_field(name="\u200b", value=server_data[server]['modpack_description'], inline=False)
+            server_embed.add_field(name="\u200b", value=server_data[server]['server_description'], inline=False)
+            server_embed.add_field(name="\u200b",
+            value=f"**Rules:** https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\n**Banned Items:** https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\n**Vote Links:** https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
+            server_embed.add_field(name="\u200b", value=f"The server is running;```v{server_data[server]['modpack_version']}```\n```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
             server_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server_data[server]['address'].split('.')[0]}.webp")
 
             await interaction.response.send_message(embed=server_embed)
