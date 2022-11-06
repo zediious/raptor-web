@@ -183,3 +183,42 @@ def get_vote_links(value):
 
         except:
             continue
+
+@register.filter
+def get_modpack_version(value):
+    """
+    Get modpack version from context dictionary.
+    """
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
+
+        try:
+            return value[f"server{number}"]["modpack_version"]
+
+        except:
+            continue
+
+@register.filter
+def get_message(value):
+    """
+    Get message value from a message dicionary
+    """
+    print(value)
+    return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["message"]
+
+@register.filter
+def get_author(value):
+    """
+    Get author value from a message dicionary
+    """
+    print(value)
+    return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["author"]
+
+@register.filter
+def get_date(value):
+    """
+    Get date value from a message dicionary
+    """
+    print(value)
+    return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["date"]
