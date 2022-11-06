@@ -63,6 +63,14 @@ class ShadowRaptor():
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
                 try:
+                    context.update({
+                        "announcement_info": InformativeText.objects.get(name="Announcements Information"),
+                    })
+                except:
+                    context.update({
+                        "announcement_info": InformativeText.objects.create(name="Announcements Information", content="Update 'Announcements Information' Model to change this text", pk=11),
+                    })
+                try:
                     announcement_dict = {
                         "announcements": []
                     }
