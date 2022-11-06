@@ -204,7 +204,6 @@ def get_message(value):
     """
     Get message value from a message dicionary
     """
-    print(value)
     return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["message"]
 
 @register.filter
@@ -212,7 +211,6 @@ def get_author(value):
     """
     Get author value from a message dicionary
     """
-    print(value)
     return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["author"]
 
 @register.filter
@@ -220,5 +218,4 @@ def get_date(value):
     """
     Get date value from a message dicionary
     """
-    print(value)
     return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["date"]
