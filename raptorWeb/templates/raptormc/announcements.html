@@ -1,5 +1,6 @@
 {% extends 'raptormc/base.html' %}
 {% load markdownStrip %}
+{% load serverContext %}
 
 {% block page_title %}
 <title>
@@ -22,7 +23,7 @@
     <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
     <hr>
     <div class="pageContent">
-      This page displays the last 30 announcements from our Discord server.
+      {{ announcement_info.content|safe }}
     </div>
   </header>
 
@@ -32,12 +33,43 @@
 
   <header class="p-0 mt-4">
     {% autoescape off %}
-    {% for announcement in announcements %}
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
+    {% for server in server_info reversed %}
+    <a id="{{ server|get_key }}"></a>
+    <p class="text-center">
+        <a class="btn btn-secondary w-100" data-bs-toggle="collapse" href="#{{ server|get_key }}collapse" role="button" aria-expanded="false" aria-controls="collapse">
+          {{ server|get_modpack_name }} Announcements
+        </a>
+      </p>
+      <div class="collapse" id="{{ server|get_key }}collapse">
+        {% for key, items in server.items %}
+          {% for message in items.announcements %}
+            <div class="collapse" id="{{ server|get_key }}collapse">
+              <div class="pageContent card bg-light opacity-75 mt-4 mb-4">
+                <p class="pageContent p-4">{{ message|get_message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+                <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message|get_author }} on {{ message|get_date }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
       </div>
     {% endfor %}
+    {% endautoescape %}
+  </header>
+  
+  <header class="p-0 mt-3">
+    {% autoescape off %}
+    <a class="btn btn-secondary w-100" data-bs-toggle="collapse" href="#globalcollapse" role="button" aria-expanded="false" aria-controls="collapse">
+      Global Announcements
+    </a>
+  
+    <div class="collapse" id="globalcollapse">
+      {% for announcement in announcements %}
+        <div class="pageContent card bg-light opacity-75 mt-4">
+          <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+          <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
+        </div>
+      {% endfor %}
+    </div>
     {% endautoescape %}
   </header>
 
