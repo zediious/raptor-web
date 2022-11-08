@@ -30,9 +30,9 @@
 
 </section>
 
-<section id="voteBoxes" class="row m-0 mb-3 mt-3">
+<section id="voteBoxes" class="m-0 mb-3 mt-4">
 
-  <div class="accordion opacity-75 mt-2" id="votingAccordion">
+  <div class="accordion opacity-75 mt-2 container" id="votingAccordion">
   {% for server in server_info reversed %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="{{ server|get_key }}Voting">

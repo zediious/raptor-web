@@ -30,9 +30,9 @@
 
 </section>
 
-<section id="bannedItemBoxes" class="row m-0 mb-3 mt-3">
+<section id="bannedItemBoxes" class="m-0 mb-3 mt-4">
 
-  <div class="accordion opacity-75 mt-2" id="bannedItemAccordion">
+  <div class="accordion opacity-75 mt-2 container" id="bannedItemAccordion">
   {% for server in server_info reversed %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="{{ server|get_key }}BannedItems">
