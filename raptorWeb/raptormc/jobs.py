@@ -123,6 +123,7 @@ def playerPoll():
                         "key": key,
                         "state": player_data[key]["online"],
                         "maintenance": server_info.in_maintenance,
+                        "player_count": player_data[key]["count"],
                         "address": server_info.server_address,
                         "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
                         "modpack_name": server_info.modpack_name,
