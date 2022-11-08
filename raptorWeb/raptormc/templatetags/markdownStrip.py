@@ -1,4 +1,4 @@
-from re import sub
+from re import sub, search
 
 from django import template
 from django.utils.html import urlize
@@ -28,8 +28,15 @@ def https_to_discord(value):
     """
     Changes instances of "https://discord" to 
     "discord://discord" to force the link to open
-    in the Discord App if installed.
+    in the Discord App if installed. Will make all
+    anchor targets be "_blank" to open in new tab.
     Runs default "urlize" filter internally before
     modification
     """
-    return sub(r'https://discord', 'discord://discord', urlize(value))
+    initial = sub(r'https://discord', 'discord://discord', urlize(value))
+    anchor = search(r'<a href="\S+"\S+>', initial)
+    if anchor:
+        blank_anchor = anchor.group(0).replace('<a', '<a target="_blank"')
+        return initial.replace(anchor.group(0), blank_anchor)
+    
+    return initial
