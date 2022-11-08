@@ -38,9 +38,7 @@
             
               <h5>{{ server|get_modpack_name}} </h5>
               {% if server|get_player_names %}
-              {% for player in server|get_player_names %}
-              <span>{{ player.name }}, </span>
-              {% endfor %}
+              <span>{{ server|get_player_names|join:", "}}</span>
               {% else %}
               <span>No players online</span>
               {% endif %}
