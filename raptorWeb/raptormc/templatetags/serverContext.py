@@ -200,6 +200,21 @@ def get_modpack_version(value):
             continue
 
 @register.filter
+def get_player_count(value):
+    """
+    Get a server's player count from context dictionary.
+    """
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
+
+        try:
+            return value[f"server{number}"]["player_count"]
+
+        except:
+            continue
+
+@register.filter
 def get_message(value):
     """
     Get message value from a message dicionary
