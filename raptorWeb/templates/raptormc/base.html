@@ -28,21 +28,19 @@
     <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
-          <div class="modal-header">
-            <h3 class="modal-title" id="playerNamesModal">Online Players</h3>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
+          <button type="button" class="btn-close btn-close-white p-3 mb-0" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-body pt-0">
             
             {% for server in server_info reversed %} 
-            
-              <h5>{{ server|get_modpack_name}} </h5>
-              {% if server|get_player_names %}
-              <span>{{ server|get_player_names|join:", "}}</span>
-              {% else %}
-              <span>No players online</span>
-              {% endif %}
+              {% if forloop.counter0 != 0 %}
               <hr>
+              {% endif %}
+              <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server|get_modpack_name}}</h5>
+              {% if server|get_player_names %}
+              <span class=" d-block text-center">{{ server|get_player_names|join:", "}}</span>
+              {% else %}
+              <span class=" d-block text-center">No players online</span>
+              {% endif %}
             {% endfor %}
 
           </div>
