@@ -32,115 +32,21 @@
 
 <section id="voteBoxes" class="row m-0 mb-3 mt-3">
 
-  {% for server in server_info reversed %} 
-  
-    <div class="col-12 col-lg-6">
-      <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-        <a id="{{ server|get_key }}"></a>
-        <h3 class="pageHeader card-header fw-bold text-center text-break">{{ server|get_modpack_name }}</h3>
-        <div class="pageContent p-4">
+  <div class="accordion opacity-75" id="votingAccordion">
+  {% for server in server_info reversed %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="{{ server|get_key }}Voting">
+        <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server|get_key }}" aria-expanded="true" aria-controls="collapse{{ server|get_key }}">
+          {{ server|get_modpack_name }} Vote Links
+        </button>
+      </h2>
+      <div id="collapse{{ server|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server|get_key }}">
+        <div class="accordion-body pageContent p-4">
           {{ server|get_vote_links|safe }}
         </div>
       </div>
     </div>
-
   {% endfor %}
-  
-  {% comment %} <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="AlltheMods7"></a>
-      {% if atm7_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ atm7_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ atm7_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-  
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="Nomifactory"></a>
-      {% if nomi_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ nomi_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ nomi_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="Enigmatica6Expert"></a>
-      {% if e6e_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ e6e_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ e6e_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="ChromaTechnology2"></a>
-      {% if ct2_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ct2_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ ct2_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="FTBUAnniversary"></a>
-      {% if ftbu_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ftbu_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ ftbu_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div>
-
-  <div class="col-12 col-lg-6">
-    <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-      <a id="FTBOceanBlock"></a>
-      {% if ob_info %}
-      <h3 class="pageHeader card-header fw-bold text-center text-break">{{ ob_info.modpack_name }}</h3>
-      <div class="pageContent p-4">
-        {{ ob_info.server_vote_links|safe }}
-      </div>
-    {% else %}
-    <p class="pageContent">
-      Model content not loaded
-    </p>
-    {% endif %}
-    </div>
-  </div> {% endcomment %}
 
 </section>
 {% endblock %}

@@ -32,18 +32,20 @@
 
 <section id="bannedItemBoxes" class="row m-0 mb-3 mt-3">
 
-  {% for server in server_info reversed %} 
-  
-    <div class="col-12 col-lg-6">
-      <div class="infoCard card bg-light mt-4 opacity-75 container-flex">
-        <a id="{{ server|get_key }}"></a>
-        <h3 class="pageHeader card-header fw-bold text-center text-break">{{ server|get_modpack_name }} Banned Items</h3>
-        <div class="pageContent p-4">
+  <div class="accordion opacity-75" id="bannedItemAccordion">
+  {% for server in server_info reversed %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="{{ server|get_key }}BannedItems">
+        <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server|get_key }}" aria-expanded="true" aria-controls="collapse{{ server|get_key }}">
+          {{ server|get_modpack_name }} Banned Items
+        </button>
+      </h2>
+      <div id="collapse{{ server|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server|get_key }}">
+        <div class="accordion-body pageContent p-4">
           {{ server|get_banned_items|safe }}
         </div>
       </div>
     </div>
-
   {% endfor %}
 
 </section>
