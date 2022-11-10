@@ -26,7 +26,7 @@
   <body id="body" style="background-color: rgba(0,13,33,255)">
 
     <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-sm">
         <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close btn-close-white p-3 mb-0" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-body pt-0">
@@ -51,7 +51,7 @@
     {% for server in server_info reversed %} 
     
       <div class="modal fade" id="{{ server|get_key }}Info" tabindex="-1" aria-labelledby="{{ server|get_modpack_name }} Information" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content bg-dark text-white">
             <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-header">
@@ -59,10 +59,12 @@
                 <h3 class="col-12 modal-title" id="{{ server|get_key }}InfoModal"><a href="{{ server|get_modpack_url }}" target="_blank">
                   <img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}"></a>
                 </h3>
-                <button class="col-12 mt-3 btn btn-outline-success copy{{ server|get_key }}Address" data-clipboard-text={{ server|get_address }}
-                data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                  <p class="fs-4"> Join at: <span id="{{ server|get_key }}Address" class="fs-2 fw-semibold">{{ server|get_address }}</span></p>
-                </button>
+                <div class="text-center">
+                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server|get_key }}Address" data-clipboard-text={{ server|get_address }}
+                  data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
+                    <p class="fs-4"> Join at: <span id="{{ server|get_key }}Address" class="fs-2 fw-semibold">{{ server|get_address }}</span></p>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="modal-body" id="{{ server|get_key }}Desc">
