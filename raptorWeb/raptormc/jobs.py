@@ -132,6 +132,7 @@ def playerPoll():
                         "server_description": server_info.server_description,
                         "modpack": server_info.modpack_url,
                         "announcements": announcements,
+                        "announcement_count": len(announcements),
                         "server_rules": server_info.server_rules,
                         "server_banned_items": server_info.server_banned_items,
                         "server_vote_links": server_info.server_vote_links
