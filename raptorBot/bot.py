@@ -204,15 +204,17 @@ async def display_server_info(interaction: discord.Interaction, key: str):
     for server in server_data:
 
         if server_data[server]["address"].split(".")[0] == key:
-            server_embed = discord.Embed(title=server_data[server]["modpack_name"], description=f"Join at: ```{server_data[server]['address']}```", color=0x00ff00, url=server_data[server]["modpack_url"])
-            server_embed.add_field(name="\u200b", value=server_data[server]['modpack_description'], inline=False)
-            server_embed.add_field(name="\u200b", value=server_data[server]['server_description'], inline=False)
-            server_embed.add_field(name="\u200b",
-            value=f"**Rules:** https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\n**Banned Items:** https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\n**Vote Links:** https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
-            server_embed.add_field(name="\u200b", value=f"The server is running;```v{server_data[server]['modpack_version']}```\n```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
-            server_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server_data[server]['address'].split('.')[0]}.webp")
+            image_embed = discord.Embed(color=0x00ff00)
+            image_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server_data[server]['address'].split('.')[0]}.webp")
 
-            await interaction.response.send_message(embed=server_embed)
+            info_embed = discord.Embed(title=server_data[server]["modpack_name"], description=f"Join at: ```{server_data[server]['address']}```", color=0x00ff00, url=server_data[server]["modpack_url"])
+            info_embed.add_field(name="\u200b", value=server_data[server]['modpack_description'], inline=False)
+            info_embed.add_field(name="\u200b", value=server_data[server]['server_description'], inline=False)
+            info_embed.add_field(name="\u200b", value=f"**Rules:** https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\n**Banned Items:** https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\n**Vote Links:** https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
+            info_embed.add_field(name="\u200b", value=f"The server is running;```v{server_data[server]['modpack_version']}```\n```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
+
+            message_embeds = [image_embed, info_embed]
+            await interaction.response.send_message(embeds=message_embeds)
 
 # Run the bot
 raptor_bot.run(TOKEN)
