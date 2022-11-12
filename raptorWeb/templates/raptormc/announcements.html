@@ -34,11 +34,11 @@
   <header class="p-0 mt-4">
     {% autoescape off %}
     {% for server in server_info reversed %}
-    <a id="{{ server|get_key }}"></a>
-    <p class="text-center">
-        <a class="btn btn-secondary w-100" data-bs-toggle="collapse" href="#{{ server|get_key }}collapse" role="button" aria-expanded="false" aria-controls="collapse">
-          {{ server|get_modpack_name }} Announcements
-        </a>
+      <a id="{{ server|get_key }}"></a>
+      <p class="text-center">
+          <a class="btn btn-secondary w-75" data-bs-toggle="collapse" href="#{{ server|get_key }}collapse" role="button" aria-expanded="false" aria-controls="collapse">
+            {{ server|get_modpack_name }} Announcements <span class="badge text-bg-info">{{server|get_announcement_count}}</span>
+          </a>
       </p>
       <div class="collapse" id="{{ server|get_key }}collapse">
         {% for key, items in server.items %}
@@ -58,9 +58,11 @@
   
   <header class="p-0 mt-3">
     {% autoescape off %}
-    <a class="btn btn-secondary w-100" data-bs-toggle="collapse" href="#globalcollapse" role="button" aria-expanded="false" aria-controls="collapse">
-      Global Announcements
+   <p class="text-center">
+    <a class="btn btn-secondary w-75" data-bs-toggle="collapse" href="#globalcollapse" role="button" aria-expanded="false" aria-controls="collapse">
+        Global Announcements
     </a>
+   </p>
   
     <div class="collapse" id="globalcollapse">
       {% for announcement in announcements %}
