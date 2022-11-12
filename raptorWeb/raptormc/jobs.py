@@ -165,8 +165,8 @@ def export_server_data():
                 "address": server.server_address,
                 "modpack_name": server.modpack_name,
                 "modpack_version": server.modpack_version,
-                "modpack_description": strip_tags(server.modpack_description),
-                "server_description": strip_tags(server.server_description),
+                "modpack_description": strip_tags(server.modpack_description).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"'),
+                "server_description": strip_tags(server.server_description).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"'),
                 "modpack_url": server.modpack_url
             }
         })
