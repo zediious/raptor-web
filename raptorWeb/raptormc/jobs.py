@@ -1,4 +1,3 @@
-from raptormc.views import player_poller
 from os.path import join, getmtime
 from logging import getLogger
 from time import time
@@ -8,8 +7,10 @@ from django.utils.html import strip_tags
 
 from raptorWeb import settings
 from raptormc.models import PlayerCount, PlayerName, Server
+from raptormc.util.playerCounts import PlayerCounts
 
 LOGGER = getLogger('raptormc.jobs')
+player_poller = PlayerCounts()
 
 class RaptorWare:
     """
@@ -21,7 +22,6 @@ class RaptorWare:
         One-time configuration and initialization.
         """
         export_server_data()
-        playerPoll()
 
         self.get_response = get_response
 
@@ -33,7 +33,6 @@ class RaptorWare:
         response = self.get_response(request)
 
         export_server_data()
-        playerPoll()
         
         return response
 
