@@ -25,105 +25,13 @@
   </head>
 
   <body id="body" style="background-color: rgba(0,13,33,255)">
-
-    <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content bg-dark text-white">
-          <button type="button" class="btn-close btn-close-white p-3 mb-0" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-body pt-0">
-            
-            {% for server in server_info reversed %} 
-              {% if forloop.counter0 != 0 %}
-              <hr>
-              {% endif %}
-              <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server|get_modpack_name}}</h5>
-              {% if server|get_player_names %}
-              <span class=" d-block text-center">{{ server|get_player_names|join:", "}}</span>
-              {% else %}
-              <span class=" d-block text-center">No players online</span>
-              {% endif %}
-            {% endfor %}
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {% for server in server_info reversed %} 
     
-      <div class="modal fade" id="{{ server|get_key }}Info" tabindex="-1" aria-labelledby="{{ server|get_modpack_name }} Information" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content bg-dark text-white">
-            <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-header">
-              <div class="row">
-                <h3 class="col-12 modal-title" id="{{ server|get_key }}InfoModal"><a href="{{ server|get_modpack_url }}" target="_blank">
-                  <img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}"></a>
-                </h3>
-                <div class="text-center">
-                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server|get_key }}Address" data-clipboard-text={{ server|get_address }}
-                  data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                    <p class="fs-4"> Join at: <span id="{{ server|get_key }}Address" class="fs-2 fw-semibold">{{ server|get_address }}</span></p>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="modal-body" id="{{ server|get_key }}Desc">
-              {{ server|get_modpack_desc|safe }}
-              <hr>
-              {{ server|get_server_desc|safe }}
-              <p class="text-center">
-                <span class="pageContent">The server is running: <strong>v{{ server|get_modpack_version}}</strong></span>
-              </p>
-            </div>
-            <div class="modal-footer justify-content-center">
-
-              {% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
-                  Announcements
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
-                  Announcements
-                </a>
-              {% endif %}
-              
-              {% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server|get_key }}">
-                  Rules
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server|get_key }}">
-                  Rules
-                </a>
-              {% endif %}
-
-              {% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server|get_key }}">
-                  Banned Items
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server|get_key }}">
-                  Banned Items
-                </a>
-              {% endif %}
-
-              {% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server|get_key }}">
-                  Vote
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server|get_key }}">
-                  Vote
-                </a>
-              {% endif %}
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-    {% endfor %}
+    <div hx-get="/server_button_poll" hx-trigger="load, every 120s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
+    <div hx-get="/server_modal_poll" hx-trigger="load, every 120s" hx-target="#server_modals" hx-swap="innerHTML"></div>
+    <div hx-get="/total_count_poll" hx-trigger="load, every 120s" hx-target="#total_count" hx-swap="innerHTML"></div>
+    
+    <div id="server_modals"> 
+    </div>
 
     <div id="headerBox" class="container-flex" style="background-image: url({% static 'image/background.webp' %}); background-color: rgba(0,13,33,255); background-position: top center; background-attachment: scroll;">
 
@@ -229,7 +137,8 @@
           <section class="col-lg col-12 fs-2 mt-3 d-flex align-items-center flex-column">
   
             <button class="mt-auto btn btn-lg btn-dark" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
-              <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span class="fs-1">{{ totalCount }}</span></aside>
+              <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
+              <img src="{% static 'image/tail-spin.svg' %}" alt="Loading..." class="htmx-indicator w-25"></span></aside>
               <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
             </button>
             <span id="spacer" class="mt-auto"></span>
@@ -243,30 +152,9 @@
               <div id="spacer" class="col-lg-4 col-0">
                 <span></span>
               </div>
-  
-              <div class="col-lg-8 col-12 row">
 
-                {% for server in server_info reversed %} 
-
-                  {% if server == 'view' or server == 'totalCount' %}
-                  {% else %}
-                                    
-                    <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#{{ server|get_key }}Info"><img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}">
-                      {% if server|get_maintenance %}
-                        <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
-                      {% else %}
-                        {% if server|get_state %}
-                        <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
-                        {% else %}
-                        <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
-                        {% endif %}
-                      {% endif %}
-                    </button></span>
-
-                  {% endif %}
-
-                {% endfor %}
-
+              <div id="server_buttons" class="col-lg-8 col-12 row">
+                <img src="{% static 'image/tail-spin.svg' %}" alt="Loading..." class="htmx-indicator align-middle w-75">
               </div>
   
             </i>

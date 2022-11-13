@@ -8,13 +8,11 @@ from logging import getLogger
 from json import load
 
 from raptorWeb import settings
-from raptormc.util.playerCounts import PlayerCounts
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
 from raptormc.models import InformativeText
+from raptormc.jobs import player_poller, playerPoll
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
-
-player_poller = PlayerCounts()
 
 LOGGER = getLogger('raptormc.views')
 
@@ -432,4 +430,33 @@ class ShadowRaptor():
             logout(request)
             LOGGER.error("User logged out!")
             return HttpResponseRedirect('..')
-            
+
+    class Ajax_Views():
+        """
+        Views that return HTML for use in AJAX requests
+        """
+        class Server_Buttons(TemplateView):
+            """
+            Returns HTML of server buttons
+            Attempts to fetch new info before sending
+            """
+            def get(self, request):
+                playerPoll()
+                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverButtons.html')
+                return render(request, template_name, context=player_poller.currentPlayers_DB)
+
+        class Server_Modals(TemplateView):
+            """
+            Returns HTML of server modals, as well as player counts modal
+            Attempts to fetch new info before sending
+            """
+            def get(self, request):
+                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverModals.html')
+                return render(request, template_name, context=player_poller.currentPlayers_DB)
+
+        class Total_Count(TemplateView):
+            """
+            Returns a simple HttpResponse with the total count of players on all servers
+            """
+            def get(self, request):
+                return HttpResponse(player_poller.currentPlayers_DB["totalCount"])

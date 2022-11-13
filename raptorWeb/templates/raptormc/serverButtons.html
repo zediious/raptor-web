@@ -1,0 +1,26 @@
+{% load static %}
+{% load serverContext %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+
+{% for server in server_info reversed %} 
+
+    {% if server == 'view' or server == 'totalCount' %}
+    {% else %}
+                    
+    <span id="serverButton" class="col-lg-12 col-6 mt-2"><button class="btn btn-dark fs-4 d-flex" data-bs-toggle="modal" data-bs-target="#{{ server|get_key }}Info"><img class="w-100" src="/media/modpack_pictures/{{ server|get_key}}.webp" alt="{{ server|get_modpack_name }}">
+        {% if server|get_maintenance %}
+        <img class="w-25 p-2" src="{% static 'image/maintenance_indicator.webp' %}">
+        {% else %}
+        {% if server|get_state %}
+        <img class="w-25 p-2" src="{% static 'image/online_indicator.webp' %}">
+        {% else %}
+        <img class="w-25 p-2" src="{% static 'image/offline_indicator.webp' %}">
+        {% endif %}
+        {% endif %}
+    </button></span>
+
+    {% endif %}
+
+{% endfor %}
