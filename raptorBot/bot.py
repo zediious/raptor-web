@@ -12,6 +12,15 @@ TOKEN = getenv('DISCORD_TOKEN')
 DESCRIPTION = "I do work for the ShadowRaptorMC website!"
 DISCORD_GUILD = 740388741079760937
 ANNOUNCEMENT_CHANNEL_ID = 741015006480564254
+SERVER_ANNOUNCEMENT_CHANNEL_IDS = {
+    "ob": 897710478678163526,
+    "ftbu": 916808914828423168,
+    "ct2": 937592813393162280,
+    "e6e": 956730958013411358,
+    "nomi": 990473836606677023,
+    "atm7": 1024894719886631003
+
+}
 STAFF_ROLE_ID = 937891209291120660
 
 async def update_announcements():
@@ -40,11 +49,75 @@ async def update_announcements():
     announcementsJSON.write(dumps(announcements, indent=4))
     announcementsJSON.close()
 
-async def update_server_announcements(message):
+async def get_server_roles():
     """
-    Get all messages mentioning roles associated with 
-    the list of Server Modals, and places them
-    in a dictionary keyed by the Server address key.
+    Return role names and ids that match modpack names, keyed by their address key
+    """
+    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
+    sr_guild = raptor_bot.get_guild(DISCORD_GUILD)
+    total_role_list = await sr_guild.fetch_roles()
+    role_list = {}
+    for server in server_data:
+        for role in total_role_list:
+            if role.name == str(f'{server_data[server]["modpack_name"]}'):
+                role_list.update({
+                    server_data[server]["address"].split('.')[0]: {
+                        "id": role.id,
+                        "name": role.name
+                    }
+                })
+    return role_list
+
+async def update_server_announcements():
+    """
+    Gets all messages from a server's general channel, and adds any
+    messages mentioning a server's role to a dictionary keyed 
+    by the server
+
+    This should be run once, and only if messages already existed. It will remove
+    any messages added by "add_server_announcement" that were sent from a 
+    channel besides the ones defined in "SERVER_ANNOUNCEMENT_CHANNEL_IDS"
+    """
+    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
+    role_list = await get_server_roles()
+    announcements = {}
+    for server in server_data:
+        for channel in SERVER_ANNOUNCEMENT_CHANNEL_IDS:
+            channel_instance = raptor_bot.get_channel(SERVER_ANNOUNCEMENT_CHANNEL_IDS[channel])
+            messages = [message async for message in channel_instance.history(limit=200)]
+            for message in messages:
+                for role in role_list:
+                    if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[server]["modpack_name"] and str(channel) == server_data[server]["address"].split('.')[0]:
+                        current_time = time()
+                        try:
+                            announcements[server_data[server]["address"].split('.')[0]].update({
+                                f"message_{str(message.author)}-{str(message.created_at.date().strftime(f'{current_time}-%B-%d-%Y'))}": {
+                                    "author": str(message.author),
+                                    "message": message.content,
+                                    "date": str(message.created_at.date().strftime('%B %d %Y'))
+                                }
+                            })
+                        # If a dictionary keyed by server role/modpack name doesn't exist, create it first.
+                        except KeyError as e:
+                            announcements.update({
+                                server_data[server]["address"].split('.')[0]: {}
+                            })
+                            announcements[server_data[server]["address"].split('.')[0]].update({
+                                f"message_{str(message.author)}-{str(message.created_at.date().strftime(f'{current_time}-%B-%d-%Y'))}": {
+                                    "author": str(message.author),
+                                    "message": message.content,
+                                    "date": str(message.created_at.date().strftime('%B %d %Y'))
+                                }
+                            })
+            
+    with open("../raptorWeb/server_announcements.json", "r+") as announcement_json:
+        dump(announcements, announcement_json, indent=4)
+
+async def add_server_announcement(message):
+    """
+    If a message was sent mentioning a Server's role, the message along 
+    with it's author and date will be added to a dictionary keyed 
+    by the server
     """
     if message.author != raptor_bot.user:
         if message.author.get_role(STAFF_ROLE_ID) != None:
@@ -67,17 +140,7 @@ async def update_server_announcements(message):
                         sr_guild = raptor_bot.get_guild(DISCORD_GUILD)
                         total_role_list = await sr_guild.fetch_roles()
                         announcement_json.seek(0)
-                        role_list = {}
-                        # Get role names and ids that match modpack names, keyed by their address key
-                        for server in server_data:
-                            for role in total_role_list:
-                                if role.name == str(f'{server_data[server]["modpack_name"]}'):
-                                    role_list.update({
-                                        server_data[server]["address"].split('.')[0]: {
-                                            "id": role.id,
-                                            "name": role.name
-                                        }
-                                    })
+                        role_list = get_server_roles()
                         # Check if message contains a mention of roles found above, if a match is found it is saved
                         for server in server_data:
                             for role in role_list:
@@ -168,7 +231,7 @@ async def on_message(message):
     except AttributeError:
         if message.channel_id == ANNOUNCEMENT_CHANNEL_ID:
             await update_announcements()
-    await update_server_announcements(message)
+    await add_server_announcement(message)
 
 @raptor_bot.event
 async def on_raw_message_edit(message):
@@ -207,6 +270,11 @@ async def display_server_info(interaction: discord.Interaction, key: str):
 async def refresh_announcements(interaction: discord.Interaction):
     await update_announcements()
     await interaction.response.send_message(embed=discord.Embed(description="Announcements JSON has been refreshed from current Announcements channel", color=0x00ff00), ephemeral=True)
+
+@raptor_bot.tree.command(name="refresh_server_announcements")
+async def refresh_server_announcements(interaction: discord.Interaction):
+    await interaction.response.send_message(embed=discord.Embed(description="server_announcements.json is now being updated with the announcements for servers from their respective channels, going back 200 messages.", color=0x00ff00), ephemeral=True)
+    await update_server_announcements()
 
 # Run the bot
 raptor_bot.run(TOKEN)
