@@ -43,7 +43,7 @@
       <div class="collapse" id="{{ server|get_key }}collapse">
         {% for key, items in server.items %}
           {% for message in items.announcements reversed %}
-            <div class="collapse" id="{{ server|get_key }}collapse">
+            <div>
               <div class="pageContent card bg-light opacity-75 mt-4 mb-4">
                 <p class="pageContent p-4">{{ message|get_message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
                 <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message|get_author }} on {{ message|get_date }}</p>
