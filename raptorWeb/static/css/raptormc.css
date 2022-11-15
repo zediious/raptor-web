@@ -68,6 +68,18 @@ body {
     
 }
 
+#loadingSpinnerCount {
+
+    width: 10%;
+
+}
+
+#loadingSpinnerButtons {
+
+    width: 85%;
+
+}
+
 @media (max-width: 767px) {
 
     .pageHeader {
