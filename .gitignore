@@ -130,7 +130,6 @@ dmypy.json
 
 # LOCK Files
 playerCounts.LOCK
-update_server_announcements.LOCK
 
 # RaptorBot JSON
 announcements.json
