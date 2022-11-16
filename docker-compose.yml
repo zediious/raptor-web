@@ -29,7 +29,7 @@ services:
     volumes:
       - ./raptorWeb:/raptorWeb
       - ./raptorBot:/raptorBot
-    command: sh -c "cd raptorBot &&
+    command: sh -c "cd raptorBot/raptorBot &&
                     conda run -n discordWork python bot.py"
     depends_on:
       - raptorapp
