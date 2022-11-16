@@ -23,21 +23,17 @@ async def on_ready():
 @raptor_bot.event
 async def on_message(message):
     channel = raptor_bot.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
-    try:
-        if message.channel == channel:
-            await raptorbot_util.update_global_announcements()
-    except AttributeError:
-        if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
-            await raptorbot_util.update_global_announcements()
-    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
-    role_list = raptorbot_util.get_server_roles()
+    if message.channel == channel:
+        await raptorbot_util.update_global_announcements(raptor_bot)
+    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
+    role_list = await raptorbot_util.get_server_roles(raptor_bot)
     for server in server_data:
         for announce_channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
             if message.channel == raptor_bot.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[announce_channel]):
                 if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
                     for role in role_list:
                         if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[server]["modpack_name"]:
-                            raptorbot_util.update_server_announce(server_channel_id=raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[server_data[server]["address"].split('.')[0]])
+                            raptorbot_util.update_server_announce(server_key=server_data[server]["address"].split('.')[0], bot_instance=raptor_bot)
                         else:
                             break
 
@@ -46,19 +42,19 @@ async def on_raw_message_edit(message):
     channel = raptor_bot.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
     try:
         if message.channel == channel:
-            await raptorbot_util.update_global_announcements()
+            await raptorbot_util.update_global_announcements(raptor_bot)
     except AttributeError:
         if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
-            await raptorbot_util.update_global_announcements()
+            await raptorbot_util.update_global_announcements(raptor_bot)
 
 @raptor_bot.event
 async def on_presence_update(before, after):
-    await raptorbot_util.update_member_count()
+    await raptorbot_util.update_member_count(raptor_bot)
 
 @raptor_bot.tree.command(name="display_server_info")
 @discord.app_commands.describe(key = "Choose a server address prefix")
 async def display_server_info(interaction: discord.Interaction, key: str):
-    server_data = dict(load(open('../raptorWeb/server_data.json', "r")))
+    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
     for server in server_data:
 
         if server_data[server]["address"].split(".")[0] == key:
@@ -76,13 +72,13 @@ async def display_server_info(interaction: discord.Interaction, key: str):
 
 @raptor_bot.tree.command(name="refresh_announcements")
 async def refresh_announcements(interaction: discord.Interaction):
-    await raptorbot_util.update_global_announcements()
+    await raptorbot_util.update_global_announcements(raptor_bot)
     await interaction.response.send_message(embed=discord.Embed(description="Announcements JSON has been refreshed from current Announcements channel", color=0x00ff00), ephemeral=True)
 
 @raptor_bot.tree.command(name="refresh_server_announcements")
 async def refresh_server_announcements(interaction: discord.Interaction):
     await interaction.response.send_message(embed=discord.Embed(description="server_announcements.json is now being updated with the announcements for servers from their respective channels, going back 200 messages.", color=0x00ff00), ephemeral=True)
-    await raptorbot_util.update_all_server_announce()
+    await raptorbot_util.update_all_server_announce(raptor_bot)
 
 # Run the bot
 raptor_bot.run(raptorbot_settings.TOKEN)
