@@ -25,7 +25,6 @@ async def get_server_roles(bot_instance):
                         "name": role.name
                     }
                 })
-    logging.debug(f'Role List: {role_list}')
     return role_list
 
 async def get_server_number(key):
@@ -101,7 +100,6 @@ async def update_server_announce(server_key, bot_instance):
         announcement_json = open("../../raptorWeb/server_announcements.json", "r+")
         announcements = load(announcement_json)
     except JSONDecodeError as e:
-        logging.debug("JSON does not exist. Will create")
         base_keys = {}
         for server in server_data:
             base_keys.update({
@@ -129,7 +127,7 @@ async def update_server_announce(server_key, bot_instance):
                                 }
                             })
                         except KeyError as e:
-                            logging.debug(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
+                            logging.debug(f'An error occured attempting to find the "{e}" key within server_announcements.json.')
             except AttributeError:
                 continue
 
