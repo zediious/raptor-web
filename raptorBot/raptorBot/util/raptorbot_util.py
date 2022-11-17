@@ -25,7 +25,7 @@ async def get_server_roles(bot_instance):
                         "name": role.name
                     }
                 })
-    print(f'Role List: {role_list}')
+    logging.debug(f'Role List: {role_list}')
     return role_list
 
 async def get_server_number(key):
