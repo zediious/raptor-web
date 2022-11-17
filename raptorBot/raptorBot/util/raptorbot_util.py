@@ -2,6 +2,7 @@ import discord
 from json import dump, dumps, load
 from json.decoder import JSONDecodeError
 from time import time
+import logging
 
 from . import raptorbot_settings
 
@@ -125,6 +126,7 @@ async def update_server_announce(server_key, bot_instance):
                             })
                         except KeyError as e:
                             print(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
+                            logging.critical(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
             except AttributeError:
                 continue
 
