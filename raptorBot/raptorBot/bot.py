@@ -27,15 +27,15 @@ async def on_message(message):
         await raptorbot_util.update_global_announcements(raptor_bot)
     server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
     role_list = await raptorbot_util.get_server_roles(raptor_bot)
-    for server in server_data:
-        for announce_channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
-            if message.channel == raptor_bot.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[announce_channel]):
+    for announce_channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
+        if message.channel == raptor_bot.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[announce_channel]):
+            try:
                 if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
                     for role in role_list:
-                        if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[server]["modpack_name"]:
-                            raptorbot_util.update_server_announce(server_key=server_data[server]["address"].split('.')[0], bot_instance=raptor_bot)
-                        else:
-                            break
+                        if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[announce_channel]["modpack_name"]:
+                            raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
+            except AttributeError:
+                break
 
 @raptor_bot.event
 async def on_raw_message_edit(message):
