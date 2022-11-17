@@ -80,7 +80,7 @@ async def update_all_server_announce(bot_instance):
             if server_data[server]["address"].split('.')[0] == channel:
                 await update_server_announce(server_key=server_data[server]["address"].split('.')[0], bot_instance=bot_instance)
             else:
-                logging.debug(f'The server: {server["address"].split(".")[0]} was not checked for messages')
+                logging.debug(f'The server: {server_data[server]["address"].split(".")[0]} was not checked for messages')
 
 async def update_server_announce(server_key, bot_instance):
     """
