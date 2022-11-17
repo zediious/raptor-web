@@ -21,6 +21,7 @@ urlpatterns = [
     path('register/', SR.Application.RegisterUser.as_view(), name="register"),
     path('login/', SR.Application.UserLogin.as_view(), name="login"),
     path('logout/', SR.Application.user_logout, name="logout"),
+    path('profile/<str:profile_name>/', SR.Profile_Views.User_Profile.as_view(), name="user_profile"),
     path('server_button_poll/', SR.Ajax_Views.Server_Buttons.as_view(), name="server_buttons_poll"),
     path('server_modal_poll/', SR.Ajax_Views.Server_Modals.as_view(), name="server_modals_poll"),
     path('total_count_poll/', SR.Ajax_Views.Total_Count.as_view(), name="totol_counts_poll")

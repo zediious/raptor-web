@@ -9,7 +9,7 @@ from json import load
 
 from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
-from raptormc.models import InformativeText
+from raptormc.models import InformativeText, User, UserProfileInfo
 from raptormc.jobs import player_poller, playerPoll
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
@@ -430,6 +430,47 @@ class ShadowRaptor():
             logout(request)
             LOGGER.error("User logged out!")
             return HttpResponseRedirect('..')
+
+    class Profile_Views():
+        """
+        Views that are related to User Profiles and their content
+        """
+        class User_Profile(TemplateView):
+            """
+            Displays a User's Profile and it's information
+            """
+            template_name = join(settings.PROFILES_DIR, 'profile.html')
+
+            def get(self, request, profile_name):
+                instance_dict = player_poller.currentPlayers_DB
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    instance_dict.update(load(discordJSON))
+                except:
+                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                try:
+                    user_base = User.objects.get(username=profile_name)
+                    user_extra = UserProfileInfo.objects.get(user=user_base)
+                    instance_dict.update({
+                        "displayed_profile": {
+                            "base": {
+                                "username": user_base.username,
+                                "date_joined": user_base.date_joined,
+                                "last_login": user_base.last_login,
+                                "is_staff": user_base.is_staff
+
+                            },
+                            "extra": {
+                                "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
+                                "mc_username": user_extra.minecraft_username,
+                                "discord_username": user_extra.discord_username,
+                                "favorite_pack": user_extra.favorite_modpack
+                            }
+                        }
+                    })  
+                except Exception as e:
+                    print(e)
+                return render(request, self.template_name, context=instance_dict)
 
     class Ajax_Views():
         """
