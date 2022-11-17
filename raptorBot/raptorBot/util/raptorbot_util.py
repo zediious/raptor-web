@@ -4,6 +4,8 @@ from json.decoder import JSONDecodeError
 from time import time
 import logging
 
+logging.basicConfig(filename="error.log", level=logging.DEBUG)
+
 from . import raptorbot_settings
 
 async def get_server_roles(bot_instance):
@@ -77,6 +79,8 @@ async def update_all_server_announce(bot_instance):
         for channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
             if server_data[server]["address"].split('.')[0] == channel:
                 await update_server_announce(server_key=server_data[server]["address"].split('.')[0], bot_instance=bot_instance)
+            else:
+                logging.debug(f'The server: {server["address"].split(".")[0]} was not checked for messages')
 
 async def update_server_announce(server_key, bot_instance):
     """
@@ -96,8 +100,7 @@ async def update_server_announce(server_key, bot_instance):
         announcement_json = open("../../raptorWeb/server_announcements.json", "r+")
         announcements = load(announcement_json)
     except JSONDecodeError as e:
-        print(e)
-        print("JSON does not exist. Will create")
+        logging.debug("JSON does not exist. Will create")
         base_keys = {}
         for server in server_data:
             base_keys.update({
@@ -125,8 +128,7 @@ async def update_server_announce(server_key, bot_instance):
                                 }
                             })
                         except KeyError as e:
-                            print(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
-                            logging.critical(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
+                            logging.debug(f'An error occured attempting to find the "{e}" key within server_announcements.json. This should not happen!')
             except AttributeError:
                 continue
 
