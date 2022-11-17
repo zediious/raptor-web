@@ -26,9 +26,9 @@
 
   <body id="body" style="background-color: rgba(0,13,33,255)">
     
-    <div hx-get="/server_button_poll" hx-trigger="load, every 120s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
-    <div hx-get="/server_modal_poll" hx-trigger="load, every 120s" hx-target="#server_modals" hx-swap="innerHTML"></div>
-    <div hx-get="/total_count_poll" hx-trigger="load, every 120s" hx-target="#total_count" hx-swap="innerHTML"></div>
+    <div hx-get="/server_button_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
+    <div hx-get="/server_modal_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#server_modals" hx-swap="innerHTML"></div>
+    <div hx-get="/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#total_count" hx-swap="innerHTML"></div>
     
     <div id="server_modals"> 
     </div>
@@ -156,9 +156,9 @@
               <div id="server_buttons" class="col-lg-8 col-12 row">
 
                 {% for server in server_info reversed %}
-                  <span id="serverButton" class="col-lg-12 col-6 mt-2">
+                  <span id="serverButton" class="col-lg-12 col-6 mt-2 opacity-50">
                     <button class="btn btn-dark fs-4 w-100 align-content-center">
-                      <img id="loadingSpinnerButtons" src="{% static 'image/three-dots.svg' %}" alt="Loading..." class="align-middle">
+                      <img id="loadingSpinnerButtons" src="{% static 'image/three-dots.svg' %}" alt="Loading..." class="align-middle opacity-75">
                     </button>
                   </span>
                 {% endfor %}
