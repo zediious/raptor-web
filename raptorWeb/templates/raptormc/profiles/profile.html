@@ -1,0 +1,52 @@
+{% extends 'raptormc/base.html' %}
+{% load markdownStrip %}
+{% load serverContext %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | Profile
+  
+</title>
+{% endblock %}
+{% block metadata %}
+<meta property="og:title" content="ShadowRaptor | Profile" />
+<meta property="og:description" content="A profile" />
+<meta property="og:url" content="https://shadowraptor.net/profile" />
+{% endblock %}
+
+{% block main_block %}
+
+<div class="container">
+    <div class="card">
+        {% if user.is_authenticated %}
+            {% if user.username == displayed_profile.base.username %}
+                <p>
+                    Edit your things here!
+                </p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="card">
+        <p>
+           Profile for: {{displayed_profile.base.username}}
+           <br>
+           Joined on: {{displayed_profile.base.date_joined}}
+           <br>
+           Last Active: {{displayed_profile.base.last_login}}
+           <br>
+           Is Staff: {{displayed_profile.base.is_staff|yesno|capfirst}}
+        </p>
+        <p>
+           <img src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+           <br>
+           Minecraft Username: {{displayed_profile.extra.mc_username}}
+           <br>
+           Discord Username: {{displayed_profile.extra.discord_username}}
+           <br>
+           Favorite Modpack: {{displayed_profile.extra.favorite_pack|capfirst}}
+        </p>
+    </div>
+</div>
+
+{% endblock %}

@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
 RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
 APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
+PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
 STATIC_DIR = join(BASE_DIR, "static")
 MEDIA_DIR = join(BASE_DIR, "media")
 
