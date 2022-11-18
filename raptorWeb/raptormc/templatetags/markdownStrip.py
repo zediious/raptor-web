@@ -37,6 +37,8 @@ def https_to_discord(value):
     anchor = search(r'<a href="\S+"\S+>', initial)
     if anchor:
         blank_anchor = anchor.group(0).replace('<a', '<a target="_blank"')
-        return initial.replace(anchor.group(0), blank_anchor)
+        anchor_end = search(r'</a>', initial)
+        anchor_end_icon = anchor_end.group(0).replace('</a>', ' <img class="new_tab_icon" src="https://shadowraptor.net/static/image/new_tab_black.svg"></a>')
+        return initial.replace(anchor.group(0), blank_anchor).replace(anchor_end.group(0), anchor_end_icon)
     
     return initial

@@ -39,33 +39,10 @@ body {
 
 }
 
-@media (min-width: 768px) {
+.new_tab_icon {
 
-    .pageHeader {
+    width: 1.1%;
 
-        font-size: xx-large;
-    
-    }
-
-    .pageContent > * {
-
-        font-size: large;
-
-    }
-
-    #navImage {
-
-        width: 80%;
-        height: 80%;
-
-    }
-
-    .navbar-brand {
-
-        width: 25%;
-
-    }
-    
 }
 
 #loadingSpinnerCount {
@@ -112,6 +89,35 @@ body {
     100% {
         opacity: 1;
     }
+}
+
+@media (min-width: 768px) {
+
+    .pageHeader {
+
+        font-size: xx-large;
+    
+    }
+
+    .pageContent > * {
+
+        font-size: large;
+
+    }
+
+    #navImage {
+
+        width: 80%;
+        height: 80%;
+
+    }
+
+    .navbar-brand {
+
+        width: 25%;
+
+    }
+    
 }
 
 @media (max-width: 767px) {
