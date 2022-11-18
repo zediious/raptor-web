@@ -1,8 +1,12 @@
 import discord
 from discord.ext import commands
+import logging
 from json import load
 
 from util import raptorbot_settings, raptorbot_util
+
+# Configure basic logger
+logging.basicConfig(filename="error.log", level=logging.DEBUG)
 
 # State bot intents and declare Bot instance
 intents = discord.Intents.all()
@@ -28,14 +32,20 @@ async def on_message(message):
     server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
     role_list = await raptorbot_util.get_server_roles(raptor_bot)
     for announce_channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
-        if message.channel == raptor_bot.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[announce_channel]):
-            try:
-                if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
-                    for role in role_list:
-                        if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[announce_channel]["modpack_name"]:
-                            raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
-            except AttributeError:
-                break
+        if message.author != raptor_bot.user:
+            if message.channel == raptor_bot.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[announce_channel]):
+                try:
+                    if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
+                        for role in role_list:
+                            if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[announce_channel]["modpack_name"]:
+                                raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
+                except AttributeError as e:
+                    try: 
+                        logging.debug(f'{e}\nAn Attribute Error occured, debug information below\n\nMessage channel: {message.channel}\n\nRole list: {role_list}\n\nCurrent server info: {server_data[announce_channel]}')
+                        break
+                    except:
+                        logging.debug("An error occured logging a previous error.")
+                        break
 
 @raptor_bot.event
 async def on_raw_message_edit(message):
