@@ -482,7 +482,6 @@ class ShadowRaptor():
             Attempts to fetch new info before sending
             """
             def get(self, request):
-                playerPoll()
                 template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverButtons.html')
                 return render(request, template_name, context=player_poller.currentPlayers_DB)
 
@@ -500,4 +499,5 @@ class ShadowRaptor():
             Returns a simple HttpResponse with the total count of players on all servers
             """
             def get(self, request):
+                playerPoll()
                 return HttpResponse(player_poller.currentPlayers_DB["totalCount"])
