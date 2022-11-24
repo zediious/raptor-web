@@ -28,6 +28,9 @@ CSRF_COOKIE_SECURE = True
 DEBUG = True
 USE_SQLITE = True
 
+# Public domain name
+DOMAIN_NAME = "shadowraptor.net"
+
 # Addresses the Django app can be directly accessed from
 ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
 
@@ -134,6 +137,25 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
+# Django Authentication
+AUTHENTICATION_BACKENDS = [
+    'raptormc.auth.DiscordAuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+# Discord OAuth2 settings
+DISCORD_AUTH_URL = ""
+DISCORD_REDIRECT_URL = ""
+DISCORD_APP_ID = getenv('DISCORD_APP_ID')
+DISCORD_APP_SECRET = getenv('DISCORD_APP_SECRET')
+
+if DEBUG:
+    DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+    DISCORD_REDIRECT_URL = "http://127.0.0.1:8000/oauth2/login/redirect"
+else:
+    DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri=https%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+    DISCORD_REDIRECT_URL = f"https://{DOMAIN_NAME}/oauth2/login/redirect"
+
 # Logging configuration
 LOGGING = {
     'version': 1,
@@ -184,6 +206,11 @@ LOGGING = {
             'propagate': False,
         },
         'raptormc.jobs': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+         'raptormc.auth': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
             'propagate': False,
