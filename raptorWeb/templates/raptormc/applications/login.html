@@ -19,8 +19,19 @@
 
     <header class="card bg-dark opacity-75 text-white p-4 mt-4">
       <h3 class="pageHeader fw-bold text-center">Login</h3>
+      <p class="pageContent">No Account? <a href="{% url 'raptormc:register' %}">Register here.</a></p>
     </header>
 
+    <section>
+    
+      <div class="card bg-light p-3 mt-4 opacity-75 container">
+        <a role="button" href="{% url 'raptormc:login_oauth' %}" class="btn btn-primary">
+          Login with Discord
+        </a>
+      </div>
+    
+    </section>
+    
     <section>
 
       <div class="card bg-light p-3 mt-4 opacity-75 container">
