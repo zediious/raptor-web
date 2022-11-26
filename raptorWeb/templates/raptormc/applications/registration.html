@@ -20,7 +20,18 @@
     <header class="card bg-dark opacity-75 text-white p-4 mt-4">
       <h3 class="pageHeader fw-bold text-center">Create Account</h3>
       <p class="pageContent">User profiles, and functionality that comes with it, are still under development. Feel free to create an account now, to have access to it when it is finished.</p>
+      <p class="pageContent">You can either register manually with the form, or with Discord</p>
     </header>
+
+    <section>
+    
+      <div class="card bg-light p-3 mt-4 opacity-75 container">
+        <a role="button" href="{% url 'raptormc:login_oauth' %}" class="btn btn-primary">
+          Register with Discord
+        </a>
+      </div>
+    
+    </section>
 
     <section>
 

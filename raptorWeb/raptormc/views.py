@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -6,11 +6,13 @@ from django.http import HttpResponseRedirect, HttpResponse
 from os.path import join
 from logging import getLogger
 from json import load
+from requests import post, get
 
 from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
-from raptormc.models import InformativeText, User, UserProfileInfo
+from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
 from raptormc.jobs import player_poller, playerPoll
+from raptormc.util import discordAuth
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
@@ -336,6 +338,27 @@ class ShadowRaptor():
 
                         return render(request, self.template_name, context=dictionary)
 
+        class UserLogin_OAuth(TemplateView):
+
+            def get(self, request):
+
+                return redirect(settings.DISCORD_AUTH_URL)
+
+        class UserLogin_OAuth_Success(TemplateView):
+
+            def get(self, request):
+
+                discord_code = request.GET.get('code')
+                user_info = discordAuth.exchange_code(discord_code)
+                discord_user = authenticate(request, user=user_info)
+                try:
+                    login(request, discord_user, backend='raptormc.auth.DiscordAuthBackend')
+                except AttributeError:
+                    login(request, list(discord_user).pop(), backend='raptormc.auth.DiscordAuthBackend')
+                return redirect('../../')
+
+        # @login_required(login_url='/login/')
+
         class ModApp(TemplateView):
             """
             Moderator Application
@@ -428,7 +451,7 @@ class ShadowRaptor():
             Log out the signed in user
             """
             logout(request)
-            LOGGER.error("User logged out!")
+            LOGGER.info("User logged out!")
             return HttpResponseRedirect('..')
 
     class Profile_Views():
@@ -458,18 +481,35 @@ class ShadowRaptor():
                                 "date_joined": user_base.date_joined,
                                 "last_login": user_base.last_login,
                                 "is_staff": user_base.is_staff
-
                             },
                             "extra": {
                                 "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
                                 "mc_username": user_extra.minecraft_username,
-                                "discord_username": user_extra.discord_username,
                                 "favorite_pack": user_extra.favorite_modpack
                             }
                         }
                     })  
-                except Exception as e:
-                    print(e)
+                except User.DoesNotExist:
+                    try:
+                        discord_user = DiscordUserInfo.objects.get(username=profile_name)
+                        instance_dict.update({
+                            "displayed_profile": {
+                                "base": {
+                                    "username": discord_user.username,
+                                    "date_joined": discord_user.date_joined,
+                                    "last_login": discord_user.last_login,
+                                },
+                                "extra": {
+                                    "picture": f'https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.profile_picture}.png',
+                                    "mc_username": discord_user.minecraft_username,
+                                    "discord_username": discord_user.tag,
+                                    "favorite_pack": discord_user.favorite_modpack
+                                }
+                            }
+                        })
+                    except DiscordUserInfo.DoesNotExist:
+                        return HttpResponse("A User with the provided username was not found")
+
                 return render(request, self.template_name, context=instance_dict)
 
     class Ajax_Views():
