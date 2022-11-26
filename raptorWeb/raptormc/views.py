@@ -451,7 +451,7 @@ class ShadowRaptor():
             Log out the signed in user
             """
             logout(request)
-            LOGGER.error("User logged out!")
+            LOGGER.info("User logged out!")
             return HttpResponseRedirect('..')
 
     class Profile_Views():
