@@ -5,14 +5,14 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | Profile
+  ShadowRaptor | {{displayed_profile.base.username}}
   
 </title>
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Profile" />
-<meta property="og:description" content="A profile" />
-<meta property="og:url" content="https://shadowraptor.net/profile" />
+<meta property="og:title" content="ShadowRaptor | {{displayed_profile.base.username}}" />
+<meta property="og:description" content="User Profile for {{displayed_profile.base.username}}" />
+<meta property="og:url" content="https://shadowraptor.net/profile/{{displayed_profile.base.username}}" />
 {% endblock %}
 
 {% block main_block %}
