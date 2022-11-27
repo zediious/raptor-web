@@ -21,5 +21,4 @@ class DiscordAuthManager(models.UserManager):
             date_joined = date.today()
         )
 
-        print(new_discord_info)
         return new_discord_info

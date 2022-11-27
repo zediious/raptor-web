@@ -476,21 +476,38 @@ class ShadowRaptor():
                     user_base = User.objects.get(username=profile_name)
                     user_extra = UserProfileInfo.objects.get(user=user_base)
                     try:
-                        instance_dict.update({
-                            "displayed_profile": {
-                                "base": {
-                                    "username": user_base.username,
-                                    "date_joined": user_base.date_joined,
-                                    "last_login": user_base.last_login,
-                                    "is_staff": user_base.is_staff
-                                },
-                                "extra": {
-                                    "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
-                                    "mc_username": user_extra.minecraft_username,
-                                    "favorite_pack": user_extra.favorite_modpack
+                        if settings.DEBUG:
+                            instance_dict.update({
+                                "displayed_profile": {
+                                    "base": {
+                                        "username": user_base.username,
+                                        "date_joined": user_base.date_joined,
+                                        "last_login": user_base.last_login,
+                                        "is_staff": user_base.is_staff
+                                    },
+                                    "extra": {
+                                        "picture": f'http://{settings.DOMAIN_NAME}/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
+                                        "mc_username": user_extra.minecraft_username,
+                                        "favorite_pack": user_extra.favorite_modpack
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        else:
+                            instance_dict.update({
+                                "displayed_profile": {
+                                    "base": {
+                                        "username": user_base.username,
+                                        "date_joined": user_base.date_joined,
+                                        "last_login": user_base.last_login,
+                                        "is_staff": user_base.is_staff
+                                    },
+                                    "extra": {
+                                        "picture": f'https://{settings.DOMAIN_NAME}/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
+                                        "mc_username": user_extra.minecraft_username,
+                                        "favorite_pack": user_extra.favorite_modpack
+                                    }
+                                }
+                            })
                     except IndexError:
                         instance_dict.update({
                         "displayed_profile": {
@@ -537,11 +554,13 @@ class ShadowRaptor():
             template_name = join(settings.PROFILES_DIR, 'profile_edit.html')
             login_url = '/login/'
             profile_edit_form = DiscordUserInfoForm()
+            extra_edit_form = UserProfileInfoForm()
 
             def get(self, request, profile_name):
                 if str(request.user).split('#')[0] == profile_name:
                     instance_dict = player_poller.currentPlayers_DB
                     instance_dict["profile_edit_form"] = self.profile_edit_form
+                    instance_dict["extra_edit_form"] = self.extra_edit_form
                     try:
                         discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
                         instance_dict.update(load(discordJSON))
@@ -610,15 +629,17 @@ class ShadowRaptor():
             def post(self, request, profile_name):
 
                 profile_edit_form = DiscordUserInfoForm(request.POST)
+                extra_edit_form = UserProfileInfoForm(request.POST)
                 instance_dict = player_poller.currentPlayers_DB
                 instance_dict["profile_edit_form"] = profile_edit_form
+                instance_dict["extra_edit_form"] = self.extra_edit_form
                 try:
                     discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
                     instance_dict.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
 
-                if profile_edit_form.is_valid():
+                if profile_edit_form.is_valid() and extra_edit_form.is_valid():
 
                     LOGGER.info("A User modified their profile details")
                     changed_user = None
@@ -631,6 +652,8 @@ class ShadowRaptor():
                         changed_user.minecraft_username = profile_edit_form.cleaned_data["minecraft_username"]
                     if profile_edit_form.cleaned_data["favorite_modpack"] != '':
                         changed_user.favorite_modpack = profile_edit_form.cleaned_data["favorite_modpack"]
+                    if "profile_picture" in request.FILES:
+                        changed_user.profile_picture = request.FILES["profile_picture"]
                     changed_user.save()
                     return redirect('../')
 
