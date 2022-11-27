@@ -18,36 +18,45 @@
 {% block main_block %}
 
 <div class="container">
-    <div class="card">
-        {% if user.is_authenticated %}
-            {% if user.username == displayed_profile.base.username %}
-                <p>
+    {% if user.is_authenticated %}
+        {% if user.username == displayed_profile.base.username %}
+            <div class="card bg-dark m-3 p-3">
+                <div class="row">
                     <a role="button" href="{% url 'raptormc:user_profile_edit' user.username %}" class="btn btn-primary">
                         Edit Profile Details
                     </a>
-                </p>
-            {% endif %}
+                </div>
+            </div>
         {% endif %}
-    </div>
-    <div class="card">
-        <p>
-           Profile for: {{displayed_profile.base.username}}
-           <br>
-           Joined on: {{displayed_profile.base.date_joined}}
-           <br>
-           Last Active: {{displayed_profile.base.last_login}}
-           <br>
-           Is Staff: {{displayed_profile.base.is_staff|yesno|capfirst}}
-        </p>
-        <p>
-           <img src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
-           <br>
-           Minecraft Username: {{displayed_profile.extra.mc_username}}
-           <br>
-           Discord Username: {{displayed_profile.extra.discord_username}}
-           <br>
-           Favorite Modpack: {{displayed_profile.extra.favorite_pack|capfirst}}
-        </p>
+    {% endif %}
+    <div class="card bg-dark m-3 p-3 text-white">
+        <p class="fs-4 text-center mb-0">{{displayed_profile.base.username}}</p>
+        <hr>
+        <div class="row">
+            <div class="col-lg-2 col-12 mb-3">
+                {% if displayed_profile.base.is_staff == True %}
+                    <img id="profilePicturePage" class="border border-2 border-danger w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                {% else %}
+                    <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                {% endif %}
+            </div>
+            <div class="col-lg-5 col-6 align-middle">
+                <strong>Joined on:</strong> {{displayed_profile.base.date_joined}}
+                <br>
+                <br>
+                <strong>Last Active:</strong> {{displayed_profile.base.last_login}}
+
+            </div>
+            <div class="col-lg-5 col-6 align-middle">
+                <strong>Minecraft Username:</strong> {{displayed_profile.extra.mc_username}}
+                <br>
+                <br>
+                <strong>Discord Username:</strong> {{displayed_profile.extra.discord_username}}
+                <br>
+                <br>
+                <strong>Favorite Modpack:</strong> {{displayed_profile.extra.favorite_pack|capfirst}}
+            </div>
+        </div>
     </div>
 </div>
 
