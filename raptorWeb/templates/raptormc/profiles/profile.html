@@ -22,7 +22,9 @@
         {% if user.is_authenticated %}
             {% if user.username == displayed_profile.base.username %}
                 <p>
-                    Edit your things here!
+                    <a role="button" href="{% url 'raptormc:user_profile_edit' user.username %}" class="btn btn-primary">
+                        Edit Profile Details
+                    </a>
                 </p>
             {% endif %}
         {% endif %}

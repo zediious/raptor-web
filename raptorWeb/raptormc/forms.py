@@ -3,7 +3,7 @@ from django.core import validators
 from django.contrib.auth.models import User
 import logging
 
-from raptormc.models import AdminApplication, ModeratorApplication, UserProfileInfo
+from raptormc.models import AdminApplication, ModeratorApplication, UserProfileInfo, DiscordUserInfo
 
 LOGGER = logging.Logger("form_validator_logger")
 
@@ -236,12 +236,18 @@ class UserForm(forms.ModelForm):
 class UserProfileInfoForm(forms.ModelForm):
     """
     Extra information in User Registration form
-    """
-    discord_username = forms.CharField(max_length=50, help_text="Format it as such: Zediious#1234", validators=[check_for_hash])
-    
+    """  
     class Meta():
         model = UserProfileInfo
-        fields = ('profile_picture', 'minecraft_username', 'discord_username', 'favorite_modpack')
+        fields = ('profile_picture', 'minecraft_username', 'favorite_modpack')
+
+class DiscordUserInfoForm(forms.ModelForm):
+    """
+    Information from a Discord User that can be changed
+    """ 
+    class Meta():
+        model = DiscordUserInfo
+        fields = ('minecraft_username', 'favorite_modpack')
 
 class UserLoginForm(forms.Form):
     """

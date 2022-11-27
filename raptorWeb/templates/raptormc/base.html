@@ -33,8 +33,10 @@
     <div id="server_modals"> 
     </div>
 
-    <div id="headerBox" class="container-flex" style="background-image: url({% static 'image/background.webp' %}); background-color: rgba(0,13,33,255); background-position: top center; background-attachment: scroll;">
-
+    <div id="topBox" style="background-image: url({% static 'image/background.webp' %}); background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
+    
+      <div class="container-flex" style="position: relative; z-index: 1">
+    
       <nav class="navbar navbar-dark bg-dark">
         <div class="container">
           <div class="navbar-header d-flex">
@@ -63,22 +65,30 @@
               <div id="spacer" class="col-lg-2 col-0">
                 <span></span>
               </div>
+              {% if user.is_authenticated %}
+                <div class="dropstart">
+                  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img id="profilePicture" class="border border-secondary border-2" src="{{ user.profile_picture }}" alt="Profile">
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'raptormc:user_profile_edit' user.username %}">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'raptormc:logout' %}">Logout</a></li>
+                  </ul>
+                </div>
+              {% else %}
               <p id="loginRegister" class="mt-2 mb-2 p-0 w-75 row">
 
-                {% if user.is_authenticated %}
-                <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:logout' %}" role="button">
-                  <img id="navImage" class="p-0" src="{% static 'image/logout.webp' %}">
-                </a>
-                {% else %}
                 <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:login' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
                 </a></span>
-                {% endif %}
                 <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:register' %}" role="button">
                   <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
                 </a>
                 
               </p>
+              {% endif %}
+
             </div>
           </div>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -129,6 +139,10 @@
           </div>
         </div>
       </nav>
+
+    </div>
+
+    <div id="headerBox" class="container-flex" style="position: relative;">
       
       <div class="container">
 
@@ -174,6 +188,9 @@
       </div>
       
     </div>
+    
+    </div>
+
 
     <div id="scrollStopper"></div>
 
@@ -195,8 +212,8 @@
 
     </footer>
     
-    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
     
