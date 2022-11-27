@@ -56,9 +56,11 @@
                 <strong>Minecraft Username:</strong> {{displayed_profile.extra.mc_username}}
                 <br>
                 <br>
-                <strong>Discord Username:</strong> {{displayed_profile.extra.discord_username}}
-                <br>
-                <br>
+                {% if displayed_profile.extra.discord_username %}
+                    <strong>Discord Username:</strong> {{displayed_profile.extra.discord_username}}
+                    <br>
+                    <br>
+                {% endif%}
                 <strong>Favorite Modpack:</strong> {{displayed_profile.extra.favorite_pack|capfirst}}
             </div>
         </div>

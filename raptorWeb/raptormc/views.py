@@ -459,6 +459,22 @@ class ShadowRaptor():
         """
         Views that are related to User Profiles and their content
         """
+        class All_User_Profile(TemplateView):
+            """
+            Displays all User Profiles
+            """
+            template_name = join(settings.PROFILES_DIR, 'all_profiles.html')
+
+            def get(self, request):
+                instance_dict = player_poller.currentPlayers_DB
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    instance_dict.update(load(discordJSON))
+                except:
+                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+
+                return render(request, self.template_name, context=instance_dict)
+        
         class User_Profile(TemplateView):
             """
             Displays a User's Profile and it's information
