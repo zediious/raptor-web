@@ -52,7 +52,7 @@
       
       <nav class="navbar navbar-dark bg-dark">
         <div class="container">
-          <div class="d-flex">
+          <div class="d-flex w-100">
             <div class="navbar-header d-flex">
               <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon" ></span>
@@ -61,37 +61,39 @@
                 <img id="navImage" class="w-75" src="{% static 'image/letters.webp' %}">
               </a>
             </div>
-            <div class="navbar-header d-flex">
+            <div class="navbar-header d-flex w-25">
               <div id="spacer" class="col-lg-2 col-0">
                 <span></span>
               </div>
               {% if user.is_authenticated %}
-                <div class="dropstart">
-                  <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div id="profile_picture_box" class="align-self-center">
-                      {% if user.profile_picture %}
-                        <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
-                      {% else %}
-                        {% for loaded_user in users %}
-                          {% if user.get_username == loaded_user|get_username %}
-                            {% if loaded_user.profile_picture != default_media %}
-                              <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user|get_avatar_url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
-                            {% else %}
-                              <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                <div class="float-end">
+                  <div class="dropstart">
+                    <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <div id="profile_picture_box">
+                        {% if user.profile_picture %}
+                          <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                        {% else %}
+                          {% for loaded_user in users %}
+                            {% if user.get_username == loaded_user|get_username %}
+                              {% if loaded_user.profile_picture != default_media %}
+                                <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user|get_avatar_url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                              {% else %}
+                                <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                              {% endif %}
                             {% endif %}
-                          {% endif %}
-                        {% endfor %}
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
+                      <li><a class="dropdown-item" href="{% url 'raptormc:user_profile_edit' user.username %}">Edit Profile</a></li>
+                      {% if user.is_staff %}
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
                       {% endif %}
-                    </div>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'raptormc:user_profile_edit' user.username %}">Edit Profile</a></li>
-                    {% if user.is_staff %}
-                      <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
-                    {% endif %}
-                    <li><a class="dropdown-item" href="{% url 'raptormc:logout' %}">Logout</a></li>
-                  </ul>
+                      <li><a class="dropdown-item" href="{% url 'raptormc:logout' %}">Logout</a></li>
+                    </ul>
+                  </div>
                 </div>
               {% else %}
                 <p id="login_register_box" class="mt-2 mb-2 p-0 w-75 row">
