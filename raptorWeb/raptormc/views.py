@@ -2,14 +2,16 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from os.path import join
 from logging import getLogger
 from json import load
 from requests import post, get
 
 from raptorWeb import settings
-from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm
+from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
 from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
 from raptormc.jobs import player_poller, playerPoll
 from raptormc.util import discordAuth
@@ -474,7 +476,24 @@ class ShadowRaptor():
                 try:
                     user_base = User.objects.get(username=profile_name)
                     user_extra = UserProfileInfo.objects.get(user=user_base)
-                    instance_dict.update({
+                    try:
+                        instance_dict.update({
+                            "displayed_profile": {
+                                "base": {
+                                    "username": user_base.username,
+                                    "date_joined": user_base.date_joined,
+                                    "last_login": user_base.last_login,
+                                    "is_staff": user_base.is_staff
+                                },
+                                "extra": {
+                                    "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
+                                    "mc_username": user_extra.minecraft_username,
+                                    "favorite_pack": user_extra.favorite_modpack
+                                }
+                            }
+                        })
+                    except IndexError:
+                        instance_dict.update({
                         "displayed_profile": {
                             "base": {
                                 "username": user_base.username,
@@ -483,12 +502,11 @@ class ShadowRaptor():
                                 "is_staff": user_base.is_staff
                             },
                             "extra": {
-                                "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
                                 "mc_username": user_extra.minecraft_username,
                                 "favorite_pack": user_extra.favorite_modpack
                             }
                         }
-                    })  
+                    }) 
                 except User.DoesNotExist:
                     try:
                         discord_user = DiscordUserInfo.objects.get(username=profile_name)
@@ -500,7 +518,7 @@ class ShadowRaptor():
                                     "last_login": discord_user.last_login,
                                 },
                                 "extra": {
-                                    "picture": f'https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.profile_picture}.png',
+                                    "picture": discord_user.profile_picture,
                                     "mc_username": discord_user.minecraft_username,
                                     "discord_username": discord_user.tag,
                                     "favorite_pack": discord_user.favorite_modpack
@@ -511,6 +529,134 @@ class ShadowRaptor():
                         return HttpResponse("A User with the provided username was not found")
 
                 return render(request, self.template_name, context=instance_dict)
+
+        class User_Profile_Edit(LoginRequiredMixin, TemplateView):
+            """
+            Displays a User's profile details that can be edited, and allows
+            changing of said details
+            """
+            template_name = join(settings.PROFILES_DIR, 'profile_edit.html')
+            login_url = '/login/'
+            profile_edit_form = DiscordUserInfoForm()
+
+            def get(self, request, profile_name):
+                if str(request.user).split('#')[0] == profile_name:
+                    instance_dict = player_poller.currentPlayers_DB
+                    instance_dict["profile_edit_form"] = self.profile_edit_form
+                    try:
+                        discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                        instance_dict.update(load(discordJSON))
+                    except:
+                        LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                    try:
+                        user_base = User.objects.get(username=profile_name)
+                        user_extra = UserProfileInfo.objects.get(user=user_base)
+                        try:
+                            instance_dict.update({
+                                "displayed_profile": {
+                                    "base": {
+                                        "username": user_base.username,
+                                        "date_joined": user_base.date_joined,
+                                        "last_login": user_base.last_login,
+                                        "is_staff": user_base.is_staff
+                                    },
+                                    "extra": {
+                                        "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
+                                        "mc_username": user_extra.minecraft_username,
+                                        "favorite_pack": user_extra.favorite_modpack
+                                    }
+                                }
+                            })
+                        except IndexError:
+                            instance_dict.update({
+                            "displayed_profile": {
+                                "base": {
+                                    "username": user_base.username,
+                                    "date_joined": user_base.date_joined,
+                                    "last_login": user_base.last_login,
+                                    "is_staff": user_base.is_staff
+                                },
+                                "extra": {
+                                    "mc_username": user_extra.minecraft_username,
+                                    "favorite_pack": user_extra.favorite_modpack
+                                }
+                            }
+                        }) 
+                    except User.DoesNotExist:
+                        try:
+                            discord_user = DiscordUserInfo.objects.get(username=profile_name)
+                            instance_dict.update({
+                                "displayed_profile": {
+                                    "base": {
+                                        "username": discord_user.username,
+                                        "date_joined": discord_user.date_joined,
+                                        "last_login": discord_user.last_login,
+                                    },
+                                    "extra": {
+                                        "picture": f'https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.profile_picture}.png',
+                                        "mc_username": discord_user.minecraft_username,
+                                        "discord_username": discord_user.tag,
+                                        "favorite_pack": discord_user.favorite_modpack
+                                    }
+                                }
+                            })
+                        except DiscordUserInfo.DoesNotExist:
+                            return HttpResponse("A User with the provided username was not found")
+
+                    return render(request, self.template_name, context=instance_dict)
+
+                else: 
+                    return redirect('/accessdenied')
+
+            def post(self, request, profile_name):
+
+                profile_edit_form = DiscordUserInfoForm(request.POST)
+                instance_dict = player_poller.currentPlayers_DB
+                instance_dict["profile_edit_form"] = profile_edit_form
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    instance_dict.update(load(discordJSON))
+                except:
+                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+
+                if profile_edit_form.is_valid():
+
+                    LOGGER.info("A User modified their profile details")
+                    changed_user = None
+                    try:
+                        changed_user = DiscordUserInfo.objects.get(tag=request.user)
+                    except ObjectDoesNotExist:
+                        changed_user_base = User.objects.get(username=request.user)
+                        changed_user = UserProfileInfo.objects.get(user=changed_user_base)
+                    if profile_edit_form.cleaned_data["minecraft_username"] != '':
+                        changed_user.minecraft_username = profile_edit_form.cleaned_data["minecraft_username"]
+                    if profile_edit_form.cleaned_data["favorite_modpack"] != '':
+                        changed_user.favorite_modpack = profile_edit_form.cleaned_data["favorite_modpack"]
+                    changed_user.save()
+                    return redirect('../')
+
+                else:
+
+                    instance_dict["profile_edit_form"] = profile_edit_form
+
+                    return render(request, self.template_name, context=instance_dict)
+
+        class Access_Denied(TemplateView):
+            """
+            Page displayed when a resource cannot be accessed by a user
+            """
+            template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'no_access.html')
+
+            def get(self, request):
+
+                dictionary = player_poller.currentPlayers_DB
+                try:
+                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
+                    dictionary.update(load(discordJSON))
+                except:
+                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+
+                return render(request, self.template_name, context=dictionary)
 
     class Ajax_Views():
         """

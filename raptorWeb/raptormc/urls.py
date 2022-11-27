@@ -26,8 +26,10 @@ urlpatterns = [
     path('oauth2/login/', SR.Application.UserLogin_OAuth.as_view(), name="login_oauth"),
     path('oauth2/login/redirect', SR.Application.UserLogin_OAuth_Success.as_view(), name="login_oauth_success"),
     path('logout/', SR.Application.user_logout, name="logout"),
+    path('accessdenied/', SR.Profile_Views.Access_Denied.as_view(), name="access_denied"),
     # Profiles
     path('profile/<str:profile_name>/', SR.Profile_Views.User_Profile.as_view(), name="user_profile"),
+    path('profile/<str:profile_name>/edit/', SR.Profile_Views.User_Profile_Edit.as_view(), name="user_profile_edit"),
     # Ajax
     path('server_button_poll/', SR.Ajax_Views.Server_Buttons.as_view(), name="server_buttons_poll"),
     path('server_modal_poll/', SR.Ajax_Views.Server_Modals.as_view(), name="server_modals_poll"),

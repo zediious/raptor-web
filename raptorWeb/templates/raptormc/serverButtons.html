@@ -1,9 +1,6 @@
 {% load static %}
 {% load serverContext %}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
-
 {% for server in server_info reversed %} 
 
     {% if server == 'view' or server == 'totalCount' %}
@@ -25,8 +22,8 @@
     {% endif %}
 
 {% endfor %}
-<script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
+{% comment %} <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
 <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
 <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')

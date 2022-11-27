@@ -13,7 +13,7 @@ class DiscordAuthManager(models.UserManager):
             id = user["id"],
             tag = discord_tag,
             username = discord_tag.split('#')[0],
-            profile_picture = user["avatar"],
+            profile_picture = f'https://cdn.discordapp.com/avatars/{user["id"]}/{user["avatar"]}.png',
             pub_flags = user["public_flags"],
             flags = user["flags"],
             locale = user["locale"],
