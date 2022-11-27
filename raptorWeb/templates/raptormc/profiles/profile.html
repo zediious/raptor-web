@@ -1,4 +1,5 @@
 {% extends 'raptormc/base.html' %}
+{% load static %}
 {% load markdownStrip %}
 {% load serverContext %}
 
@@ -34,10 +35,14 @@
         <hr>
         <div class="row">
             <div class="col-lg-2 col-12 mb-3">
-                {% if displayed_profile.base.is_staff == True %}
-                    <img id="profilePicturePage" class="border border-2 border-danger w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                {% if displayed_profile.extra.picture %}
+                    {% if displayed_profile.base.is_staff == True %}
+                        <img id="profilePicturePage" class="border border-2 border-danger w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                    {% else %}
+                        <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                    {% endif %}
                 {% else %}
-                    <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
+                    <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
                 {% endif %}
             </div>
             <div class="col-lg-5 col-6 align-middle">
