@@ -28,8 +28,12 @@ CSRF_COOKIE_SECURE = True
 DEBUG = True
 USE_SQLITE = True
 
-# Public domain name
-DOMAIN_NAME = "shadowraptor.net"
+# Public domain name, and debug address
+DOMAIN_NAME = ""
+if DEBUG:
+    DOMAIN_NAME = "127.0.0.1:8000"
+else:
+    DOMAIN_NAME = "shadowraptor.net"
 
 # Addresses the Django app can be directly accessed from
 ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
