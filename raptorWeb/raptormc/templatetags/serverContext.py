@@ -249,3 +249,18 @@ def get_date(value):
     Get date value from a message dicionary
     """
     return value[str(value).split(':')[0].replace('"', '').replace('{', '').replace("'", '')]["date"]
+
+@register.filter
+def get_username(value):
+    """
+    Get username value from a user dictionary
+    """
+    print(value)
+    return value["username"]
+
+@register.filter
+def get_avatar_url(value):
+    """
+    Get user avatar URL from a user dictionary
+    """
+    return value["profile_picture"]

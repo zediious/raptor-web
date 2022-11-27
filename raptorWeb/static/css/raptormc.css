@@ -99,9 +99,15 @@ body {
     
     }
 
-    #profilePicture {
+    #profile_picture_box {
 
-        width: 50%
+        width: 100px
+
+    }
+
+    #login_register_box {
+
+        width: 220px
 
     }
 
@@ -147,9 +153,15 @@ body {
 
     }
 
-    #profilePicture {
+    #profile_picture_box {
 
-        width: 100%
+        width: 60px
+
+    }
+
+    #login_register_box {
+
+        width: 140px
 
     }
     

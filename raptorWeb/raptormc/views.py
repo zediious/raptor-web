@@ -8,7 +8,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from os.path import join
 from logging import getLogger
 from json import load
-from requests import post, get
 
 from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm

@@ -6,7 +6,7 @@ from json import dumps, load
 from django.utils.html import strip_tags
 
 from raptorWeb import settings
-from raptormc.models import PlayerCount, PlayerName, Server
+from raptormc.models import PlayerCount, PlayerName, Server, User, UserProfileInfo, DiscordUserInfo
 from raptormc.util.playerCounts import PlayerCounts
 
 LOGGER = getLogger('raptormc.jobs')
@@ -141,6 +141,45 @@ def playerPoll():
                 server_number += 1
 
             LOGGER.info("Request made, playerCounts.py ran")
+
+            # All user profile picture URLs to context
+            all_normal_users = User.objects.all()
+            all_discord_users = DiscordUserInfo.objects.all()
+            player_poller.currentPlayers_DB.update({
+                "users": []
+            })
+            for user in all_normal_users:
+                try: 
+                    user_core = UserProfileInfo.objects.get(user=user)
+                except UserProfileInfo.DoesNotExist:
+                    continue
+                if settings.DEBUG:
+                    player_poller.currentPlayers_DB["users"].append({
+            
+                        "username": user.username,
+                        "profile_picture": f'http://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
+                        
+                    })
+                else:
+                    player_poller.currentPlayers_DB["users"].append({
+            
+                        "username": user.username,
+                        "profile_picture": f'https://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
+                        
+                    })
+            for user in all_discord_users:
+                player_poller.currentPlayers_DB["users"].append({
+                    
+                    "username": user.username,
+                    "profile_picture": user.profile_picture
+                    
+                })
+
+            # Settings to context
+            player_poller.currentPlayers_DB.update({
+                "pub_domain": settings.DOMAIN_NAME,
+                "default_media": f'http://{settings.DOMAIN_NAME}/media/'
+            })
 
         else:
 

@@ -29,7 +29,7 @@
     <div hx-get="/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#total_count" hx-swap="innerHTML"></div>
     <div hx-get="/server_button_poll" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
     <div hx-get="/server_modal_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#server_modals" hx-swap="innerHTML"></div>
-    
+
     <div id="server_modals"> 
     </div>
 
@@ -67,8 +67,22 @@
               </div>
               {% if user.is_authenticated %}
                 <div class="dropstart">
-                  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img id="profilePicture" class="border border-secondary border-2" src="{{ user.profile_picture }}" alt="Profile">
+                  <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div id="profile_picture_box" class="align-self-center">
+                      {% if user.profile_picture %}
+                        <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                      {% else %}
+                        {% for loaded_user in users %}
+                          {% if user.get_username == loaded_user|get_username %}
+                            {% if loaded_user.profile_picture != default_media %}
+                              <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user|get_avatar_url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                            {% else %}
+                              <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
                   </button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
@@ -80,16 +94,16 @@
                   </ul>
                 </div>
               {% else %}
-              <p id="loginRegister" class="mt-2 mb-2 p-0 w-75 row">
+                <p id="login_register_box" class="mt-2 mb-2 p-0 w-75 row">
 
-                <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:login' %}" role="button">
-                  <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
-                </a></span>
-                <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:register' %}" role="button">
-                  <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
-                </a>
-                
-              </p>
+                  <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:login' %}" role="button">
+                    <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
+                  </a></span>
+                  <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:register' %}" role="button">
+                    <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
+                  </a>
+                  
+                </p>
               {% endif %}
 
             </div>
