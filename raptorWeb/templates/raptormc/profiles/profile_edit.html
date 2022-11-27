@@ -20,40 +20,25 @@
 
 {% if user.username == displayed_profile.base.username %}
     <div class="container">
+        <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+            <h3 class="pageHeader fw-bold text-center">Edit Profile</h3>
+            <p class="pageContent">Below you can edit certain details from your profile. Only edited fields will be submitted.</a></p>
+        </header>
+        
         <section>
 
-        <div class="card bg-light p-3 mt-4 opacity-75 container">
-            <form action="{% url 'raptormc:user_profile_edit' user.username %}" method="POST">
+            <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
+                <form action="{% url 'raptormc:user_profile_edit' user.username %}" method="POST">
 
-            {% csrf_token %}
-            {% bootstrap_form profile_edit_form %}
-            {% bootstrap_button button_type="submit" content="Change Details" %}
+                {% csrf_token %}
+                {% bootstrap_form profile_edit_form %}
+                {% bootstrap_button button_type="submit" content="Change Details" %}
 
-            </form>
-        </div>
+                </form>
+            </div>
 
         </section>
-        
-        <div class="card">
-            <p>
-            Profile for: {{displayed_profile.base.username}}
-            <br>
-            Joined on: {{displayed_profile.base.date_joined}}
-            <br>
-            Last Active: {{displayed_profile.base.last_login}}
-            <br>
-            Is Staff: {{displayed_profile.base.is_staff|yesno|capfirst}}
-            </p>
-            <p>
-            <img src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
-            <br>
-            Minecraft Username: {{displayed_profile.extra.mc_username}}
-            <br>
-            Discord Username: {{displayed_profile.extra.discord_username}}
-            <br>
-            Favorite Modpack: {{displayed_profile.extra.favorite_pack|capfirst}}
-            </p>
-        </div>
+    
     </div>
 {% else %}
     <div class="container">
