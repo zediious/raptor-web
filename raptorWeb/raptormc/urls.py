@@ -28,6 +28,7 @@ urlpatterns = [
     path('logout/', SR.Application.user_logout, name="logout"),
     path('accessdenied/', SR.Profile_Views.Access_Denied.as_view(), name="access_denied"),
     # Profiles
+    path('profile/', SR.Profile_Views.All_User_Profile.as_view(), name="all_user_profile"),
     path('profile/<str:profile_name>/', SR.Profile_Views.User_Profile.as_view(), name="user_profile"),
     path('profile/<str:profile_name>/edit/', SR.Profile_Views.User_Profile_Edit.as_view(), name="user_profile_edit"),
     # Ajax

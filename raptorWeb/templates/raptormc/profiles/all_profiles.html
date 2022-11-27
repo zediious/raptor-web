@@ -1,0 +1,40 @@
+{% extends 'raptormc/base.html' %}
+{% load static %}
+{% load markdownStrip %}
+{% load serverContext %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | Profiles
+  
+</title>
+{% endblock %}
+{% block metadata %}
+<meta property="og:title" content="ShadowRaptor | Profiles" />
+<meta property="og:description" content="All User profiles on ShadowRaptor" />
+<meta property="og:url" content="https://shadowraptor.net/profile/" />
+{% endblock %}
+
+{% block main_block %}
+
+<div class="container-flex">
+    <div class="row">
+        {% for loaded_user in users %}
+            <div class="col-md-4 col-12">
+                <a href="{% url 'raptormc:user_profile' loaded_user.username %}">
+                    <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
+                        <div id="profile_picture_box" class="mx-auto d-block">
+                            <img class="w-100" src="{{loaded_user.profile_picture}}" alt="">
+                        </div>
+                        <div class="col-10 w-100 text-center">
+                            <strong>{{loaded_user.username}}</strong>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

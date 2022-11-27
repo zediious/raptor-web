@@ -57,6 +57,12 @@ body {
 
 }
 
+#profile_box {
+
+    height: 140px
+
+}
+
 .fade-in-button {
     opacity: 1;
     animation-name: fadeInOpacityButton;
