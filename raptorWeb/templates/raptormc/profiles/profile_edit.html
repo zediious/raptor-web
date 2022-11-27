@@ -25,19 +25,35 @@
             <p class="pageContent">Below you can edit certain details from your profile. Only edited fields will be submitted.</a></p>
         </header>
         
-        <section>
+        {% if user.tag %}
+            <section>
 
-            <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
-                <form action="{% url 'raptormc:user_profile_edit' user.username %}" method="POST">
+                <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
+                    <form action="{% url 'raptormc:user_profile_edit' user.username %}" method="POST">
 
-                {% csrf_token %}
-                {% bootstrap_form profile_edit_form %}
-                {% bootstrap_button button_type="submit" content="Change Details" %}
+                    {% csrf_token %}
+                    {% bootstrap_form profile_edit_form %}
+                    {% bootstrap_button button_type="submit" content="Change Details" %}
 
-                </form>
-            </div>
+                    </form>
+                </div>
 
-        </section>
+            </section>
+        {% else %}
+            <section>
+
+                <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
+                    <form action="{% url 'raptormc:user_profile_edit' user.username %}" enctype="multipart/form-data" method="POST">
+
+                    {% csrf_token %}
+                    {% bootstrap_form extra_edit_form %}
+                    {% bootstrap_button button_type="submit" content="Change Details" %}
+
+                    </form>
+                </div>
+
+            </section>
+        {% endif %}
     
     </div>
 {% else %}
