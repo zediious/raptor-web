@@ -73,6 +73,9 @@
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'raptormc:user_profile_edit' user.username %}">Edit Profile</a></li>
+                    {% if user.is_staff %}
+                      <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                    {% endif %}
                     <li><a class="dropdown-item" href="{% url 'raptormc:logout' %}">Logout</a></li>
                   </ul>
                 </div>
