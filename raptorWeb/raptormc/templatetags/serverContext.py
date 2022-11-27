@@ -255,7 +255,6 @@ def get_username(value):
     """
     Get username value from a user dictionary
     """
-    print(value)
     return value["username"]
 
 @register.filter
