@@ -96,16 +96,33 @@
                   </div>
                 </div>
               {% else %}
-                <p id="login_register_box" class="mt-2 mb-2 p-0 w-75 row">
 
-                  <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:login' %}" role="button">
-                    <img id="navImage" class="p-0" src="{% static 'image/login.webp' %}">
-                  </a></span>
-                  <a class="col btn btn-dark fs-4 border border-2 p-1 pt-0 pb-0" href="{% url 'raptormc:register' %}" role="button">
-                    <img id="navImage" class="p-0" src="{% static 'image/register.webp' %}">
-                  </a>
-                  
-                </p>
+              <div class="float-end">
+                <div class="dropstart">
+                  <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div id="profile_picture_box">
+                      <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    </div>
+                  </button>
+                  <ul class="dropdown-menu bg-dark">
+                    <header class="p-3">
+                      <h3 class="pageContent fw-bold"><a href="{% url 'raptormc:login' %}">Login.</a></h3>
+                      <p class="pageContent text-white">No Account? <a href="{% url 'raptormc:register' %}">Register.</a></p>
+                    </header>
+                
+                    <section>
+                    
+                      <div class="p-3 opacity-75 container">
+                        <a role="button" href="{% url 'raptormc:login_oauth' %}" class="btn btn-primary">
+                          Login with Discord
+                        </a>
+                      </div>
+                    
+                    </section>
+                    
+                  </ul>
+                </div>
+              </div>
               {% endif %}
 
             </div>
