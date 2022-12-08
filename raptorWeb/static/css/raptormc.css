@@ -77,7 +77,7 @@ body {
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
     animation-duration: 0.6s;
-}
+} 
 
 @keyframes fadeInOpacityButton {
     0% {

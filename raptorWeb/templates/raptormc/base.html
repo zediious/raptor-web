@@ -105,17 +105,16 @@
                     </div>
                   </button>
                   <ul class="dropdown-menu bg-dark">
-                    <header class="p-3">
-                      <h3 class="pageContent fw-bold"><a href="{% url 'raptormc:login' %}">Login.</a></h3>
-                      <p class="pageContent text-white">No Account? <a href="{% url 'raptormc:register' %}">Register.</a></p>
-                    </header>
-                
-                    <section>
-                    
-                      <div class="p-3 opacity-75 container">
-                        <a role="button" href="{% url 'raptormc:login_oauth' %}" class="btn btn-primary">
-                          Login with Discord
-                        </a>
+            
+                    <section class="opacity-75 w-100 container">
+
+                      <div class="p-2 btn-group" role="group" aria-label="Basic example">
+                        <a role="button" type="button" class="btn btn-secondary" href="{% url 'raptormc:login' %}">Login</a>
+                        <a role="button" type="button" class="btn btn-primary" href="{% url 'raptormc:login_oauth' %}">Discord Login</a>
+                      </div>
+
+                      <div class="p-2 text-center">
+                        <p class="pageContent text-white">No Account? <a href="{% url 'raptormc:register' %}">Register.</a></p>
                       </div>
                     
                     </section>
