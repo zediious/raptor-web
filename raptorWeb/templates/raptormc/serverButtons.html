@@ -22,20 +22,10 @@
     {% endif %}
 
 {% endfor %}
+
 <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
 <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
 <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-</script>
-<script>
-    $( document ).ready(function() {
-    {% for server in server_info reversed %}
-
-            new ClipboardJS('.copy{{ server|get_key}}Address', {
-                container: document.getElementById('{{ server|get_key}}Desc')
-            });
-
-    {% endfor %}
-    });
 </script>
