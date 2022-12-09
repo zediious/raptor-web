@@ -1,3 +1,11 @@
+//Bootstrap SCSS
+@import './dep/bootstrap_scss/bootstrap.scss';
+@import './dep/bootstrap_scss/functions';
+@import './dep/bootstrap_scss/buttons';
+@import './dep/bootstrap_scss/variables';
+
+$bd-discord-tone: #7289da;
+
 body {
 
     background-size: auto;
@@ -78,6 +86,23 @@ body {
     animation-timing-function: ease-in;
     animation-duration: 0.6s;
 }
+
+.btn-discord {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-bg: #{shade-color($bd-discord-tone, 10%)};
+    --bs-btn-border-color: var(--bd-discord-tone);
+    --bs-btn-border-radius: .5rem;
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: #{shade-color($bd-discord-tone, 30%)};
+    --bs-btn-hover-border-color: #{shade-color($bd-discord-tone, 30%)};
+    --bs-btn-focus-shadow-rgb: var(--bd-discord-tone);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: #{shade-color($bd-discord-tone, 20%)};
+    --bs-btn-active-border-color: #{shade-color($bd-discord-tone, 20%)};
+  }
+  
+  
 
 @keyframes fadeInOpacityButton {
     0% {
