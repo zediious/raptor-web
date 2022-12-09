@@ -77,7 +77,7 @@ body {
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
     animation-duration: 0.6s;
-} 
+}
 
 @keyframes fadeInOpacityButton {
     0% {
@@ -135,6 +135,12 @@ body {
         width: 25%;
 
     }
+
+    .indicatorImage {
+
+        width: 25%;
+
+    }
     
 }
 
@@ -168,6 +174,12 @@ body {
     #login_register_box {
 
         width: 140px
+
+    }
+
+    .indicatorImage {
+
+        width: 40%;
 
     }
     
