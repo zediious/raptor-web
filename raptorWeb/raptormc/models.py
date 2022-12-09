@@ -87,12 +87,6 @@ class UserProfileInfo(models.Model):
         blank=True
     )
 
-    discord_info = models.OneToOneField(
-        DiscordUserInfo,
-        null=True,
-        on_delete=models.CASCADE
-    )
-
     def __str__(self):
         try:
             return self.user.username
