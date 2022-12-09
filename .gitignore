@@ -145,3 +145,6 @@ key.txt
 
 # Media files
 /raptorWeb/media
+
+# SCSS Dependencies
+/raptorWeb/static/css/dep
