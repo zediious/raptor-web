@@ -7,3 +7,4 @@ Disallow: /admin/
 Disallow: /server_button_poll/
 Disallow: /server_modal_poll/
 Disallow: /total_count_poll/
+Disallow: /login/
