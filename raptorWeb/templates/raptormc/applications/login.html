@@ -1,50 +1,18 @@
-{% extends 'raptormc/base.html' %}
+{% load static %}
 {% load django_bootstrap5 %}
 
-{% block page_title %}
-<title>
-  
-  ShadowRaptor | Login
-  
-</title>
-{% endblock %}
-{% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Login" />
-<meta property="og:description" content="Login to ShadowRaptor Network's Website" />
-<meta property="og:url" content="https://shadowraptor.net/login" />
-{% endblock %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
-{% block main_block %}
-<section id="login" class="container">
+<div class="card bg-dark text-white p-1 mt-0 mb-0 opacity-75 container">
+  <form action="{% url 'raptormc:login' %}" method="POST">
 
-    <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-      <h3 class="pageHeader fw-bold text-center">Login</h3>
-      <p class="pageContent">No Account? <a href="{% url 'raptormc:register' %}">Register here.</a></p>
-    </header>
+    {% csrf_token %}
+    {% bootstrap_form login_form %}
+    <div class="loginSubmit opacity-100">
+      {% bootstrap_button button_type="submit" content="Login" %}
+    </div>
+    <a role="button" type="button" class="btn btn-discord mt-2 opacity-100" href="{% url 'raptormc:login_oauth' %}">Login with Discord</a>
 
-    <section>
-    
-      <div class="card bg-light p-3 mt-4 opacity-75 container">
-        <a role="button" href="{% url 'raptormc:login_oauth' %}" class="btn btn-discord">
-          Login with Discord
-        </a>
-      </div>
-    
-    </section>
-    
-    <section>
-
-      <div class="card bg-light p-3 mt-4 opacity-75 container">
-        <form action="{% url 'raptormc:login' %}" method="POST">
-
-          {% csrf_token %}
-          {% bootstrap_form login_form %}
-          {% bootstrap_button button_type="submit" content="Login" %}
-
-        </form>
-      </div>
-
-    </section>
-  
-  </section>
-{% endblock %}
+  </form>
+</div>

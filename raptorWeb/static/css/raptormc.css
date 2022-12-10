@@ -11365,6 +11365,10 @@ body {
   height: 140px;
 }
 
+.loginSubmit button {
+  width: 100%;
+}
+
 .fade-in-button {
   opacity: 1;
   -webkit-animation-name: fadeInOpacityButton;

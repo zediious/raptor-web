@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -282,67 +283,43 @@ class ShadowRaptor():
 
                     return render(request, self.template_name, context=dictionary)
 
-        class UserLogin(TemplateView):
+        class User_Login_Form(TemplateView):
             """
-            User Login form
+            Returns a form for a user to login with Username and Password
             """
-            template_name = join(settings.APPLICATIONS_DIR, 'login.html')
             login_form = UserLoginForm()
 
             def get(self, request):
 
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["login_form"] = self.login_form
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                template_name = join(settings.APPLICATIONS_DIR, 'login.html')
                 
-                return render(request, self.template_name, context=dictionary)      
+                return render(request, template_name, context=dictionary)    
 
             def post(self, request):
 
                 login_form = UserLoginForm(request.POST)
-
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["login_form"] = self.login_form
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
 
                 if login_form.is_valid():
-
                     username = login_form.cleaned_data["username"]
                     password = login_form.cleaned_data["password"]
-
                     user = authenticate(username=username, password=password)
-
                     if user:
-
-                        if user.is_active:
-
-                            LOGGER.info("User logged in!")
-                            login(request, user)
-                            return HttpResponseRedirect('..')
-
-                        else:
-
-                            return HttpResponse("Account not active")
-
+                        LOGGER.info("User logged in!")
+                        login(request, user)
+                        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
                     else:
-
-                        LOGGER.info(f"User login attempt failed for user: {username}")
-                        dictionary["login_form"] = login_form
-
-                        return render(request, self.template_name, context=dictionary)
+                        return HttpResponse("Account does not exist")
+                else:
+                    messages.error(request, login_form.errors.as_text().replace('* __all__', ''))
+                    return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
         class UserLogin_OAuth(TemplateView):
 
             def get(self, request):
-
                 return redirect(settings.DISCORD_AUTH_URL)
 
         class UserLogin_OAuth_Success(TemplateView):
@@ -368,7 +345,6 @@ class ShadowRaptor():
             mod_app = ModApp()
 
             def get(self, request):
-
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = self.mod_app
                 try:
@@ -380,7 +356,6 @@ class ShadowRaptor():
                 return render(request, self.template_name, context=dictionary)
 
             def post(self, request):
-
                 mod_app = ModApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = mod_app
@@ -389,18 +364,13 @@ class ShadowRaptor():
                     dictionary.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-
                 if mod_app.is_valid():
-
                     LOGGER.info("Mod Application submitted!")
                     LOGGER.info(f"Discord ID of applicant: {mod_app.cleaned_data['discord_name']}")
                     new_app = mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
-
                 else:
-
                     dictionary["modform"] = mod_app
-
                     return render(request, self.template_name, context=dictionary)
 
         class AdminApp(TemplateView):
@@ -411,7 +381,6 @@ class ShadowRaptor():
             admin_app = AdminApp()
 
             def get(self, request):
-
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = self.admin_app
                 try:
@@ -419,11 +388,9 @@ class ShadowRaptor():
                     dictionary.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-
                 return render(request, self.template_name, context=dictionary)
 
             def post(self, request):
-
                 admin_app = AdminApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = admin_app
@@ -432,18 +399,13 @@ class ShadowRaptor():
                     dictionary.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-
                 if admin_app.is_valid():
-
                     LOGGER.info("Admin Application submitted.!")
                     LOGGER.info(f"Discord ID of applicant: {admin_app.cleaned_data['discord_name']}")
                     new_app = admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
-
                 else:
-
                     dictionary["admin_form"] = admin_app
-
                     return render(request, self.template_name, context=dictionary)
 
         @login_required
@@ -453,7 +415,7 @@ class ShadowRaptor():
             """
             logout(request)
             LOGGER.info("User logged out!")
-            return HttpResponseRedirect('..')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     class Profile_Views():
         """
@@ -654,9 +616,7 @@ class ShadowRaptor():
                     instance_dict.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-
                 if profile_edit_form.is_valid() and extra_edit_form.is_valid():
-
                     LOGGER.info("A User modified their profile details")
                     changed_user = None
                     try:
@@ -672,11 +632,8 @@ class ShadowRaptor():
                         changed_user.profile_picture = request.FILES["profile_picture"]
                     changed_user.save()
                     return redirect('../')
-
                 else:
-
                     instance_dict["profile_edit_form"] = profile_edit_form
-
                     return render(request, self.template_name, context=instance_dict)
 
         class Access_Denied(TemplateView):
@@ -693,7 +650,6 @@ class ShadowRaptor():
                     dictionary.update(load(discordJSON))
                 except:
                     LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-
                 return render(request, self.template_name, context=dictionary)
 
     class Ajax_Views():

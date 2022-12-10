@@ -22,7 +22,7 @@ urlpatterns = [
     path('applications/admin/', SR.Application.AdminApp.as_view(), name="admin_app"),
     # Auth
     path('register/', SR.Application.RegisterUser.as_view(), name="register"),
-    path('login/', SR.Application.UserLogin.as_view(), name="login"),
+    path('login/', SR.Application.User_Login_Form.as_view(), name="login"),
     path('oauth2/login/', SR.Application.UserLogin_OAuth.as_view(), name="login_oauth"),
     path('oauth2/login/redirect', SR.Application.UserLogin_OAuth_Success.as_view(), name="login_oauth_success"),
     path('logout/', SR.Application.user_logout, name="logout"),
