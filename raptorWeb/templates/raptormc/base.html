@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load serverContext %}
+{% load django_bootstrap5 %}
 
 <html lang="en" dir="ltr">
 
@@ -29,6 +30,7 @@
     <div hx-get="/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#total_count" hx-swap="innerHTML"></div>
     <div hx-get="/server_button_poll" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
     <div hx-get="/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"></div>
+    <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
 
     <div id="server_modals"> 
     </div>
@@ -108,11 +110,14 @@
             
                     <section class="opacity-75 w-100 container">
 
-                      <div class="p-2 btn-group" role="group" aria-label="Basic example">
-                        <a role="button" type="button" class="btn btn-secondary" href="{% url 'raptormc:login' %}">Login</a>
-                        <a role="button" type="button" class="btn btn-discord" href="{% url 'raptormc:login_oauth' %}">Discord Login</a>
-                      </div>
-
+                      {% if messages %}
+                      <ul class="messages alert alert-warning">
+                        {% for message in messages %}
+                          {{message}}
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
+                      <div id="user_login_form"></div>
                       <div class="p-1 mb-0 text-center">
                         <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'raptormc:register' %}">Register</a></p>
                       </div>

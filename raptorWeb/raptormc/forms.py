@@ -1,9 +1,10 @@
 from django import forms
 from django.core import validators
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 import logging
 
-from raptormc.models import AdminApplication, ModeratorApplication, UserProfileInfo, DiscordUserInfo
+from raptormc.models import AdminApplication, ModeratorApplication, User, UserProfileInfo, DiscordUserInfo
 
 LOGGER = logging.Logger("form_validator_logger")
 
@@ -255,3 +256,24 @@ class UserLoginForm(forms.Form):
     """
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        """
+        Overrides default clean, while calling the superclass clean()
+        Ensures a User exists and that password is correct before 
+        returning clean data to view
+        """
+        clean_data = super().clean()
+        username = clean_data.get("username")
+        password = clean_data.get("password")
+        user_exists = False
+        for user in User.objects.all():
+            if user.username == username:
+                user_exists = True
+                break
+
+        if user_exists == False:
+            raise forms.ValidationError("The entered Username does not exist")
+
+        if authenticate(username=username, password=password) == None:
+            raise forms.ValidationError("The entered Password was incorrect")
