@@ -103,6 +103,9 @@
     {% endfor %}
 
 <script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    
     $( document ).ready(function() {
     {% for server in server_info reversed %}
 
