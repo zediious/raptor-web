@@ -3,29 +3,6 @@
 
 <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
-<div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content bg-dark text-white">
-          <button type="button" class="btn-close btn-close-white p-3 mb-0" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-body pt-0">
-            
-            {% for server in server_info reversed %} 
-              {% if forloop.counter0 != 0 %}
-              <hr>
-              {% endif %}
-              <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server|get_modpack_name}}</h5>
-              {% if server|get_player_names %}
-              <span class=" d-block text-center">{{ server|get_player_names|join:", "}}</span>
-              {% else %}
-              <span class=" d-block text-center">No players online</span>
-              {% endif %}
-            {% endfor %}
-
-          </div>
-        </div>
-      </div>
-    </div>
-
     {% for server in server_info reversed %} 
     
       <div class="modal fade" id="{{ server|get_key }}Info" tabindex="-1" aria-labelledby="{{ server|get_modpack_name }} Information" aria-hidden="true">

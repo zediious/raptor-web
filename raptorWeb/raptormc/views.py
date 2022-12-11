@@ -679,5 +679,6 @@ class ShadowRaptor():
             Returns a simple HttpResponse with the total count of players on all servers
             """
             def get(self, request):
+                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'playerCounts.html')
                 playerPoll()
-                return HttpResponse(player_poller.currentPlayers_DB["totalCount"])
+                return render(request, template_name, context=player_poller.currentPlayers_DB)
