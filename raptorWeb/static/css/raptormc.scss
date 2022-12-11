@@ -66,74 +66,52 @@
 $bd-discord-tone: #7289da;
 
 body {
-
     background-size: auto;
     background-position: center top;
     background-repeat: no-repeat;
-
 }
 
 #discordBanner {
-
     width: 100%;
     height: 100%;
-
 }
 
 .navbar {
-
     opacity: 0.95;
-
 }
 
 .navbar-toggler-icon {
-
     opacity: 1.00;
-    
 }
 
 .btn-dark {
-
     opacity: 0.75;
-
 }
 
 #topBox {
-
     background-size: auto;
     background-repeat: no-repeat;
     background-position: top center;
-
 }
 
 .new_tab_icon {
-
     width: 1.1%;
-
 }
 
 #loadingSpinnerCount {
-
     width: 10%;
-
 }
 
 #loadingSpinnerButtons {
-
     width: 84%;
-
 }
 
 #profile_box {
-
     height: 140px
-
 }
 
 .loginSubmit button {
-
     width: 100%;
-
 }
 
 .fade-in-button {
@@ -165,9 +143,7 @@ body {
     --bs-btn-active-color: var(--bs-btn-hover-color);
     --bs-btn-active-bg: #{shade-color($bd-discord-tone, 20%)};
     --bs-btn-active-border-color: #{shade-color($bd-discord-tone, 20%)};
-  }
-  
-  
+  }  
 
 @keyframes fadeInOpacityButton {
     0% {
@@ -190,46 +166,32 @@ body {
 @media (min-width: 768px) {
 
     .pageHeader {
-
         font-size: xx-large;
-    
     }
 
     #profile_picture_box {
-
         width: 60px
-
     }
 
     #login_register_box {
-
         width: 220px
-
     }
 
     .pageContent > * {
-
         font-size: large;
-
     }
 
     #navImage {
-
         width: 80%;
         height: 80%;
-
     }
 
     .navbar-brand {
-
         width: 25%;
-
     }
 
     .indicatorImage {
-
         width: 25%;
-
     }
     
 }
@@ -237,40 +199,28 @@ body {
 @media (max-width: 767px) {
 
     .pageHeader {
-
         font-size: medium;
-    
     }
 
     .pageContent > * {
-
         font-size: small;
-
     }
 
     #navImage {
-
         width: 100%;
         height: 75%;
-
     }
 
     #profile_picture_box {
-
         width: 40px
-
     }
 
     #login_register_box {
-
         width: 140px
-
     }
 
     .indicatorImage {
-
         width: 30%;
-
     }
     
 }
