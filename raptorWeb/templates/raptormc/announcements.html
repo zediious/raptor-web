@@ -31,49 +31,52 @@
 
 <section id="discordAnnouncements" class="container mt-0">
 
+  {% autoescape off %}
   <header class="p-0 mt-4">
-    {% autoescape off %}
-    {% for server in server_info reversed %}
-      <a id="{{ server|get_key }}"></a>
-      <p class="text-center">
-          <a class="btn btn-secondary w-75" data-bs-toggle="collapse" href="#{{ server|get_key }}collapse" role="button" aria-expanded="false" aria-controls="collapse">
-            {{ server|get_modpack_name }} Announcements <span class="badge text-bg-info">{{server|get_announcement_count}}</span>
-          </a>
-      </p>
-      <div class="collapse" id="{{ server|get_key }}collapse">
-        {% for key, items in server.items %}
-          {% for message in items.announcements %}
-            <div>
-              <div class="pageContent card bg-light opacity-75 mt-4 mb-4">
-                <p class="pageContent p-4">{{ message|get_message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-                <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message|get_author }} on {{ message|get_date }}</p>
+    <div class="accordion opacity-75 mt-2 container" id="ruleAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="globalAnnouncements">
+          <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGlobal" aria-expanded="true" aria-controls="collapseGlobal">
+            Network Announcements
+          </button>
+        </h2>
+        <div id="collapseGlobal" class="accordion-collapse collapse" aria-labelledby="collapseGlobal">
+          <div class="accordion-body pageContent p-4">
+            {% for announcement in announcements %}
+              <div class="pageContent card bg-dark text-white opacity-100 mt-4">
+                <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+                <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
               </div>
-            </div>
-          {% endfor %}
-        {% endfor %}
+            {% endfor %}
+          </div>
+        </div>
       </div>
-    {% endfor %}
-    {% endautoescape %}
-  </header>
-  
-  <header class="p-0 mt-3">
-    {% autoescape off %}
-   <p class="text-center">
-    <a class="btn btn-secondary w-75" data-bs-toggle="collapse" href="#globalcollapse" role="button" aria-expanded="false" aria-controls="collapse">
-        Global Announcements
-    </a>
-   </p>
-  
-    <div class="collapse" id="globalcollapse">
-      {% for announcement in announcements %}
-        <div class="pageContent card bg-light opacity-75 mt-4">
-          <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-          <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
+      {% for server in server_info reversed %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="{{ server|get_key }}Announcements">
+            <a id="{{ server|get_key }}"></a>
+            <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server|get_key }}" aria-expanded="true" aria-controls="collapse{{ server|get_key }}">
+              {{ server|get_modpack_name }} Announcements
+            </button>
+          </h2>
+          <div id="collapse{{ server|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server|get_key }}">
+            <div class="accordion-body pageContent p-3">
+              {% for key, items in server.items %}
+                {% for message in items.announcements %}
+                  <div>
+                    <div class="pageContent card bg-dark text-white opacity-100 mt-4 mb-4">
+                      <p class="pageContent p-4">{{ message|get_message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+                      <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message|get_author }} on {{ message|get_date }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
         </div>
       {% endfor %}
-    </div>
-    {% endautoescape %}
   </header>
+  {% endautoescape %}
 
 </section>
 {% endblock %}
