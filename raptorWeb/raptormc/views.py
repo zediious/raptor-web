@@ -210,14 +210,17 @@ class ShadowRaptor():
 
             def get(self, request):
 
-                discord_code = request.GET.get('code')
-                user_info = discordAuth.exchange_code(discord_code)
-                discord_user = authenticate(request, user=user_info)
                 try:
-                    login(request, discord_user, backend='raptormc.auth.DiscordAuthBackend')
-                except AttributeError:
-                    login(request, list(discord_user).pop(), backend='raptormc.auth.DiscordAuthBackend')
-                return redirect('../../')
+                    discord_code = request.GET.get('code')
+                    user_info = discordAuth.exchange_code(discord_code)
+                    discord_user = authenticate(request, user=user_info)
+                    try:
+                        login(request, discord_user, backend='raptormc.auth.DiscordAuthBackend')
+                    except AttributeError:
+                        login(request, list(discord_user).pop(), backend='raptormc.auth.DiscordAuthBackend')
+                    return redirect('../../')
+                except KeyError:
+                    return HttpResponseRedirect("../login")
 
         class ModApp(TemplateView):
             """
