@@ -37,8 +37,16 @@ async def on_message(message):
                 try:
                     if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
                         for role in role_list:
-                            if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[announce_channel]["modpack_name"]:
-                                raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
+                            try:
+                                if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server_data[announce_channel]["modpack_name"]:
+                                    raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
+                            except KeyError:
+                                try: 
+                                    logging.debug(f'{e}\nA KeyError occured, debug information below\n\nMessage channel: {message.channel}\n\nRole list: {role_list}\n\nCurrent server info: {server_data[announce_channel]}')
+                                    break
+                                except:
+                                    logging.debug("An error occured logging a previous error.")
+                                    break
                 except AttributeError as e:
                     try: 
                         logging.debug(f'{e}\nAn Attribute Error occured, debug information below\n\nMessage channel: {message.channel}\n\nRole list: {role_list}\n\nCurrent server info: {server_data[announce_channel]}')
