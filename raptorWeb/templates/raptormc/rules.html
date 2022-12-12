@@ -33,7 +33,7 @@
 <section id="ruleBoxes" class="m-1 mb-3 mt-4">
 
   <div class="accordion opacity-75 mt-2 container" id="ruleAccordion">
-  {% if network_rules.enabled %}
+  {% if Network_Rules.enabled %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="networkRules">
         <button class="accordion-button pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork" aria-expanded="true" aria-controls="collapseNetwork">
@@ -42,7 +42,7 @@
       </h2>
       <div id="collapseNetwork" class="accordion-collapse collapse show" aria-labelledby="collapseNetwork">
         <div class="accordion-body pageContent p-4">
-          {{ network_rules.content|safe }}
+          {{ Network_Rules.content|safe }}
         </div>
       </div>
     </div>
