@@ -19,13 +19,15 @@
 
 <section id="welcome" class="container mb-0">
 
-  <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
-    <hr>
-    <div class="pageContent">
-      {{ announcement_info.content|safe }}
-    </div>
-  </header>
+  {% if Announcements_Information.enabled %}
+    <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+      <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
+      <hr>
+      <div class="pageContent">
+        {{ Announcements_Information.content|safe }}
+      </div>
+    </header>
+  {% endif %}
 
 </section>
 

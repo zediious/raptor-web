@@ -17,12 +17,12 @@
 {% block main_block %}
 <section id="welcome" class="container mb-0">
 
-  {% if home_info.enabled %}
+  {% if Homepage_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-2">Welcome to ShadowRaptor</h3>
     <hr>
     <div class="pageContent">
-      {{ home_info.content|safe }}
+      {{ Homepage_Information.content|safe }}
     </div>
   </header>
   {% else %}
@@ -33,38 +33,23 @@
 <section id="discordAnnouncements" class="container mt-0">
 
   <header class="p-0 mt-4">
-    {% if message1 %}
+    {% if announcements %}
       {% autoescape off %}
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ message0.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message0.author }} on {{ message0.date }}</p>
-      </div>
-
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ message1.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message1.author }} on {{ message1.date }}</p>
-      </div>
-
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ message2.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message2.author }} on {{ message2.date }}</p>
-      </div>
-
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ message3.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message3.author }} on {{ message3.date }}</p>
-      </div>
-
-      <div class="pageContent card bg-light opacity-75 mt-4">
-        <p class="pageContent p-4">{{ message4.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ message4.author }} on {{ message4.date }}</p>
-      </div>
+        {% for announcement in announcements %}
+          {% if forloop.counter0 > 4 %}
+          {% else %}
+            <div class="pageContent card bg-light opacity-75 mt-4">
+              <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+              <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
       {% endautoescape %}
       
     {% else %}
-    <p class="pageContent">
-      announcements.json missing
-    </p>
+    <div class="pageContent card bg-light opacity-75 mt-4">
+      <p class="pageContent p-4">"announcements.json" file is missing. Ensure Discord Bot has been setup and is running</p>>
+    </div>
     {% endif %}
   </header>
 

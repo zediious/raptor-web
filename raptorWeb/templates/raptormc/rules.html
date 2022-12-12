@@ -17,12 +17,12 @@
 {% block main_block %}
 <section id="ruleIntro" class="container">
 
-  {% if rules_info.enabled %}
+  {% if Rules_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white m-2 p-4 mt-4">
     <h3 class="pageHeader fw-bold text-center mb-2">ShadowRaptor Rules</h3>
     <hr>
     <div class="pageContent">
-      {{ rules_info.content|safe }}
+      {{ Rules_Information.content|safe }}
     </div>
   </header>
   {% else %}

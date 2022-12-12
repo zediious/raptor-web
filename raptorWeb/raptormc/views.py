@@ -14,7 +14,7 @@ from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
 from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
 from raptormc.jobs import player_poller, playerPoll
-from raptormc.util import discordAuth
+from raptormc.util import discordAuth, viewContext
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
 
@@ -35,25 +35,10 @@ class ShadowRaptor():
             """
             template_name = join(TEMPLATE_DIR_RAPTORMC, 'home.html')
 
-            def get_context_data(self, **kwargs):
+            def get_context_data(self, **kwargs): 
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "home_info": InformativeText.objects.get(name="Homepage Information")
-                    })
-                except:
-                    context.update({
-                        "home_info": InformativeText.objects.create(name="Homepage Information", content="Update 'Homepage Information' Model to change this text", pk=1)
-                    })
-                try:
-                    announcementsJSON = open(join(settings.BASE_DIR, 'announcements.json'), "r")
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(announcementsJSON))
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Homepage Information"], announcements=True)
 
         class Announcements(TemplateView):
             """
@@ -64,30 +49,7 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "announcement_info": InformativeText.objects.get(name="Announcements Information"),
-                    })
-                except:
-                    context.update({
-                        "announcement_info": InformativeText.objects.create(name="Announcements Information", content="Update 'Announcements Information' Model to change this text", pk=11),
-                    })
-                try:
-                    announcement_dict = {
-                        "announcements": []
-                    }
-                    message_json = dict(load(open(join(settings.BASE_DIR, 'announcements.json'), "r")))
-                    for message in message_json:
-                        announcement_dict["announcements"].append({
-                            "author": message_json[message]["author"],
-                            "message": message_json[message]["message"],
-                            "date": message_json[message]["date"]
-                        })
-                    context.update(announcement_dict)
-                    context.update(load(open(join(settings.BASE_DIR, 'discordInfo.json'), "r")))
-                except:
-                    LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Announcements Information"], announcements=True)
 
         class Rules(TemplateView):
             """
@@ -98,22 +60,7 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "rules_info": InformativeText.objects.get(name="Rules Information"),
-                        "network_rules": InformativeText.objects.get(name="Network Rules")
-                    })
-                except:
-                    context.update({
-                        "rules_info": InformativeText.objects.create(name="Rules Information", content="Update 'Rules Information' Model to change this text", pk=2),
-                        "network_rules": InformativeText.objects.create(name="Network Rules", content="Update 'Network Rules' Model to change this text", pk=3)
-                    })
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Rules Information"])
 
         class BannedItems(TemplateView):
             """
@@ -124,20 +71,7 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "banneditems_info": InformativeText.objects.get(name="Banned Items Information"),
-                    })
-                except:
-                    context.update({
-                        "banneditems_info": InformativeText.objects.create(name="Banned Items Information", content="Update 'Banned Items Information' Model to change this text", pk=4),
-                    })
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Banned Items Information"])
 
         class Voting(TemplateView):
             """
@@ -148,20 +82,7 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "voting_info": InformativeText.objects.get(name="Voting Information"),
-                    })
-                except:
-                    context.update({
-                        "voting_info": InformativeText.objects.create(name="Voting Information", content="Update 'Voting Information' Model to change this text", pk=5),
-                    })
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Voting Information"])
 
         class HowToJoin(TemplateView):
             """
@@ -172,26 +93,11 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "joining_info": InformativeText.objects.get(name="Joining Information"),
-                        "joining_curse_info": InformativeText.objects.get(name="Using the CurseForge Launcher"),
-                        "joining_ftb_info": InformativeText.objects.get(name="Using the FTB Launcher"),
-                        "joining_technic_info": InformativeText.objects.get(name="Using the Technic Launcher")
-                    })
-                except:
-                    context.update({
-                        "joining_info": InformativeText.objects.create(name="Joining Information", content="Update 'Joining Information' Model to change this text", pk=6),
-                        "joining_curse_info": InformativeText.objects.create(name="Using the CurseForge Launcher", content="Update 'Using the CurseForge Launcher' Model to change this text", pk=7),
-                        "joining_ftb_info": InformativeText.objects.create(name="Using the FTB Launcher", content="Update 'Using the FTB Launcher' Model to change this text", pk=8),
-                        "joining_technic_info": InformativeText.objects.create(name="Using the Technic Launcher", content="Update 'Using the Technic Launcher' Model to change this text", pk=9)
-                    })
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = [
+                    "Joining Information",
+                    "Using the CurseForge Launcher",
+                    "Using the FTB Launcher",
+                    "Using the Technic Launcher"])
 
         class StaffApps(TemplateView):
             """
@@ -202,20 +108,7 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 context.update(player_poller.currentPlayers_DB)
-                try:
-                    context.update({
-                        "staffapp_info": InformativeText.objects.get(name="Staff App Information"),
-                    })
-                except:
-                    context.update({
-                        "staffapp_info": InformativeText.objects.create(name="Staff App Information", content="Update 'Staff App Information' Model to change this text", pk=10),
-                    })
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    context.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
-                return context
+                return viewContext.update_context(context = context, informative_text_names = ["Staff App Information"])
         
     class Application():
         """
@@ -234,11 +127,7 @@ class ShadowRaptor():
                 dictionary["registered"] = self.registered
                 dictionary["register_form"] = self.register_form
                 dictionary["extra_form"] = self.extra_form
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
                 
                 return render(request, self.template_name, context=dictionary)
 
@@ -251,11 +140,7 @@ class ShadowRaptor():
                 dictionary["registered"] = self.registered
                 dictionary["register_form"] = register_form
                 dictionary["extra_form"] = extra_form
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
 
                 if register_form.is_valid() and extra_form.is_valid():
 
@@ -265,11 +150,8 @@ class ShadowRaptor():
                     new_user.save()
                     new_user_extra = extra_form.save(commit=False)
                     new_user_extra.user = new_user
-
                     if "profile_picture" in request.FILES:
-
                         new_user_extra.profile_picture = request.FILES["profile_picture"]
-
                     new_user_extra.save()
                     registered = True
                     dictionary["registered"] = registered
@@ -335,8 +217,6 @@ class ShadowRaptor():
                     login(request, list(discord_user).pop(), backend='raptormc.auth.DiscordAuthBackend')
                 return redirect('../../')
 
-        # @login_required(login_url='/login/')
-
         class ModApp(TemplateView):
             """
             Moderator Application
@@ -347,11 +227,7 @@ class ShadowRaptor():
             def get(self, request):
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = self.mod_app
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
 
                 return render(request, self.template_name, context=dictionary)
 
@@ -359,15 +235,11 @@ class ShadowRaptor():
                 mod_app = ModApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["modform"] = mod_app
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
                 if mod_app.is_valid():
                     LOGGER.info("Mod Application submitted!")
                     LOGGER.info(f"Discord ID of applicant: {mod_app.cleaned_data['discord_name']}")
-                    new_app = mod_app.save()
+                    mod_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
                 else:
                     dictionary["modform"] = mod_app
@@ -383,26 +255,18 @@ class ShadowRaptor():
             def get(self, request):
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = self.admin_app
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
                 return render(request, self.template_name, context=dictionary)
 
             def post(self, request):
                 admin_app = AdminApp(request.POST)
                 dictionary = player_poller.currentPlayers_DB
                 dictionary["admin_form"] = admin_app
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
                 if admin_app.is_valid():
                     LOGGER.info("Admin Application submitted.!")
                     LOGGER.info(f"Discord ID of applicant: {admin_app.cleaned_data['discord_name']}")
-                    new_app = admin_app.save()
+                    admin_app.save()
                     return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
                 else:
                     dictionary["admin_form"] = admin_app
@@ -429,11 +293,7 @@ class ShadowRaptor():
 
             def get(self, request):
                 instance_dict = player_poller.currentPlayers_DB
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    instance_dict.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                instance_dict = viewContext.update_context(context = instance_dict)
 
                 return render(request, self.template_name, context=instance_dict)
         
@@ -445,11 +305,7 @@ class ShadowRaptor():
 
             def get(self, request, profile_name):
                 instance_dict = player_poller.currentPlayers_DB
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    instance_dict.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                instance_dict = viewContext.update_context(context = instance_dict)
                 try:
                     user_base = User.objects.get(username=profile_name)
                     user_extra = UserProfileInfo.objects.get(user=user_base)
@@ -539,11 +395,7 @@ class ShadowRaptor():
                     instance_dict = player_poller.currentPlayers_DB
                     instance_dict["profile_edit_form"] = self.profile_edit_form
                     instance_dict["extra_edit_form"] = self.extra_edit_form
-                    try:
-                        discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                        instance_dict.update(load(discordJSON))
-                    except:
-                        LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                    instance_dict = viewContext.update_context(context = instance_dict)
                     try:
                         user_base = User.objects.get(username=profile_name)
                         user_extra = UserProfileInfo.objects.get(user=user_base)
@@ -611,11 +463,7 @@ class ShadowRaptor():
                 instance_dict = player_poller.currentPlayers_DB
                 instance_dict["profile_edit_form"] = profile_edit_form
                 instance_dict["extra_edit_form"] = self.extra_edit_form
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    instance_dict.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                instance_dict = viewContext.update_context(context = instance_dict)
                 if profile_edit_form.is_valid() and extra_edit_form.is_valid():
                     LOGGER.info("A User modified their profile details")
                     changed_user = None
@@ -645,11 +493,7 @@ class ShadowRaptor():
             def get(self, request):
 
                 dictionary = player_poller.currentPlayers_DB
-                try:
-                    discordJSON = open(join(settings.BASE_DIR, 'discordInfo.json'), "r")
-                    dictionary.update(load(discordJSON))
-                except:
-                    LOGGER.error("discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+                dictionary = viewContext.update_context(context = dictionary)
                 return render(request, self.template_name, context=dictionary)
 
     class Ajax_Views():
