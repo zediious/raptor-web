@@ -173,11 +173,13 @@ class ShadowRaptor():
 
             def get(self, request):
 
-                dictionary = player_poller.currentPlayers_DB
-                dictionary["login_form"] = self.login_form
-                template_name = join(settings.APPLICATIONS_DIR, 'login.html')
-                
-                return render(request, template_name, context=dictionary)    
+                if request.headers.get('HX-Request') == "true":
+                    dictionary = player_poller.currentPlayers_DB
+                    dictionary["login_form"] = self.login_form
+                    template_name = join(settings.APPLICATIONS_DIR, 'login.html')
+                    return render(request, template_name, context=dictionary)
+                else:
+                    return HttpResponseRedirect('../')
 
             def post(self, request):
 
@@ -506,8 +508,11 @@ class ShadowRaptor():
             Attempts to fetch new info before sending
             """
             def get(self, request):
-                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverButtons.html')
-                return render(request, template_name, context=player_poller.currentPlayers_DB)
+                if request.headers.get('HX-Request') == "true":
+                    template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverButtons.html')
+                    return render(request, template_name, context=player_poller.currentPlayers_DB)
+                else:
+                    return HttpResponseRedirect('../')
 
         class Server_Modals(TemplateView):
             """
@@ -515,14 +520,20 @@ class ShadowRaptor():
             Attempts to fetch new info before sending
             """
             def get(self, request):
-                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverModals.html')
-                return render(request, template_name, context=player_poller.currentPlayers_DB)
+                if request.headers.get('HX-Request') == "true":
+                    template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'serverModals.html')
+                    return render(request, template_name, context=player_poller.currentPlayers_DB)
+                else:
+                    return HttpResponseRedirect('../')
 
         class Total_Count(TemplateView):
             """
             Returns a simple HttpResponse with the total count of players on all servers
             """
             def get(self, request):
-                template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'playerCounts.html')
-                playerPoll()
-                return render(request, template_name, context=player_poller.currentPlayers_DB)
+                if request.headers.get('HX-Request') == "true":
+                    template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'playerCounts.html')
+                    playerPoll()
+                    return render(request, template_name, context=player_poller.currentPlayers_DB)
+                else:
+                    return HttpResponseRedirect('../')
