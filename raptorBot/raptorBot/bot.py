@@ -42,9 +42,10 @@ async def on_message(message):
                                     raptorbot_util.update_server_announce(server_key=server_data[announce_channel]["address"].split('.')[0], bot_instance=raptor_bot)
                             except KeyError:
                                 try: 
-                                    logging.debug(f'{e}\nA KeyError occured, debug information below\n\nMessage channel: {message.channel}\n\nRole list: {role_list}\n\nCurrent server info: {server_data[announce_channel]}')
+                                    logging.debug(f'{e}\nA KeyError occured, debug information below\n\nMessage channel: {message.channel}\n\nRole list: {role_list}\n\nCurrent server info: {server_data}')
                                     break
-                                except:
+                                except Exception as e:
+                                    logging.debug(e)
                                     logging.debug("An error occured logging a previous error.")
                                     break
                 except AttributeError as e:
