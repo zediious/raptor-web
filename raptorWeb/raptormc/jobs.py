@@ -36,41 +36,92 @@ class RaptorWare:
         
         return response
 
-def playerPoll():
+def update_context():
     """
-    Query addresses provided in all Server objects and add PlayerName and 
-    PlayerCount objects to the database with a foreign key for each Server. 
+    Update view context with new information
     Will only run if created .LOCK file hasn't been written to in 2 minutes.
     """
     try:
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
+        if lock_time >= 120:
 
-        if  settings.ENABLE_SERVER_QUERY and lock_time >= 120 and Server.objects.count() > 0:
+            refresh_server_data()
+            add_avatars_to_context()
+            export_server_data()
 
-            server_data = Server.objects.all()
-
-            server_key = 0
-            for server in server_data:
-
-                if server.server_address == "Default":
-                    LOGGER.error("A server(s) exist, however they still have the default address set.")
-                    break
-                
-                player_poller.server_data.update({
-                    f"server{server_key}": {
-                        "address": server.server_address,
-                        "port": server.server_port
-                    }
+            # Settings to context
+            if settings.DEBUG:
+                player_poller.currentPlayers_DB.update({
+                    "pub_domain": settings.DOMAIN_NAME,
+                    "default_media": f'http://{settings.DOMAIN_NAME}/media/'
+                })
+            else:
+                player_poller.currentPlayers_DB.update({
+                    "pub_domain": settings.DOMAIN_NAME,
+                    "default_media": f'https://{settings.DOMAIN_NAME}/media/'
                 })
 
-                server_key += 1
-            
-            player_data = player_poller.get_current_players()
+        else:
 
-            PlayerCount.objects.all().delete()
-            PlayerName.objects.all().delete()
+            LOGGER.info("Request made, not enough time has passed to run update_context()")
 
+    except FileNotFoundError as e:
+
+        LOGGER.error(e)
+        LOGGER.error("playerCounts.LOCK file not present. Please create the file at the above path.")
+
+def refresh_server_data():
+    """
+    Query addresses provided in all Server objects and add PlayerName and 
+    PlayerCount objects to the database with a foreign key for each Server and
+    update instanced PlayerCount class attribute playerPoller_DB with updated data
+    """
+    if settings.ENABLE_SERVER_QUERY and Server.objects.count() > 0:
+
+        # Retrieve all Server Models from database, and update server_data class attribute with retreived data
+        server_data = Server.objects.all()
+        server_key = 0
+        for server in server_data:
+
+            if server.server_address == "Default":
+
+                LOGGER.error("A server(s) exist, however they still have the default address set.")
+                break
+
+            player_poller.server_data.update({
+                f"server{server_key}": {
+                    "address": server.server_address,
+                    "port": server.server_port
+                }
+            })
+            server_key += 1
+        
+        # Use player_poller to query addresses from provided Server Models, and return gathered data
+        player_data = player_poller.get_current_players()
+
+        # Add total player count to currentPlayers_DB
+        player_poller.currentPlayers_DB.update({
+            "totalCount": player_data["totalCount"]
+        })
+        # Create PlayerName and PlayerCount objects from gathered server data after deleting previous entries
+        PlayerCount.objects.all().delete()
+        PlayerName.objects.all().delete()
+        player_poller.currentPlayers_DB["server_info"] = []
+        server_number = 0
+        for key in player_data:
+
+            if key == "totalCount":
+                continue
+
+            for player in player_data[key]["names"]:
+
+                PlayerName.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), name=player).save()
+
+            PlayerCount.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), player_count=player_data[key]["count"]).save()
+            server_info = Server.objects.get(server_address=player_data[key]["address"])
+
+            # Add announcements specific to each server gathered from JSON
             announcement_dict = {}
             do_announcement = False
             try:
@@ -81,118 +132,86 @@ def playerPoll():
             except Exception as e:
                 LOGGER.info('server_announcements.json not present, allow Discord Bot to create and populate this file')
                 do_announcement = False
+            announcements = []
+            if do_announcement == True:
+                try:
+                    for message in announcement_dict[key]:
+                        announcements.append({
+                            message: {
+                                "author": announcement_dict[key][message]["author"],
+                                "message": announcement_dict[key][message]["message"],
+                                "date": announcement_dict[key][message]["date"]
+                            }
+                        })
+                except KeyError as e:
+                    LOGGER.info("A Server exists, however no announcements have been made regarding it yet. Skipping.")
 
-            player_poller.currentPlayers_DB.update({
-                "totalCount": player_data["totalCount"]
+            # Finalize currentPlayers_DB with all updated server information
+            player_poller.currentPlayers_DB["server_info"].append({
+                f"server{server_number}": {
+                    "key": key,
+                    "state": player_data[key]["online"],
+                    "maintenance": server_info.in_maintenance,
+                    "player_count": player_data[key]["count"],
+                    "address": server_info.server_address,
+                    "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
+                    "modpack_name": server_info.modpack_name,
+                    "modpack_version": server_info.modpack_version,
+                    "modpack_description": server_info.modpack_description,
+                    "server_description": server_info.server_description,
+                    "modpack": server_info.modpack_url,
+                    "announcements": announcements,
+                    "announcement_count": len(announcements),
+                    "server_rules": server_info.server_rules,
+                    "server_banned_items": server_info.server_banned_items,
+                    "server_vote_links": server_info.server_vote_links
+                }
             })
-            
-            player_poller.currentPlayers_DB["server_info"] = []
-            server_number = 0
-            for key in player_data:
 
-                if key == "totalCount":
+            server_number += 1
 
-                    continue
+        LOGGER.info("Request made, refresh_server_data() ran")
 
-                for player in player_data[key]["names"]:
-
-                    PlayerName.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), name=player).save()
-
-                PlayerCount.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), player_count=player_data[key]["count"]).save()
-
-                server_info = Server.objects.get(server_address=player_data[key]["address"])
+def add_avatars_to_context():
+    """
+    Add all user avatar URLs to context
+    """
+    all_normal_users = User.objects.all()
+    all_discord_users = DiscordUserInfo.objects.all()
+    player_poller.currentPlayers_DB.update({
+        "users": []
+    })
+    for user in all_normal_users:
+        try: 
+            user_core = UserProfileInfo.objects.get(user=user)
+        except UserProfileInfo.DoesNotExist:
+            continue
+        if settings.DEBUG:
+            player_poller.currentPlayers_DB["users"].append({
+    
+                "username": user.username,
+                "profile_picture": f'http://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
                 
-                announcements = []
-                if do_announcement == True:
-
-                    try:
-                        for message in announcement_dict[key]:
-                            announcements.append({
-                                message: {
-                                    "author": announcement_dict[key][message]["author"],
-                                    "message": announcement_dict[key][message]["message"],
-                                    "date": announcement_dict[key][message]["date"]
-                                }
-                            })
-                    except KeyError as e:
-                        LOGGER.info("A Server exists, however no announcements have been made regarding it yet. Skipping.")
-  
-                player_poller.currentPlayers_DB["server_info"].append({
-                    f"server{server_number}": {
-                        "key": key,
-                        "state": player_data[key]["online"],
-                        "maintenance": server_info.in_maintenance,
-                        "player_count": player_data[key]["count"],
-                        "address": server_info.server_address,
-                        "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
-                        "modpack_name": server_info.modpack_name,
-                        "modpack_version": server_info.modpack_version,
-                        "modpack_description": server_info.modpack_description,
-                        "server_description": server_info.server_description,
-                        "modpack": server_info.modpack_url,
-                        "announcements": announcements,
-                        "announcement_count": len(announcements),
-                        "server_rules": server_info.server_rules,
-                        "server_banned_items": server_info.server_banned_items,
-                        "server_vote_links": server_info.server_vote_links
-                    }
-                })
-
-                server_number += 1
-
-            LOGGER.info("Request made, playerCounts.py ran")
-
-            # All user profile picture URLs to context
-            all_normal_users = User.objects.all()
-            all_discord_users = DiscordUserInfo.objects.all()
-            player_poller.currentPlayers_DB.update({
-                "users": []
             })
-            for user in all_normal_users:
-                try: 
-                    user_core = UserProfileInfo.objects.get(user=user)
-                except UserProfileInfo.DoesNotExist:
-                    continue
-                if settings.DEBUG:
-                    player_poller.currentPlayers_DB["users"].append({
-            
-                        "username": user.username,
-                        "profile_picture": f'http://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
-                        
-                    })
-                else:
-                    player_poller.currentPlayers_DB["users"].append({
-            
-                        "username": user.username,
-                        "profile_picture": f'https://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
-                        
-                    })
-            for user in all_discord_users:
-                player_poller.currentPlayers_DB["users"].append({
-                    
-                    "username": user.username,
-                    "profile_picture": user.profile_picture
-                    
-                })
-
-            # Settings to context
-            player_poller.currentPlayers_DB.update({
-                "pub_domain": settings.DOMAIN_NAME,
-                "default_media": f'http://{settings.DOMAIN_NAME}/media/'
-            })
-
         else:
-
-            LOGGER.info("Request made, not enough time has passed to run playerCounts.py")
-
-    except FileNotFoundError as e:
-
-        LOGGER.error(e)
-        LOGGER.error("playerCounts.LOCK file not present. Please create the file at the above path.")
+            player_poller.currentPlayers_DB["users"].append({
+    
+                "username": user.username,
+                "profile_picture": f'https://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
+                
+            })
+    for user in all_discord_users:
+        player_poller.currentPlayers_DB["users"].append({
+            
+            "username": user.username,
+            "profile_picture": user.profile_picture
+            
+        })
 
 def export_server_data():
     """
-    Export current Server Models to a json file
+    Export certain details from current Server Models to a json file
+    for use by the Discord Bot
     """
     current_servers = {}
     server_num = 0

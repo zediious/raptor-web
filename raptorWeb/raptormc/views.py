@@ -13,7 +13,7 @@ from json import load
 from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
 from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
-from raptormc.jobs import player_poller, playerPoll
+from raptormc.jobs import player_poller, update_context
 from raptormc.util import discordAuth, viewContext
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
@@ -538,7 +538,7 @@ class ShadowRaptor():
             def get(self, request):
                 if request.headers.get('HX-Request') == "true":
                     template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'playerCounts.html')
-                    playerPoll()
+                    update_context()
                     return render(request, template_name, context=player_poller.currentPlayers_DB)
                 else:
                     return HttpResponseRedirect('../')
