@@ -11,8 +11,8 @@ from logging import getLogger
 from json import load
 
 from raptorWeb import settings
-from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
-from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
+from raptormc.forms import UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
+from raptormc.models import User, UserProfileInfo, DiscordUserInfo
 from raptormc.jobs import player_poller, update_context
 from raptormc.util import discordAuth, viewContext
 
@@ -223,61 +223,6 @@ class ShadowRaptor():
                     return redirect('../../')
                 except KeyError:
                     return HttpResponseRedirect("../login")
-
-        class ModApp(TemplateView):
-            """
-            Moderator Application
-            """
-            template_name = join(settings.APPLICATIONS_DIR, 'modapp.html')
-            mod_app = ModApp()
-
-            def get(self, request):
-                dictionary = player_poller.currentPlayers_DB
-                dictionary["modform"] = self.mod_app
-                dictionary = viewContext.update_context(context = dictionary)
-
-                return render(request, self.template_name, context=dictionary)
-
-            def post(self, request):
-                mod_app = ModApp(request.POST)
-                dictionary = player_poller.currentPlayers_DB
-                dictionary["modform"] = mod_app
-                dictionary = viewContext.update_context(context = dictionary)
-                if mod_app.is_valid():
-                    LOGGER.info("Mod Application submitted!")
-                    LOGGER.info(f"Discord ID of applicant: {mod_app.cleaned_data['discord_name']}")
-                    mod_app.save()
-                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
-                else:
-                    dictionary["modform"] = mod_app
-                    return render(request, self.template_name, context=dictionary)
-
-        class AdminApp(TemplateView):
-            """
-            Admin Application
-            """
-            template_name = join(settings.APPLICATIONS_DIR, 'adminapp.html')
-            admin_app = AdminApp()
-
-            def get(self, request):
-                dictionary = player_poller.currentPlayers_DB
-                dictionary["admin_form"] = self.admin_app
-                dictionary = viewContext.update_context(context = dictionary)
-                return render(request, self.template_name, context=dictionary)
-
-            def post(self, request):
-                admin_app = AdminApp(request.POST)
-                dictionary = player_poller.currentPlayers_DB
-                dictionary["admin_form"] = admin_app
-                dictionary = viewContext.update_context(context = dictionary)
-                if admin_app.is_valid():
-                    LOGGER.info("Admin Application submitted.!")
-                    LOGGER.info(f"Discord ID of applicant: {admin_app.cleaned_data['discord_name']}")
-                    admin_app.save()
-                    return render(request, join(settings.APPLICATIONS_DIR, 'appsuccess.html'), context=dictionary)
-                else:
-                    dictionary["admin_form"] = admin_app
-                    return render(request, self.template_name, context=dictionary)
 
         @login_required
         def user_logout(request):

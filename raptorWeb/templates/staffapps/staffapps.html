@@ -1,0 +1,22 @@
+{% load django_bootstrap5 %}
+
+<section class="container">
+    <div class="row m-4">
+
+        <div class="col-12 col-lg-6 mt-2 mb-2">
+            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#mod_app_modal">Moderator Application</button>
+        </div>
+  
+        <div class="col-12 col-lg-6 m-0 mt-2">
+            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#admin_app_modal">Admin Application</button>
+        </div>
+
+    </div>
+    {% if messages %}
+    <ul class="messages alert alert-warning">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+    </ul>
+    {% endif %}
+</section>

@@ -20,15 +20,15 @@ from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 
 from raptorWeb.settings import RAPTOMC_TEMPLATE_DIR, DEBUG, MEDIA_URL, MEDIA_ROOT
-from raptormc import urls
-
-SR_urls = urls
+from raptormc import urls as SR_urls
+from staffapps import urls as app_urls
 
 urlpatterns = [
 
     path('admin/', admin.site.urls, name="admin"),
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTOMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
-    path('', include(SR_urls), name="shadowraptormc")
+    path('staffapps/', include(app_urls), name="staffapps"),
+    path('', include(SR_urls), name="shadowraptormc"),
 
 ]
 # If in Debug mode, serve media files

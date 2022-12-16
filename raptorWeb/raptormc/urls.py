@@ -16,10 +16,7 @@ urlpatterns = [
     path('banneditems/', SR.Info.BannedItems.as_view(), name="banned_items"),
     path('voting/', SR.Info.Voting.as_view(), name="voting"),
     path('howtojoin/', SR.Info.HowToJoin.as_view(), name="joining"),
-    # Forms
     path('applications/', SR.Info.StaffApps.as_view(), name="staff_apps"),
-    path('applications/mod/', SR.Application.ModApp.as_view(), name="mod_app"),
-    path('applications/admin/', SR.Application.AdminApp.as_view(), name="admin_app"),
     # Auth
     path('register/', SR.Application.RegisterUser.as_view(), name="register"),
     path('login/', SR.Application.User_Login_Form.as_view(), name="login"),
