@@ -1,9 +1,9 @@
 from django.contrib.auth.backends import BaseBackend
-from raptormc.models import UserProfileInfo, DiscordUserInfo
+from authprofiles.models import DiscordUserInfo
 
 from logging import getLogger
 
-LOGGER = getLogger('raptormc.auth')
+LOGGER = getLogger('authprofiles.auth')
 
 class DiscordAuthBackend(BaseBackend):
 
