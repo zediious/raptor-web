@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
 RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
+STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
 APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
 STATIC_DIR = join(BASE_DIR, "static")
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'ckeditor',
     'raptormc',
+    'staffapps',
 ]
 
 MIDDLEWARE = [
@@ -215,6 +217,11 @@ LOGGING = {
             'propagate': False,
         },
          'raptormc.auth': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'staffapps.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
             'propagate': False,

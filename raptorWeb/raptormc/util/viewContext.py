@@ -21,7 +21,7 @@ def update_context(context, informative_text_names=None, announcements=False):
                 })
             except:
                 context.update({
-                    f"{informative_text_name.replace(' ', '_')}": InformativeText.objects.create(name=informative_text_name, content=f"Update '{informative_text_name}' Model to change this text", pk=1)
+                    f"{informative_text_name.replace(' ', '_')}": InformativeText.objects.create(name=informative_text_name, content=f"Update '{informative_text_name}' Model to change this text")
                 })
     try:
         if announcements:

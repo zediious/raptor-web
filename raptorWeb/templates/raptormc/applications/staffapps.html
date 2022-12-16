@@ -14,6 +14,10 @@
 {% endblock %}
 
 {% block main_block %}
+<div hx-get="/staffapps" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
+<div hx-get="/staffapps/mod" hx-trigger="load" hx-target="#mod_app_replace" hx-swap="innerHTML"></div>
+<div hx-get="/staffapps/admin" hx-trigger="load" hx-target="#admin_app_replace" hx-swap="innerHTML"></div>
+
 <section id="welcome" class="container">
 
   {% if Staff_App_Information.enabled %}
@@ -29,23 +33,9 @@
 
 </section>
 
-<section class="container">
+<div id="staffapps"></div>
+<div id="mod_app_replace"></div>
+<div id="admin_app_replace"></div>
 
-  <div class="row m-4">
 
-    <div class="col-12 col-lg-6 mt-2 mb-2">
-
-        <a class="display-5 text-black text-center btn btn-lg btn-primary w-100" role="button" href="{% url 'raptormc:mod_app' %}">Moderator Application</a>
-
-    </div>
-
-    <div class="col-12 col-lg-6 m-0 mt-2">
-
-      <a class="display-5 text-black text-center btn btn-lg btn-primary w-100" role="button" href="{% url 'raptormc:admin_app' %}">Admin Application</a>
-
-    </div>
-
-  </div>
-
-</section>
 {% endblock %}
