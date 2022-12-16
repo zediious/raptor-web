@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from raptormc.models import User, UserProfileInfo, DiscordUserInfo
+from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
 
 class UserForm(forms.ModelForm):
     """

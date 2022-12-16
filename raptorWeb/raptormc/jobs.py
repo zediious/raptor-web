@@ -6,8 +6,9 @@ from json import dumps, load
 from django.utils.html import strip_tags
 
 from raptorWeb import settings
-from raptormc.models import PlayerCount, PlayerName, Server, User, UserProfileInfo, DiscordUserInfo
+from raptormc.models import PlayerCount, PlayerName, Server
 from raptormc.util.playerCounts import PlayerCounts
+from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
 
 LOGGER = getLogger('raptormc.jobs')
 player_poller = PlayerCounts()
