@@ -11,7 +11,6 @@ from staffapps.forms import AdminApp, ModApp
 
 LOGGER = getLogger('staffapps.views')
 
-
 class AllApps(TemplateView):
     """
     Buttons/Modals for all Staff Forms
@@ -28,6 +27,8 @@ class AppView(TemplateView):
     """
     Abstract Application view
     """
+    APP_LIST = {
+    'ModApp': ModApp, 'AdminApp': AdminApp}
     template_name: str
     staff_app: ModelForm
 
@@ -39,7 +40,7 @@ class AppView(TemplateView):
                 self.get_app_name(): self.staff_app})
 
     def post(self, request):
-        staff_app = self.staff_app(request.POST)
+        staff_app = self.APP_LIST[self.get_app_name()](request.POST)
         dictionary = {self.get_app_name(): staff_app}
         if staff_app.is_valid():
             LOGGER.info(f"{self.get_app_name().replace('App', ' App')} submitted!")
