@@ -25,4 +25,5 @@ dependencies:
     - django-js-asset==2.0.0
     - python-dotenv==0.20.0
     - mysqlclient==2.1.1
+    - django-jazzmin==2.6.0
 prefix: /home/jack/software/anaconda3/envs/djangoWork

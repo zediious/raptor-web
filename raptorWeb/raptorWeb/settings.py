@@ -47,6 +47,7 @@ ADMINS = (
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -278,7 +279,6 @@ BOOTSTRAP5 = {
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
-        'height': 450,
-        'width': 1280,
+        'width': '120%',
     },
 }
