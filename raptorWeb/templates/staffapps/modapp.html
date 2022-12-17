@@ -1,31 +1,19 @@
 {% load django_bootstrap5 %}
 
-<div class="modal fade" id="mod_app_modal" tabindex="-1" aria-labelledby="Moderator Application" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content bg-dark text-white">
-          <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-header">
-              Moderator Application
-          </div>
-          {% if messages %}
-          <ul class="messages alert alert-warning m-2 p-1">
-            {% for message in messages %}
-              {{message}}
-            {% endfor %}
-          </ul>
-          {% endif %}
-          <div class="modal-body" id="mod_app_modal_body">
-          
-              <form class="form p-3" action="{% url 'staffapps:mod_app' %}" method="POST">
+<form class="form p-3" hx-post="{% url 'staffapps:mod_app' %}">
 
-                  {% csrf_token %}  
-                  {% bootstrap_form modform %}
-                  {% bootstrap_button button_type="submit" content="Submit Application" %}
-                  {% bootstrap_button button_type="reset" content="Reset" %}
-          
-              </form>
-          
-          </div>
-      </div>
-  </div>
-</div>
+    {% if messages %}
+    <ul class="messages alert alert-warning">
+      {% for message in messages %}
+        {{message}}
+      {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% csrf_token %}  
+    {% bootstrap_form_errors ModApp %}
+    {% bootstrap_form ModApp %}
+    {% bootstrap_button button_type="submit" content="Submit Application" %}
+    {% bootstrap_button button_type="reset" content="Reset" %}
+
+</form>

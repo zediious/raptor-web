@@ -61,28 +61,30 @@ def validate_admin_age(value):
 
         raise forms.ValidationError("You must be at least 18 years old to apply directly for Admin. One can still be promoted from a lower rank.")
 
-def verify_usernames(clean_data):
+def verify_minecraft_username(clean_data):
         """
-        Common function for staff application clean() methods to verify Discord/Minecraft usernames
+        Common function for staff application clean() methods to verify Minecraft username
         """
-        discord = clean_data.get("discord_name")
-        v_discord = clean_data.get("verify_discord")
         minecraft = clean_data.get("mc_name")
         v_minecraft = clean_data.get("verify_mc")
-
+        
         if not(minecraft == v_minecraft):
             raise forms.ValidationError("Minecraft username fields must match")
 
+def verify_discord_username(clean_data):
+        """
+        Common function for staff application clean() methods to verify Discord username
+        """
+        discord = clean_data.get("discord_name")
+        v_discord = clean_data.get("verify_discord")
+        
         if not(discord == v_discord):
-            raise forms.ValidationError("Discord username fields must match.")
+            raise forms.ValidationError("Discord username fields must match")
 
-class AdminApp(forms.ModelForm):
+class StaffAppForm(forms.ModelForm):
     """
     ModelForm for an Admin Application
     """
-    position = forms.CharField(
-        required=True, widget=forms.HiddenInput, initial="Admin")
-
     age = forms.IntegerField(
         label=FORM_LABELS["ask_age"], 
         help_text=FORM_LABELS["age_admin"], max_value=99 , validators=[validate_admin_age])
@@ -119,6 +121,30 @@ class AdminApp(forms.ModelForm):
         label=FORM_LABELS["modpack_knowledge"], 
         max_length=300, widget=forms.Textarea)
 
+    experience = forms.CharField(
+        label=FORM_LABELS["experience"], 
+        help_text=FORM_LABELS["experience_help"], max_length=500, widget=forms.Textarea)
+
+    why_join = forms.CharField(
+        label=FORM_LABELS["why_join"],
+        max_length=500, widget=forms.Textarea)
+
+    trap = forms.CharField(
+        required=False, 
+        widget=forms.HiddenInput, validators=[validators.MaxLengthValidator(0)])
+
+    def clean(self):
+        """
+        Overrides default clean, while calling the superclass clean()
+        """
+        cleaned_data = super().clean()
+        verify_minecraft_username(cleaned_data)
+        verify_discord_username(cleaned_data)
+
+class AdminApp(StaffAppForm):
+    """
+    ModelForm for an Admin Application
+    """
     plugins = forms.CharField(
         label=FORM_LABELS["plugin_knowledge"], 
         help_text=FORM_LABELS["plugin_help"], max_length=300, widget=forms.Textarea)
@@ -139,95 +165,18 @@ class AdminApp(forms.ModelForm):
         label=FORM_LABELS["ptero"], 
         max_length=150, help_text=FORM_LABELS["ptero_help"], widget=forms.Textarea)
 
-    experience = forms.CharField(
-        label=FORM_LABELS["experience"], 
-        help_text=FORM_LABELS["experience_help"], max_length=500, widget=forms.Textarea)
-
-    why_join = forms.CharField(
-        label=FORM_LABELS["why_join"],
-        max_length=500, widget=forms.Textarea)
-
-    trap = forms.CharField(
-        required=False, 
-        widget=forms.HiddenInput, validators=[validators.MaxLengthValidator(0)])
-
     class Meta:
         model = AdminApplication
         exclude = ['verify_mc', 'verify_discord', 'trap']
 
-    def clean(self):
-        """
-        Overrides default clean, while calling the superclass clean()
-        """
-        verify_usernames(super().clean())
-
-class ModApp(forms.ModelForm):
+class ModApp(StaffAppForm):
     """
     ModelForm for a Moderator Application
     """
-    position = forms.CharField(
-        required=True, 
-        widget=forms.HiddenInput, initial="Mod")
-
-    age = forms.IntegerField(
-        label=FORM_LABELS["ask_age"], 
-        help_text=FORM_LABELS["age_mod"], max_value=99 , validators=[validate_age])
-
-    time = forms.CharField(
-        label=FORM_LABELS["time_commitment"], 
-        max_length=150)
-
-    mc_name = forms.CharField(
-        label=FORM_LABELS["mc_name"], 
-        max_length=50)
-
-    verify_mc = forms.CharField(
-        label=FORM_LABELS["mc_name_verify"], 
-        max_length=50)
-
-    discord_name = forms.CharField(
-        label=FORM_LABELS["discord_name"], 
-        help_text=FORM_LABELS["discord_help"], max_length=50, validators=[check_for_hash])
-
-    verify_discord = forms.CharField(
-        label=FORM_LABELS["discord_name_verify"], 
-        max_length=50, validators=[check_for_hash])
-
-    voice_chat = forms.BooleanField(
-        label=FORM_LABELS["voice_chat"],
-        required=False)
-
     contact_uppers = forms.CharField(
         label=FORM_LABELS["contact_uppers"], 
         max_length=100)
 
-    description = forms.CharField(
-        label=FORM_LABELS["description"], 
-        max_length=500, widget=forms.Textarea)
-
-    modpacks = forms.CharField(
-        label=FORM_LABELS["modpack_knowledge"], 
-        max_length=300, widget=forms.Textarea)
-
-    experience = forms.CharField(
-        label=FORM_LABELS["experience"], 
-        help_text=FORM_LABELS["experience_help"], 
-        max_length=500, widget=forms.Textarea)
-
-    why_join = forms.CharField(
-        label=FORM_LABELS["why_join"], 
-        max_length=500, widget=forms.Textarea)
-
-    trap = forms.CharField(
-        required=False, 
-        widget=forms.HiddenInput, validators=[validators.MaxLengthValidator(0)])
-
     class Meta:
         model = ModeratorApplication
         exclude = ['verify_mc', 'verify_discord', 'trap']
-    
-    def clean(self):
-        """
-        Overrides default clean, while calling the superclass clean()
-        """
-        verify_usernames(super().clean())
