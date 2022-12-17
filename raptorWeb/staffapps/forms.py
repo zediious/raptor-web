@@ -85,10 +85,6 @@ class StaffAppForm(forms.ModelForm):
     """
     ModelForm for an Admin Application
     """
-    age = forms.IntegerField(
-        label=FORM_LABELS["ask_age"], 
-        help_text=FORM_LABELS["age_admin"], max_value=99 , validators=[validate_admin_age])
-
     time = forms.CharField(
         label=FORM_LABELS["time_commitment"], 
         max_length=150)
@@ -145,6 +141,10 @@ class AdminApp(StaffAppForm):
     """
     ModelForm for an Admin Application
     """
+    age = forms.IntegerField(
+        label=FORM_LABELS["ask_age"], 
+        help_text=FORM_LABELS["age_admin"], max_value=99 , validators=[validate_admin_age])
+    
     plugins = forms.CharField(
         label=FORM_LABELS["plugin_knowledge"], 
         help_text=FORM_LABELS["plugin_help"], max_length=300, widget=forms.Textarea)
@@ -173,6 +173,10 @@ class ModApp(StaffAppForm):
     """
     ModelForm for a Moderator Application
     """
+    age = forms.IntegerField(
+        label=FORM_LABELS["ask_age"], 
+        help_text=FORM_LABELS["age_mod"], max_value=99 , validators=[validate_age])
+    
     contact_uppers = forms.CharField(
         label=FORM_LABELS["contact_uppers"], 
         max_length=100)
