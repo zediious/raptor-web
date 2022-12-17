@@ -1,5 +1,8 @@
 {% load django_bootstrap5 %}
 
+<div hx-get="/staffapps/mod" hx-trigger="load" hx-target="#mod_form_replace" hx-swap="innerHTML"></div>
+<div hx-get="/staffapps/admin" hx-trigger="load" hx-target="#admin_form_replace" hx-swap="innerHTML"></div>
+
 <section class="container">
     <div class="row m-4">
 
@@ -12,11 +15,36 @@
         </div>
 
     </div>
-    {% if messages %}
-    <ul class="messages alert alert-warning">
-    {% for message in messages %}
-        {{message}}
-    {% endfor %}
-    </ul>
-    {% endif %}
 </section>
+
+<div class="modal fade" id="mod_app_modal" tabindex="-1" aria-labelledby="Moderator Application" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content bg-dark text-white">
+          <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header">
+              Moderator Application
+          </div>
+          <div class="modal-body" id="mod_app_modal_body">
+          
+              <div id="mod_form_replace"></div>
+          
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="admin_app_modal" tabindex="-1" aria-labelledby="Admin Application" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content bg-dark text-white">
+          <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header">
+              Admin Application
+          </div>
+          <div class="modal-body" id="admin_app_modal_body">
+          
+              <div id="admin_form_replace"></div>
+          
+          </div>
+      </div>
+  </div>
+</div>

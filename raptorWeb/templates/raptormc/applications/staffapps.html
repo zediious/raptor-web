@@ -15,8 +15,6 @@
 
 {% block main_block %}
 <div hx-get="/staffapps" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
-<div hx-get="/staffapps/mod" hx-trigger="load" hx-target="#mod_app_replace" hx-swap="innerHTML"></div>
-<div hx-get="/staffapps/admin" hx-trigger="load" hx-target="#admin_app_replace" hx-swap="innerHTML"></div>
 
 <section id="welcome" class="container">
 
@@ -34,8 +32,6 @@
 </section>
 
 <div id="staffapps"></div>
-<div id="mod_app_replace"></div>
-<div id="admin_app_replace"></div>
 
 
 {% endblock %}
