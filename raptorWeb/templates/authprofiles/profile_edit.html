@@ -29,7 +29,7 @@
             <section>
 
                 <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
-                    <form action="{% url 'raptormc:user_profile_edit' user.username %}" method="POST">
+                    <form action="{% url 'authprofiles:user_profile_edit' user.username %}" method="POST">
 
                     {% csrf_token %}
                     {% bootstrap_form profile_edit_form %}
@@ -43,7 +43,7 @@
             <section>
 
                 <div class="card bg-dark p-3 mt-4 opacity-75 container text-white">
-                    <form action="{% url 'raptormc:user_profile_edit' user.username %}" enctype="multipart/form-data" method="POST">
+                    <form action="{% url 'authprofiles:user_profile_edit' user.username %}" enctype="multipart/form-data" method="POST">
 
                     {% csrf_token %}
                     {% bootstrap_form extra_edit_form %}

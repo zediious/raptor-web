@@ -90,12 +90,12 @@
                       </div>
                     </button>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{% url 'raptormc:user_profile' user.username %}">Profile</a></li>
-                      <li><a class="dropdown-item" href="{% url 'raptormc:user_profile_edit' user.username %}">Edit Profile</a></li>
+                      <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile' user.username %}">Profile</a></li>
+                      <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile_edit' user.username %}">Edit Profile</a></li>
                       {% if user.is_staff %}
                         <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
                       {% endif %}
-                      <li><a class="dropdown-item" href="{% url 'raptormc:logout' %}">Logout</a></li>
+                      <li><a class="dropdown-item" href="{% url 'authprofiles:logout' %}">Logout</a></li>
                     </ul>
                   </div>
                 </div>
@@ -121,7 +121,7 @@
                       {% endif %}
                       <div id="user_login_form"></div>
                       <div class="p-1 mb-0 text-center">
-                        <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'raptormc:register' %}">Register</a></p>
+                        <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'authprofiles:register' %}">Register</a></p>
                       </div>
                     
                     </section>
@@ -172,7 +172,7 @@
                 <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,400">More</a>
                 <ul class="dropdown-menu dropdown-menu-start bg-dark">
                   <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
-                  <li><a class="dropdown-item text-white" href={% url 'raptormc:all_user_profile' %}>Site Members</a></li>
+                  <li><a class="dropdown-item text-white" href={% url 'authprofiles:all_user_profile' %}>Site Members</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
                 </ul>

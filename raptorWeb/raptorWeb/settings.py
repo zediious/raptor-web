@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
 RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
+STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
+AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
 APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
 PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
 STATIC_DIR = join(BASE_DIR, "static")
@@ -45,6 +47,7 @@ ADMINS = (
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +57,8 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'ckeditor',
     'raptormc',
+    'staffapps',
+    'authprofiles'
 ]
 
 MIDDLEWARE = [
@@ -143,7 +148,7 @@ PASSWORD_HASHERS = [
 
 # Django Authentication
 AUTHENTICATION_BACKENDS = [
-    'raptormc.auth.DiscordAuthBackend',
+    'authprofiles.auth.DiscordAuthBackend',
     'django.contrib.auth.backends.ModelBackend'
 ]
 
@@ -218,6 +223,16 @@ LOGGING = {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
             'propagate': False,
+        },
+        'staffapps.views': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'authprofiles.auth': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
         }
     }
 }
@@ -264,7 +279,6 @@ BOOTSTRAP5 = {
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
-        'height': 450,
-        'width': 1280,
+        'width': '120%',
     },
 }

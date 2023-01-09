@@ -1,0 +1,19 @@
+{% load django_bootstrap5 %}
+
+<form class="form p-3" hx-post="{% url 'staffapps:mod_app' %}">
+
+    {% if messages %}
+    <ul class="messages alert alert-warning">
+      {% for message in messages %}
+        {{message}}
+      {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% csrf_token %}  
+    {% bootstrap_form_errors ModApp %}
+    {% bootstrap_form ModApp %}
+    {% bootstrap_button button_type="submit" content="Submit Application" %}
+    {% bootstrap_button button_type="reset" content="Reset" %}
+
+</form>

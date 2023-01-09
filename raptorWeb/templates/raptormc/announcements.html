@@ -57,9 +57,12 @@
         <div class="accordion-item">
           <h2 class="accordion-header" id="{{ server|get_key }}Announcements">
             <a id="{{ server|get_key }}"></a>
-            <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server|get_key }}" aria-expanded="true" aria-controls="collapse{{ server|get_key }}">
-              {{ server|get_modpack_name }} Announcements
-            </button>
+            <div class="container-flex d-flex">
+              <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server|get_key }}" aria-expanded="true" aria-controls="collapse{{ server|get_key }}">
+                {{ server|get_modpack_name }} Announcements
+              </button>
+              <span class="badge bg-dark">{{ server|get_announcement_count }}</span>
+            </div>
           </h2>
           <div id="collapse{{ server|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server|get_key }}">
             <div class="accordion-body pageContent p-3">
