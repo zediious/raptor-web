@@ -274,6 +274,9 @@ BACKGROUND_TASK_RUN_ASYNC = True
 # Enable/disable querying addresses provided in Server Models
 ENABLE_SERVER_QUERY = True
 
+# Base URL for Users in main app
+BASE_USER_URL = 'user'
+
 BOOTSTRAP5 = {
 
     # Set placeholder attributes to label if no placeholder is provided.

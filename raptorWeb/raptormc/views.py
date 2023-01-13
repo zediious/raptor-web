@@ -104,11 +104,37 @@ class ShadowRaptor():
                 context.update(player_poller.currentPlayers_DB)
                 return viewContext.update_context(context = context, informative_text_names = ["Staff App Information"])
 
+    class User_Views():
+        """
+        Views related to Users
+        """
         class SiteMembers(TemplateView):
             """
             Provide links to each Site Member's profile
             """
             template_name = join(TEMPLATE_DIR_RAPTORMC, 'sitemembers.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return viewContext.update_context(context = context)
+
+        class User_Page(TemplateView):
+            """
+            Info about a User
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'user.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return viewContext.update_context(context = context)
+
+        class User_Edit_Page(TemplateView):
+            """
+            Edit a User's Info
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'user_edit.html')
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
