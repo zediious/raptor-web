@@ -6,21 +6,21 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | {{displayed_profile.base.username}}
+  ShadowRaptor | {{displayed_profile.user.username}}
   
 </title>
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | {{displayed_profile.base.username}}" />
-<meta property="og:description" content="User Profile for {{displayed_profile.base.username}}" />
-<meta property="og:url" content="https://shadowraptor.net/profile/{{displayed_profile.base.username}}" />
+<meta property="og:title" content="ShadowRaptor | {{displayed_profile.user.username}}" />
+<meta property="og:description" content="User Profile for {{displayed_profile.user.username}}" />
+<meta property="og:url" content="https://shadowraptor.net/profile/{{displayed_profile.user.username}}" />
 {% endblock %}
 
 {% block main_block %}
 
 <div class="container">
     {% if user.is_authenticated %}
-        {% if user.username == displayed_profile.base.username %}
+        {% if user.username == displayed_profile.user.username or displayed_profile.username  %}
             <div class="card bg-dark m-3 p-3">
                 <div class="row">
                     <a role="button" href="{% url 'authprofiles:user_profile_edit' user.username %}" class="btn btn-primary">
@@ -30,41 +30,72 @@
             </div>
         {% endif %}
     {% endif %}
-    <div class="card bg-dark m-3 p-3 text-white">
-        <p class="fs-4 text-center mb-0">{{displayed_profile.base.username}}</p>
-        <hr>
-        <div class="row">
-            <div class="col-lg-2 col-12 mb-3">
-                {% if displayed_profile.extra.picture %}
-                    {% if displayed_profile.base.is_staff == True %}
-                        <img id="profilePicturePage" class="border border-2 border-danger w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
-                    {% else %}
-                        <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.extra.picture}}" alt="Profile Picture">
-                    {% endif %}
-                {% else %}
-                    <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
-                {% endif %}
-            </div>
-            <div class="col-lg-5 col-6 align-middle">
-                <strong>Joined on:</strong> {{displayed_profile.base.date_joined}}
-                <br>
-                <br>
-                <strong>Last Active:</strong> {{displayed_profile.base.last_login}}
+    
+    {% if displayed_profile.tag %}
+        <div class="card bg-dark m-3 p-3 text-white">
+            <p class="fs-4 text-center mb-0">{{displayed_profile.username}}</p>
+            <hr>
+            <div class="row">
+                <div class="col-lg-2 col-12 mb-3">
+                    <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.profile_picture}}" alt="Profile Picture">
+                </div>
+                <div class="col-lg-5 col-6 align-middle">
+                    <strong>Joined on:</strong> {{displayed_profile.date_joined}}
+                    <br>
+                    <br>
+                    <strong>Last Active:</strong> {{displayed_profile.last_login}}
 
-            </div>
-            <div class="col-lg-5 col-6 align-middle">
-                <strong>Minecraft Username:</strong> {{displayed_profile.extra.mc_username}}
-                <br>
-                <br>
-                {% if displayed_profile.extra.discord_username %}
-                    <strong>Discord Username:</strong> {{displayed_profile.extra.discord_username}}
+                </div>
+                <div class="col-lg-5 col-6 align-middle">
+                    <strong>Minecraft Username:</strong> {{displayed_profile.minecraft_username}}
                     <br>
                     <br>
-                {% endif%}
-                <strong>Favorite Modpack:</strong> {{displayed_profile.extra.favorite_pack|capfirst}}
+                    {% if displayed_profile.discord_username %}
+                        <strong>Discord Username:</strong> {{displayed_profile.discord_username}}
+                        <br>
+                        <br>
+                    {% endif%}
+                    <strong>Favorite Modpack:</strong> {{displayed_profile.favorite_modpack|capfirst}}
+                </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        <div class="card bg-dark m-3 p-3 text-white">
+            <p class="fs-4 text-center mb-0">{{displayed_profile.user.username}}</p>
+            <hr>
+            <div class="row">
+                <div class="col-lg-2 col-12 mb-3">
+                    {% if displayed_profile.profile_picture %}
+                        {% if displayed_profile.user.is_staff == True %}
+                            <img id="profilePicturePage" class="border border-2 border-danger w-100" src="{{displayed_profile.profile_picture.url}}" alt="Profile Picture">
+                        {% else %}
+                            <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{displayed_profile.profile_picture.url}}" alt="Profile Picture">
+                        {% endif %}
+                    {% else %}
+                        <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    {% endif %}
+                </div>
+                <div class="col-lg-5 col-6 align-middle">
+                    <strong>Joined on:</strong> {{displayed_profile.user.date_joined}}
+                    <br>
+                    <br>
+                    <strong>Last Active:</strong> {{displayed_profile.user.last_login}}
+
+                </div>
+                <div class="col-lg-5 col-6 align-middle">
+                    <strong>Minecraft Username:</strong> {{displayed_profile.minecraft_username}}
+                    <br>
+                    <br>
+                    {% if displayed_profile.discord_username %}
+                        <strong>Discord Username:</strong> {{displayed_profile.discord_username}}
+                        <br>
+                        <br>
+                    {% endif%}
+                    <strong>Favorite Modpack:</strong> {{displayed_profile.favorite_modpack|capfirst}}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}
