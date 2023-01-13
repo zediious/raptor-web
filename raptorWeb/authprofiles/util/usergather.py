@@ -1,8 +1,13 @@
+from django.conf import settings
+
 from authprofiles.models import UserProfileInfo, DiscordUserInfo
+
+
 
 class UserGatherer(object):
     
     all_users = []
+    user_url = getattr(settings, 'BASE_USER_URL')
 
 
     def update_default_users(self):
