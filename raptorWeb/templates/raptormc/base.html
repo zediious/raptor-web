@@ -29,10 +29,6 @@
     <div hx-get="/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></div>
     <div hx-get="/server_button_poll" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML"></div>
     <div hx-get="/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"></div>
-    {% if user.is_authenticated %}
-    {% else %}
-      <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
-    {% endif %}
 
     <div id="server_modals"> 
     </div>
@@ -69,67 +65,9 @@
               <div id="spacer" class="col-lg-2 col-0">
                 <span></span>
               </div>
-              {% if user.is_authenticated %}
-                <div class="float-end">
-                  <div class="dropstart">
-                    <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <div id="profile_picture_box">
-                        {% if user.profile_picture %}
-                          <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
-                        {% else %}
-                          {% for loaded_user in users %}
-                            {% if user.get_username == loaded_user|get_username %}
-                              {% if loaded_user.profile_picture != default_media %}
-                                <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user|get_avatar_url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
-                              {% else %}
-                                <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
-                              {% endif %}
-                            {% endif %}
-                          {% endfor %}
-                        {% endif %}
-                      </div>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile' user.username %}">Profile</a></li>
-                      <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile_edit' user.username %}">Edit Profile</a></li>
-                      {% if user.is_staff %}
-                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
-                      {% endif %}
-                      <li><a class="dropdown-item" href="{% url 'authprofiles:logout' %}">Logout</a></li>
-                    </ul>
-                  </div>
-                </div>
-              {% else %}
 
-              <div class="float-end">
-                <div class="dropstart">
-                  <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div id="profile_picture_box">
-                      <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
-                    </div>
-                  </button>
-                  <ul class="dropdown-menu bg-dark">
-            
-                    <section class="opacity-75 w-100 container">
-
-                      {% if messages %}
-                      <ul class="messages alert alert-warning">
-                        {% for message in messages %}
-                          {{message}}
-                        {% endfor %}
-                      </ul>
-                      {% endif %}
-                      <div id="user_login_form"></div>
-                      <div class="p-1 mb-0 text-center">
-                        <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'authprofiles:register' %}">Register</a></p>
-                      </div>
-                    
-                    </section>
-                    
-                  </ul>
-                </div>
-              </div>
-              {% endif %}
+              <div hx-get="/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
+              <div id="profile_drowdown"></div>
 
             </div>
           </div>
@@ -172,7 +110,7 @@
                 <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,400">More</a>
                 <ul class="dropdown-menu dropdown-menu-start bg-dark">
                   <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
-                  <li><a class="dropdown-item text-white" href={% url 'authprofiles:all_user_profile' %}>Site Members</a></li>
+                  <li><a class="dropdown-item text-white" href={% url 'raptormc:site_members' %}>Site Members</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
                 </ul>

@@ -1,0 +1,68 @@
+{% load static %}
+{% load serverContext %}
+
+{% if user.is_authenticated %}
+    {% else %}
+      <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
+    {% endif %}
+
+{% if user.is_authenticated %}
+    <div class="float-end">
+        <div class="dropstart">
+        <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div id="profile_picture_box">
+            {% if user.profile_picture %}
+                <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+            {% else %}
+                {% for loaded_user in current_members %}
+                {% if user.get_username == loaded_user.user.username %}
+                    {% if loaded_user.profile_picture != default_media %}
+                         <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user.profile_picture.url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                    {% else %}
+                        <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    {% endif %}
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+            </div>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile' user.username %}">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile_edit' user.username %}">Edit Profile</a></li>
+            {% if user.is_staff %}
+            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{% url 'authprofiles:logout' %}">Logout</a></li>
+        </ul>
+        </div>
+    </div>
+{% else %}
+    <div class="float-end">
+        <div class="dropstart">
+            <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div id="profile_picture_box">
+                <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+            </div>
+            </button>
+            <ul class="dropdown-menu bg-dark">
+
+            <section class="opacity-75 w-100 container">
+
+                {% if messages %}
+                <ul class="messages alert alert-warning">
+                {% for message in messages %}
+                    {{message}}
+                {% endfor %}
+                </ul>
+                {% endif %}
+                <div id="user_login_form"></div>
+                <div class="p-1 mb-0 text-center">
+                <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'authprofiles:register' %}">Register</a></p>
+                </div>
+            
+            </section>
+            
+            </ul>
+        </div>
+    </div>
+{% endif %}

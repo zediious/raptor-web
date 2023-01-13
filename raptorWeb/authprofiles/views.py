@@ -12,9 +12,8 @@ from logging import getLogger
 from raptorWeb import settings
 from authprofiles.forms import UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
 from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
-from raptormc.util import viewContext
 from authprofiles.util import discordAuth
-from raptormc.jobs import player_poller
+from authprofiles.userlist import user_gatherer
 
 LOGGER = getLogger('authprofiles.views')
 
@@ -27,11 +26,10 @@ class RegisterUser(TemplateView):
 
     def get(self, request):
 
-        dictionary = player_poller.currentPlayers_DB
+        dictionary = {"current_members": user_gatherer.all_users}
         dictionary["registered"] = self.registered
         dictionary["register_form"] = self.register_form
         dictionary["extra_form"] = self.extra_form
-        dictionary = viewContext.update_context(context = dictionary)
         
         return render(request, self.template_name, context=dictionary)
 
@@ -40,11 +38,11 @@ class RegisterUser(TemplateView):
         register_form = UserForm(request.POST)
         extra_form = UserProfileInfoForm(request.POST)
 
-        dictionary = player_poller.currentPlayers_DB
+        dictionary = {"current_members": user_gatherer.all_users}
         dictionary["registered"] = self.registered
         dictionary["register_form"] = register_form
         dictionary["extra_form"] = extra_form
-        dictionary = viewContext.update_context(context = dictionary)
+        
 
         if register_form.is_valid() and extra_form.is_valid():
 
@@ -59,6 +57,7 @@ class RegisterUser(TemplateView):
             new_user_extra.save()
             registered = True
             dictionary["registered"] = registered
+            user_gatherer.update_default_users()
 
             return render(request, self.template_name, context=dictionary)
 
@@ -78,7 +77,7 @@ class User_Login_Form(TemplateView):
     def get(self, request):
 
         if request.headers.get('HX-Request') == "true":
-            dictionary = player_poller.currentPlayers_DB
+            dictionary = {"current_members": user_gatherer.all_users}
             dictionary["login_form"] = self.login_form
             template_name = join(settings.AUTH_TEMPLATE_DIR, 'login.html')
             return render(request, template_name, context=dictionary)
@@ -88,7 +87,7 @@ class User_Login_Form(TemplateView):
     def post(self, request):
 
         login_form = UserLoginForm(request.POST)
-        dictionary = player_poller.currentPlayers_DB
+        dictionary = {"current_members": user_gatherer.all_users}
         dictionary["login_form"] = self.login_form
 
         if login_form.is_valid():
@@ -96,7 +95,7 @@ class User_Login_Form(TemplateView):
             password = login_form.cleaned_data["password"]
             user = authenticate(username=username, password=password)
             if user:
-                LOGGER.info("User logged in!")
+                LOGGER.info(f"{username} logged in!")
                 login(request, user)
                 return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
             else:
@@ -122,6 +121,8 @@ class UserLogin_OAuth_Success(TemplateView):
                 login(request, discord_user, backend='authprofiles.auth.DiscordAuthBackend')
             except AttributeError:
                 login(request, list(discord_user).pop(), backend='authprofiles.auth.DiscordAuthBackend')
+                user_gatherer.update_discord_users()
+                LOGGER.info(f'{user_info["username"]} logged in')
             return redirect('../../')
         except KeyError:
             return HttpResponseRedirect("../login")
@@ -132,8 +133,21 @@ def user_logout(request):
     Log out the signed in user
     """
     logout(request)
-    LOGGER.info("User logged out!")
+    LOGGER.info(f"{request.user} logged out!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+class User_Dropdown(TemplateView):
+    """
+    Dropdown Button with User Picture and Links
+    """
+    template_name = join(settings.AUTH_TEMPLATE_DIR, 'profile_dropdown.html')
+
+    def get(self, request):
+        if request.headers.get('HX-Request') == "true":
+            instance_dict = {"current_members": user_gatherer.all_users}
+            return render(request, self.template_name, context=instance_dict)
+        else:
+            return HttpResponseRedirect('../')
 
 class All_User_Profile(TemplateView):
     """
@@ -142,10 +156,11 @@ class All_User_Profile(TemplateView):
     template_name = join(settings.AUTH_TEMPLATE_DIR, 'all_profiles.html')
 
     def get(self, request):
-        instance_dict = player_poller.currentPlayers_DB
-        instance_dict = viewContext.update_context(context = instance_dict)
-
-        return render(request, self.template_name, context=instance_dict)
+        if request.headers.get('HX-Request') == "true":
+            instance_dict = {"current_members": user_gatherer.all_users}
+            return render(request, self.template_name, context=instance_dict)
+        else:
+            return HttpResponseRedirect('../')
 
 class User_Profile(TemplateView):
     """
@@ -154,76 +169,18 @@ class User_Profile(TemplateView):
     template_name = join(settings.AUTH_TEMPLATE_DIR, 'profile.html')
 
     def get(self, request, profile_name):
-        instance_dict = player_poller.currentPlayers_DB
-        instance_dict = viewContext.update_context(context = instance_dict)
+        instance_dict = {"current_members": user_gatherer.all_users}
         try:
             user_base = User.objects.get(username=profile_name)
             user_extra = UserProfileInfo.objects.get(user=user_base)
-            try:
-                if settings.DEBUG:
-                    instance_dict.update({
-                        "displayed_profile": {
-                            "base": {
-                                "username": user_base.username,
-                                "date_joined": user_base.date_joined,
-                                "last_login": user_base.last_login,
-                                "is_staff": user_base.is_staff
-                            },
-                            "extra": {
-                                "picture": f'http://{settings.DOMAIN_NAME}/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
-                                "mc_username": user_extra.minecraft_username,
-                                "favorite_pack": user_extra.favorite_modpack
-                            }
-                        }
-                    })
-                else:
-                    instance_dict.update({
-                        "displayed_profile": {
-                            "base": {
-                                "username": user_base.username,
-                                "date_joined": user_base.date_joined,
-                                "last_login": user_base.last_login,
-                                "is_staff": user_base.is_staff
-                            },
-                            "extra": {
-                                "picture": f'https://{settings.DOMAIN_NAME}/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
-                                "mc_username": user_extra.minecraft_username,
-                                "favorite_pack": user_extra.favorite_modpack
-                            }
-                        }
-                    })
-            except IndexError:
-                instance_dict.update({
-                "displayed_profile": {
-                    "base": {
-                        "username": user_base.username,
-                        "date_joined": user_base.date_joined,
-                        "last_login": user_base.last_login,
-                        "is_staff": user_base.is_staff
-                    },
-                    "extra": {
-                        "mc_username": user_extra.minecraft_username,
-                        "favorite_pack": user_extra.favorite_modpack
-                    }
-                }
-            }) 
+            instance_dict.update({
+                    "displayed_profile": user_extra 
+                })
         except User.DoesNotExist:
             try:
                 discord_user = DiscordUserInfo.objects.get(username=profile_name)
                 instance_dict.update({
-                    "displayed_profile": {
-                        "base": {
-                            "username": discord_user.username,
-                            "date_joined": discord_user.date_joined,
-                            "last_login": discord_user.last_login,
-                        },
-                        "extra": {
-                            "picture": discord_user.profile_picture,
-                            "mc_username": discord_user.minecraft_username,
-                            "discord_username": discord_user.tag,
-                            "favorite_pack": discord_user.favorite_modpack
-                        }
-                    }
+                    "displayed_profile": discord_user
                 })
             except DiscordUserInfo.DoesNotExist:
                 return HttpResponse("A User with the provided username was not found")
@@ -242,61 +199,20 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
     def get(self, request, profile_name):
         if str(request.user).split('#')[0] == profile_name:
-            instance_dict = player_poller.currentPlayers_DB
+            instance_dict = {"current_members": user_gatherer.all_users}
             instance_dict["profile_edit_form"] = self.profile_edit_form
             instance_dict["extra_edit_form"] = self.extra_edit_form
-            instance_dict = viewContext.update_context(context = instance_dict)
             try:
                 user_base = User.objects.get(username=profile_name)
                 user_extra = UserProfileInfo.objects.get(user=user_base)
-                try:
-                    instance_dict.update({
-                        "displayed_profile": {
-                            "base": {
-                                "username": user_base.username,
-                                "date_joined": user_base.date_joined,
-                                "last_login": user_base.last_login,
-                                "is_staff": user_base.is_staff
-                            },
-                            "extra": {
-                                "picture": f'https://shadowraptor.net/media/profile_pictures/{user_extra.profile_picture.name.split("/")[1]}',
-                                "mc_username": user_extra.minecraft_username,
-                                "favorite_pack": user_extra.favorite_modpack
-                            }
-                        }
+                instance_dict.update({
+                        "displayed_profile": user_extra 
                     })
-                except IndexError:
-                    instance_dict.update({
-                    "displayed_profile": {
-                        "base": {
-                            "username": user_base.username,
-                            "date_joined": user_base.date_joined,
-                            "last_login": user_base.last_login,
-                            "is_staff": user_base.is_staff
-                        },
-                        "extra": {
-                            "mc_username": user_extra.minecraft_username,
-                            "favorite_pack": user_extra.favorite_modpack
-                        }
-                    }
-                }) 
             except User.DoesNotExist:
                 try:
                     discord_user = DiscordUserInfo.objects.get(username=profile_name)
                     instance_dict.update({
-                        "displayed_profile": {
-                            "base": {
-                                "username": discord_user.username,
-                                "date_joined": discord_user.date_joined,
-                                "last_login": discord_user.last_login,
-                            },
-                            "extra": {
-                                "picture": f'https://cdn.discordapp.com/avatars/{discord_user.id}/{discord_user.profile_picture}.png',
-                                "mc_username": discord_user.minecraft_username,
-                                "discord_username": discord_user.tag,
-                                "favorite_pack": discord_user.favorite_modpack
-                            }
-                        }
+                        "displayed_profile": discord_user
                     })
                 except DiscordUserInfo.DoesNotExist:
                     return HttpResponse("A User with the provided username was not found")
@@ -310,10 +226,9 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
         profile_edit_form = DiscordUserInfoForm(request.POST)
         extra_edit_form = UserProfileInfoForm(request.POST)
-        instance_dict = player_poller.currentPlayers_DB
+        instance_dict = {"current_members": user_gatherer.all_users}
         instance_dict["profile_edit_form"] = profile_edit_form
         instance_dict["extra_edit_form"] = self.extra_edit_form
-        instance_dict = viewContext.update_context(context = instance_dict)
         if profile_edit_form.is_valid() and extra_edit_form.is_valid():
             LOGGER.info("A User modified their profile details")
             changed_user = None
@@ -342,6 +257,5 @@ class Access_Denied(TemplateView):
 
     def get(self, request):
 
-        dictionary = player_poller.currentPlayers_DB
-        dictionary = viewContext.update_context(context = dictionary)
+        dictionary = {"current_members": user_gatherer.all_users}
         return render(request, self.template_name, context=dictionary)

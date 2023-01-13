@@ -1,0 +1,25 @@
+{% extends 'raptormc/base.html' %}
+{% load static %}
+{% load markdownStrip %}
+{% load serverContext %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | Profiles
+  
+</title>
+{% endblock %}
+{% block metadata %}
+<meta property="og:title" content="ShadowRaptor | Profiles" />
+<meta property="og:description" content="All User profiles on ShadowRaptor" />
+<meta property="og:url" content="https://shadowraptor.net/profile/" />
+{% endblock %}
+
+{% block main_block %}
+
+<div hx-get="/profile" hx-trigger="load" hx-target="#all_profiles" hx-swap="innerHTML"></div>
+
+<div id="all_profiles"></div>
+
+{% endblock %}
