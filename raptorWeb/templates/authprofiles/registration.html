@@ -9,15 +9,15 @@
           </div>
           <div class="modal-body" id="mod_app_modal_body">
 
-              <header class="bg-dark text-white p-4 mt-4">
+              <header class="bg-dark text-white p-1">
                 <p class="pageContent">User profiles, and functionality that comes with it, are still under development. Feel free to create an account now, to have access to it when it is finished.</p>
                 <p class="pageContent">You can either register manually with the form, or with Discord</p>
               </header>
           
               <section>
     
-                <div class="p-3 mt-4 opacity-75 container-flex">
-                  <a role="button" href="{% url 'authprofiles:login_oauth' %}" class="btn btn-discord">
+                <div class="p-3 container">
+                  <a role="button" href="{% url 'authprofiles:login_oauth' %}" class="btn btn-discord w-100">
                     Register with Discord
                   </a>
                 </div>
@@ -27,11 +27,11 @@
               <section>
           
                 {% if registered %}
-                  <div class="card bg-light p-3 mt-4 opacity-75 container">
+                  <div class="card bg-light p-3 opacity-75 container">
                     <h3 class="pageHeader fw-bold text-center">Thank you for creating an account!</h3>
                   </div>
                 {% else %}
-                  <div class="card bg-dark p-3 mt-4 opacity-75 container">
+                  <div class="bg-dark p-3 opacity-75 container">
                     <form action="{% url 'authprofiles:register' %}" method="POST" enctype="multipart/form-data">
           
                       {% csrf_token %}
