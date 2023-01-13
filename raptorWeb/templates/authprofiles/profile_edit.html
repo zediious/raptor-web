@@ -18,7 +18,7 @@
 
 {% block main_block %}
 
-{% if user.username == displayed_profile.base.username %}
+{% if user.username == displayed_profile.user.username or displayed_profile.username%}
     <div class="container">
         <header class="card bg-dark opacity-75 text-white p-4 mt-4">
             <h3 class="pageHeader fw-bold text-center">Edit Profile</h3>
@@ -57,12 +57,6 @@
     
     </div>
 {% else %}
-    <div class="container">
-        <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-            <h3 class="pageHeader fw-bold text-center">You do not have permission to manage this resource</h3>
-            <p class="pageContent">Is this your account? <a href="{% url 'raptormc:login' %}">Sign in.</a></p>
-        </header>
-    </div>
 {% endif %}
 
 {% endblock %}
