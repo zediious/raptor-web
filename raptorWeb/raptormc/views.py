@@ -104,6 +104,17 @@ class ShadowRaptor():
                 context.update(player_poller.currentPlayers_DB)
                 return viewContext.update_context(context = context, informative_text_names = ["Staff App Information"])
 
+        class SiteMembers(TemplateView):
+            """
+            Provide links to each Site Member's profile
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, 'sitemembers.html')
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                context.update(player_poller.currentPlayers_DB)
+                return viewContext.update_context(context = context)
+
     class Ajax_Views():
         """
         Views that return HTML for use in AJAX requests

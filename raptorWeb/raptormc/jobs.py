@@ -48,7 +48,6 @@ def update_context():
         if lock_time >= 120:
 
             refresh_server_data()
-            add_avatars_to_context()
             export_server_data()
 
             # Settings to context
@@ -172,42 +171,6 @@ def refresh_server_data():
             server_number += 1
 
         LOGGER.info("Request made, refresh_server_data() ran")
-
-def add_avatars_to_context():
-    """
-    Add all user avatar URLs to context
-    """
-    all_normal_users = User.objects.all()
-    all_discord_users = DiscordUserInfo.objects.all()
-    player_poller.currentPlayers_DB.update({
-        "users": []
-    })
-    for user in all_normal_users:
-        try: 
-            user_core = UserProfileInfo.objects.get(user=user)
-        except UserProfileInfo.DoesNotExist:
-            continue
-        if settings.DEBUG:
-            player_poller.currentPlayers_DB["users"].append({
-    
-                "username": user.username,
-                "profile_picture": f'http://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
-                
-            })
-        else:
-            player_poller.currentPlayers_DB["users"].append({
-    
-                "username": user.username,
-                "profile_picture": f'https://{settings.DOMAIN_NAME}/media/{user_core.profile_picture.name}'
-                
-            })
-    for user in all_discord_users:
-        player_poller.currentPlayers_DB["users"].append({
-            
-            "username": user.username,
-            "profile_picture": user.profile_picture
-            
-        })
 
 def export_server_data():
     """

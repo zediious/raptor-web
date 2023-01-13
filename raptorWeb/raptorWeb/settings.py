@@ -71,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'raptormc.jobs.RaptorWare',
+    'authprofiles.userlist.ProfileManager'
 ]
 
 ROOT_URLCONF = 'raptorWeb.urls'
@@ -230,6 +231,11 @@ LOGGING = {
             'propagate': False,
         },
         'authprofiles.auth': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'authprofiles.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
             'propagate': False,
