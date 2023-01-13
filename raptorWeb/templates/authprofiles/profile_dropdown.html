@@ -4,6 +4,7 @@
 {% if user.is_authenticated %}
     {% else %}
       <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
+      <div hx-get="/register" hx-trigger="load" hx-target="#registeration_modal" hx-swap="innerHTML"></div>
     {% endif %}
 
 {% if user.is_authenticated %}
@@ -26,17 +27,19 @@
             {% endif %}
             </div>
         </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile' user.username %}">Profile</a></li>
-            <li><a class="dropdown-item" href="{% url 'authprofiles:user_profile_edit' user.username %}">Edit Profile</a></li>
+        <ul class="dropdown-menu bg-dark">
+            <li><span class="text-center text-white"><p class="text-white">Welcome, {{user}}</p></span></li>
+            <li><a class="dropdown-item text-white" href="{% url 'authprofiles:user_profile' user.username %}">Profile</a></li>
+            <li><a class="dropdown-item text-white" href="{% url 'authprofiles:user_profile_edit' user.username %}">Edit Profile</a></li>
             {% if user.is_staff %}
-            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+            <li><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></li>
             {% endif %}
-            <li><a class="dropdown-item" href="{% url 'authprofiles:logout' %}">Logout</a></li>
+            <li><a class="dropdown-item text-white" href="{% url 'authprofiles:logout' %}">Logout</a></li>
         </ul>
         </div>
     </div>
 {% else %}
+    <div id="registeration_modal"></div>
     <div class="float-end">
         <div class="dropstart">
             <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,8 +60,9 @@
                 {% endif %}
                 <div id="user_login_form"></div>
                 <div class="p-1 mb-0 text-center">
-                <p class="pageContent text-white">No Account? <a role="button" type="button" class="btn btn-primary mt-2 mb-0" href="{% url 'authprofiles:register' %}">Register</a></p>
+                <p class="pageContent text-white">No Account? <button id="modalButton" class="btn btn-primary mt-2 mb-0" data-bs-toggle="modal" data-bs-target="#register_modal">Register</button></p>
                 </div>
+                
             
             </section>
             
@@ -66,3 +70,11 @@
         </div>
     </div>
 {% endif %}
+
+<script>
+    $(document).ready(function () {
+        $("#modalButton").on("click", function () {
+            $('.modal-backdrop').remove();
+        });
+    });
+</script>
