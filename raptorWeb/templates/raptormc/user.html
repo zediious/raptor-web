@@ -1,0 +1,11 @@
+{% extends 'raptormc/base.html' %}
+{% load static %}
+{% load markdownStrip %}
+{% load serverContext %}
+
+{% block main_block %}
+
+<div hx-get="/profile{{request.path|slice:'5:'}}" hx-trigger="load" hx-target="#user_box" hx-swap="innerHTML"></div>
+<div id="user_box"></div>
+
+{% endblock %}

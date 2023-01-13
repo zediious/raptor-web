@@ -1,0 +1,11 @@
+{% extends 'raptormc/base.html' %}
+{% load django_bootstrap5 %}
+{% load markdownStrip %}
+{% load serverContext %}
+
+{% block main_block %}
+
+<div hx-get="/profile{{request.path|slice:'5:'}}" hx-trigger="load" hx-target="#user_edit_box" hx-swap="innerHTML"></div>
+<div id="user_edit_box"></div>
+
+{% endblock %}

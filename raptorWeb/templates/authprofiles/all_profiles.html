@@ -5,7 +5,7 @@
         {% for loaded_user in current_members %}
             {% if loaded_user.tag %}
                 <div class="col-md-4 col-12">
-                    <a href="{% url 'authprofiles:user_profile' loaded_user.username %}">
+                    <a href="{{request.META.HTTP_REFERER}}{{loaded_user.username}}">
                         <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                             <div id="profile_picture_box" class="mx-auto d-block">
                                 <img class="w-100" src="{{loaded_user.profile_picture}}" alt="">
@@ -18,7 +18,7 @@
                 </div>
             {% else%}
                 <div class="col-md-4 col-12">
-                    <a href="{% url 'authprofiles:user_profile' loaded_user.user.username %}">
+                    <a href="{{request.META.HTTP_REFERER}}{{loaded_user.user.username}}">
                         <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                             <div id="profile_picture_box" class="mx-auto d-block">
                                 <img class="w-100" src="{{loaded_user.profile_picture.url}}" alt="">

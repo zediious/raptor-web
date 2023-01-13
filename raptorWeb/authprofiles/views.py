@@ -28,6 +28,7 @@ class RegisterUser(TemplateView):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {"current_members": user_gatherer.all_users}
+            dictionary['user_path'] = user_gatherer.user_url
             dictionary["registered"] = self.registered
             dictionary["register_form"] = self.register_form
             dictionary["extra_form"] = self.extra_form
@@ -43,6 +44,7 @@ class RegisterUser(TemplateView):
         extra_form = UserProfileInfoForm(request.POST)
 
         dictionary = {"current_members": user_gatherer.all_users}
+        dictionary['user_path'] = user_gatherer.user_url
         dictionary["registered"] = self.registered
         dictionary["register_form"] = register_form
         dictionary["extra_form"] = extra_form
@@ -82,6 +84,7 @@ class User_Login_Form(TemplateView):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {"current_members": user_gatherer.all_users}
+            dictionary['user_path'] = user_gatherer.user_url
             dictionary["login_form"] = self.login_form
             template_name = join(settings.AUTH_TEMPLATE_DIR, 'login.html')
             return render(request, template_name, context=dictionary)
@@ -92,6 +95,7 @@ class User_Login_Form(TemplateView):
 
         login_form = UserLoginForm(request.POST)
         dictionary = {"current_members": user_gatherer.all_users}
+        dictionary['user_path'] = user_gatherer.user_url
         dictionary["login_form"] = self.login_form
 
         if login_form.is_valid():
@@ -149,6 +153,7 @@ class User_Dropdown(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             instance_dict = {"current_members": user_gatherer.all_users}
+            instance_dict['user_path'] = user_gatherer.user_url
             return render(request, self.template_name, context=instance_dict)
         else:
             return HttpResponseRedirect('../')
@@ -173,39 +178,9 @@ class User_Profile(TemplateView):
     template_name = join(settings.AUTH_TEMPLATE_DIR, 'profile.html')
 
     def get(self, request, profile_name):
-        instance_dict = {"current_members": user_gatherer.all_users}
-        try:
-            user_base = User.objects.get(username=profile_name)
-            user_extra = UserProfileInfo.objects.get(user=user_base)
-            instance_dict.update({
-                    "displayed_profile": user_extra 
-                })
-        except User.DoesNotExist:
-            try:
-                discord_user = DiscordUserInfo.objects.get(username=profile_name)
-                instance_dict.update({
-                    "displayed_profile": discord_user
-                })
-            except DiscordUserInfo.DoesNotExist:
-                return HttpResponse("A User with the provided username was not found")
-
-        return render(request, self.template_name, context=instance_dict)
-
-class User_Profile_Edit(LoginRequiredMixin, TemplateView):
-    """
-    Displays a User's profile details that can be edited, and allows
-    changing of said details
-    """
-    template_name = join(settings.AUTH_TEMPLATE_DIR, 'profile_edit.html')
-    login_url = '/login/'
-    profile_edit_form = DiscordUserInfoForm()
-    extra_edit_form = UserProfileInfoForm()
-
-    def get(self, request, profile_name):
-        if str(request.user).split('#')[0] == profile_name:
+        if request.headers.get('HX-Request') == "true":
             instance_dict = {"current_members": user_gatherer.all_users}
-            instance_dict["profile_edit_form"] = self.profile_edit_form
-            instance_dict["extra_edit_form"] = self.extra_edit_form
+            instance_dict['user_path'] = user_gatherer.user_url
             try:
                 user_base = User.objects.get(username=profile_name)
                 user_extra = UserProfileInfo.objects.get(user=user_base)
@@ -223,14 +198,55 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
             return render(request, self.template_name, context=instance_dict)
 
-        else: 
-            return redirect('/accessdenied')
+        else:
+            return HttpResponseRedirect('../../')
+
+class User_Profile_Edit(LoginRequiredMixin, TemplateView):
+    """
+    Displays a User's profile details that can be edited, and allows
+    changing of said details
+    """
+    template_name = join(settings.AUTH_TEMPLATE_DIR, 'profile_edit.html')
+    login_url = '/login/'
+    profile_edit_form = DiscordUserInfoForm()
+    extra_edit_form = UserProfileInfoForm()
+
+    def get(self, request, profile_name):
+        if request.headers.get('HX-Request') == "true":
+            if str(request.user).split('#')[0] == profile_name:
+                instance_dict = {"current_members": user_gatherer.all_users}
+                instance_dict['user_path'] = user_gatherer.user_url
+                instance_dict["profile_edit_form"] = self.profile_edit_form
+                instance_dict["extra_edit_form"] = self.extra_edit_form
+                try:
+                    user_base = User.objects.get(username=profile_name)
+                    user_extra = UserProfileInfo.objects.get(user=user_base)
+                    instance_dict.update({
+                            "displayed_profile": user_extra 
+                        })
+                except User.DoesNotExist:
+                    try:
+                        discord_user = DiscordUserInfo.objects.get(username=profile_name)
+                        instance_dict.update({
+                            "displayed_profile": discord_user
+                        })
+                    except DiscordUserInfo.DoesNotExist:
+                        return HttpResponse("A User with the provided username was not found")
+
+                return render(request, self.template_name, context=instance_dict)
+
+            else: 
+                return redirect('/accessdenied')
+
+        else:
+            return HttpResponseRedirect('../../../')
 
     def post(self, request, profile_name):
 
         profile_edit_form = DiscordUserInfoForm(request.POST)
         extra_edit_form = UserProfileInfoForm(request.POST)
         instance_dict = {"current_members": user_gatherer.all_users}
+        instance_dict['user_path'] = user_gatherer.user_url
         instance_dict["profile_edit_form"] = profile_edit_form
         instance_dict["extra_edit_form"] = self.extra_edit_form
         if profile_edit_form.is_valid() and extra_edit_form.is_valid():
@@ -248,7 +264,10 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
             if "profile_picture" in request.FILES:
                 changed_user.profile_picture = request.FILES["profile_picture"]
             changed_user.save()
-            return redirect('../')
+            try:
+                return redirect(f'../../../{user_gatherer.user_url}/{changed_user_base.username}')
+            except:
+                return redirect(f'../../../{user_gatherer.user_url}/{changed_user.username}')
         else:
             instance_dict["profile_edit_form"] = profile_edit_form
             return render(request, self.template_name, context=instance_dict)
@@ -262,4 +281,5 @@ class Access_Denied(TemplateView):
     def get(self, request):
 
         dictionary = {"current_members": user_gatherer.all_users}
+        dictionary['user_path'] = user_gatherer.user_url
         return render(request, self.template_name, context=dictionary)
