@@ -26,12 +26,16 @@ class RegisterUser(TemplateView):
 
     def get(self, request):
 
-        dictionary = {"current_members": user_gatherer.all_users}
-        dictionary["registered"] = self.registered
-        dictionary["register_form"] = self.register_form
-        dictionary["extra_form"] = self.extra_form
-        
-        return render(request, self.template_name, context=dictionary)
+        if request.headers.get('HX-Request') == "true":
+            dictionary = {"current_members": user_gatherer.all_users}
+            dictionary["registered"] = self.registered
+            dictionary["register_form"] = self.register_form
+            dictionary["extra_form"] = self.extra_form
+            
+            return render(request, self.template_name, context=dictionary)
+
+        else:
+            return HttpResponseRedirect('../')
 
     def post(self,request):
 
@@ -57,16 +61,16 @@ class RegisterUser(TemplateView):
             new_user_extra.save()
             registered = True
             dictionary["registered"] = registered
+            login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')
             user_gatherer.update_default_users()
-
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
         else:
 
             dictionary["register_form"] = register_form
             dictionary["extra_form"] = extra_form
-
-            return render(request, self.template_name, context=dictionary)
+            messages.error(request, register_form.errors.as_text().replace('* __all__', ''))
+            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 class User_Login_Form(TemplateView):
     """
