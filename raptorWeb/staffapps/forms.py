@@ -3,39 +3,9 @@ from django.core import validators
 import logging
 
 from staffapps.models import ModeratorApplication, AdminApplication
+from staffapps.util import form_labels
 
 LOGGER = logging.Logger("form_validator_logger")
-
-FORM_LABELS = {
-    "ask_age": "How old are you?",
-    "age_admin": "You must be at least 18 years old to apply directly for admin",
-    "age_mod": "You must be at least 10 years old to apply",
-    "time_commitment": "What Timezone do you live in? How often and at what time of the day will you be available?",
-    "mc_name": "What is your Minecraft In-Game name?",
-    "discord_help": "Format it as such: Zediious#1234",
-    "mc_name_verify": "Confirm your Minecraft In-Game name.",
-    "discord_name": "What is your Discord Username?",
-    "discord_name_verify": "Confirm your Discord Username",
-    "voice_chat": "Do you have a working microphone and are comfortable speaking in Voice Chat?",
-    "description": "Give a general description of yourself, and how you operate.",
-    "contact_uppers": "Do you have the ability to quickly establish the problem, and get in contact with higher up if someone is breaking the rules and/or hacking?",
-    "plugin_help": "Our 1.16.5 servers use server-side mods rather than plugins.",
-    "server_api": "Are you familiar with/have used Minecraft reverse proxy software as well as the various APIs to integrate Forge with plugins (SpongeForge, Mohist, Magma)?",
-    "it_knowledge": "How much knowledge to do you have in terms of IT/networking/software development? If your profession includes either of these skills that is very useful information.",
-    "it_help": "Having a basic understanding of network concepts is the bare minimum.",
-    "linux": "How much experience and/or knowledge do you have regarding Linux system administration and general usage?",
-    "ptero": "Are you familiar with the Pterodactyl Game Server management panel and its usage?",
-    "ptero_help": "Having set up /configuring an instance of Pterodactyl yourself is not a requirement.",
-    "experience_help": "Any Admin roles you've had outside of Minecraft may also be described here.",
-    "why_join": "Why do you want to join the ShadowRaptor staff team?",
-    "experience": "Please provide as much information as you can about any Admin roles you've had on Minecraft servers, whether you owned the server or were staff. \
-        Describe what exactly it was you did for the server you were staff of in as much detail as possible.",
-    "modpack_knowledge": "Administrating a modded server requires good knowledge of how mods play, to properly identify certain things. \
-        Have you played the modpacks we run on our network, \and/or have a good understanding of how they/modded Minecraft in general works? \
-            Provide a short history of your time with Minecraft here as well.",
-    "plugin_knowledge": "Plugin/server-side mod knowledge is a necessity to become an Admin. Are there are any plugins in particular that you \
-        have extensive experience with? Do you believe that you can adapt to different configurations?",
-}
 
 def check_for_hash(value):
     """
@@ -86,43 +56,43 @@ class StaffAppForm(forms.ModelForm):
     ModelForm for an Admin Application
     """
     time = forms.CharField(
-        label=FORM_LABELS["time_commitment"], 
+        label=form_labels.time_commitment, 
         max_length=150)
 
     mc_name = forms.CharField(
-        label=FORM_LABELS["mc_name"], 
+        label=form_labels.mc_name, 
         max_length=50)
 
     verify_mc = forms.CharField(
-        label=FORM_LABELS["mc_name_verify"], 
+        label=form_labels.mc_name_verify, 
         max_length=50)
 
     discord_name = forms.CharField(
-        label=FORM_LABELS["discord_name"], 
-        help_text=FORM_LABELS["discord_help"], max_length=50, validators=[check_for_hash])
+        label=form_labels.discord_name, 
+        help_text=form_labels.discord_help, max_length=50, validators=[check_for_hash])
 
     verify_discord = forms.CharField(
-        label=FORM_LABELS["discord_name_verify"], 
+        label=form_labels.discord_name_verify, 
         max_length=50, validators=[check_for_hash])
 
     voice_chat = forms.BooleanField(
-        label=FORM_LABELS["voice_chat"], 
+        label=form_labels.voice_chat, 
         required=False)
 
     description = forms.CharField(
-        label=FORM_LABELS["description"], 
+        label=form_labels.description, 
         max_length=500, widget=forms.Textarea)
 
     modpacks = forms.CharField(
-        label=FORM_LABELS["modpack_knowledge"], 
+        label=form_labels.modpack_knowledge, 
         max_length=300, widget=forms.Textarea)
 
     experience = forms.CharField(
-        label=FORM_LABELS["experience"], 
-        help_text=FORM_LABELS["experience_help"], max_length=500, widget=forms.Textarea)
+        label=form_labels.experience, 
+        help_text=form_labels.experience_help, max_length=500, widget=forms.Textarea)
 
     why_join = forms.CharField(
-        label=FORM_LABELS["why_join"],
+        label=form_labels.why_join,
         max_length=500, widget=forms.Textarea)
 
     trap = forms.CharField(
@@ -142,28 +112,28 @@ class AdminApp(StaffAppForm):
     ModelForm for an Admin Application
     """
     age = forms.IntegerField(
-        label=FORM_LABELS["ask_age"], 
-        help_text=FORM_LABELS["age_admin"], max_value=99 , validators=[validate_admin_age])
+        label=form_labels.ask_age, 
+        help_text=form_labels.age_admin, max_value=99 , validators=[validate_admin_age])
     
     plugins = forms.CharField(
-        label=FORM_LABELS["plugin_knowledge"], 
-        help_text=FORM_LABELS["plugin_help"], max_length=300, widget=forms.Textarea)
+        label=form_labels.plugin_knowledge, 
+        help_text=form_labels.plugin_help, max_length=300, widget=forms.Textarea)
 
     api = forms.CharField(
-        label=FORM_LABELS["server_api"], 
+        label=form_labels.server_api, 
         max_length=150, widget=forms.Textarea)
 
     it_knowledge = forms.CharField(
-        label=FORM_LABELS["it_knowledge"], 
-        help_text=FORM_LABELS["it_help"], max_length=300, widget=forms.Textarea)
+        label=form_labels.it_knowledge, 
+        help_text=form_labels.it_help, max_length=300, widget=forms.Textarea)
 
     linux = forms.CharField(
-        label=FORM_LABELS["linux"], 
+        label=form_labels.linux, 
         max_length=200, widget=forms.Textarea)
 
     ptero = forms.CharField(
-        label=FORM_LABELS["ptero"], 
-        max_length=150, help_text=FORM_LABELS["ptero_help"], widget=forms.Textarea)
+        label=form_labels.ptero, 
+        max_length=150, help_text=form_labels.ptero_help, widget=forms.Textarea)
 
     class Meta:
         model = AdminApplication
@@ -174,11 +144,11 @@ class ModApp(StaffAppForm):
     ModelForm for a Moderator Application
     """
     age = forms.IntegerField(
-        label=FORM_LABELS["ask_age"], 
-        help_text=FORM_LABELS["age_mod"], max_value=99 , validators=[validate_age])
+        label=form_labels.ask_age, 
+        help_text=form_labels.age_mod, max_value=99 , validators=[validate_age])
     
     contact_uppers = forms.CharField(
-        label=FORM_LABELS["contact_uppers"], 
+        label=form_labels.contact_uppers, 
         max_length=100)
 
     class Meta:
