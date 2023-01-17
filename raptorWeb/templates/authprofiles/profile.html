@@ -16,7 +16,7 @@
 
 <div class="container">
     {% if user.is_authenticated %}
-        {% if user.username == displayed_profile.user.username or displayed_profile.username  %}
+        {% if user.username == displayed_profile.user.username or user.username == displayed_profile.username  %}
             <div class="card bg-dark m-3 p-3">
                 <div class="row">
                     <a role="button" href="{{request.META.HTTP_REFERER}}{{loaded_user.username}}/edit" class="btn btn-primary">
