@@ -1,6 +1,6 @@
 from django import template
 
-from raptormc.models import Server
+from gameservers.models import Server
 
 register = template.Library()
 

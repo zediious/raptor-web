@@ -1,5 +1,4 @@
 from mcstatus import JavaServer
-from raptorWeb import settings
             
 class PlayerCounts():
     """
@@ -31,11 +30,8 @@ class PlayerCounts():
         if type(ADDRESS) == type("") and type(KEY) == type(""):
 
             try:
-
                 serverJSON = JavaServer(ADDRESS, PORT).query()
-
                 self.currentPlayers["totalCount"] += serverJSON.players.online
-
                 self.currentPlayers.update({
                     KEY: {
                         "address": ADDRESS,
@@ -46,7 +42,6 @@ class PlayerCounts():
                 })
 
             except TimeoutError:
-
                 self.currentPlayers.update({
                     KEY: {
                         "address": ADDRESS,
@@ -55,11 +50,8 @@ class PlayerCounts():
                         "names": []
                     }
                 })
-                
-                pass
 
         else:
-            
             raise TypeError
 
     def get_current_players(self):

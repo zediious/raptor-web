@@ -6,13 +6,16 @@ from dotenv import load_dotenv
 # Define project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = join(BASE_DIR, "templates")
-RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
-STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
-AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
-APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
-PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
 STATIC_DIR = join(BASE_DIR, "static")
 MEDIA_DIR = join(BASE_DIR, "media")
+
+RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
+APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
+PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
+
+GAMESERVERS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'gameservers')
+STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
+AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
 
 # Load .env file
 load_dotenv()
@@ -30,14 +33,18 @@ CSRF_COOKIE_SECURE = True
 DEBUG = True
 USE_SQLITE = True
 
-# Public domain name, and debug address
-DOMAIN_NAME = ""
+# Configure "DOMAIN_NAME" to match the domain name you will use (no www)
+DOMAIN_NAME = "shadowraptor.net"
+
+# Configure web protocol based on DEBUG status
+WEB_PROTO = ""
 if DEBUG:
     DOMAIN_NAME = "127.0.0.1:8000"
+    WEB_PROTO = "http"
 else:
-    DOMAIN_NAME = "shadowraptor.net"
+    WEB_PROTO = "https"
 
-# Addresses the Django app can be directly accessed from
+# Addresses the Django app can be directly accessed from.
 ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
 
 # List of Super Users to create when no users are present. To be changed immediately after creation
@@ -58,7 +65,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'raptormc',
     'staffapps',
-    'authprofiles'
+    'authprofiles',
+    'gameservers'
 ]
 
 MIDDLEWARE = [
@@ -70,7 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'raptormc.jobs.RaptorWare',
+    'gameservers.jobs.ServerWare',
     'authprofiles.userlist.ProfileManager'
 ]
 
@@ -262,6 +270,7 @@ STATICFILES_DIRS = [
 # Media files (User submitted content)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
+DEFAULT_MEDIA = f'{WEB_PROTO}://{DOMAIN_NAME}/media/'
 
 # Login URL
 LOGIN_URL = 'raptormc/applications/login'
