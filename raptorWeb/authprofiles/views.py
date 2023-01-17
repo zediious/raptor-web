@@ -276,10 +276,13 @@ class Access_Denied(TemplateView):
     """
     Page displayed when a resource cannot be accessed by a user
     """
-    template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'no_access.html')
+    template_name = join(settings.AUTH_TEMPLATE_DIR, 'no_access.html')
 
     def get(self, request):
 
-        dictionary = {"current_members": user_gatherer.all_users}
-        dictionary['user_path'] = user_gatherer.user_url
-        return render(request, self.template_name, context=dictionary)
+        if request.headers.get('HX-Request') == "true":
+            dictionary = {"current_members": user_gatherer.all_users}
+            dictionary['user_path'] = user_gatherer.user_url
+            return render(request, self.template_name, context=dictionary)
+        else:
+            return HttpResponseRedirect('../')
