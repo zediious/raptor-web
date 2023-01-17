@@ -8,7 +8,6 @@ class RaptormcConfig(AppConfig):
     verbose_name = 'ShadowRaptorMC Website'
 
     def ready(self):
-        from . import jobs
 
         if os.environ.get('RUN_MAIN', None) != 'true':
 

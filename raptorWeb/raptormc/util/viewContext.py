@@ -40,4 +40,13 @@ def update_context(context, informative_text_names=None, announcements=False):
         context.update(load(discordJSON))
     except FileNotFoundError:
         LOGGER.error("announcements.json and/or discordInfo.json missing. Ensure Discord Bot is running and that your directories are structured correctly.")
+
+    domain_to_context(context)
     return context
+
+def domain_to_context(context):
+    # Add domain Settings to context
+    context.update({
+            "pub_domain": settings.DOMAIN_NAME,
+            "default_media": settings.DEFAULT_MEDIA
+        })

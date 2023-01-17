@@ -6,17 +6,15 @@ from json import dumps, load
 from django.utils.html import strip_tags
 
 from raptorWeb import settings
-from raptormc.models import PlayerCount, PlayerName, Server
-from raptormc.util.playerCounts import PlayerCounts
-from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
+from gameservers.models import Server, PlayerCount, PlayerName
+from gameservers.util.playerCounts import PlayerCounts
 
 LOGGER = getLogger('raptormc.jobs')
 player_poller = PlayerCounts()
 
-class RaptorWare:
+class ServerWare:
     """
-    Middleware containing code to run on first initilization, as well as code to
-    run whenever a request is made, before the view is displayed.
+    Handle tasks regarding the gameservers app
     """
     def __init__(self, get_response):
         """
@@ -48,23 +46,6 @@ def update_context():
         if lock_time >= 120:
 
             refresh_server_data()
-            export_server_data()
-
-            # Settings to context
-            if settings.DEBUG:
-                player_poller.currentPlayers_DB.update({
-                    "pub_domain": settings.DOMAIN_NAME,
-                    "default_media": f'http://{settings.DOMAIN_NAME}/media/'
-                })
-            else:
-                player_poller.currentPlayers_DB.update({
-                    "pub_domain": settings.DOMAIN_NAME,
-                    "default_media": f'https://{settings.DOMAIN_NAME}/media/'
-                })
-
-        else:
-
-            LOGGER.info("Request made, not enough time has passed to run update_context()")
 
     except FileNotFoundError as e:
 
@@ -113,7 +94,7 @@ def refresh_server_data():
 
             if key == "totalCount":
                 continue
-
+            
             for player in player_data[key]["names"]:
 
                 PlayerName.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), name=player).save()
@@ -146,7 +127,7 @@ def refresh_server_data():
                 except KeyError as e:
                     LOGGER.info("A Server exists, however no announcements have been made regarding it yet. Skipping.")
 
-            # Finalize currentPlayers_DB with all updated server information
+            # Finalize currentPlayers_DB with updated information for current iterated server
             player_poller.currentPlayers_DB["server_info"].append({
                 f"server{server_number}": {
                     "key": key,
@@ -170,12 +151,11 @@ def refresh_server_data():
 
             server_number += 1
 
-        LOGGER.info("Request made, refresh_server_data() ran")
+        LOGGER.info("Server data has been retrieved and saved")
 
 def export_server_data():
     """
     Export certain details from current Server Models to a json file
-    for use by the Discord Bot
     """
     current_servers = {}
     server_num = 0
