@@ -43,9 +43,10 @@ def update_context():
     try:
 
         lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
-        if lock_time >= 120:
+        if lock_time >= 120 or player_poller.has_run == False:
 
             refresh_server_data()
+            player_poller.has_run = True
 
     except FileNotFoundError as e:
 

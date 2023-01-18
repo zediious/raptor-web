@@ -5,6 +5,7 @@ class PlayerCounts():
     Object containing data structures and methods used for polling
     ShadowRaptor Minecraft servers for state and player information.
     """
+    has_run = False
     # Dictionary containing address/port/key names of servers
     server_data = {}
     # Dict to track player counts and names in each server internally

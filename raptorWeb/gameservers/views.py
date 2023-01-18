@@ -10,8 +10,8 @@ from gameservers.jobs import player_poller, update_context
 
 class Server_Buttons(TemplateView):
     """
-    Returns HTML of server buttons
-    Attempts to fetch new info before sending
+    Returns Bootstrap buttons for each server
+    Buttons used to open Server Modals
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
@@ -22,7 +22,7 @@ class Server_Buttons(TemplateView):
 
 class Server_Buttons_Loading(TemplateView):
     """
-    Returns HTML of server buttons with loading image
+    Returns loading-image buttons for each server
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
@@ -33,8 +33,8 @@ class Server_Buttons_Loading(TemplateView):
 
 class Server_Modals(TemplateView):
     """
-    Returns HTML of server modals, as well as player counts modal
-    Attempts to fetch new info before sending
+    Returns Bootstrap Modals for each server, containing
+    all information regarding it
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
@@ -45,12 +45,61 @@ class Server_Modals(TemplateView):
 
 class Total_Count(TemplateView):
     """
-    Returns a simple HttpResponse with the total count of players on all servers
+    Returns button showing total player count
+    and Bootstrap Modal containing names of online players
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'playerCounts.html')
             update_context()
+            return render(request, template_name, context=player_poller.currentPlayers_DB)
+        else:
+            return HttpResponseRedirect('../')
+
+class Server_Rules(TemplateView):
+    """
+    Returns a Bootstrap Accordion containing Server Rules
+    for each Server
+    """
+    def get(self, request):
+        if request.headers.get('HX-Request') == "true":
+            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverRules.html')
+            return render(request, template_name, context=player_poller.currentPlayers_DB)
+        else:
+            return HttpResponseRedirect('../')
+
+class Server_Banned_Items(TemplateView):
+    """
+    Returns a Bootstrap Accordion containing Server Banned
+    Items for each Server
+    """
+    def get(self, request):
+        if request.headers.get('HX-Request') == "true":
+            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverBannedItems.html')
+            return render(request, template_name, context=player_poller.currentPlayers_DB)
+        else:
+            return HttpResponseRedirect('../')
+
+class Server_Voting(TemplateView):
+    """
+    Returns a Bootstrap Accordion containing Server Voting
+    Information for each Server
+    """
+    def get(self, request):
+        if request.headers.get('HX-Request') == "true":
+            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverVoting.html')
+            return render(request, template_name, context=player_poller.currentPlayers_DB)
+        else:
+            return HttpResponseRedirect('../')
+
+class Server_Announcements(TemplateView):
+    """
+    Returns a Bootstrap Accordion containing Server
+    Announcements for each Server
+    """
+    def get(self, request):
+        if request.headers.get('HX-Request') == "true":
+            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
