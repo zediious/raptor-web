@@ -20,6 +20,10 @@ class ServerWare:
         """
         One-time configuration and initialization.
         """
+        if settings.IMPORT_SERVERS == True:
+            import_server_data(delete_existing=settings.DELETE_EXISTING)
+            LOGGER.info("All servers from server_data_full.json have been imported. Please restart the server with IMPORT_SERVERS disabled.")
+            
         export_server_data()
 
         self.get_response = get_response
@@ -178,3 +182,62 @@ def export_server_data():
     server_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
     server_json.write(dumps(current_servers, indent=4))
     server_json.close()
+
+def export_server_data_full():
+    """
+    Export all server data for importing to a new instance
+    Does not export server images
+    """
+    current_servers = {}
+    server_num = 0
+
+    for server in Server.objects.all():
+        current_servers.update({
+            f'server{server_num}': {
+                "in_maintenance": server.in_maintenance,
+                "server_address": server.server_address,
+                "server_port": server.server_port,
+                "modpack_name": server.modpack_name,
+                "modpack_version": server.modpack_version,
+                "modpack_description": server.modpack_description,
+                "server_description": server.server_description,
+                "server_rules": server.server_rules,
+                "server_banned_items": server.server_banned_items,
+                "server_vote_links": server.server_vote_links,
+                "modpack": server.modpack_url
+            }
+        })
+        server_num += 1
+
+    server_json = open(join(settings.BASE_DIR, 'server_data_full.json'), "w")
+    server_json.write(dumps(current_servers, indent=4))
+    server_json.close()
+    return current_servers
+
+def import_server_data(delete_existing):
+    """
+    Create server objects based on an exsiting server_data_full.json
+    Will delete existing servers first
+    """
+    try:
+        if delete_existing == True:
+            Server.objects.all().delete()
+        with open(settings.IMPORT_JSON_LOCATION, "r+") as import_json:
+            import_json_dict = load(import_json)
+            for server in import_json_dict:
+                new_server = Server.objects.create(
+                    in_maintenance = import_json_dict[server]["in_maintenance"],
+                    server_address = import_json_dict[server]["server_address"],
+                    server_port = import_json[server]["server_port"],
+                    modpack_name = import_json_dict[server]["modpack_name"],
+                    modpack_version = import_json_dict[server]["modpack_version"],
+                    modpack_description = import_json_dict[server]["modpack_description"],
+                    server_description = import_json_dict[server]["server_description"],
+                    server_rules = import_json_dict[server]["server_rules"],
+                    server_banned_items = import_json_dict[server]["server_banned_items"],
+                    server_vote_links = import_json_dict[server]["server_vote_links"],
+                    modpack_url = import_json_dict[server]["modpack"]
+                )
+                new_server.save()
+    except FileNotFoundError:
+        LOGGER.error("You enabled IMPORT_SERVERS in settings.py, but you did not place server_data_full.json in your BASE_DIR")
