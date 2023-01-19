@@ -280,6 +280,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BACKGROUND_TASK_RUN_ASYNC = True
 
+# Set to true if you want to import a server_data_full.json from a previous instance
+# This will remove ALL current servers if DELETE_EXISTING set to True! Shut off server and restart
+# with option IMPORT_SERVERS back to False after sucessfully importing.
+IMPORT_SERVERS = False
+DELETE_EXISTING = True
+IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
+
 # Enable/disable querying addresses provided in Server Models
 ENABLE_SERVER_QUERY = True
 
