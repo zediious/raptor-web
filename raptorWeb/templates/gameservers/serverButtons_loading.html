@@ -2,7 +2,7 @@
 
 <div hx-get="/servers/server_button_poll" hx-trigger="load delay:0.3s" hx-target="#server_button" hx-swap="innerHTML"></div>
 
-<div id="server_button">
+<div id="server_button" class="row">
 
 {% for server in server_info reversed %}
     <span id="serverButton" class="col-lg-12 col-6 opacity-50">
