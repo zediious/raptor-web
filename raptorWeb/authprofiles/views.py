@@ -125,11 +125,11 @@ class UserLogin_OAuth_Success(TemplateView):
             discord_code = request.GET.get('code')
             user_info = discordAuth.exchange_code(discord_code)
             discord_user = authenticate(request, user=user_info)
+            user_gatherer.update_discord_users()
             try:
                 login(request, discord_user, backend='authprofiles.auth.DiscordAuthBackend')
             except AttributeError:
                 login(request, list(discord_user).pop(), backend='authprofiles.auth.DiscordAuthBackend')
-                user_gatherer.update_discord_users()
                 LOGGER.info(f'{user_info["username"]} logged in')
             return redirect('../../')
         except KeyError:
