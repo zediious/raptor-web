@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 from os.path import join
 from logging import getLogger
@@ -13,7 +13,7 @@ from json import load
 from raptorWeb import settings
 from raptormc.forms import AdminApp, ModApp, UserForm, UserProfileInfoForm, UserLoginForm, DiscordUserInfoForm
 from raptormc.models import InformativeText, User, UserProfileInfo, DiscordUserInfo
-from raptormc.jobs import player_poller, playerPoll
+from raptormc.jobs import player_poller, playerPoll, export_server_data_full
 from raptormc.util import discordAuth, viewContext
 
 TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
@@ -542,3 +542,13 @@ class ShadowRaptor():
                     return render(request, template_name, context=player_poller.currentPlayers_DB)
                 else:
                     return HttpResponseRedirect('../')
+
+        class Export_Data(TemplateView):
+            """
+            Dump JSON data of all servers
+            """
+            def get(self, request):
+                current_servers = export_server_data_full()
+                return JsonResponse(current_servers)
+
+
