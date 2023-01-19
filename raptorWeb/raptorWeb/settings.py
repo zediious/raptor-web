@@ -161,19 +161,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
 
-# Discord OAuth2 settings
-DISCORD_AUTH_URL = ""
-DISCORD_REDIRECT_URL = ""
-DISCORD_APP_ID = getenv('DISCORD_APP_ID')
-DISCORD_APP_SECRET = getenv('DISCORD_APP_SECRET')
-
-if DEBUG:
-    DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
-    DISCORD_REDIRECT_URL = "http://127.0.0.1:8000/oauth2/login/redirect"
-else:
-    DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri=https%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
-    DISCORD_REDIRECT_URL = f"https://{DOMAIN_NAME}/oauth2/login/redirect"
-
 # Logging configuration
 LOGGING = {
     'version': 1,
@@ -272,27 +259,33 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 DEFAULT_MEDIA = f'{WEB_PROTO}://{DOMAIN_NAME}/media/'
 
-# Login URL
-LOGIN_URL = 'raptormc/applications/login'
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BACKGROUND_TASK_RUN_ASYNC = True
 
-# Set to true if you want to import a server_data_full.json from a previous instance
-# This will remove ALL current servers if DELETE_EXISTING set to True! Shut off server and restart
-# with option IMPORT_SERVERS back to False after sucessfully importing.
+# ** Settings for "gameservers" app **
+# Set to True to query addresses of Servers
+ENABLE_SERVER_QUERY = True
+# Set to True to import a server_data_full.json on start
 IMPORT_SERVERS = False
+# Set to True to delete existing servers when performing an import
 DELETE_EXISTING = True
+# Location of json file to import servers from
 IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
 
-# Enable/disable querying addresses provided in Server Models
-ENABLE_SERVER_QUERY = True
-
-# Base URL for Users in main app
+# ** Settings for "authprofiles" app **
+LOGIN_URL = 'raptormc/applications/login'
 BASE_USER_URL = 'user'
 
+DISCORD_AUTH_URL = ""
+DISCORD_REDIRECT_URL = ""
+DISCORD_APP_ID = getenv('DISCORD_APP_ID')
+DISCORD_APP_SECRET = getenv('DISCORD_APP_SECRET')
+DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
+
+# ** Settings for "django_bootstrap5" app **
 BOOTSTRAP5 = {
 
     # Set placeholder attributes to label if no placeholder is provided.
@@ -300,7 +293,7 @@ BOOTSTRAP5 = {
 
 }
 
-# Configure CKEditor, Rich Text Editor plugin
+# ** Settings for "CKEditor-django" app **
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
