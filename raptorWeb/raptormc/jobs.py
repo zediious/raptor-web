@@ -214,33 +214,3 @@ def export_server_data():
     server_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
     server_json.write(dumps(current_servers, indent=4))
     server_json.close()
-
-def export_server_data_full():
-    """
-    Export all server data for importing to a new instance
-    """
-    current_servers = {}
-    server_num = 0
-
-    for server in Server.objects.all():
-        current_servers.update({
-            f'server{server_num}': {
-                "state": server.server_state,
-                "maintenance": server.in_maintenance,
-                "address": server.server_address,
-                "modpack_name": server.modpack_name,
-                "modpack_version": server.modpack_version,
-                "modpack_description": server.modpack_description,
-                "server_description": server.server_description,
-                "server_rules": server.server_rules,
-                "server_banned_items": server.server_banned_items,
-                "server_vote_links": server.server_vote_links,
-                "modpack": server.modpack_url
-            }
-        })
-        server_num += 1
-
-    server_json = open(join(settings.BASE_DIR, 'server_data_full.json'), "w")
-    server_json.write(dumps(current_servers, indent=4))
-    server_json.close()
-    return current_servers
