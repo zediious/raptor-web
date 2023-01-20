@@ -34,6 +34,7 @@ urlpatterns = [
     # Ajax
     path('server_button_poll/', SR.Ajax_Views.Server_Buttons.as_view(), name="server_buttons_poll"),
     path('server_modal_poll/', SR.Ajax_Views.Server_Modals.as_view(), name="server_modals_poll"),
-    path('total_count_poll/', SR.Ajax_Views.Total_Count.as_view(), name="totol_counts_poll")
+    path('total_count_poll/', SR.Ajax_Views.Total_Count.as_view(), name="totol_counts_poll"),
+    path('dump_all_server_json_data/', SR.Ajax_Views.Export_Data.as_view(), name="export_data")
 
 ]
