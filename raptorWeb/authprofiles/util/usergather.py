@@ -1,8 +1,7 @@
 from django.conf import settings
+from django.utils.text import slugify
 
 from authprofiles.models import UserProfileInfo, DiscordUserInfo
-
-
 
 class UserGatherer(object):
     
@@ -25,3 +24,16 @@ class UserGatherer(object):
     def update_all_users(self):
         self.update_default_users()
         self.update_discord_users()
+
+    def find_slugged_user(self, slugged_username):
+        """
+        Given a slugified username, find the user 
+        associated with that username
+        """
+        for saved_user in self.all_users:
+            try:
+                if str(slugify(saved_user.user.username)) == slugify(slugged_username):
+                    return saved_user
+            except AttributeError:
+                if str(slugify(saved_user.username)) == slugify(slugged_username):
+                    return saved_user

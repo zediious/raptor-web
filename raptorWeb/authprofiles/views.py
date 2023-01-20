@@ -181,22 +181,16 @@ class User_Profile(TemplateView):
         if request.headers.get('HX-Request') == "true":
             instance_dict = {"current_members": user_gatherer.all_users}
             instance_dict['user_path'] = user_gatherer.user_url
-            try:
-                user_base = User.objects.get(username=profile_name)
-                user_extra = UserProfileInfo.objects.get(user=user_base)
-                instance_dict.update({
-                        "displayed_profile": user_extra 
-                    })
-            except User.DoesNotExist:
-                try:
-                    discord_user = DiscordUserInfo.objects.get(username=profile_name)
-                    instance_dict.update({
-                        "displayed_profile": discord_user
-                    })
-                except DiscordUserInfo.DoesNotExist:
-                    return HttpResponse("A User with the provided username was not found")
+            displayed_user = user_gatherer.find_slugged_user(profile_name)
 
-            return render(request, self.template_name, context=instance_dict)
+            if displayed_user == None:
+                return redirect('/nouserfound')
+            else:
+                instance_dict.update({
+                            "displayed_profile": displayed_user
+                        })
+
+                return render(request, self.template_name, context=instance_dict)
 
         else:
             return HttpResponseRedirect('../../')
@@ -218,22 +212,16 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 instance_dict['user_path'] = user_gatherer.user_url
                 instance_dict["profile_edit_form"] = self.profile_edit_form
                 instance_dict["extra_edit_form"] = self.extra_edit_form
-                try:
-                    user_base = User.objects.get(username=profile_name)
-                    user_extra = UserProfileInfo.objects.get(user=user_base)
-                    instance_dict.update({
-                            "displayed_profile": user_extra 
-                        })
-                except User.DoesNotExist:
-                    try:
-                        discord_user = DiscordUserInfo.objects.get(username=profile_name)
-                        instance_dict.update({
-                            "displayed_profile": discord_user
-                        })
-                    except DiscordUserInfo.DoesNotExist:
-                        return HttpResponse("A User with the provided username was not found")
+                displayed_user = user_gatherer.find_slugged_user(profile_name)
 
-                return render(request, self.template_name, context=instance_dict)
+                if displayed_user == None:
+                    return redirect('/nouserfound')
+                else:
+                    instance_dict.update({
+                                "displayed_profile": displayed_user
+                            })
+
+                    return render(request, self.template_name, context=instance_dict)
 
             else: 
                 return redirect('/accessdenied')
@@ -277,6 +265,21 @@ class Access_Denied(TemplateView):
     Page displayed when a resource cannot be accessed by a user
     """
     template_name = join(settings.AUTH_TEMPLATE_DIR, 'no_access.html')
+
+    def get(self, request):
+
+        if request.headers.get('HX-Request') == "true":
+            dictionary = {"current_members": user_gatherer.all_users}
+            dictionary['user_path'] = user_gatherer.user_url
+            return render(request, self.template_name, context=dictionary)
+        else:
+            return HttpResponseRedirect('../')
+
+class No_User_Found(TemplateView):
+    """
+    Page displayed when a requested user is not found
+    """
+    template_name = join(settings.AUTH_TEMPLATE_DIR, 'no_user.html')
 
     def get(self, request):
 
