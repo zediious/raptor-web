@@ -26,7 +26,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs): 
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = ["Homepage Information"], announcements=True)
 
         class Announcements(TemplateView):
@@ -37,7 +36,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = ["Announcements Information"], announcements=True)
 
         class Rules(TemplateView):
@@ -48,7 +46,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = [
                     "Rules Information",
                     "Network Rules"])
@@ -61,7 +58,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = ["Banned Items Information"])
 
         class Voting(TemplateView):
@@ -72,7 +68,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = ["Voting Information"])
 
         class HowToJoin(TemplateView):
@@ -83,7 +78,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = [
                     "Joining Information",
                     "Using the CurseForge Launcher",
@@ -98,7 +92,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context, informative_text_names = ["Staff App Information"])
 
     class User_Views():
@@ -113,7 +106,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context)
 
         class User_Page(TemplateView):
@@ -124,7 +116,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context)
 
         class User_Edit_Page(TemplateView):
@@ -135,5 +126,4 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                
                 return viewContext.update_context(context = context)
