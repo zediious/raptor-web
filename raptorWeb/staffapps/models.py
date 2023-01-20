@@ -51,7 +51,8 @@ class AdminApplication(StaffApplication):
     """
     position = models.CharField(
         max_length=100,
-        default="Admin"
+        default="Admin",
+        editable=False
     )
     
     plugins = models.TextField(
