@@ -125,6 +125,7 @@ class UserLogin_OAuth_Success(TemplateView):
             discord_code = request.GET.get('code')
             user_info = discordAuth.exchange_code(discord_code)
             discord_user = authenticate(request, user=user_info)
+            discordAuth.update_user_details(DiscordUserInfo.objects.get(id=user_info["id"]), user_info)
             user_gatherer.update_discord_users()
             LOGGER.info(f'{user_info["username"]} logged in')
             try:
