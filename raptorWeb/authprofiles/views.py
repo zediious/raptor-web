@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.text import slugify
 from os.path import join
 from logging import getLogger
 
@@ -208,7 +209,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
     def get(self, request, profile_name):
         if request.headers.get('HX-Request') == "true":
-            if str(request.user).split('#')[0] == profile_name:
+            if slugify(str(request.user).split('#')[0]) == profile_name:
                 instance_dict = {"current_members": user_gatherer.all_users}
                 instance_dict['user_path'] = user_gatherer.user_url
                 instance_dict["profile_edit_form"] = self.profile_edit_form
