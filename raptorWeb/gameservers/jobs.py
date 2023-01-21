@@ -70,17 +70,23 @@ def refresh_server_data():
         server_key = 0
         for server in server_data:
 
-            if server.server_address == "Default":
-
-                LOGGER.error("A server(s) exist, however they still have the default address set.")
-                break
-
             player_poller.server_data.update({
                 f"server{server_key}": {
                     "address": server.server_address,
-                    "port": server.server_port
+                    "port": server.server_port,
+                    "is_default": False,
+                    "do_query": True
                 }
             })
+
+            if server.server_address == "Default":
+                LOGGER.error(f"The server {server.modpack_name} still has a default address, so it will not be queried.")
+                player_poller.server_data[f'server{server_key}']["is_default"] = True
+
+            if server.in_maintenance == True:
+                LOGGER.error(f'The server "{server.modpack_name}" is in Maintenance Mode, so it will not be queried')
+                player_poller.server_data[f'server{server_key}']["do_query"] = False
+
             server_key += 1
         
         # Use player_poller to query addresses from provided Server Models, and return gathered data

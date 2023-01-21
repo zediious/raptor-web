@@ -23,12 +23,12 @@ class PlayerCounts():
         """
         return str(ADDRESS.split(".")[0])
 
-    def request_info(self, ADDRESS, PORT, KEY):
+    def request_info(self, ADDRESS, PORT, KEY, do_query = True):
         """
         Sets the "count", "names" and "online" keys within the provided "KEY" parameter
         to values gathered from a domain name "ADDRESS" parameter.
         """
-        if type(ADDRESS) == type("") and type(KEY) == type(""):
+        if do_query == True:
 
             try:
                 serverJSON = JavaServer(ADDRESS, PORT).query()
@@ -53,7 +53,14 @@ class PlayerCounts():
                 })
 
         else:
-            raise TypeError
+            self.currentPlayers.update({
+                    KEY: {
+                        "address": ADDRESS,
+                        "online": False,
+                        "count": 0,
+                        "names": []
+                    }
+                })
 
     def get_current_players(self):
         """
@@ -66,10 +73,17 @@ class PlayerCounts():
 
         for server in self.server_data:
 
-            self.request_info(
+            if self.server_data[server]["do_query"] == False or self.server_data[server]["is_default"] == True:
+                self.request_info(
                 self.server_data[server]["address"], 
                 self.server_data[server]["port"], 
-                self.parse_key(self.server_data[server]["address"]))
+                self.parse_key(self.server_data[server]["address"]),
+                do_query = False)
+            else:
+                self.request_info(
+                    self.server_data[server]["address"], 
+                    self.server_data[server]["port"], 
+                    self.parse_key(self.server_data[server]["address"]))
 
         with open('playerCounts.LOCK', 'w') as lock_file:
             lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")
