@@ -30,8 +30,8 @@
         <ul class="dropdown-menu bg-dark">
             <li><span class="text-center text-white"><p class="text-white m-1">Welcome, {{user}}</p></span></li>
             <hr style="color: white">
-            <li><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.username}}">Profile</a></li>
-            <li><a class="dropdown-item text-white" href="/{{user_path}}/{{user.username}}/edit">Edit Profile</a></li>
+            <li><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.username|slugify}}">Profile</a></li>
+            <li><a class="dropdown-item text-white" href="/{{user_path}}/{{user.username|slugify}}/edit">Edit Profile</a></li>
             {% if user.is_staff %}
             <li><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></li>
             {% endif %}
