@@ -136,7 +136,7 @@ def refresh_server_data():
                             }
                         })
                 except KeyError as e:
-                    LOGGER.info("A Server exists, however no announcements have been made regarding it yet. Skipping.")
+                    LOGGER.info(f'No announcements have been made regarding the server "{server_info.modpack_name}". Skipping.')
 
             # Finalize currentPlayers_DB with updated information for current iterated server
             player_poller.currentPlayers_DB["server_info"].append({
