@@ -230,6 +230,21 @@ def get_announcement_count(value):
             continue
 
 @register.filter
+def get_modpack_image(value):
+    """
+    Get a server's modpack image from context dictionary
+    """
+    server_count = Server.objects.count()
+    
+    for number in range(0, server_count):
+
+        try:
+            return value[f"server{number}"]["modpack_image"]
+
+        except:
+            continue
+
+@register.filter
 def get_message(value):
     """
     Get message value from a message dicionary

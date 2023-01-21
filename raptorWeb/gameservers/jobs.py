@@ -139,6 +139,7 @@ def refresh_server_data():
                     LOGGER.info(f'No announcements have been made regarding the server "{server_info.modpack_name}". Skipping.')
 
             # Finalize currentPlayers_DB with updated information for current iterated server
+            server_from_db = Server.objects.get(server_address=player_data[key]["address"])
             player_poller.currentPlayers_DB["server_info"].append({
                 f"server{server_number}": {
                     "key": key,
@@ -146,7 +147,7 @@ def refresh_server_data():
                     "maintenance": server_info.in_maintenance,
                     "player_count": player_data[key]["count"],
                     "address": server_info.server_address,
-                    "names": PlayerName.objects.all().filter(server=Server.objects.get(server_address=player_data[key]["address"])),
+                    "names": PlayerName.objects.all().filter(server=server_from_db),
                     "modpack_name": server_info.modpack_name,
                     "modpack_version": server_info.modpack_version,
                     "modpack_description": server_info.modpack_description,
@@ -156,7 +157,8 @@ def refresh_server_data():
                     "announcement_count": len(announcements),
                     "server_rules": server_info.server_rules,
                     "server_banned_items": server_info.server_banned_items,
-                    "server_vote_links": server_info.server_vote_links
+                    "server_vote_links": server_info.server_vote_links,
+                    "modpack_image": server_from_db.modpack_picture
                 }
             })
 
