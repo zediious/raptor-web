@@ -70,7 +70,14 @@ class Server(models.Model):
 
     modpack_url = models.URLField(
         max_length=200, 
-        verbose_name="Link to Modpack")
+        verbose_name="Link to Modpack"
+    )
+
+    discord_announcement_channel_id = models.CharField(
+        max_length=200,
+        verbose_name="Discord Announcment Channel ID",
+        default="None"  
+    )
 
     def __str__(self) -> str:
         return self.modpack_name

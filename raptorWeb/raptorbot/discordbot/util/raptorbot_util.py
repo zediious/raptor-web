@@ -4,6 +4,15 @@ from json.decoder import JSONDecodeError
 from time import time
 import logging
 
+from asgiref.sync import sync_to_async
+from threading import Thread
+
+from raptorWeb import settings
+if settings.SCRAPE_ANNOUNCEMENT:
+    from gameservers.models import Server
+    from raptorbot.models import Announcement, ServerAnnouncement
+from raptorbot.models import DiscordMemberCount
+
 logging.basicConfig(filename="error.log", level=logging.DEBUG)
 
 from . import raptorbot_settings
@@ -12,29 +21,33 @@ async def get_server_roles(bot_instance):
     """
     Return role names and ids that match modpack names, keyed by their address key
     """
-    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
+    server_data = Server.objects.all()
     sr_guild = bot_instance.get_guild(raptorbot_settings.DISCORD_GUILD)
     total_role_list = await sr_guild.fetch_roles()
     role_list = {}
     for server in server_data:
         for role in total_role_list:
-            if role.name == str(f'{server_data[server]["modpack_name"]}'):
+            if role.name == server.modpack_name:
                 role_list.update({
-                    server_data[server]["address"].split('.')[0]: {
+                    server.server_address.split('.')[0]: {
                         "id": role.id,
                         "name": role.name
                     }
                 })
     return role_list
 
-async def get_server_number(key):
-    """
-    Given a key, return the key for the upper dictionary a server is contained in
-    """
-    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
-    for server in server_data:
-        if str(key) == server_data[server]["address"].split('.')[0]:
-            return str(server)
+async def check_if_global_announcement_exists(message):
+    global_announcements = Announcement.objects.all()
+    for announcement in global_announcements:
+        if message.author is announcement.author and message.content is announcement.message:
+            return True
+
+async def check_if_server_announcement_exists(message, server_address):
+    server_announcements = ServerAnnouncement.objects.all()
+    for announcement in server_announcements:
+        if announcement.server is Server.objects.get(server_address = server_address):
+            if message.author is announcement.author and message.content is announcement.message:
+                return True
 
 async def update_global_announcements(bot_instance):
     """
@@ -44,23 +57,16 @@ async def update_global_announcements(bot_instance):
     to an "announcements.json" each iteration.
     """
     channel = bot_instance.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
-    messages = [message async for message in channel.history(limit=30)]
-    announcements = {}
+    messages = [message async for message in channel.history(limit=100)]
 
-    key = 0
     for message in messages:
-        announcements.update({
-            "message{}".format(key): {
-                "author": str(message.author),
-                "message": message.content,
-                "date": str(message.created_at.date().strftime('%B %d %Y'))
-                }
-        })
-        key += 1
-
-    announcementsJSON = open("../../raptorWeb/announcements.json", "w")
-    announcementsJSON.write(dumps(announcements, indent=4))
-    announcementsJSON.close()
+        if check_if_global_announcement_exists(message) == True:
+            continue
+        Announcement.objects.create(
+            author = str(message.author),
+            message = message.content,
+            date = str(message.created_at.date().strftime('%B %d %Y'))
+        ).save()
 
 async def update_all_server_announce(bot_instance):
     """
@@ -69,71 +75,39 @@ async def update_all_server_announce(bot_instance):
     server. his is intended to be run once, if messages already existed
     in selected channels.
     """
-    # Emptying file before running
-    announcement_json = open("../../raptorWeb/server_announcements.json", "w")
-    announcement_json.write('')
-    announcement_json.close()
-
-    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
+    server_data = Server.objects.all()
     for server in server_data:
-        for channel in raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS:
-            if server_data[server]["address"].split('.')[0] == channel:
-                await update_server_announce(server_key=server_data[server]["address"].split('.')[0], bot_instance=bot_instance)
-            else:
-                logging.debug(f'The server: {server_data[server]["address"].split(".")[0]} was not checked for messages')
+        if server.server_address.split('.')[0] == server.discord_announcement_channel_id:
+            await update_server_announce(server.server_address, bot_instance=bot_instance)
+        else:
+            logging.debug(f'The server: {server.modpack_name} was not checked for messages')
 
-async def update_server_announce(server_key, bot_instance):
+async def update_server_announce(server_address, bot_instance):
     """
     Updates the announcement for a server passed as argument.
     Runs to update a server's messages when a message is sent 
     mentioning that server's role from it's selected channel.
     """
-    server_num = await get_server_number(server_key)
-    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
+    server_key = server_address.split('.')[0]
     role_list = await get_server_roles(bot_instance=bot_instance)
-    channel_instance = bot_instance.get_channel(raptorbot_settings.SERVER_ANNOUNCEMENT_CHANNEL_IDS[server_key])
+    channel_instance = bot_instance.get_channel(Server.objects.get(server_address=server_address).discord_announcement_channel_id)
     messages = [message async for message in channel_instance.history(limit=200)]
-    announcements = None
-    announcement_json = None
 
-    try:
-        announcement_json = open("../../raptorWeb/server_announcements.json", "r+")
-        announcements = load(announcement_json)
-    except JSONDecodeError as e:
-        base_keys = {}
-        for server in server_data:
-            base_keys.update({
-                server_data[server]["address"].split('.')[0]: {}
-            })
-        base_json = open("../../raptorWeb/server_announcements.json", "r+")
-        dump(base_keys, base_json, indent=4)
-        base_json.close()
-        load_base_json = open("../../raptorWeb/server_announcements.json", "r+")
-        announcements = load(load_base_json)
-        load_base_json.close()
-        
     for message in messages:
-        current_time = time()
+        if check_if_server_announcement_exists(message, server_address) == True:
+            continue
         if message.author != bot_instance.user:
             try:
                 if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
                     if str(role_list[server_key]["id"]) in str(message.content):
-                        try:
-                            announcements[server_data[server_num]["address"].split('.')[0]].update({
-                                f"message_{str(message.author)}-{str(message.created_at.date().strftime(f'{current_time}-%B-%d-%Y'))}": {
-                                    "author": str(message.author),
-                                    "message": message.content,
-                                    "date": str(message.created_at.date().strftime('%B %d %Y'))
-                                }
-                            })
-                        except KeyError as e:
-                            logging.debug(f'An error occured attempting to find the "{e}" key within server_announcements.json.')
+                        ServerAnnouncement.objects.create(
+                            server = Server.objects.get(server_address = server_address),
+                            author = str(message.author),
+                            message = message.content,
+                            date = str(message.created_at.date().strftime('%B %d %Y'))
+                        ).save()
             except AttributeError:
                 continue
-
-    finished_json = open("../../raptorWeb/server_announcements.json", "r+")
-    dump(announcements, finished_json, indent=4)
-    finished_json.close()
 
 async def update_member_count(bot_instance):
     """
@@ -150,12 +124,9 @@ async def update_member_count(bot_instance):
 
         if member.status != discord.Status.offline:
             online_members += 1
-
-    discord_info = {
-        "totalMembers": member_total,
-        "onlineMembers": online_members
-    }
-
-    membersJSON = open("../../raptorWeb/discordInfo.json", "w")
-    membersJSON.write(dumps(discord_info, indent=4))
-    membersJSON.close()
+    
+    await sync_to_async(DiscordMemberCount.objects.all().delete(), thread_sensitive=True)
+    await sync_to_async(DiscordMemberCount.objects.create(
+        total_members = member_total,
+        online_members = online_members
+    ).save(), thread_sensitive=True)
