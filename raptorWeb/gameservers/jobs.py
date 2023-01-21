@@ -80,7 +80,7 @@ def refresh_server_data():
             })
 
             if server.server_address == "Default":
-                LOGGER.error(f"The server {server.modpack_name} still has a default address, so it will not be queried.")
+                LOGGER.error(f'The server "{server.modpack_name}" still has a default address, so it will not be queried.')
                 player_poller.server_data[f'server{server_key}']["is_default"] = True
 
             if server.in_maintenance == True:
