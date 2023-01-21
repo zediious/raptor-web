@@ -1,4 +1,5 @@
 from logging import getLogger
+from threading import Thread
 
 from raptorWeb import settings
 from raptorbot.discordbot.bot import raptor_bot
@@ -15,8 +16,9 @@ class RaptorBotWare:
         One-time configuration and initialization.
         """
         self.get_response = get_response
-        # Run the Discord Bot
-        raptor_bot.run(TOKEN)
+        # Run the Discord Bot in new thread
+        thread = Thread(target=lambda: raptor_bot.run((TOKEN)))
+        thread.start()
 
     def __call__(self, request):
         """
