@@ -22,3 +22,12 @@ def exchange_code(discord_code):
     })
     
     return info_response.json()
+
+def update_user_details(discord_user, new_info):
+    discord_tag = f'{new_info["username"]}#{new_info["discriminator"]}'
+    discord_user.profile_picture = f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
+    discord_user.tag = f'{new_info["username"]}#{new_info["discriminator"]}'
+    discord_user.username = discord_tag.split('#')[0]
+    discord_user.save()
+    return discord_user
+    
