@@ -72,7 +72,8 @@ INSTALLED_APPS = [
     'raptormc',
     'staffapps',
     'authprofiles',
-    'gameservers'
+    'gameservers',
+    'raptorbot'
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'gameservers.jobs.ServerWare',
-    'authprofiles.userlist.ProfileManager'
+    'authprofiles.userlist.ProfileManager',
+    'raptorbot.botware.RaptorBotWare'
 ]
 
 ROOT_URLCONF = 'raptorWeb.urls'
@@ -237,6 +239,11 @@ LOGGING = {
             'propagate': False,
         },
         'authprofiles.views': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'raptorbot.botware': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
             'propagate': False,
