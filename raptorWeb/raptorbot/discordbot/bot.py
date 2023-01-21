@@ -3,7 +3,7 @@ from discord.ext import commands
 import logging
 from json import load
 
-from util import raptorbot_settings, raptorbot_util
+from raptorbot.discordbot.util import raptorbot_settings, raptorbot_util
 
 # Configure basic logger
 logging.basicConfig(filename="error.log", level=logging.DEBUG)
@@ -98,6 +98,3 @@ async def refresh_announcements(interaction: discord.Interaction):
 async def refresh_server_announcements(interaction: discord.Interaction):
     await interaction.response.send_message(embed=discord.Embed(description="server_announcements.json is now being updated with the announcements for servers from their respective channels, going back 200 messages.", color=0x00ff00), ephemeral=True)
     await raptorbot_util.update_all_server_announce(raptor_bot)
-
-# Run the bot
-raptor_bot.run(raptorbot_settings.TOKEN)
