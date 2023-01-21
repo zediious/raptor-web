@@ -33,12 +33,18 @@ CSRF_COOKIE_SECURE = True
 DEBUG = True
 USE_SQLITE = True
 
+# Set RUNNING_IN_DOCKER to True if you are running this in a Docker container
+RUNNING_IN_DOCKER = True
+
 # Configure "DOMAIN_NAME" to match the domain name you will use (no www)
 DOMAIN_NAME = "shadowraptor.net"
 
 # Configure web protocol based on DEBUG status
 WEB_PROTO = ""
-if DEBUG:
+if DEBUG and RUNNING_IN_DOCKER:
+    DOMAIN_NAME = "localhost"
+    WEB_PROTO = "https"
+if DEBUG and not RUNNING_IN_DOCKER:
     DOMAIN_NAME = "127.0.0.1:8000"
     WEB_PROTO = "http"
 else:
