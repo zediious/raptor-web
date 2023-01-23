@@ -27,5 +27,4 @@ dependencies:
     - mysqlclient==2.1.1
     - django-jazzmin==2.6.0
     - discord.py==2.0.1
-    - discord-py-slash-command==4.2.1
 prefix: /home/jack/software/anaconda3/envs/djangoWork
