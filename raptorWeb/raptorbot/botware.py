@@ -6,6 +6,7 @@ from raptorbot.discordbot.bot import raptor_bot
 from raptorbot.discordbot.util.raptorbot_settings import TOKEN
 
 LOGGER = getLogger('raptorbot.botware')
+bot_thread = Thread(target=lambda: raptor_bot.run((TOKEN)))
 
 class RaptorBotWare:
     """
@@ -17,8 +18,7 @@ class RaptorBotWare:
         """
         self.get_response = get_response
         # Run the Discord Bot in new thread
-        thread = Thread(target=lambda: raptor_bot.run((TOKEN)))
-        thread.start()
+        bot_thread.start()
 
     def __call__(self, request):
         """
