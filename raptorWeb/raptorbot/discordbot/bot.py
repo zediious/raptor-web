@@ -30,28 +30,24 @@ async def on_ready():
 @raptor_bot.event
 async def on_message(message):
     if settings.SCRAPE_ANNOUNCEMENT:
-        channel = raptor_bot.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
+        channel = raptor_bot.get_channel(int(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID))
         if message.channel == channel:
             await raptorbot_util.update_global_announcements(raptor_bot)
         server_data = Server.objects.all()
         role_list = await raptorbot_util.get_server_roles(raptor_bot)
         if message.author != raptor_bot.user and message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
-            for server in server_data:
-                if message.channel != raptor_bot.get_channel(server.discord_announcement_channel_id):
+            async for server in server_data:
+                if message.channel != raptor_bot.get_channel(int(server.discord_announcement_channel_id)):
                     continue
                 for role in role_list:
                     if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server.modpack_name:
-                        raptorbot_util.update_server_announce(server_key=server.server_address, bot_instance=raptor_bot)
+                        await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
     
 @raptor_bot.event
 async def on_raw_message_edit(message):
-    channel = raptor_bot.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
-    try:
-        if message.channel == channel:
-            await raptorbot_util.update_global_announcements(raptor_bot)
-    except AttributeError:
+    if settings.SCRAPE_ANNOUNCEMENT:
         if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
-            await raptorbot_util.update_global_announcements(raptor_bot)
+                await raptorbot_util.update_global_announcements(raptor_bot)
 
 @raptor_bot.event
 async def on_presence_update(before, after):
