@@ -13,26 +13,12 @@ services:
       - ./raptorWeb:/raptorWeb
       - ./raptorWeb/raptormc/migrations:/raptorWeb/raptormc/migrations/
     command: sh -c "cd raptorWeb &&
-                    conda run -n djangoWork python manage.py makemigrations raptormc &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
                     conda run -n djangoWork python manage.py createSuper &&
                     conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
     depends_on:
       - mariadb
-
-  raptorbot:
-    build:
-      context: raptorBot/.
-      dockerfile: Dockerfile
-    container_name: raptorbot
-    volumes:
-      - ./raptorWeb:/raptorWeb
-      - ./raptorBot:/raptorBot
-    command: sh -c "cd raptorBot/raptorBot &&
-                    conda run -n discordWork python bot.py"
-    depends_on:
-      - raptorapp
 
   mariadb:
     image: mariadb:latest
