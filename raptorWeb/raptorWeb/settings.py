@@ -25,10 +25,6 @@ with open(join(BASE_DIR, 'key.txt')) as key:
 
     SECRET_KEY =  key.read().strip()
 
-# CSRF
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
 # SECURITY WARNING: Neither of the below two True in production!
 DEBUG = True
 USE_SQLITE = True
@@ -51,12 +47,17 @@ else:
     WEB_PROTO = "https"
 
 # Addresses the Django app can be directly accessed from.
-ALLOWED_HOSTS = ['raptorapp', '127.0.0.1']
+ALLOWED_HOSTS = ['raptorapp', '127.0.0.1', 'localhost']
 
 # List of Super Users to create when no users are present. To be changed immediately after creation
 ADMINS = (
     ('sradmin', 'sradmin@shadowraptor.net'),
 )
+
+# CSRF
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [f'{WEB_PROTO}://{DOMAIN_NAME}']
 
 # Application definition
 INSTALLED_APPS = [
@@ -288,20 +289,17 @@ DELETE_EXISTING = True
 IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
 
 # ** Settings for "authprofiles" app **
-LOGIN_URL = 'raptormc/applications/login'
+LOGIN_URL = '/login/'
 BASE_USER_URL = 'user'
 
-DISCORD_AUTH_URL = ""
-DISCORD_REDIRECT_URL = ""
 DISCORD_APP_ID = getenv('DISCORD_APP_ID')
 DISCORD_APP_SECRET = getenv('DISCORD_APP_SECRET')
 DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
 # ** Settings for "raptorbot" app **
 # Set to True to enable Raptor Bot scraping Discord announcements
 SCRAPE_ANNOUNCEMENT = True
-
-DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
 # ** Settings for "django_bootstrap5" app **
 BOOTSTRAP5 = {
