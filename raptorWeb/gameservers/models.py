@@ -76,7 +76,13 @@ class Server(models.Model):
     discord_announcement_channel_id = models.CharField(
         max_length=200,
         verbose_name="Discord Announcment Channel ID",
-        default="None"  
+        default="0"  
+    )
+
+    discord_modpack_role_id = models.CharField(
+        max_length=200,
+        verbose_name="Discord Modpack Role ID",
+        default="0"  
     )
 
     def __str__(self) -> str:

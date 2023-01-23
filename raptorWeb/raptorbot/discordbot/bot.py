@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import logging
-from json import load
 
 from raptorWeb import settings
 from raptorbot.discordbot.util import raptorbot_settings, raptorbot_util
@@ -34,20 +33,22 @@ async def on_message(message):
         if message.channel == channel:
             await raptorbot_util.update_global_announcements(raptor_bot)
         server_data = Server.objects.all()
-        role_list = await raptorbot_util.get_server_roles(raptor_bot)
         if message.author != raptor_bot.user and message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
             async for server in server_data:
                 if message.channel != raptor_bot.get_channel(int(server.discord_announcement_channel_id)):
                     continue
-                for role in role_list:
-                    if str(role_list[role]["id"]) in str(message.content) and str(role_list[role]["name"]) == server.modpack_name:
-                        await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
+                if server.discord_modpack_role_id in str(message.content):
+                    await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
     
 @raptor_bot.event
 async def on_raw_message_edit(message):
     if settings.SCRAPE_ANNOUNCEMENT:
         if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
                 await raptorbot_util.update_global_announcements(raptor_bot)
+        server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
+        if server_queryset != None:
+            server = await server_queryset.aget()
+            await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
 
 @raptor_bot.event
 async def on_presence_update(before, after):
@@ -56,18 +57,18 @@ async def on_presence_update(before, after):
 @raptor_bot.tree.command(name="display_server_info")
 @discord.app_commands.describe(key = "Choose a server address prefix")
 async def display_server_info(interaction: discord.Interaction, key: str):
-    server_data = dict(load(open('../../raptorWeb/server_data.json', "r")))
-    for server in server_data:
-
-        if server_data[server]["address"].split(".")[0] == key:
+    server_data = Server.objects.all()
+    async for server in server_data:
+        if server.server_address.split(".")[0] == key:
             image_embed = discord.Embed(color=0x00ff00)
-            image_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server_data[server]['address'].split('.')[0]}.webp")
+            image_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server.server_address.split('.')[0]}.webp")
 
-            info_embed = discord.Embed(title=server_data[server]["modpack_name"], description=f"Join at: ```{server_data[server]['address']}```", color=0x00ff00, url=server_data[server]["modpack_url"])
-            info_embed.add_field(name="\u200b", value=server_data[server]['modpack_description'], inline=False)
-            info_embed.add_field(name="\u200b", value=server_data[server]['server_description'], inline=False)
-            info_embed.add_field(name="\u200b", value=f"**Rules:** https://shadowraptor.net/rules/#{server_data[server]['address'].split('.')[0]}\n**Banned Items:** https://shadowraptor.net/banneditems/#{server_data[server]['address'].split('.')[0]}\n**Vote Links:** https://shadowraptor.net/voting/#{server_data[server]['address'].split('.')[0]}")
-            info_embed.add_field(name="\u200b", value=f"The server is running;```v{server_data[server]['modpack_version']}```\n```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
+            info_embed = discord.Embed(title=server.modpack_name, description=f"Join at: ```{server.server_address}```", color=0x00ff00, url=server.modpack_url)
+            info_embed.add_field(name="\u200b", value=await raptorbot_util.strip_html(server.modpack_description), inline=False)
+            info_embed.add_field(name="\u200b", value='▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬', inline=False)
+            info_embed.add_field(name="\u200b", value=await raptorbot_util.strip_html(server.server_description), inline=False)
+            info_embed.add_field(name="\u200b", value=f"**Rules:** https://shadowraptor.net/rules/#{server.server_address.split('.')[0]}\n**Banned Items:** https://shadowraptor.net/banneditems/#{server.server_address.split('.')[0]}\n**Vote Links:** https://shadowraptor.net/voting/#{server.server_address.split('.')[0]}")
+            info_embed.add_field(name="\u200b", value=f"The server is running;```v{server.modpack_version}```\n```Make sure to read all the information at the server spawn! It contains things you should not do, as well as helpful tips```", inline=False)
 
             message_embeds = [image_embed, info_embed]
             await interaction.response.send_message(embeds=message_embeds)
