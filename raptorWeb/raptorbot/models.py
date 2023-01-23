@@ -4,7 +4,7 @@ from raptorWeb import settings
 
 if settings.SCRAPE_ANNOUNCEMENT:
     from gameservers.models import Server
-
+    
     class Announcement(models.Model):
         """
         Represents an announcement.
@@ -14,7 +14,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
             verbose_name="Author",
             default="None")
 
-        date = models.DateField(
+        date = models.DateTimeField(
             verbose_name="Date",
             default="None")
 
@@ -24,7 +24,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
             default="None")
 
         def __str__(self) -> str:
-            return f'Announcment by {self.author} made on {self.date}'
+            return f'Announcement by {self.author} made on {self.date}'
 
         def get_author(self):
             return self.author
@@ -59,22 +59,35 @@ if settings.SCRAPE_ANNOUNCEMENT:
             verbose_name = "Server Announcement"
             verbose_name_plural = "Server Announcements"
 
-class DiscordMemberCount(models.Model):
+class DiscordGuild(models.Model):
         """
-        Represents a count of members on linked 
-        Discord Community.
+        Represents a Discord Community/Guild.
         """
-        total_members = models.CharField(
-            max_length=100,
-            verbose_name="Author",
+        guild_name = models.CharField(
+             max_length=200,
+            verbose_name="Guild Name",
+            default="None")
+        
+        guild_id = models.IntegerField(
+            verbose_name="Guild ID",
+            default="None")
+        
+        total_members = models.IntegerField(
+            verbose_name="Total Members",
             default="None")
 
-        online_members = models.DateField(
-            verbose_name="Date",
+        online_members = models.IntegerField(
+            verbose_name="Online Members",
             default="None")
 
         def __str__(self) -> str:
-            return f'Discord Members: {self.online_members}/{self.total_members} online'
+            return f'{self.online_members}/{self.total_members} Members Online'
+
+        def get_guild_name(self):
+            return self.guild_name
+
+        def get_guild_id(self):
+            return self.guild_id
 
         def get_total_member_count(self):
             return self.total_members
@@ -83,5 +96,5 @@ class DiscordMemberCount(models.Model):
             return self.online_members
 
         class Meta:
-            verbose_name = "Discord Member Count"
-            verbose_name_plural = "Discord Member Counts"
+            verbose_name = "Discord Guild"
+            verbose_name_plural = "Discord Guilds"
