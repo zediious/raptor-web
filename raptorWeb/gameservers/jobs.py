@@ -23,8 +23,6 @@ class ServerWare:
         if settings.IMPORT_SERVERS == True:
             import_server_data(delete_existing=settings.DELETE_EXISTING)
             LOGGER.info("All servers from server_data_full.json have been imported. Please restart the server with IMPORT_SERVERS disabled.")
-            
-        export_server_data()
 
         self.get_response = get_response
 
@@ -34,8 +32,6 @@ class ServerWare:
         the view (and later middleware) are called.
         """
         response = self.get_response(request)
-
-        export_server_data()
         
         return response
 
@@ -166,31 +162,6 @@ def refresh_server_data():
 
         LOGGER.info("Server data has been retrieved and saved")
 
-def export_server_data():
-    """
-    Export certain details from current Server Models to a json file
-    """
-    current_servers = {}
-    server_num = 0
-
-    for server in Server.objects.all():
-
-        current_servers.update({
-            f'server{server_num}': {
-                "address": server.server_address,
-                "modpack_name": server.modpack_name,
-                "modpack_version": server.modpack_version,
-                "modpack_description": strip_tags(server.modpack_description).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&rsquo;', "'"),
-                "server_description": strip_tags(server.server_description).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&rsquo;', "'"),
-                "modpack_url": server.modpack_url
-            }
-        })
-        server_num += 1
-
-    server_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
-    server_json.write(dumps(current_servers, indent=4))
-    server_json.close()
-
 def export_server_data_full():
     """
     Export all server data for importing to a new instance
@@ -236,7 +207,7 @@ def import_server_data(delete_existing):
                 new_server = Server.objects.create(
                     in_maintenance = import_json_dict[server]["in_maintenance"],
                     server_address = import_json_dict[server]["server_address"],
-                    server_port = import_json[server]["server_port"],
+                    server_port = import_json_dict[server]["server_port"],
                     modpack_name = import_json_dict[server]["modpack_name"],
                     modpack_version = import_json_dict[server]["modpack_version"],
                     modpack_description = import_json_dict[server]["modpack_description"],

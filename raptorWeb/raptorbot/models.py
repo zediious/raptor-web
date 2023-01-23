@@ -7,7 +7,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
     
     class Announcement(models.Model):
         """
-        Represents an announcement.
+        Represents an abstract announcement.
         """
         author = models.CharField(
             max_length=100,
@@ -36,8 +36,15 @@ if settings.SCRAPE_ANNOUNCEMENT:
             return self.message
 
         class Meta:
-            verbose_name = "Announcement"
-            verbose_name_plural = "Announcements"
+            abstract = True
+
+    class GlobalAnnouncement(Announcement):
+        """
+        Represents a global announcement.
+        """
+        class Meta:
+            verbose_name = "Global Announcement"
+            verbose_name_plural = "Global Announcements"
 
     class ServerAnnouncement(Announcement):
         """
@@ -50,7 +57,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
             on_delete=models.CASCADE)
 
         def __str__(self) -> str:
-            return f'Announcment by {self.author} for {self.server} made on {self.date}'
+            return f'Announcement by {self.author} for {self.server} made on {self.date}'
 
         def get_server(self):
             return self.server
