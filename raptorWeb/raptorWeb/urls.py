@@ -24,6 +24,7 @@ from raptormc import urls as SR_urls
 from gameservers import urls as server_urls
 from staffapps import urls as app_urls
 from authprofiles import urls as auth_urls
+from raptorbot import urls as bot_urls
 
 urlpatterns = [
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTOMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
     path('servers/', include(server_urls), name="gameservers"),
     path('staffapps/', include(app_urls), name="staffapps"),
+    path('raptorbot/', include(bot_urls), name="raptorbot"),
     path('', include(auth_urls), name="authprofiles"),
     path('', include(SR_urls), name="shadowraptormc"),
 
