@@ -18,7 +18,7 @@ class ServerTestCase(TestCase):
             server_rules = "There are no specific rules",
             server_banned_items = "There are no banned items",
             server_vote_links = "Vote links are not available",
-            modpack_url = "https://hypixel.net/"
+            modpack_url = "https://hypixel.net/",
         )
 
     def test_server_info(self):
@@ -34,7 +34,9 @@ class ServerTestCase(TestCase):
         poller.server_data.update({
                 f"server": {
                     "address": non_empty_server.server_address,
-                    "port": non_empty_server.server_port
+                    "port": non_empty_server.server_port,
+                    "do_query": True,
+                    "is_default": False
                 }
             })
 
