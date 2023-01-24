@@ -203,6 +203,12 @@ LOGGING = {
             'formatter': 'debug',
             'filename': join(BASE_DIR, 'raptorWeb.log'),
         },
+        'bot_log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(BASE_DIR, 'raptorBot.log'),
+        },
     },
     'loggers': {
         'django': {
@@ -245,7 +251,12 @@ LOGGING = {
             'propagate': False,
         },
         'raptorbot.botware': {
-            'handlers': ['console', 'log_file'],
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'discordbot.bot': {
+            'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
         }

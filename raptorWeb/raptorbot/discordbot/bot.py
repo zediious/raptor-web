@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import logging
+from logging import getLogger
 
 from raptorWeb import settings
 from raptorbot.discordbot.util import raptorbot_settings, raptorbot_util
@@ -8,7 +8,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
     from gameservers.models import Server
 
 # Configure basic logger
-logging.basicConfig(filename="error.log", level=logging.DEBUG)
+LOGGER = getLogger('discordbot.bot')
 
 # State bot intents and declare Bot instance
 intents = discord.Intents.all()
@@ -19,12 +19,12 @@ raptor_bot = commands.Bot(command_prefix='!', description=raptorbot_settings.DES
 # Define events to listen to and bot commands
 @raptor_bot.event
 async def on_ready():
-    print(f'Logged in as {raptor_bot.user} (ID: {raptor_bot.user.id})')
+    LOGGER.info(f'Logged in as {raptor_bot.user} (ID: {raptor_bot.user.id})')
     try:
         synced = await raptor_bot.tree.sync()
-        print(f"Synced {len(synced)} command(s)")
+        LOGGER.info(f"Synced {len(synced)} command(s)")
     except Exception as e:
-        print(e)
+        LOGGER.error(e)
 
 @raptor_bot.event
 async def on_message(message):
