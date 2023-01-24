@@ -15,8 +15,8 @@ class Announcement(models.Model):
         verbose_name="Date",
         default="None")
 
-    message = models.CharField(
-        max_length=50000,
+    message = models.TextField(
+        max_length=16383,
         verbose_name="Message",
         default="None")
 
