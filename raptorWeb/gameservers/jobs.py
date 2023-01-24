@@ -3,11 +3,12 @@ from logging import getLogger
 from time import time
 from json import dumps, load
 
-from django.utils.html import strip_tags
-
 from raptorWeb import settings
 from gameservers.models import Server, PlayerCount, PlayerName
 from gameservers.util.playerCounts import PlayerCounts
+
+if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorbot.models import ServerAnnouncement
 
 LOGGER = getLogger('raptormc.jobs')
 player_poller = PlayerCounts()
@@ -109,28 +110,14 @@ def refresh_server_data():
             PlayerCount.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), player_count=player_data[key]["count"]).save()
             server_info = Server.objects.get(server_address=player_data[key]["address"])
 
-            # Add announcements specific to each server gathered from JSON
-            announcement_dict = {}
-            do_announcement = False
-            try:
-                with open(join(settings.BASE_DIR, 'server_announcements.json'), "r+") as announcement_json:
-                    announcement_dict = load(announcement_json)
-                    if announcement_dict != {}:
-                        do_announcement = True
-            except Exception as e:
-                LOGGER.info('server_announcements.json not present, allow Discord Bot to create and populate this file')
-                do_announcement = False
-            announcements = []
-            if do_announcement == True:
+            # Get announcements counts
+            if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+                announcements = 0
+                all_announcements = ServerAnnouncement.objects.all()
                 try:
-                    for message in announcement_dict[key]:
-                        announcements.append({
-                            message: {
-                                "author": announcement_dict[key][message]["author"],
-                                "message": announcement_dict[key][message]["message"],
-                                "date": announcement_dict[key][message]["date"]
-                            }
-                        })
+                    for announcement in all_announcements:
+                        if player_data[key]["address"] == announcement.server.server_address:
+                            announcements += 1
                 except KeyError as e:
                     LOGGER.info(f'No announcements have been made regarding the server "{server_info.modpack_name}". Skipping.')
 
@@ -149,8 +136,7 @@ def refresh_server_data():
                     "modpack_description": server_info.modpack_description,
                     "server_description": server_info.server_description,
                     "modpack": server_info.modpack_url,
-                    "announcements": announcements,
-                    "announcement_count": len(announcements),
+                    "announcement_count": announcements,
                     "server_rules": server_info.server_rules,
                     "server_banned_items": server_info.server_banned_items,
                     "server_vote_links": server_info.server_vote_links,
