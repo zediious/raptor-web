@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.http import HttpResponseRedirect
 
 from os.path import join
 
 from raptorWeb import settings
 from gameservers.jobs import player_poller, update_context
-
+from gameservers.models import Server
 
 class Server_Buttons(TemplateView):
     """
@@ -92,14 +92,37 @@ class Server_Voting(TemplateView):
         else:
             return HttpResponseRedirect('../')
 
-class Server_Announcements(TemplateView):
-    """
-    Returns a Bootstrap Accordion containing Server
-    Announcements for each Server
-    """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
-        else:
-            return HttpResponseRedirect('../')
+if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorbot.models import ServerAnnouncement
+
+    class Server_Announcements_Base(TemplateView):
+        """
+        Returns a Bootstrap Accordion containing Server Announcement
+        Information for each Server
+        """
+        def get(self, request):
+            if request.headers.get('HX-Request') == "true":
+                template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
+                return render(request, template_name, context=player_poller.currentPlayers_DB)
+            else:
+                return HttpResponseRedirect('../')
+
+    class Server_Announcements(ListView):
+        """
+        ListView for all ServerAnnouncements
+        """
+        model = ServerAnnouncement
+
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            return context
+
+        def get_queryset(self):
+            server = Server.objects.get(server_address=self.request.GET.get('server_address'))
+            return ServerAnnouncement.objects.filter(server=server)
+
+        def get(self, request, *args, **kwargs):
+            if request.headers.get('HX-Request') == "true":
+                return super().get(request, *args, **kwargs)
+            else:
+                return HttpResponseRedirect('../../')
