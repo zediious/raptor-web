@@ -75,7 +75,7 @@ class Server(models.Model):
 
     discord_announcement_channel_id = models.CharField(
         max_length=200,
-        verbose_name="Discord Announcment Channel ID",
+        verbose_name="Discord Announcement Channel ID",
         default="0"  
     )
 
