@@ -309,8 +309,8 @@ DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD
 DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
 # ** Settings for "raptorbot" app **
-# Set to True to enable Raptor Bot scraping Discord announcements
-SCRAPE_ANNOUNCEMENT = True
+# Set to True to enable Raptor Bot scraping Discord announcements for each server
+SCRAPE_SERVER_ANNOUNCEMENT = True
 
 # ** Settings for "django_bootstrap5" app **
 BOOTSTRAP5 = {
