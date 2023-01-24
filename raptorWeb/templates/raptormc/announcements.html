@@ -43,12 +43,8 @@
         </h2>
         <div id="collapseGlobal" class="accordion-collapse collapse" aria-labelledby="collapseGlobal">
           <div class="accordion-body pageContent p-4">
-            {% for announcement in announcements %}
-              <div class="pageContent card bg-dark text-white opacity-100 mt-4">
-                <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-                <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
-              </div>
-            {% endfor %}
+            <div hx-get="/raptorbot/global_announcements_list/dark" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
+            <div id="global_announcements"></div>
           </div>
         </div>
       </div>

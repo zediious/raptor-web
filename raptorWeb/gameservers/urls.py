@@ -13,7 +13,6 @@ urlpatterns = [
     path('server_rules_poll/', views.Server_Rules.as_view(), name="server_rules_poll"),
     path('server_banned_items_poll/', views.Server_Banned_Items.as_view(), name="server_banned_items_poll"),
     path('server_voting_poll/', views.Server_Voting.as_view(), name="server_voting_poll"),
-    path('server_announcements_poll/', views.Server_Announcements_Base.as_view(), name="server_announcements_poll"),
-    path('server_announcements_list/', views.Server_Announcements.as_view(), name="server_announcements_list")
+    path('server_announcements_poll/', views.Server_Announcements_Base.as_view(), name="server_announcements_poll")
 
 ]

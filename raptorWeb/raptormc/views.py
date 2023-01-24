@@ -28,15 +28,16 @@ class ShadowRaptor():
                 context = super().get_context_data(**kwargs)
                 return viewContext.update_context(context = context, informative_text_names = ["Homepage Information"], announcements=True)
 
-        class Announcements(TemplateView):
-            """
-            Page containing the last 30 announcements from Discord
-            """
-            template_name = join(TEMPLATE_DIR_RAPTORMC, 'announcements.html')
+        if settings.USE_GLOBAL_ANNOUNCEMENT:
+            class Announcements(TemplateView):
+                """
+                Page containing the last 30 announcements from Discord
+                """
+                template_name = join(TEMPLATE_DIR_RAPTORMC, 'announcements.html')
 
-            def get_context_data(self, **kwargs):
-                context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = ["Announcements Information"], announcements=True)
+                def get_context_data(self, **kwargs):
+                    context = super().get_context_data(**kwargs)
+                    return viewContext.update_context(context = context, informative_text_names = ["Announcements Information"], announcements=True)
 
         class Rules(TemplateView):
             """

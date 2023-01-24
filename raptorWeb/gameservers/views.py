@@ -93,11 +93,10 @@ class Server_Voting(TemplateView):
             return HttpResponseRedirect('../')
 
 if settings.SCRAPE_SERVER_ANNOUNCEMENT:
-    from raptorbot.models import ServerAnnouncement
 
     class Server_Announcements_Base(TemplateView):
         """
-        Returns a Bootstrap Accordion containing Server Announcement
+        Returns a Bootstrap Accordion to contain Server Announcement
         Information for each Server
         """
         def get(self, request):
@@ -106,23 +105,3 @@ if settings.SCRAPE_SERVER_ANNOUNCEMENT:
                 return render(request, template_name, context=player_poller.currentPlayers_DB)
             else:
                 return HttpResponseRedirect('../')
-
-    class Server_Announcements(ListView):
-        """
-        ListView for all ServerAnnouncements
-        """
-        model = ServerAnnouncement
-
-        def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            return context
-
-        def get_queryset(self):
-            server = Server.objects.get(server_address=self.request.GET.get('server_address'))
-            return ServerAnnouncement.objects.filter(server=server)
-
-        def get(self, request, *args, **kwargs):
-            if request.headers.get('HX-Request') == "true":
-                return super().get(request, *args, **kwargs)
-            else:
-                return HttpResponseRedirect('../../')

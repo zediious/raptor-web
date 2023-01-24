@@ -15,7 +15,7 @@
     </h2>
     <div id="collapse{{ server|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server|get_key }}">
     <div class="accordion-body pageContent p-3">
-        <div hx-get="/servers/server_announcements_list/?server_address={{server|get_address}}" hx-trigger="load" hx-target="#{{server|get_key}}_announcements" hx-swap="innerHTML"></div>
+        <div hx-get="/raptorbot/server_announcements_list/?server_address={{server|get_address}}" hx-trigger="load" hx-target="#{{server|get_key}}_announcements" hx-swap="innerHTML"></div>
         <div id="{{server|get_key}}_announcements"></div>
     </div>
     </div>
