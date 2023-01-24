@@ -16,9 +16,7 @@ class RaptorBotWare:
         One-time configuration and initialization.
         """
         self.get_response = get_response
-        # Run the Discord Bot in new thread
-        bot_process_manager.start_process()
-        LOGGER.info("A Discord Bot Thread has been created and is now running")
+        self.start_bot_process()
 
     def __call__(self, request):
         """
@@ -27,3 +25,18 @@ class RaptorBotWare:
         """
         response = self.get_response(request)
         return response
+
+    def start_bot_process(self):
+        """
+        Run the Discord Bot in a new thread
+        """
+        bot_process_manager.start_process()
+        LOGGER.info("A Discord Bot Thread has been created and is now running")
+
+    def stop_bot_process(self):
+        """
+        Terminate the current Discord Bot thread, re-instantiate the bot and thread
+        and start the new thread
+        """
+        bot_process_manager.stop_process()
+        LOGGER.info("The previous Discord Bot Thread has been stopped and a new one is now running")
