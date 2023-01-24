@@ -7,7 +7,7 @@ from discord.ext import commands
 
 from raptorWeb import settings
 from raptorbot.discordbot.util import raptorbot_settings, raptorbot_util
-if settings.SCRAPE_ANNOUNCEMENT:
+if settings.SCRAPE_SERVER_ANNOUNCEMENT:
     from gameservers.models import Server
 
 # Configure basic logger
@@ -46,7 +46,7 @@ class BotProcessManager:
         intents.message_content = True
         intents.members = True
         raptor_bot = commands.Bot(command_prefix='!', description=raptorbot_settings.DESCRIPTION, intents=intents)
-        
+
         self.is_running = True
         self.active_process = Thread(target = _bot_start, args=(raptor_bot, self.bot_token),)
         self.active_process.start()
@@ -63,10 +63,10 @@ class BotProcessManager:
 
         @raptor_bot.event
         async def on_message(message):
-            if settings.SCRAPE_ANNOUNCEMENT:
-                channel = raptor_bot.get_channel(int(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID))
-                if message.channel == channel:
-                    await raptorbot_util.update_global_announcements(raptor_bot)
+            channel = raptor_bot.get_channel(int(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID))
+            if message.channel == channel:
+                await raptorbot_util.update_global_announcements(raptor_bot)
+            if settings.SCRAPE_SERVER_ANNOUNCEMENT:
                 server_data = Server.objects.all()
                 if message.author != raptor_bot.user and message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
                     async for server in server_data:
@@ -77,16 +77,17 @@ class BotProcessManager:
             
         @raptor_bot.event
         async def on_raw_message_edit(message):
-            if settings.SCRAPE_ANNOUNCEMENT and message.data["author"]["id"] != raptor_bot.user.id:
+            if message.data["author"]["id"] != raptor_bot.user.id:
                 if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
                         await raptorbot_util.update_global_announcements(raptor_bot)
-                try:
-                    server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
-                    if server_queryset != None:
-                        server = await server_queryset.aget()
-                        await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
-                except Server.DoesNotExist:
-                    pass
+                if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+                    try:
+                        server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
+                        if server_queryset != None:
+                            server = await server_queryset.aget()
+                            await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
+                    except Server.DoesNotExist:
+                        pass
 
         @raptor_bot.event
         async def on_presence_update(before, after):
