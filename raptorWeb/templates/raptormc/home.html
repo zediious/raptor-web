@@ -33,24 +33,11 @@
 <section id="discordAnnouncements" class="container mt-0">
 
   <header class="p-0 mt-4">
-    {% if announcements %}
-      {% autoescape off %}
-        {% for announcement in announcements %}
-          {% if forloop.counter0 > 4 %}
-          {% else %}
-            <div class="pageContent card bg-light opacity-75 mt-4">
-              <p class="pageContent p-4">{{ announcement.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-              <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ announcement.author }} on {{ announcement.date }}</p>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endautoescape %}
-      
-    {% else %}
-    <div class="pageContent card bg-light opacity-75 mt-4">
-      <p class="pageContent p-4">"announcements.json" file is missing. Ensure Discord Bot has been setup and is running</p>>
-    </div>
-    {% endif %}
+    {% autoescape off %}
+        <div hx-get="/raptorbot/global_announcements_list/light" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
+        <div id="global_announcements"></div>
+    {% endautoescape %}
+
   </header>
 
 </section>

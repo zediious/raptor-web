@@ -309,6 +309,8 @@ DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD
 DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
 # ** Settings for "raptorbot" app **
+# Set to True to enable website using scraped Global Announcements
+USE_GLOBAL_ANNOUNCEMENT = True
 # Set to True to enable Raptor Bot scraping Discord announcements for each server
 SCRAPE_SERVER_ANNOUNCEMENT = True
 
