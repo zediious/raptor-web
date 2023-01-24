@@ -79,6 +79,7 @@ async def update_global_announcements(bot_instance):
             replacing_announcement = await GlobalAnnouncement.objects.aget(author=message.author, date=message.created_at)
             await GlobalAnnouncement.objects.filter(author=message.author, date=message.created_at).adelete()
             await GlobalAnnouncement.objects.acreate(
+                id = replacing_announcement.id,
                 author = str(replacing_announcement.author),
                 message = message.content,
                 date = replacing_announcement.date
@@ -151,6 +152,7 @@ async def update_server_announce(server_address, bot_instance):
                 replacing_announcement = await ServerAnnouncement.objects.aget(author=message.author, date=message.created_at)
                 await ServerAnnouncement.objects.filter(author=message.author, date=message.created_at).adelete()
                 await ServerAnnouncement.objects.acreate(
+                    id = replacing_announcement.id,
                     server = await Server.objects.aget(server_address = server_address),
                     author = replacing_announcement.author,
                     message = message.content,
