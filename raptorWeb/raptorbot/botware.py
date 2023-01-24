@@ -1,12 +1,11 @@
 from logging import getLogger
-from threading import Thread
+from time import sleep
 
-from raptorWeb import settings
-from raptorbot.discordbot.bot import raptor_bot
+from raptorbot.discordbot.bot import BotProcessManager
 from raptorbot.discordbot.util.raptorbot_settings import TOKEN
 
 LOGGER = getLogger('raptorbot.botware')
-bot_thread = Thread(target=lambda: raptor_bot.run((TOKEN)))
+bot_process_manager = BotProcessManager(bot_token=TOKEN)
 
 class RaptorBotWare:
     """
@@ -18,7 +17,8 @@ class RaptorBotWare:
         """
         self.get_response = get_response
         # Run the Discord Bot in new thread
-        bot_thread.start()
+        bot_process_manager.start_process()
+        LOGGER.info("A Discord Bot Thread has been created and is now running")
 
     def __call__(self, request):
         """
