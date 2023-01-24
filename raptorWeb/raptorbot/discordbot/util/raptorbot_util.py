@@ -1,5 +1,5 @@
 import discord
-import logging
+from logging import getLogger
 
 from django.utils.html import strip_tags
 
@@ -9,7 +9,7 @@ if settings.SCRAPE_ANNOUNCEMENT:
     from raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorbot.models import DiscordGuild
 
-logging.basicConfig(filename="error.log", level=logging.DEBUG)
+LOGGER = getLogger('discordbot.util')
 
 from raptorbot.discordbot.util import raptorbot_settings
 
