@@ -169,7 +169,9 @@ def export_server_data_full():
                 "server_rules": server.server_rules,
                 "server_banned_items": server.server_banned_items,
                 "server_vote_links": server.server_vote_links,
-                "modpack": server.modpack_url
+                "modpack": server.modpack_url,
+                "modpack_discord_channel": server.discord_announcement_channel_id,
+                "modpack_discord_role": server.discord_modpack_role_id
             }
         })
         server_num += 1
@@ -201,7 +203,9 @@ def import_server_data(delete_existing):
                     server_rules = import_json_dict[server]["server_rules"],
                     server_banned_items = import_json_dict[server]["server_banned_items"],
                     server_vote_links = import_json_dict[server]["server_vote_links"],
-                    modpack_url = import_json_dict[server]["modpack"]
+                    modpack_url = import_json_dict[server]["modpack"],
+                    modpack_discord_channel = import_json_dict[server]["discord_announcement_channel_id"],
+                    modpack_discord_role = import_json_dict[server]["discord_modpack_role_id"]
                 )
                 new_server.save()
     except FileNotFoundError:
