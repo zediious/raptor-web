@@ -4,9 +4,10 @@ from logging import getLogger
 from django.utils.html import strip_tags
 
 from raptorWeb import settings
-if settings.SCRAPE_ANNOUNCEMENT:
+from raptorbot.models import GlobalAnnouncement
+if settings.SCRAPE_SERVER_ANNOUNCEMENT:
     from gameservers.models import Server
-    from raptorbot.models import GlobalAnnouncement, ServerAnnouncement
+    from raptorbot.models import ServerAnnouncement
 from raptorbot.models import DiscordGuild
 
 LOGGER = getLogger('discordbot.util')

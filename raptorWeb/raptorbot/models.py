@@ -1,51 +1,50 @@
 from django.db import models
 
 from raptorWeb import settings
-
-if settings.SCRAPE_ANNOUNCEMENT:
-    from gameservers.models import Server
     
-    class Announcement(models.Model):
-        """
-        Represents an abstract announcement.
-        """
-        author = models.CharField(
-            max_length=100,
-            verbose_name="Author",
-            default="None")
+class Announcement(models.Model):
+    """
+    Represents an abstract announcement.
+    """
+    author = models.CharField(
+        max_length=100,
+        verbose_name="Author",
+        default="None")
 
-        date = models.DateTimeField(
-            verbose_name="Date",
-            default="None")
+    date = models.DateTimeField(
+        verbose_name="Date",
+        default="None")
 
-        message = models.CharField(
-            max_length=50000,
-            verbose_name="Message",
-            default="None")
+    message = models.CharField(
+        max_length=50000,
+        verbose_name="Message",
+        default="None")
 
-        def __str__(self) -> str:
-            return f'Announcement by {self.author} made on {self.date}'
+    def __str__(self) -> str:
+        return f'Announcement by {self.author} made on {self.date}'
 
-        def get_author(self):
-            return self.author
+    def get_author(self):
+        return self.author
 
-        def get_date(self):
-            return self.date
+    def get_date(self):
+        return self.date
 
-        def get_message(self):
-            return self.message
+    def get_message(self):
+        return self.message
 
-        class Meta:
-            abstract = True
+    class Meta:
+        abstract = True
 
-    class GlobalAnnouncement(Announcement):
-        """
-        Represents a global announcement.
-        """
-        class Meta:
-            verbose_name = "Global Announcement"
-            verbose_name_plural = "Global Announcements"
+class GlobalAnnouncement(Announcement):
+    """
+    Represents a global announcement.
+    """
+    class Meta:
+        verbose_name = "Global Announcement"
+        verbose_name_plural = "Global Announcements"
 
+if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+    from gameservers.models import Server
     class ServerAnnouncement(Announcement):
         """
         Represents an announcement made for a game server.
