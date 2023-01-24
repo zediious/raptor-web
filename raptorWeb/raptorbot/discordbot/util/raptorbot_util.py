@@ -13,13 +13,6 @@ LOGGER = getLogger('discordbot.util')
 
 from raptorbot.discordbot.util import raptorbot_settings
 
-async def strip_html(value):
-    """
-    Strip certain pieces of html/unicode from a value
-    Calls django.utils.html.strip_tags() internally
-    """
-    return strip_tags(value).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&rsquo;', "'")
-
 async def check_if_global_announcement_exists(message):
     """
     Check if a Global Announcement with matching author and content exists, and return
@@ -48,6 +41,21 @@ async def check_if_server_announcement_exists(message, server_address):
             if str(message.author) == str(announcement.author) and str(message.content) != str(announcement.message) and str(message.created_at) == str(announcement.date):
                 return "edited"
 
+async def strip_html(value):
+    """
+    Strip certain pieces of html/unicode from a value
+    Calls django.utils.html.strip_tags() internally
+    """
+    return strip_tags(value).replace('&gt;', '>').replace('&nbsp;', ' ').replace('&quot;', '"').replace('&#39;', "'").replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&rsquo;', "'")
+
+async def update_all_server_announce(bot_instance):
+    """
+    Runs update_server_announce() against all Servers in database.
+    """
+    server_data = Server.objects.all()
+    async for server in server_data:
+            await update_server_announce(server.server_address, bot_instance=bot_instance)
+
 async def update_global_announcements(bot_instance):
     """
     Gets all messages from defined "ANNOUNCEMENT_CHANNEL" and
@@ -74,15 +82,40 @@ async def update_global_announcements(bot_instance):
                 message = message.content,
                 date = replacing_announcement.date
             )
-            
 
-async def update_all_server_announce(bot_instance):
+async def update_member_count(bot_instance):
     """
-    Runs update_server_announce() against all Servers in database.
+    Gets a count of total and online members on a
+    provided Discord server, and create a DiscordGuild
+    with the guilds name, ID, and gathered member info.
+    If DiscordGuild exists, delete and re-create with
+    existing guild_name and guild_id
     """
-    server_data = Server.objects.all()
-    async for server in server_data:
-            await update_server_announce(server.server_address, bot_instance=bot_instance)
+    server = bot_instance.get_guild(raptorbot_settings.DISCORD_GUILD)
+    member_total = len(server.members)
+    online_members = 0
+
+    for member in server.members:
+
+        if member.status != discord.Status.offline:
+            online_members += 1
+    
+    try:
+        replacing_guild = await DiscordGuild.objects.aget(guild_id = server.id)
+        await DiscordGuild.objects.filter(guild_id = server.id).adelete()
+        await DiscordGuild.objects.acreate(
+            guild_name = replacing_guild.guild_name,
+            guild_id = replacing_guild.guild_id,
+            total_members = member_total,
+            online_members = online_members
+        )
+    except DiscordGuild.DoesNotExist:
+        await DiscordGuild.objects.acreate(
+            guild_name = server.name,
+            guild_id = server.id,
+            total_members = member_total,
+            online_members = online_members
+        )
 
 async def update_server_announce(server_address, bot_instance):
     """
@@ -122,40 +155,3 @@ async def update_server_announce(server_address, bot_instance):
                     message = message.content,
                     date = replacing_announcement.date
                 )
-
-
-async def update_member_count(bot_instance):
-    """
-    Gets a count of total and online members on a
-    provided Discord server, and create a DiscordGuild
-    with the guilds name, ID, and gathered member info.
-    If DiscordGuild exists, delete and re-create with
-    existing guild_name and guild_id
-    """
-    server = bot_instance.get_guild(raptorbot_settings.DISCORD_GUILD)
-    member_total = len(server.members)
-    online_members = 0
-
-    for member in server.members:
-
-        if member.status != discord.Status.offline:
-            online_members += 1
-    
-    try:
-        replacing_guild = await DiscordGuild.objects.aget(guild_id = server.id)
-        await DiscordGuild.objects.filter(guild_id = server.id).adelete()
-        await DiscordGuild.objects.acreate(
-            guild_name = replacing_guild.guild_name,
-            guild_id = replacing_guild.guild_id,
-            total_members = member_total,
-            online_members = online_members
-        )
-    except DiscordGuild.DoesNotExist:
-        await DiscordGuild.objects.acreate(
-            guild_name = server.name,
-            guild_id = server.id,
-            total_members = member_total,
-            online_members = online_members
-        )
-
-
