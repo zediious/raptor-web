@@ -42,13 +42,16 @@ async def on_message(message):
     
 @raptor_bot.event
 async def on_raw_message_edit(message):
-    if settings.SCRAPE_ANNOUNCEMENT:
+    if settings.SCRAPE_ANNOUNCEMENT and message.data["author"]["id"] != raptor_bot.user.id:
         if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
                 await raptorbot_util.update_global_announcements(raptor_bot)
-        server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
-        if server_queryset != None:
-            server = await server_queryset.aget()
-            await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
+        try:
+            server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
+            if server_queryset != None:
+                server = await server_queryset.aget()
+                await raptorbot_util.update_server_announce(server_address=server.server_address, bot_instance=raptor_bot)
+        except Server.DoesNotExist:
+            pass
 
 @raptor_bot.event
 async def on_presence_update(before, after):
@@ -61,7 +64,7 @@ async def display_server_info(interaction: discord.Interaction, key: str):
     async for server in server_data:
         if server.server_address.split(".")[0] == key:
             image_embed = discord.Embed(color=0x00ff00)
-            image_embed.set_image(url=f"https://shadowraptor.net/media/modpack_pictures/{server.server_address.split('.')[0]}.webp")
+            image_embed.set_image(url=f"{settings.WEB_PROTO}://{settings.DOMAIN_NAME}{server.modpack_picture.url}")
 
             info_embed = discord.Embed(title=server.modpack_name, description=f"Join at: ```{server.server_address}```", color=0x00ff00, url=server.modpack_url)
             info_embed.add_field(name="\u200b", value=await raptorbot_util.strip_html(server.modpack_description), inline=False)
