@@ -1,6 +1,6 @@
 {% load markdownStrip %}
 
-{% for object in object_list reversed%}
+{% for object in object_list %}
 <div>
 <div class="pageContent card bg-light text-black opacity-75 mt-4 mb-4">
     <p class="pageContent p-4">{{ object.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
