@@ -13,12 +13,16 @@ class ServerTestCase(TestCase):
 
     def test_thread_restart(self):
         process_manager = BotProcessManager(DISCORD_BOT_TOKEN)
+        print("Beginning RaptorBot tests, bot will be started and stopped twice")
         process_manager.start_process()
-        print("Sleeping for 3 seconds")
+        print("Sleeping for 5 seconds")
         sleep(5)
+        print("Stopping")
         process_manager.stop_process()
-        print("Sleeping for 3 seconds")
+        print("Sleeping for 5 seconds")
         sleep(5)
         process_manager.start_process()
+        print("Sleeping for 5 seconds")
         sleep(5)
+        print("Stopping")
         process_manager.stop_process()
