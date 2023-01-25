@@ -21,7 +21,11 @@
                     <a href="{{request.META.HTTP_REFERER}}{{loaded_user.user.username}}">
                         <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                             <div id="profile_picture_box" class="mx-auto d-block">
-                                <img class="w-100" src="{{loaded_user.profile_picture.url}}" alt="">
+                                {% if loaded_user.profile_picture %}
+                                    <img class="w-100" src="{{loaded_user.profile_picture.url}}" alt="">
+                                {% else %}
+                                    <img id="noProfilePicture" class="w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
+                                {% endif %}
                             </div>
                             <div class="col-10 w-100 text-center">
                                 <strong>{{loaded_user.user.username}}</strong>
