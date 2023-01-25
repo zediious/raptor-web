@@ -1,9 +1,12 @@
-from django import forms
-from django.core import validators
 import logging
 
-from staffapps.models import ModeratorApplication, AdminApplication
-from staffapps.util import form_labels
+from django import forms
+from django.core import validators
+
+from captcha.fields import CaptchaField
+
+from raptorWeb.staffapps.models import ModeratorApplication, AdminApplication
+from raptorWeb.staffapps.util import form_labels
 
 LOGGER = logging.Logger("form_validator_logger")
 
@@ -94,6 +97,8 @@ class StaffAppForm(forms.ModelForm):
     why_join = forms.CharField(
         label=form_labels.why_join,
         max_length=500, widget=forms.Textarea)
+
+    captcha = CaptchaField()
 
     trap = forms.CharField(
         required=False, 

@@ -1,16 +1,14 @@
-from os.path import join
-from json import load
 from logging import getLogger
 
-from raptorWeb import settings
-from raptormc.models import InformativeText
+from raptorWeb.raptormc.models import InformativeText
 
 LOGGER = getLogger('raptormc.views')
 
-def update_context(context, informative_text_names=None):
+def get_or_create_informative_text(context, informative_text_names=None):
     """
-    Update a view's context with JSON data. Will also load or create InformativeText
-    objects whose names are passed inside 'informative_text_names' list argument.
+    Update a view's context with InformativeText objects whose names are
+    passed inside 'informative_text_names' list argument. If they do not
+    exist, they will be created.
     """
     if informative_text_names:
         for informative_text_name in informative_text_names:
@@ -23,12 +21,4 @@ def update_context(context, informative_text_names=None):
                     f"{informative_text_name.replace(' ', '_')}": InformativeText.objects.create(name=informative_text_name, content=f"Update '{informative_text_name}' Model to change this text")
                 })
 
-    domain_to_context(context)
     return context
-
-def domain_to_context(context):
-    # Add domain Settings to context
-    context.update({
-            "pub_domain": settings.DOMAIN_NAME,
-            "default_media": settings.DEFAULT_MEDIA
-        })

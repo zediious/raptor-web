@@ -1,18 +1,23 @@
-import discord
 from logging import getLogger
 
 from django.utils.html import strip_tags
+from django.conf import settings
 
-from raptorWeb import settings
-from raptorbot.models import GlobalAnnouncement
-if settings.SCRAPE_SERVER_ANNOUNCEMENT:
-    from gameservers.models import Server
-    from raptorbot.models import ServerAnnouncement
-from raptorbot.models import DiscordGuild
+import discord
+
+from raptorWeb.raptorbot.models import GlobalAnnouncement
+from raptorWeb.raptorbot.models import DiscordGuild
+
+SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+GLOBAL_ANNOUNCEMENT_CHANNEL_ID = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
+DISCORD_GUILD = getattr(settings, 'DISCORD_GUILD')
+STAFF_ROLE_ID = getattr(settings, 'STAFF_ROLE_ID')
+
+if SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorWeb.gameservers.models import Server
+    from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER = getLogger('discordbot.util')
-
-from raptorbot.discordbot.util import raptorbot_settings
 
 async def check_if_global_announcement_exists(message):
     """
@@ -62,7 +67,7 @@ async def update_global_announcements(bot_instance):
     Gets all messages from defined "ANNOUNCEMENT_CHANNEL" and
     create Announcement objects for each message.
     """
-    channel = bot_instance.get_channel(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID)
+    channel = bot_instance.get_channel(GLOBAL_ANNOUNCEMENT_CHANNEL_ID)
     messages = [message async for message in channel.history(limit=100)]
 
     for message in messages:
@@ -93,12 +98,11 @@ async def update_member_count(bot_instance):
     If DiscordGuild exists, delete and re-create with
     existing guild_name and guild_id
     """
-    server = bot_instance.get_guild(raptorbot_settings.DISCORD_GUILD)
+    server = bot_instance.get_guild(DISCORD_GUILD)
     member_total = len(server.members)
     online_members = 0
 
     for member in server.members:
-
         if member.status != discord.Status.offline:
             online_members += 1
     
@@ -139,7 +143,7 @@ async def update_server_announce(server_address, bot_instance):
             elif exists == None:
                 if message.author != bot_instance.user:
                     try:
-                        if message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None and str(server_in_db.discord_modpack_role_id) in str(message.content):
+                        if message.author.get_role(STAFF_ROLE_ID) != None and str(server_in_db.discord_modpack_role_id) in str(message.content):
                             await ServerAnnouncement.objects.acreate(
                                 server = await Server.objects.aget(server_address = server_address),
                                 author = str(message.author),

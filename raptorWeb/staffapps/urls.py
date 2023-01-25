@@ -1,6 +1,6 @@
 from django.urls import path
 
-from staffapps import views
+from raptorWeb.staffapps import views
 
 app_name = "staffapps"
 

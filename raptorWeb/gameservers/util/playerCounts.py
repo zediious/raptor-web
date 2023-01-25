@@ -1,4 +1,8 @@
+from django.conf import settings
+
 from mcstatus import JavaServer
+
+LOCK_FILE_PATH = getattr(settings, 'LOCK_FILE_PATH')
             
 class PlayerCounts():
     """
@@ -16,7 +20,7 @@ class PlayerCounts():
         "totalCount": 0
     }     
 
-    def parse_key (self, ADDRESS):
+    def _parse_key (self, ADDRESS):
         """
         Returns a string that represents a key in the "currentPlayers" 
         Dictionary, gathered from domain name "ADDRESS" parameter.
@@ -28,6 +32,21 @@ class PlayerCounts():
         Sets the "count", "names" and "online" keys within the provided "KEY" parameter
         to values gathered from a domain name "ADDRESS" parameter.
         """
+        def _load_offline_server(KEY, ADDRESS):
+            """
+            Helper function to update currentPlayers with
+            information if a server is offline or is not to
+            be queried
+            """
+            self.currentPlayers.update({
+                    KEY: {
+                        "address": ADDRESS,
+                        "online": False,
+                        "count": 0,
+                        "names": []
+                    }
+                })
+
         if do_query == True:
 
             try:
@@ -43,24 +62,10 @@ class PlayerCounts():
                 })
 
             except TimeoutError:
-                self.currentPlayers.update({
-                    KEY: {
-                        "address": ADDRESS,
-                        "online": False,
-                        "count": 0,
-                        "names": []
-                    }
-                })
+                _load_offline_server(KEY, ADDRESS)
 
         else:
-            self.currentPlayers.update({
-                    KEY: {
-                        "address": ADDRESS,
-                        "online": False,
-                        "count": 0,
-                        "names": []
-                    }
-                })
+            _load_offline_server(KEY, ADDRESS)
 
     def get_current_players(self):
         """
@@ -77,15 +82,15 @@ class PlayerCounts():
                 self.request_info(
                 self.server_data[server]["address"], 
                 self.server_data[server]["port"], 
-                self.parse_key(self.server_data[server]["address"]),
+                self._parse_key(self.server_data[server]["address"]),
                 do_query = False)
             else:
                 self.request_info(
                     self.server_data[server]["address"], 
                     self.server_data[server]["port"], 
-                    self.parse_key(self.server_data[server]["address"]))
+                    self._parse_key(self.server_data[server]["address"]))
 
-        with open('playerCounts.LOCK', 'w') as lock_file:
+        with open(LOCK_FILE_PATH, 'w') as lock_file:
             lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")
 
         return dict(self.currentPlayers)

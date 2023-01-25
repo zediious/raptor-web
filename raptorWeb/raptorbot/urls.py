@@ -1,5 +1,6 @@
 from django.urls import path
-from raptorbot import views
+
+from raptorWeb.raptorbot import views
 
 app_name = "raptorbot"
 

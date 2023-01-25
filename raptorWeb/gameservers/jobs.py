@@ -2,13 +2,22 @@ from os.path import join, getmtime
 from logging import getLogger
 from time import time
 from json import dumps, load
+from pathlib import Path
 
-from raptorWeb import settings
-from gameservers.models import Server, PlayerCount, PlayerName
-from gameservers.util.playerCounts import PlayerCounts
+from django.conf import settings
 
-if settings.SCRAPE_SERVER_ANNOUNCEMENT:
-    from raptorbot.models import ServerAnnouncement
+from raptorWeb.gameservers.models import Server, PlayerCount, PlayerName
+from raptorWeb.gameservers.util.playerCounts import PlayerCounts
+
+ENABLE_SERVER_QUERY = getattr(settings, 'ENABLE_SERVER_QUERY')
+SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+IMPORT_SERVERS = getattr(settings, 'IMPORT_SERVERS')
+DELETE_EXISTING = getattr(settings, 'DELETE_EXISTING')
+IMPORT_JSON_LOCATION = getattr(settings, 'IMPORT_JSON_LOCATION')
+LOCK_FILE_PATH = getattr(settings, 'LOCK_FILE_PATH')
+
+if SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER = getLogger('raptormc.jobs')
 player_poller = PlayerCounts()
@@ -21,8 +30,8 @@ class ServerWare:
         """
         One-time configuration and initialization.
         """
-        if settings.IMPORT_SERVERS == True:
-            import_server_data(delete_existing=settings.DELETE_EXISTING)
+        if IMPORT_SERVERS == True:
+            import_server_data(delete_existing=DELETE_EXISTING)
             LOGGER.info("All servers from server_data_full.json have been imported. Please restart the server with IMPORT_SERVERS disabled.")
 
         self.get_response = get_response
@@ -43,7 +52,7 @@ def update_context():
     """
     try:
 
-        lock_time = time() - getmtime(join(settings.BASE_DIR, 'playerCounts.LOCK'))
+        lock_time = time() - getmtime(join(LOCK_FILE_PATH))
         if lock_time >= 120 or player_poller.has_run == False:
 
             refresh_server_data()
@@ -60,7 +69,7 @@ def refresh_server_data():
     PlayerCount objects to the database with a foreign key for each Server and
     update instanced PlayerCount class attribute playerPoller_DB with updated data
     """
-    if settings.ENABLE_SERVER_QUERY and Server.objects.count() > 0:
+    if ENABLE_SERVER_QUERY and Server.objects.count() > 0:
 
         # Retrieve all Server Models from database, and update server_data class attribute with retreived data
         server_data = Server.objects.all()
@@ -111,7 +120,7 @@ def refresh_server_data():
             server_info = Server.objects.get(server_address=player_data[key]["address"])
 
             # Get announcements counts
-            if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+            if SCRAPE_SERVER_ANNOUNCEMENT:
                 announcements = 0
                 all_announcements = ServerAnnouncement.objects.all()
                 try:
@@ -176,7 +185,7 @@ def export_server_data_full():
         })
         server_num += 1
 
-    server_json = open(join(settings.BASE_DIR, 'server_data_full.json'), "w")
+    server_json = open(IMPORT_JSON_LOCATION, "w")
     server_json.write(dumps(current_servers, indent=4))
     server_json.close()
     return current_servers
@@ -189,7 +198,7 @@ def import_server_data(delete_existing):
     try:
         if delete_existing == True:
             Server.objects.all().delete()
-        with open(settings.IMPORT_JSON_LOCATION, "r+") as import_json:
+        with open(IMPORT_JSON_LOCATION, "r+") as import_json:
             import_json_dict = load(import_json)
             for server in import_json_dict:
                 new_server = Server.objects.create(
@@ -204,8 +213,8 @@ def import_server_data(delete_existing):
                     server_banned_items = import_json_dict[server]["server_banned_items"],
                     server_vote_links = import_json_dict[server]["server_vote_links"],
                     modpack_url = import_json_dict[server]["modpack"],
-                    modpack_discord_channel = import_json_dict[server]["discord_announcement_channel_id"],
-                    modpack_discord_role = import_json_dict[server]["discord_modpack_role_id"]
+                    discord_announcement_channel_id = import_json_dict[server]["discord_announcement_channel_id"],
+                    discord_modpack_role_id = import_json_dict[server]["discord_modpack_role_id"]
                 )
                 new_server.save()
     except FileNotFoundError:

@@ -1,13 +1,14 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
+from django.conf import settings
 
-from raptorWeb import settings
+ADMINS = getattr(settings, 'ADMINS')
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if User.objects.count() == 0:
-            for user in settings.ADMINS:
+            for user in ADMINS:
                 username = user[0].replace(' ', '')
                 email = user[1]
                 password = 'admin'

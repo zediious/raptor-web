@@ -1,6 +1,6 @@
 from django.urls import path
 
-from gameservers import views
+from raptorWeb.gameservers import views
 
 app_name = "gameservers"
 

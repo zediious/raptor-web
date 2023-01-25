@@ -2,10 +2,12 @@ from re import sub, search
 
 from django import template
 from django.utils.html import urlize
-
-from raptorWeb import settings
+from django.conf import settings
 
 register = template.Library()
+
+DOMAIN_NAME = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO = getattr(settings, 'WEB_PROTO')
 
 @register.filter
 def strip_markdown(value):
@@ -40,10 +42,7 @@ def https_to_discord(value):
     if anchor:
         blank_anchor = anchor.group(0).replace('<a', '<a target="_blank"')
         anchor_end = search(r'</a>', initial)
-        if settings.DEBUG:
-            anchor_end_icon = anchor_end.group(0).replace('</a>', f' <img class="new_tab_icon" src="http://{settings.DOMAIN_NAME}/static/image/new_tab_black.svg"></a>')
-        else:
-            anchor_end_icon = anchor_end.group(0).replace('</a>', f' <img class="new_tab_icon" src="https://{settings.DOMAIN_NAME}/static/image/new_tab_black.svg"></a>')
+        anchor_end_icon = anchor_end.group(0).replace('</a>', f' <img class="new_tab_icon" src="{WEB_PROTO}://{DOMAIN_NAME}/static/image/new_tab_black.svg"></a>')
         return initial.replace(anchor.group(0), blank_anchor).replace(anchor_end.group(0), anchor_end_icon)
     
     return initial

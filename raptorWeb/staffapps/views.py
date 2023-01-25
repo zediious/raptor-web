@@ -1,21 +1,23 @@
+from os.path import join
+from logging import getLogger
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.forms import ModelForm
 from django.contrib import messages
-from os.path import join
-from logging import getLogger
+from django.conf import settings
 
-from raptorWeb import settings
-from staffapps.forms import AdminApp, ModApp
+from raptorWeb.staffapps.forms import AdminApp, ModApp
 
 LOGGER = getLogger('staffapps.views')
+STAFFAPPS_TEMPLATE_DIR = getattr(settings, 'STAFFAPPS_TEMPLATE_DIR')
 
 class AllApps(TemplateView):
     """
     Buttons/Modals for all Staff Forms
     """
-    template_name = join(settings.STAFFAPPS_TEMPLATE_DIR, 'staffapps.html')
+    template_name = join(STAFFAPPS_TEMPLATE_DIR, 'staffapps.html')
 
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
@@ -64,12 +66,12 @@ class ModAppView(AppView):
     """
     Moderator Application
     """
-    template_name = join(settings.STAFFAPPS_TEMPLATE_DIR, 'modapp.html')
+    template_name = join(STAFFAPPS_TEMPLATE_DIR, 'modapp.html')
     staff_app = ModApp()
 
 class AdminAppView(AppView):
     """
     Admin Application
     """
-    template_name = join(settings.STAFFAPPS_TEMPLATE_DIR, 'adminapp.html')
+    template_name = join(STAFFAPPS_TEMPLATE_DIR, 'adminapp.html')
     staff_app = AdminApp()
