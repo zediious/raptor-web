@@ -1,6 +1,5 @@
-from datetime import date
-
 from django.contrib.auth import models
+from django.utils import timezone
 
 class DiscordAuthManager(models.UserManager):
 
@@ -18,7 +17,7 @@ class DiscordAuthManager(models.UserManager):
             flags = user["flags"],
             locale = user["locale"],
             mfa_enabled = user["mfa_enabled"],
-            date_joined = date.today()
+            date_joined = timezone.now()
         )
 
         return new_discord_info
