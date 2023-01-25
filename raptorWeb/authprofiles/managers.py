@@ -1,6 +1,6 @@
-from django.contrib.auth import models
-
 from datetime import date
+
+from django.contrib.auth import models
 
 class DiscordAuthManager(models.UserManager):
 

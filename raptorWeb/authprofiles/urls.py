@@ -1,6 +1,6 @@
 from django.urls import path
 
-from authprofiles import views
+from raptorWeb.authprofiles import views
 
 app_name = "authprofiles"
 

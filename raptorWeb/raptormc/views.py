@@ -1,11 +1,13 @@
-from django.views.generic import TemplateView
 from os.path import join
 from logging import getLogger
 
-from raptorWeb import settings
-from raptormc.util import viewContext
+from django.views.generic import TemplateView
+from django.conf import settings
 
-TEMPLATE_DIR_RAPTORMC = join(settings.TEMPLATE_DIR, "raptormc")
+from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
+
+TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
+USE_GLOBAL_ANNOUNCEMENT = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
 
 LOGGER = getLogger('raptormc.views')
 
@@ -26,9 +28,9 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs): 
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = ["Homepage Information"])
+                return get_or_create_informative_text(context = context, informative_text_names = ["Homepage Information"])
 
-        if settings.USE_GLOBAL_ANNOUNCEMENT:
+        if USE_GLOBAL_ANNOUNCEMENT:
             class Announcements(TemplateView):
                 """
                 Page containing the last 30 announcements from Discord
@@ -37,7 +39,7 @@ class ShadowRaptor():
 
                 def get_context_data(self, **kwargs):
                     context = super().get_context_data(**kwargs)
-                    return viewContext.update_context(context = context, informative_text_names = ["Announcements Information"])
+                    return get_or_create_informative_text(context = context, informative_text_names = ["Announcements Information"])
 
         class Rules(TemplateView):
             """
@@ -47,7 +49,7 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = [
+                return get_or_create_informative_text(context = context, informative_text_names = [
                     "Rules Information",
                     "Network Rules"])
 
@@ -59,7 +61,7 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = ["Banned Items Information"])
+                return get_or_create_informative_text(context = context, informative_text_names = ["Banned Items Information"])
 
         class Voting(TemplateView):
             """
@@ -69,7 +71,7 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = ["Voting Information"])
+                return get_or_create_informative_text(context = context, informative_text_names = ["Voting Information"])
 
         class HowToJoin(TemplateView):
             """
@@ -79,7 +81,7 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = [
+                return get_or_create_informative_text(context = context, informative_text_names = [
                     "Joining Information",
                     "Using the CurseForge Launcher",
                     "Using the FTB Launcher",
@@ -89,11 +91,11 @@ class ShadowRaptor():
             """
             Provide links to each staff application
             """
-            template_name = join(settings.APPLICATIONS_DIR, 'staffapps.html')
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('applications', 'staffapps.html'))
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context, informative_text_names = ["Staff App Information"])
+                return get_or_create_informative_text(context = context, informative_text_names = ["Staff App Information"])
 
     class User_Views():
         """
@@ -103,28 +105,28 @@ class ShadowRaptor():
             """
             Provide links to each Site Member's profile
             """
-            template_name = join(TEMPLATE_DIR_RAPTORMC, 'sitemembers.html')
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('users', 'sitemembers.html'))
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context)
+                return get_or_create_informative_text(context = context)
 
         class User_Page(TemplateView):
             """
             Info about a User
             """
-            template_name = join(TEMPLATE_DIR_RAPTORMC, 'user.html')
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user.html'))
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context)
+                return get_or_create_informative_text(context = context)
 
         class User_Edit_Page(TemplateView):
             """
             Edit a User's Info
             """
-            template_name = join(TEMPLATE_DIR_RAPTORMC, 'user_edit.html')
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user_edit.html'))
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                return viewContext.update_context(context = context)
+                return get_or_create_informative_text(context = context)

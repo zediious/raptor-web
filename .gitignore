@@ -131,18 +131,11 @@ dmypy.json
 # LOCK Files
 playerCounts.LOCK
 
-# RaptorBot JSON
-announcements.json
-discordInfo.json
-server_data.json
+# Server data to be imported
 server_data_full.json
-server_announcements.json
-
-# Key
-key.txt
 
 # Collected static files
-/config/static/*
+/docker/static/
 
 # Media files
 /raptorWeb/media

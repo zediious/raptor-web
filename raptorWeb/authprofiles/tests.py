@@ -1,6 +1,6 @@
 from django.test import TestCase
-from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
 
+from raptorWeb.authprofiles.models import User, UserProfileInfo, DiscordUserInfo
 
 class UserTestCase(TestCase):
     def setUp(self):

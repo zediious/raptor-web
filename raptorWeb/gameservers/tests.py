@@ -1,6 +1,7 @@
 from django.test import TestCase
-from gameservers.models import Server, PlayerCount, PlayerName
-from gameservers.util.playerCounts import PlayerCounts
+
+from raptorWeb.gameservers.models import Server
+from raptorWeb.gameservers.util.playerCounts import PlayerCounts
 
 class ServerTestCase(TestCase):
     def setUp(self):

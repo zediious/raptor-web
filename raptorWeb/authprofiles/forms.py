@@ -2,7 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-from authprofiles.models import User, UserProfileInfo, DiscordUserInfo
+from captcha.fields import CaptchaField
+
+from raptorWeb.authprofiles.models import User, UserProfileInfo, DiscordUserInfo
 
 class UserForm(forms.ModelForm):
     """
@@ -10,6 +12,7 @@ class UserForm(forms.ModelForm):
     """
     password = forms.CharField(widget=forms.PasswordInput())
     password_v = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
+    captcha = CaptchaField()
 
     class Meta():
         model = User

@@ -1,6 +1,6 @@
 # Environment setup
 
-### This is currently haphazard, mostly just putting reference for a later data, when I will format this well.
+### This is currently haphazard and EXTREMELY OUTDATED. Will be re-written!
 
 ## **Requirements**
 

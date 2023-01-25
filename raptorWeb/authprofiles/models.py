@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from authprofiles.managers import DiscordAuthManager
+from raptorWeb.authprofiles.managers import DiscordAuthManager
 
 class DiscordUserInfo(models.Model):
     """

@@ -10,7 +10,8 @@
     </ul>
     {% endif %}
     
-    {% csrf_token %}  
+    {% csrf_token %} 
+    {{ form.captcha }} 
     {% bootstrap_form_errors AdminApp %}
     {% bootstrap_form AdminApp %}
     {% bootstrap_button button_type="submit" content="Submit Application" %}

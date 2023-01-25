@@ -35,6 +35,7 @@
                     <form action="{% url 'authprofiles:register' %}" method="POST" enctype="multipart/form-data">
           
                       {% csrf_token %}
+                      {{ form.captcha }} 
                       {% bootstrap_form register_form %}
                       {% bootstrap_form extra_form %}
                       {% bootstrap_button button_type="submit" content="Create Account" %}

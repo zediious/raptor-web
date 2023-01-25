@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import TextInput, Textarea
 from django.db import models
 
-from gameservers.models import Server, PlayerCount, PlayerName
+from raptorWeb.gameservers.models import Server, PlayerCount, PlayerName
 
 class ServerAdmin(admin.ModelAdmin):
     formfield_overrides = {

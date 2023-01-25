@@ -1,22 +1,20 @@
 version: '3'
-
 services:
 
   raptorapp:
     build:
-      context: raptorWeb/.
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile
     container_name: raptorapp
     expose:
       - 80
     volumes:
-      - ./raptorWeb:/raptorWeb
-      - ./raptorWeb/raptormc/migrations:/raptorWeb/raptormc/migrations/
-    command: sh -c "cd raptorWeb &&
+      - ./:/raptorWebApp
+    command: sh -c "cd raptorWebApp &&
                     conda run -n djangoWork python manage.py migrate &&
                     conda run -n djangoWork python manage.py collectstatic --noinput &&
                     conda run -n djangoWork python manage.py createSuper &&
-                    conda run -n djangoWork daphne -b 0.0.0.0 -p 80 raptorWeb.asgi:application"
+                    conda run -n djangoWork daphne -b 0.0.0.0 -p 80 config.asgi:application"
     depends_on:
       - mariadb
 
@@ -26,7 +24,7 @@ services:
     expose:
       - 3306
     env_file:
-    - ./config/db/.env
+    - ./config/.env
     volumes:
       - raptor-db:/var/lib/mysql/
 
@@ -36,7 +34,7 @@ services:
     ports:
       - 443:443
     volumes:
-      - ./config/nginx/conf.d:/etc/nginx/conf.d/
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
       - ./raptorWeb/media:/raptor_app/media/
     depends_on:
       - raptorapp
