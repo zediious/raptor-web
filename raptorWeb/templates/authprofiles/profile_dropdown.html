@@ -17,7 +17,7 @@
             {% else %}
                 {% for loaded_user in current_members %}
                 {% if user.get_username == loaded_user.user.username %}
-                    {% if loaded_user.profile_picture != default_media %}
+                    {% if loaded_user.profile_picture %}
                          <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user.profile_picture.url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
                     {% else %}
                         <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
