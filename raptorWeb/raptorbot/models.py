@@ -1,6 +1,7 @@
 from django.db import models
+from django.conf import settings
 
-from raptorWeb import settings
+SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
     
 class Announcement(models.Model):
     """
@@ -43,8 +44,8 @@ class GlobalAnnouncement(Announcement):
         verbose_name = "Global Announcement"
         verbose_name_plural = "Global Announcements"
 
-if settings.SCRAPE_SERVER_ANNOUNCEMENT:
-    from gameservers.models import Server
+if SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorWeb.gameservers.models import Server
     class ServerAnnouncement(Announcement):
         """
         Represents an announcement made for a game server.
@@ -74,7 +75,7 @@ class DiscordGuild(models.Model):
             verbose_name="Guild Name",
             default="None")
         
-        guild_id = models.IntegerField(
+        guild_id = models.BigIntegerField(
             verbose_name="Guild ID",
             default="None")
         
@@ -87,7 +88,7 @@ class DiscordGuild(models.Model):
             default="None")
 
         def __str__(self) -> str:
-            return f'{self.online_members}/{self.total_members} Members Online'
+            return f'{self.online_members}/{self.total_members}'
 
         def get_guild_name(self):
             return self.guild_name

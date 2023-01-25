@@ -14,22 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from os.path import join
+
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
+from django.conf import settings
 
-from raptorWeb.settings import RAPTOMC_TEMPLATE_DIR, DEBUG, MEDIA_URL, MEDIA_ROOT
-from raptormc import urls as SR_urls
-from gameservers import urls as server_urls
-from staffapps import urls as app_urls
-from authprofiles import urls as auth_urls
-from raptorbot import urls as bot_urls
+from raptorWeb.raptormc import urls as SR_urls
+from raptorWeb.gameservers import urls as server_urls
+from raptorWeb.staffapps import urls as app_urls
+from raptorWeb.authprofiles import urls as auth_urls
+from raptorWeb.raptorbot import urls as bot_urls
+
+DEBUG = getattr(settings, 'DEBUG')
+RAPTORMC_TEMPLATE_DIR = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
+MEDIA_URL = getattr(settings, 'MEDIA_URL')
+MEDIA_ROOT = getattr(settings, 'MEDIA_ROOT')
 
 urlpatterns = [
 
     path('admin/', admin.site.urls, name="admin"),
-    path('robots.txt', TemplateView.as_view(template_name=join(RAPTOMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
+    path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
+    path('captcha/', include('captcha.urls')),
     path('servers/', include(server_urls), name="gameservers"),
     path('staffapps/', include(app_urls), name="staffapps"),
     path('raptorbot/', include(bot_urls), name="raptorbot"),

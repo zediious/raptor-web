@@ -5,14 +5,12 @@ from dotenv import load_dotenv
 
 # Define project directories
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = join(BASE_DIR, "templates")
-STATIC_DIR = join(BASE_DIR, "static")
-MEDIA_DIR = join(BASE_DIR, "media")
+RAPTORWEB_DIR = join(BASE_DIR, 'raptorWeb')
+TEMPLATE_DIR = join(RAPTORWEB_DIR, "templates")
+STATIC_DIR = join(RAPTORWEB_DIR, "static")
+MEDIA_DIR = join(RAPTORWEB_DIR, "media")
 
-RAPTOMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
-APPLICATIONS_DIR = join(RAPTOMC_TEMPLATE_DIR, "applications")
-PROFILES_DIR = join(RAPTOMC_TEMPLATE_DIR, 'profiles')
-
+RAPTORMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
 GAMESERVERS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'gameservers')
 STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
 AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
@@ -20,20 +18,18 @@ AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
 # Load .env file
 load_dotenv()
 
-# Load key.txt for Django secret key
-with open(join(BASE_DIR, 'key.txt')) as key:
-
-    SECRET_KEY =  key.read().strip()
+# Django secret key from .env
+SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: Neither of the below two True in production!
-DEBUG = True
-USE_SQLITE = True
+DEBUG = True if getenv('DEBUG') == "True" else False
+USE_SQLITE = True if getenv('USE_SQLITE') == "True" else False
 
 # Set RUNNING_IN_DOCKER to True if you are running this in a Docker container
-RUNNING_IN_DOCKER = True
+RUNNING_IN_DOCKER = True if getenv('RUNNING_IN_DOCKER') == "True" else False
 
 # Configure "DOMAIN_NAME" to match the domain name you will use (no www)
-DOMAIN_NAME = "shadowraptor.net"
+DOMAIN_NAME = getenv('DOMAIN_NAME'),
 
 # Configure web protocol based on DEBUG status
 WEB_PROTO = ""
@@ -70,11 +66,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_bootstrap5',
     'ckeditor',
-    'raptormc',
-    'staffapps',
-    'authprofiles',
-    'gameservers',
-    'raptorbot'
+    'captcha',
+    'raptorWeb.raptormc',
+    'raptorWeb.staffapps',
+    'raptorWeb.authprofiles',
+    'raptorWeb.gameservers',
+    'raptorWeb.raptorbot'
 ]
 
 MIDDLEWARE = [
@@ -86,12 +83,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'gameservers.jobs.ServerWare',
-    'authprofiles.userlist.ProfileManager',
-    'raptorbot.botware.RaptorBotWare'
+    'raptorWeb.gameservers.jobs.ServerWare',
+    'raptorWeb.raptorbot.botware.RaptorBotWare'
 ]
 
-ROOT_URLCONF = 'raptorWeb.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -104,13 +100,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'raptorWeb.raptormc.context_processor.context_process',
+                'raptorWeb.authprofiles.context_processor.all_users_to_context',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'raptorWeb.wsgi.application'
-ASGI_APPLICATION = 'raptorWeb.asgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 # Database
 DATABASES = {}
@@ -166,7 +164,7 @@ PASSWORD_HASHERS = [
 
 # Django Authentication
 AUTHENTICATION_BACKENDS = [
-    'authprofiles.auth.DiscordAuthBackend',
+    'raptorWeb.authprofiles.auth.DiscordAuthBackend',
     'django.contrib.auth.backends.ModelBackend'
 ]
 
@@ -259,13 +257,18 @@ LOGGING = {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
+        },
+        'discordbot.util': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
         }
     }
 }
 
 # Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'America/New_York'
+LANGUAGE_CODE = getenv('LANGUAGE_CODE')
+TIME_ZONE = getenv('TIME_ZONE')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -291,28 +294,36 @@ BACKGROUND_TASK_RUN_ASYNC = True
 
 # ** Settings for "gameservers" app **
 # Set to True to query addresses of Servers
-ENABLE_SERVER_QUERY = True
+ENABLE_SERVER_QUERY = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
 # Set to True to import a server_data_full.json on start
-IMPORT_SERVERS = False
+IMPORT_SERVERS = True if getenv('IMPORT_SERVERS') == "True" else False
 # Set to True to delete existing servers when performing an import
-DELETE_EXISTING = True
+DELETE_EXISTING = True if getenv('DELETE_EXISTING') == "True" else False
 # Location of json file to import servers from
 IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
+# Location of LOCk file used to time gameserver queries
+LOCK_FILE_PATH = join(BASE_DIR, 'playerCounts.LOCK')
 
 # ** Settings for "authprofiles" app **
 LOGIN_URL = '/login/'
 BASE_USER_URL = 'user'
 
-DISCORD_APP_ID = getenv('DISCORD_APP_ID')
-DISCORD_APP_SECRET = getenv('DISCORD_APP_SECRET')
+DISCORD_APP_ID = getenv('DISCORD_OAUTH_APP_ID')
+DISCORD_APP_SECRET = getenv('DISCORD_OAUTH_APP_SECRET')
 DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
 DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
 # ** Settings for "raptorbot" app **
 # Set to True to enable website using scraped Global Announcements
-USE_GLOBAL_ANNOUNCEMENT = True
+USE_GLOBAL_ANNOUNCEMENT = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
 # Set to True to enable Raptor Bot scraping Discord announcements for each server
-SCRAPE_SERVER_ANNOUNCEMENT = True
+SCRAPE_SERVER_ANNOUNCEMENT = True if getenv('SCRAPE_SERVER_ANNOUNCEMENT') == "True" else False
+# Settings for the Discord Bot
+DISCORD_BOT_TOKEN = getenv('DISCORD_BOT_TOKEN')
+DISCORD_BOT_DESCRIPTION = getenv('DISCORD_BOT_DESCRIPTION')
+DISCORD_GUILD = int(getenv('DISCORD_GUILD'))
+GLOBAL_ANNOUNCEMENT_CHANNEL_ID = int(getenv('GLOBAL_ANNOUNCEMENT_CHANNEL_ID'))
+STAFF_ROLE_ID = int(getenv('STAFF_ROLE_ID'))
 
 # ** Settings for "django_bootstrap5" app **
 BOOTSTRAP5 = {

@@ -1,13 +1,15 @@
-from django.views.generic import ListView
-from django.http import HttpResponseRedirect
 from logging import getLogger
 
-from raptorWeb import settings
+from django.views.generic import ListView
+from django.http import HttpResponseRedirect
+from django.conf import settings
 
-from raptorbot.models import GlobalAnnouncement, ServerAnnouncement
+from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 
-if settings.USE_GLOBAL_ANNOUNCEMENT:
-    from gameservers.models import Server
+USE_GLOBAL_ANNOUNCEMENT = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
+
+if USE_GLOBAL_ANNOUNCEMENT:
+    from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('raptorbot.views')
 

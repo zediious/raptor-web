@@ -1,14 +1,23 @@
 from logging import getLogger
 from threading import Thread
-
 import ctypes
+
+from django.conf import settings
+
 import discord
 from discord.ext import commands
 
-from raptorWeb import settings
-from raptorbot.discordbot.util import raptorbot_settings, raptorbot_util
-if settings.SCRAPE_SERVER_ANNOUNCEMENT:
-    from gameservers.models import Server
+from raptorWeb.raptorbot.discordbot.util import raptorbot_util
+
+SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+DISCORD_BOT_DESCRIPTION = getattr(settings, 'DISCORD_BOT_DESCRIPTION')
+GLOBAL_ANNOUNCEMENT_CHANNEL_ID = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
+STAFF_ROLE_ID = getattr(settings, 'STAFF_ROLE_ID')
+DOMAIN_NAME = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO = getattr(settings, 'WEB_PROTO')
+
+if SCRAPE_SERVER_ANNOUNCEMENT:
+    from raptorWeb.gameservers.models import Server
 
 # Configure basic logger
 LOGGER = getLogger('discordbot.bot')
@@ -45,7 +54,7 @@ class BotProcessManager:
         intents = discord.Intents.all()
         intents.message_content = True
         intents.members = True
-        raptor_bot = commands.Bot(command_prefix='!', description=raptorbot_settings.DESCRIPTION, intents=intents)
+        raptor_bot = commands.Bot(command_prefix='!', description=DISCORD_BOT_DESCRIPTION, intents=intents)
 
         self.is_running = True
         self.active_process = Thread(target = _bot_start, args=(raptor_bot, self.bot_token),)
@@ -63,12 +72,12 @@ class BotProcessManager:
 
         @raptor_bot.event
         async def on_message(message):
-            channel = raptor_bot.get_channel(int(raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID))
+            channel = raptor_bot.get_channel(int(GLOBAL_ANNOUNCEMENT_CHANNEL_ID))
             if message.channel == channel:
                 await raptorbot_util.update_global_announcements(raptor_bot)
-            if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+            if SCRAPE_SERVER_ANNOUNCEMENT:
                 server_data = Server.objects.all()
-                if message.author != raptor_bot.user and message.author.get_role(raptorbot_settings.STAFF_ROLE_ID) != None:
+                if message.author != raptor_bot.user and message.author.get_role(STAFF_ROLE_ID) != None:
                     async for server in server_data:
                         if message.channel != raptor_bot.get_channel(int(server.discord_announcement_channel_id)):
                             continue
@@ -78,9 +87,9 @@ class BotProcessManager:
         @raptor_bot.event
         async def on_raw_message_edit(message):
             if message.data["author"]["id"] != raptor_bot.user.id:
-                if message.channel_id == raptorbot_settings.ANNOUNCEMENT_CHANNEL_ID:
+                if message.channel_id == GLOBAL_ANNOUNCEMENT_CHANNEL_ID:
                         await raptorbot_util.update_global_announcements(raptor_bot)
-                if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+                if SCRAPE_SERVER_ANNOUNCEMENT:
                     try:
                         server_queryset = Server.objects.filter(discord_announcement_channel_id = message.channel_id)
                         if server_queryset != None:
@@ -100,7 +109,7 @@ class BotProcessManager:
             async for server in server_data:
                 if server.server_address.split(".")[0] == key:
                     image_embed = discord.Embed(color=0x00ff00)
-                    image_embed.set_image(url=f"{settings.WEB_PROTO}://{settings.DOMAIN_NAME}{server.modpack_picture.url}")
+                    image_embed.set_image(url=f"{WEB_PROTO}://{DOMAIN_NAME}{server.modpack_picture.url}")
 
                     info_embed = discord.Embed(title=server.modpack_name, description=f"Join at: ```{server.server_address}```", color=0x00ff00, url=server.modpack_url)
                     info_embed.add_field(name="\u200b", value=await raptorbot_util.strip_html(server.modpack_description), inline=False)

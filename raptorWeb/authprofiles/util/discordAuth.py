@@ -1,15 +1,15 @@
 from requests import get, post
 
-from raptorWeb import settings
+from django.conf import settings
 
 def exchange_code(discord_code):
 
     data = {
-        "client_id": settings.DISCORD_APP_ID,
-        "client_secret": settings.DISCORD_APP_SECRET,
+        "client_id": getattr(settings, 'DISCORD_APP_ID'),
+        "client_secret": getattr(settings, 'DISCORD_APP_SECRET'),
         "grant_type": "authorization_code",
         "code": discord_code,
-        "redirect_uri": settings.DISCORD_REDIRECT_URL,
+        "redirect_uri": getattr(settings, 'DISCORD_REDIRECT_URL'),
         "scope": "identify email guilds"
     }
     headers = {

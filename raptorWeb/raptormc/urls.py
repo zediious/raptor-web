@@ -1,9 +1,8 @@
 from django.urls import path
 
-from raptormc import views
+from raptorWeb.raptormc import views
 
 SR = views.ShadowRaptor
-
 app_name = "raptormc"
 
 urlpatterns = [

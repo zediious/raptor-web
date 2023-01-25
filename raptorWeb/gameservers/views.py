@@ -1,12 +1,14 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, ListView
-from django.http import HttpResponseRedirect
-
 from os.path import join
 
-from raptorWeb import settings
-from gameservers.jobs import player_poller, update_context
-from gameservers.models import Server
+from django.shortcuts import render
+from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
+from django.conf import settings
+
+from raptorWeb.gameservers.jobs import player_poller, update_context
+
+GAMESERVERS_TEMPLATE_DIR = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
+SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class Server_Buttons(TemplateView):
     """
@@ -15,7 +17,7 @@ class Server_Buttons(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverButtons.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
@@ -26,7 +28,7 @@ class Server_Buttons_Loading(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverButtons_loading.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons_loading.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
@@ -38,7 +40,7 @@ class Server_Modals(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverModals.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverModals.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
@@ -50,7 +52,7 @@ class Total_Count(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'playerCounts.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'playerCounts.html')
             update_context()
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
@@ -63,7 +65,7 @@ class Server_Rules(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverRules.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverRules.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
@@ -75,7 +77,7 @@ class Server_Banned_Items(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverBannedItems.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverBannedItems.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
@@ -87,12 +89,12 @@ class Server_Voting(TemplateView):
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverVoting.html')
+            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverVoting.html')
             return render(request, template_name, context=player_poller.currentPlayers_DB)
         else:
             return HttpResponseRedirect('../')
 
-if settings.SCRAPE_SERVER_ANNOUNCEMENT:
+if SCRAPE_SERVER_ANNOUNCEMENT:
 
     class Server_Announcements_Base(TemplateView):
         """
@@ -101,7 +103,7 @@ if settings.SCRAPE_SERVER_ANNOUNCEMENT:
         """
         def get(self, request):
             if request.headers.get('HX-Request') == "true":
-                template_name = join(settings.GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
+                template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
                 return render(request, template_name, context=player_poller.currentPlayers_DB)
             else:
                 return HttpResponseRedirect('../')

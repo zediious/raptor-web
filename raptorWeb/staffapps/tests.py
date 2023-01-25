@@ -1,5 +1,5 @@
 from django.test import TestCase
-from staffapps.models import StaffApplication, ModeratorApplication, AdminApplication
+from raptorWeb.staffapps.models import ModeratorApplication, AdminApplication
 
 class StaffAppTestCase(TestCase):
     def setUp(self):
