@@ -1,27 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-from raptorWeb.authprofiles.managers import DiscordAuthManager
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
 
 class DiscordUserInfo(models.Model):
     """
     Discord Information for a User that was registered using Discord OAuth2.
     """
-    objects = DiscordAuthManager()
-
     id = models.BigIntegerField(
         primary_key=True)
 
     tag = models.CharField(
-        max_length=100)
-
-    username = models.CharField(
-        default="Default",
-        max_length=100)    
-
-    profile_picture = models.CharField(
-        max_length=100
-    )
+        max_length=100) 
 
     pub_flags = models.IntegerField()
 
@@ -33,14 +23,6 @@ class DiscordUserInfo(models.Model):
 
     mfa_enabled = models.BooleanField()
 
-    date_joined = models.DateTimeField(
-        null=True
-    )
-
-    last_login = models.DateTimeField(
-        null=True
-    )
-
     def is_authenticated(self):
         return True
 
@@ -48,8 +30,8 @@ class DiscordUserInfo(models.Model):
         return f'DiscordUserInfo#{self.id}'
 
     class Meta:
-        verbose_name = "User - Discord OAuth"
-        verbose_name_plural = "Users - Discord OAuth"
+        verbose_name = "User - Discord Information"
+        verbose_name_plural = "Users - Discord Information"
 
 class UserProfileInfo(models.Model):
     """
@@ -80,6 +62,11 @@ class RaptorUser(User):
     A Base user. Has optional OneToOne Fields to UserProfileInfo Model
     and DiscordUserInfo Model. Inherits from default Django user.
     """
+    is_discord_user=  models.BooleanField(
+        blank=True,
+        null=True
+    )
+
     user_profile_info = models.OneToOneField(
         UserProfileInfo,
         null=True,
@@ -91,3 +78,18 @@ class RaptorUser(User):
         null=True,
         blank=True,
         on_delete=models.CASCADE)
+
+    def delete(self, *args, **kwargs):
+        self.user_profile_info.delete()
+        self.discord_user_info.delete()
+        return super(self.__class__, self).delete(*args, **kwargs)
+
+@receiver(post_delete, sender=RaptorUser)
+def post_delete_user(sender, instance, *args, **kwargs):
+    if instance.user_profile_info and instance.discord_user_info:
+        instance.user_profile_info.delete()
+        instance.discord_user_info.delete()
+    elif instance.user_profile_info and not instance.discord_user_info:
+        instance.user_profile_info.delete()
+    elif not instance.user_profile_info and instance.discord_user_info:
+        instance.discord_user_info.delete()
