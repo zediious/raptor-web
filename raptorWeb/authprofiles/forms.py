@@ -1,10 +1,9 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 from captcha.fields import CaptchaField
 
-from raptorWeb.authprofiles.models import User, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 
 class UserForm(forms.ModelForm):
     """
@@ -15,7 +14,7 @@ class UserForm(forms.ModelForm):
     captcha = CaptchaField()
 
     class Meta():
-        model = User
+        model = RaptorUser
         fields = ('username', 'email', 'password')
 
     def clean(self):
@@ -39,14 +38,6 @@ class UserProfileInfoForm(forms.ModelForm):
         model = UserProfileInfo
         fields = ('profile_picture', 'minecraft_username', 'favorite_modpack')
 
-class DiscordUserInfoForm(forms.ModelForm):
-    """
-    Information from a Discord User that can be changed
-    """ 
-    class Meta():
-        model = DiscordUserInfo
-        fields = ('minecraft_username', 'favorite_modpack')
-
 class UserLoginForm(forms.Form):
     """
     User Login form
@@ -64,7 +55,7 @@ class UserLoginForm(forms.Form):
         username = clean_data.get("username")
         password = clean_data.get("password")
         user_exists = False
-        for user in User.objects.all():
+        for user in RaptorUser.objects.all():
             if user.username == username:
                 user_exists = True
                 break

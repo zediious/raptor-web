@@ -5,7 +5,7 @@ from raptorWeb.authprofiles.managers import DiscordAuthManager
 
 class DiscordUserInfo(models.Model):
     """
-    A User that was registered using Discord OAuth2.
+    Discord Information for a User that was registered using Discord OAuth2.
     """
     objects = DiscordAuthManager()
 
@@ -41,21 +41,11 @@ class DiscordUserInfo(models.Model):
         null=True
     )
 
-    minecraft_username = models.CharField(
-        max_length=50,
-        blank=True
-    )
-
-    favorite_modpack = models.CharField(
-        max_length=80, 
-        blank=True
-    )
-
     def is_authenticated(self):
         return True
 
     def __str__(self):
-        return self.tag
+        return f'DiscordUserInfo#{self.id}'
 
     class Meta:
         verbose_name = "User - Discord OAuth"
@@ -63,14 +53,8 @@ class DiscordUserInfo(models.Model):
 
 class UserProfileInfo(models.Model):
     """
-    A User that was created with the website's registration
-    form. Has a OneToOne relationship with a Django User
+    A User's extra profile information
     """
-    user = models.OneToOneField(
-        User,
-        null=True,
-        on_delete=models.CASCADE)
-
     profile_picture = models.ImageField(
         upload_to='profile_pictures', 
         blank=True)
@@ -84,13 +68,26 @@ class UserProfileInfo(models.Model):
         max_length=80, 
         blank=True
     )
-
     def __str__(self):
-        try:
-            return self.user.username
-        except:
-            return self.discord_info.tag
+        return f'UserProfileInfo#{self.id}'
 
     class Meta:
         verbose_name = "User - Extra Information"
         verbose_name_plural = "Users - Extra Information"
+
+class RaptorUser(User):
+    """
+    A Base user. Has optional OneToOne Fields to UserProfileInfo Model
+    and DiscordUserInfo Model. Inherits from default Django user.
+    """
+    user_profile_info = models.OneToOneField(
+        UserProfileInfo,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE)
+
+    discord_user_info = models.OneToOneField(
+        DiscordUserInfo,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE)
