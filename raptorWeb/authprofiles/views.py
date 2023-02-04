@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserForm, UserProfileInfoForm, UserLoginForm
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
 from raptorWeb.authprofiles.util.usergather import find_slugged_user
@@ -26,8 +26,8 @@ class RegisterUser(TemplateView):
 
     template_name = join(AUTH_TEMPLATE_DIR, 'registration.html')
     registered = False
-    register_form = UserForm()
-    extra_form = UserProfileInfoForm()
+    register_form = UserRegisterForm()
+    extra_form = UserProfileEditForm()
 
     def get(self, request):
 
@@ -45,8 +45,8 @@ class RegisterUser(TemplateView):
 
     def post(self,request):
 
-        register_form = UserForm(request.POST)
-        extra_form = UserProfileInfoForm(request.POST)
+        register_form = UserRegisterForm(request.POST)
+        extra_form = UserProfileEditForm(request.POST)
 
         dictionary = {}
         dictionary['user_path'] = BASE_USER_URL
@@ -160,6 +160,9 @@ class User_Dropdown(TemplateView):
         if request.headers.get('HX-Request') == "true":
             instance_dict = {}
             instance_dict['user_path'] = BASE_USER_URL
+            if request.user.is_authenticated:
+                instance_dict['loaded_user'] = RaptorUser.objects.get(
+                    user_slug = find_slugged_user(str(request.user)).user_slug)
             return render(request, self.template_name, context=instance_dict)
         else:
             return HttpResponseRedirect('../')
@@ -202,11 +205,11 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     """
     template_name = join(AUTH_TEMPLATE_DIR, 'profile_edit.html')
     login_url = '/login/'
-    extra_edit_form = UserProfileInfoForm()
+    extra_edit_form = UserProfileEditForm()
 
     def get(self, request, profile_name):
         if request.headers.get('HX-Request') == "true":
-            if slugify(str(request.user).split('#')[0]) == profile_name:
+            if slugify(str(request.user)) == slugify(profile_name):
                 instance_dict = {}
                 instance_dict['user_path'] = BASE_USER_URL
                 instance_dict["extra_edit_form"] = self.extra_edit_form
@@ -229,29 +232,23 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
     def post(self, request, profile_name):
 
-        extra_edit_form = UserProfileInfoForm(request.POST)
+        extra_edit_form = UserProfileEditForm(request.POST)
         instance_dict = {}
         instance_dict['user_path'] = BASE_USER_URL
         instance_dict["extra_edit_form"] = self.extra_edit_form
         if extra_edit_form.is_valid():
-            LOGGER.info("A User modified their profile details")
-            changed_user = None
-            try:
-                changed_user = DiscordUserInfo.objects.get(tag=request.user)
-            except ObjectDoesNotExist:
-                changed_user_base = RaptorUser.objects.get(username=request.user)
-                changed_user = UserProfileInfo.objects.get(user=changed_user_base)
+            changed_user = RaptorUser.objects.get(username=request.user)
             if extra_edit_form.cleaned_data["minecraft_username"] != '':
-                changed_user.minecraft_username = extra_edit_form.cleaned_data["minecraft_username"]
+                changed_user.user_profile_info.minecraft_username = extra_edit_form.cleaned_data["minecraft_username"]
             if extra_edit_form.cleaned_data["favorite_modpack"] != '':
-                changed_user.favorite_modpack = extra_edit_form.cleaned_data["favorite_modpack"]
+                changed_user.user_profile_info.favorite_modpack = extra_edit_form.cleaned_data["favorite_modpack"]
             if "profile_picture" in request.FILES:
-                changed_user.profile_picture = request.FILES["profile_picture"]
+                changed_user.user_profile_info.profile_picture = request.FILES["profile_picture"]
+                changed_user.user_profile_info.picture_changed_manually = True
+            changed_user.user_profile_info.save()
             changed_user.save()
-            try:
-                return redirect(f'../../../{BASE_USER_URL}/{slugify(changed_user_base.username)}')
-            except:
-                return redirect(f'../../../{BASE_USER_URL}/{slugify(changed_user.username)}')
+            LOGGER.info(f"{changed_user.username} modified their profile details")
+            return redirect(f'../../../{BASE_USER_URL}/{slugify(changed_user.username)}')
         else:
             instance_dict["extra_edit_form"] = extra_edit_form
             return render(request, self.template_name, context=instance_dict)
