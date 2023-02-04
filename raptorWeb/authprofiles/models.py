@@ -23,9 +23,6 @@ class DiscordUserInfo(models.Model):
 
     mfa_enabled = models.BooleanField()
 
-    def is_authenticated(self):
-        return True
-
     def __str__(self):
         return f'DiscordUserInfo#{self.id}'
 
