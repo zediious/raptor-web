@@ -3,11 +3,12 @@ from django.contrib.auth import authenticate
 
 from captcha.fields import CaptchaField
 
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo
+from raptorWeb.authprofiles.util.usergather import find_slugged_user
 
-class UserForm(forms.ModelForm):
+class UserRegisterForm(forms.ModelForm):
     """
-    Standard information in User Registration form
+    Form returned for registering a user with a password
     """
     password = forms.CharField(widget=forms.PasswordInput())
     password_v = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
@@ -30,17 +31,9 @@ class UserForm(forms.ModelForm):
 
             raise forms.ValidationError("Password fields must match")
 
-class UserProfileInfoForm(forms.ModelForm):
-    """
-    Extra information in User Registration form
-    """  
-    class Meta():
-        model = UserProfileInfo
-        fields = ('profile_picture', 'minecraft_username', 'favorite_modpack')
-
 class UserLoginForm(forms.Form):
     """
-    User Login form
+    Form returned for logging into a user with a password
     """
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput())
@@ -55,6 +48,10 @@ class UserLoginForm(forms.Form):
         username = clean_data.get("username")
         password = clean_data.get("password")
         user_exists = False
+
+        if find_slugged_user(username).is_discord_user:
+            raise forms.ValidationError("The entered Username does not exist")
+
         for user in RaptorUser.objects.all():
             if user.username == username:
                 user_exists = True
@@ -65,3 +62,11 @@ class UserLoginForm(forms.Form):
 
         if authenticate(username=username, password=password) == None:
             raise forms.ValidationError("The entered Password was incorrect")
+
+class UserProfileEditForm(forms.ModelForm):
+    """
+    Form returned for editing profile information
+    """  
+    class Meta():
+        model = UserProfileInfo
+        fields = ('profile_picture', 'minecraft_username', 'favorite_modpack')

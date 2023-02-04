@@ -23,6 +23,11 @@ class DiscordUserInfo(models.Model):
 
     mfa_enabled = models.BooleanField()
 
+    avatar_string = models.CharField(
+        max_length=200,
+        null=True
+    )
+
     def __str__(self):
         return f'DiscordUserInfo#{self.id}'
 
@@ -34,6 +39,11 @@ class UserProfileInfo(models.Model):
     """
     A User's extra profile information
     """
+    picture_changed_manually = models.BooleanField(
+        default=False,
+        null=True
+    )
+
     profile_picture = models.ImageField(
         upload_to='profile_pictures', 
         blank=True)
@@ -72,13 +82,21 @@ class RaptorUser(User):
         UserProfileInfo,
         null=True,
         blank=True,
+        related_name='profileinfo',
         on_delete=models.CASCADE)
 
     discord_user_info = models.OneToOneField(
         DiscordUserInfo,
         null=True,
         blank=True,
+        related_name='discordinfo',
         on_delete=models.CASCADE)
+
+    def get_profile_info(self):
+        return self.user_profile_info
+
+    def get_discord_info(self):
+        return self.discord_user_info
 
     def delete(self, *args, **kwargs):
         self.user_profile_info.delete()
