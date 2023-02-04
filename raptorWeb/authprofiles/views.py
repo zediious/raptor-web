@@ -2,7 +2,7 @@ from os.path import join
 from logging import getLogger
 
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -13,7 +13,7 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserForm, UserProfileInfoForm, UserLoginForm
-from raptorWeb.authprofiles.models import User, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
 from raptorWeb.authprofiles.util.usergather import find_slugged_user
 
@@ -64,6 +64,7 @@ class RegisterUser(TemplateView):
             new_user_extra.user = new_user
             if "profile_picture" in request.FILES:
                 new_user_extra.profile_picture = request.FILES["profile_picture"]
+            new_user.user_slug = slugify(new_user.username)
             new_user_extra.save()
             new_user.user_profile_info = new_user_extra
             new_user.save()
@@ -163,42 +164,36 @@ class User_Dropdown(TemplateView):
         else:
             return HttpResponseRedirect('../')
 
-class All_User_Profile(TemplateView):
+class All_User_Profile(ListView):
     """
-    Displays all User Profiles
+    ListView for all Users
     """
-    template_name = join(AUTH_TEMPLATE_DIR, 'all_profiles.html')
+    model = RaptorUser
 
-    def get(self, request):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
         if request.headers.get('HX-Request') == "true":
-            instance_dict = {}
-            return render(request, self.template_name, context=instance_dict)
+            return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('../')
 
-class User_Profile(TemplateView):
+class User_Profile(DetailView):
     """
-    Displays a User's Profile and it's information
+    DetailView for a User's profile
     """
-    template_name = join(AUTH_TEMPLATE_DIR, 'profile.html')
+    model = RaptorUser
 
-    def get(self, request, profile_name):
+    def get(self, request, *args, **kwargs):
         if request.headers.get('HX-Request') == "true":
-            instance_dict = {}
-            instance_dict['user_path'] = BASE_USER_URL
-            displayed_user = find_slugged_user(profile_name)
-
-            if displayed_user == None:
-                return redirect('/nouserfound')
-            else:
-                instance_dict.update({
-                            "displayed_profile": displayed_user
-                        })
-
-                return render(request, self.template_name, context=instance_dict)
-
+            return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('../../')
+
+    def get_object(self):
+        return RaptorUser.objects.get(user_slug = slugify(self.request.GET.get('requested_user')))
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     """
@@ -244,7 +239,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
             try:
                 changed_user = DiscordUserInfo.objects.get(tag=request.user)
             except ObjectDoesNotExist:
-                changed_user_base = User.objects.get(username=request.user)
+                changed_user_base = RaptorUser.objects.get(username=request.user)
                 changed_user = UserProfileInfo.objects.get(user=changed_user_base)
             if extra_edit_form.cleaned_data["minecraft_username"] != '':
                 changed_user.minecraft_username = extra_edit_form.cleaned_data["minecraft_username"]
