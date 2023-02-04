@@ -2,6 +2,9 @@ from requests import get, post
 
 from django.conf import settings
 
+from raptorWeb.authprofiles.models import RaptorUser
+from raptorWeb.authprofiles.auth import save_image_from_url_to_profile_info
+
 def exchange_code(discord_code):
 
     data = {
@@ -24,10 +27,16 @@ def exchange_code(discord_code):
     return info_response.json()
 
 def update_user_details(discord_user, new_info):
+    base_user = RaptorUser.objects.get(discord_user_info = discord_user)
     discord_tag = f'{new_info["username"]}#{new_info["discriminator"]}'
-    discord_user.profile_picture = f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
+    if discord_user.avatar_string != new_info["avatar"] and base_user.user_profile_info.picture_changed_manually != True:
+        save_image_from_url_to_profile_info(
+            model=base_user.user_profile_info,
+            url=f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
+        )
     discord_user.tag = f'{new_info["username"]}#{new_info["discriminator"]}'
-    discord_user.username = discord_tag.split('#')[0]
+    base_user.username = discord_tag.split('#')[0]
     discord_user.save()
+    base_user.save()
     return discord_user
     

@@ -12,6 +12,7 @@ from tempfile import NamedTemporaryFile
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 
 LOGGER = getLogger('raptorWeb.authprofiles.auth')
+
 def save_image_from_url_to_profile_info(model, url):
     image_request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     temp_image = NamedTemporaryFile(delete=True)
@@ -38,6 +39,7 @@ class DiscordAuthBackend(BaseBackend):
                 flags = user["flags"],
                 locale = user["locale"],
                 mfa_enabled = user["mfa_enabled"],
+                avatar_string = user["avatar"]
             )
 
             new_extra_info = UserProfileInfo.objects.create()
