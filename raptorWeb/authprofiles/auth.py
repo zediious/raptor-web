@@ -58,6 +58,6 @@ class DiscordAuthBackend(BaseBackend):
     def get_user(self, user_id):
 
         try:
-            return DiscordUserInfo.objects.get(pk=user_id)
-        except DiscordUserInfo.DoesNotExist:
+            return RaptorUser.objects.get(pk=user_id)
+        except RaptorUser.DoesNotExist:
             return None
