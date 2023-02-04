@@ -62,6 +62,10 @@ class RaptorUser(User):
     A Base user. Has optional OneToOne Fields to UserProfileInfo Model
     and DiscordUserInfo Model. Inherits from default Django user.
     """
+    user_slug = models.SlugField(
+        null=True
+    )
+    
     is_discord_user=  models.BooleanField(
         blank=True,
         null=True

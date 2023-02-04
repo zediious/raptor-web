@@ -2,28 +2,20 @@
 {% load serverContext %}
 
 {% if user.is_authenticated %}
-    {% else %}
-      <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
-      <div hx-get="/register" hx-trigger="load" hx-target="#registeration_modal" hx-swap="innerHTML"></div>
-    {% endif %}
+{% else %}
+    <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
+    <div hx-get="/register" hx-trigger="load" hx-target="#registeration_modal" hx-swap="innerHTML"></div>
+{% endif %}
 
 {% if user.is_authenticated %}
     <div class="float-end">
         <div class="dropstart">
         <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <div id="profile_picture_box">
-            {% if user.profile_picture %}
-                <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+            {% if user.user_profile_info.profile_picture %}
+                <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ user.user_profile_info.profile_picture }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
             {% else %}
-                {% for loaded_user in current_members %}
-                {% if user.get_username == loaded_user.user.username %}
-                    {% if loaded_user.profile_picture %}
-                         <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user.profile_picture.url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
-                    {% else %}
-                        <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
-                    {% endif %}
-                {% endif %}
-                {% endfor %}
+                <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
             {% endif %}
             </div>
         </button>
