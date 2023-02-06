@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from captcha.fields import CaptchaField
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo
-from raptorWeb.authprofiles.util.usergather import find_slugged_user
+from raptorWeb.authprofiles.util.usergather import find_slugged_user, check_profile_picture_dimensions
 
 class UserRegisterForm(forms.ModelForm):
     """
@@ -67,6 +67,25 @@ class UserProfileEditForm(forms.ModelForm):
     """
     Form returned for editing profile information
     """  
+    captcha = CaptchaField()
+
+    picture_changed_manually = forms.BooleanField(
+        label = "Reset Profile Picture",
+        help_text="If this is checked, your Profile Picture will be reset to your current Discord Avatar. This setting has no effect for Users that did not sign up with Discord.",
+        required=False
+    )
+
     class Meta():
         model = UserProfileInfo
-        fields = ('profile_picture', 'minecraft_username', 'favorite_modpack')
+        fields = ('picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
+
+    def clean(self):
+        """
+        Overrides default clean, while calling the superclass clean()
+        Check image dimensions of profile picture
+        """
+        clean_data = super().clean()
+        image = clean_data.get('profile_picture')
+        if image != None:
+            if check_profile_picture_dimensions(image) == False:
+                raise forms.ValidationError("Aspect ratio of profile picture must be relatively close to 1x1.")
