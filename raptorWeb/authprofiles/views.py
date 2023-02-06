@@ -13,7 +13,7 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
-from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo, UserProfileInfo
 from raptorWeb.authprofiles.util import discordAuth
 from raptorWeb.authprofiles.util.usergather import find_slugged_user
 
@@ -36,7 +36,6 @@ class RegisterUser(TemplateView):
             dictionary['user_path'] = BASE_USER_URL
             dictionary["registered"] = self.registered
             dictionary["register_form"] = self.register_form
-            dictionary["extra_form"] = self.extra_form
             
             return render(request, self.template_name, context=dictionary)
 
@@ -46,27 +45,21 @@ class RegisterUser(TemplateView):
     def post(self,request):
 
         register_form = UserRegisterForm(request.POST)
-        extra_form = UserProfileEditForm(request.POST)
 
         dictionary = {}
         dictionary['user_path'] = BASE_USER_URL
         dictionary["registered"] = self.registered
-        dictionary["register_form"] = register_form
-        dictionary["extra_form"] = extra_form
-        
+        dictionary["register_form"] = register_form        
 
-        if register_form.is_valid() and extra_form.is_valid():
+        if register_form.is_valid():
 
             LOGGER.info("A new User has been registered!")
             new_user = register_form.save()
+            new_user_extra = UserProfileInfo.objects.create()
             new_user.set_password(new_user.password)
-            new_user_extra = extra_form.save(commit=False)
-            new_user_extra.user = new_user
-            if "profile_picture" in request.FILES:
-                new_user_extra.profile_picture = request.FILES["profile_picture"]
             new_user.user_slug = slugify(new_user.username)
-            new_user_extra.save()
             new_user.user_profile_info = new_user_extra
+            new_user_extra.save()
             new_user.save()
             registered = True
             dictionary["registered"] = registered
@@ -76,7 +69,6 @@ class RegisterUser(TemplateView):
         else:
 
             dictionary["register_form"] = register_form
-            dictionary["extra_form"] = extra_form
             messages.error(request, register_form.errors.as_text().replace('* __all__', ''))
             return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
