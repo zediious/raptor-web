@@ -18,7 +18,6 @@ urlpatterns = [
     path('applications/', SR.Info.StaffApps.as_view(), name="staff_apps"),
     # Users
     path('user/', SR.User_Views.SiteMembers.as_view(), name='site_members'),
-    path('user/<str:profile_name>', SR.User_Views.User_Page.as_view(), name="user_page"),
-    path('user/<str:profile_name>/edit', SR.User_Views.User_Edit_Page.as_view(), name="user_edit_page"),
+    path('user/<str:profile_name>', SR.User_Views.User_Page.as_view(), name="user_page")
 
 ]
