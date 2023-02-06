@@ -120,13 +120,3 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 return get_or_create_informative_text(context = context)
-
-        class User_Edit_Page(TemplateView):
-            """
-            Edit a User's Info
-            """
-            template_name = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user_edit.html'))
-
-            def get_context_data(self, **kwargs):
-                context = super().get_context_data(**kwargs)
-                return get_or_create_informative_text(context = context)

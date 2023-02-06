@@ -7,9 +7,17 @@
                 <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                     <div id="profile_picture_box" class="mx-auto d-block">
                         {% if object.user_profile_info.profile_picture %}
-                            <img class="w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="">
+                            {% if object.is_staff == True %}
+                            <img class="border border-2 border-danger w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="">
+                            {% else %}
+                            <img class="border border-2 border-secondary w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="">
+                            {% endif %}
                         {% else %}
-                            <img id="noProfilePicture" class="w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
+                            {% if object.is_staff == True %}
+                            <img id="noProfilePicture" class="border border-2 border-danger w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
+                            {% else %}
+                            <img id="noProfilePicture" class="border border-2 border-secondary w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div class="col-10 w-100 text-center">

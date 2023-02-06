@@ -16,11 +16,35 @@
 
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
-    <div class="card bg-dark m-3 p-3">
-        <div class="row">
-            <a role="button" href="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}/edit" class="btn btn-primary">
+    <div hx-get="/profile{{request.path|slice:'8:'}}edit?requested_user={{user.username}}" hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
+    <div class="modal fade" id="edit_profile_modal" tabindex="-1" aria-labelledby="Edit Profile" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+                Edit Profile
+            </div>
+            <div class="modal-body" id="edit_profile_modal_body">
+            
+                <div id="edit_profile_replace"></div>
+            
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="m-3 p-3">
+        <div class="row"> 
+            <button role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile_modal">
                 Edit Profile Details
-            </a>
+            </button>
+            {% if messages %}
+            <ul class="messages alert alert-warning">
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
     {% endif %}

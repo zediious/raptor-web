@@ -13,9 +13,17 @@
         <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <div id="profile_picture_box">
             {% if loaded_user.user_profile_info.profile_picture %}
+                {% if loaded_user.is_staff %}
+                <img id="profilePicture" class="border border-danger border-2 w-100" src="{{ loaded_user.user_profile_info.profile_picture.url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                {% else %}
                 <img id="profilePicture" class="border border-secondary border-2 w-100" src="{{ loaded_user.user_profile_info.profile_picture.url }}" alt="Profile" onerror=this.src="{% static 'image/no_user.webp' %}">
+                {% endif %}
             {% else %}
+                {% if loaded_user.is_staff %}
+                <img id="noProfilePicture" class="border border-danger border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                {% else %}
                 <img id="noProfilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                {% endif %}
             {% endif %}
             </div>
         </button>
@@ -23,7 +31,6 @@
             <li><span class="text-center text-white"><p class="text-white m-1">Welcome, {{user}}</p></span></li>
             <hr style="color: white">
             <li><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.get_username|slugify}}">Profile</a></li>
-            <li><a class="dropdown-item text-white" href="/{{user_path}}/{{user.get_username|slugify}}/edit">Edit Profile</a></li>
             {% if user.is_staff %}
             <li><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></li>
             {% endif %}

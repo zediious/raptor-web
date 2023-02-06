@@ -8,12 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import localtime, now
 from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
 from raptorWeb.authprofiles.util.usergather import find_slugged_user
 
@@ -217,11 +217,9 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
                 if displayed_user == None:
                     return redirect('/nouserfound')
-                else:
-                    instance_dict.update({
-                                "displayed_profile": displayed_user
-                            })
 
+                else:
+                    instance_dict["displayed_profile"] = displayed_user
                     return render(request, self.template_name, context=instance_dict)
 
             else: 
@@ -232,10 +230,11 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
     def post(self, request, profile_name):
 
-        extra_edit_form = UserProfileEditForm(request.POST)
+        extra_edit_form = UserProfileEditForm(request.POST, request.FILES)
         instance_dict = {}
         instance_dict['user_path'] = BASE_USER_URL
         instance_dict["extra_edit_form"] = self.extra_edit_form
+        instance_dict["displayed_profile"] = find_slugged_user(profile_name)
         if extra_edit_form.is_valid():
             changed_user = RaptorUser.objects.get(username=request.user)
             if extra_edit_form.cleaned_data["minecraft_username"] != '':
@@ -244,11 +243,17 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 changed_user.user_profile_info.favorite_modpack = extra_edit_form.cleaned_data["favorite_modpack"]
             if "profile_picture" in request.FILES:
                 changed_user.user_profile_info.profile_picture = request.FILES["profile_picture"]
+                changed_user.user_profile_info.profile_picture.name = f"profile_picture_{changed_user.pk}_{localtime(now())}.png"
                 changed_user.user_profile_info.picture_changed_manually = True
+            if extra_edit_form.cleaned_data["picture_changed_manually"] == True and changed_user.is_discord_user == True:
+                discordAuth.save_image_from_url_to_profile_info(
+                    changed_user.user_profile_info,
+                    f'https://cdn.discordapp.com/avatars/{changed_user.discord_user_info.id}/{changed_user.discord_user_info.avatar_string}.png')
             changed_user.user_profile_info.save()
             changed_user.save()
             LOGGER.info(f"{changed_user.username} modified their profile details")
-            return redirect(f'../../../{BASE_USER_URL}/{slugify(changed_user.username)}')
+            messages.error(request, "Profile details successfully changed!")
+            return render(request, self.template_name, context=instance_dict)
         else:
             instance_dict["extra_edit_form"] = extra_edit_form
             return render(request, self.template_name, context=instance_dict)
