@@ -42,7 +42,7 @@ class Server_Announcements(ListView):
 
         def get_queryset(self):
             server = Server.objects.get(server_address=self.request.GET.get('server_address'))
-            return ServerAnnouncement.objects.filter(server=server)
+            return ServerAnnouncement.objects.filter(server=server).order_by('-date')
 
         def get(self, request, *args, **kwargs):
             if request.headers.get('HX-Request') == "true":
