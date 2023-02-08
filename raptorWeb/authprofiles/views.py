@@ -56,6 +56,7 @@ class RegisterUser(TemplateView):
             new_user.set_password(new_user.password)
             new_user.user_slug = slugify(new_user.username)
             new_user.user_profile_info = new_user_extra
+            new_user.is_discord_user = False
             new_user_extra.save()
             new_user.save()
             registered = True
