@@ -234,6 +234,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 discordAuth.save_image_from_url_to_profile_info(
                     changed_user.user_profile_info,
                     f'https://cdn.discordapp.com/avatars/{changed_user.discord_user_info.id}/{changed_user.discord_user_info.avatar_string}.png')
+            changed_user.user_profile_info.picture_changed_manually = False
             changed_user.user_profile_info.save()
             changed_user.save()
             LOGGER.info(f"{changed_user.username} modified their profile details")
