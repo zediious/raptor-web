@@ -30,7 +30,7 @@ def exchange_code(discord_code):
 def update_user_details(discord_user, new_info):
     base_user = RaptorUser.objects.get(discord_user_info = discord_user)
     discord_tag = f'{new_info["username"]}#{new_info["discriminator"]}'
-    if RaptorUser.objects.filter(user_slug=slugify(new_info["username"])).count() > 0:
+    if RaptorUser.objects.filter(user_slug=slugify(new_info["username"]), is_discord_user = False).count() > 0:
         username = discord_tag
     else:
         username = discord_tag.split('#')[0]
