@@ -24,6 +24,12 @@ class Global_Announcements(ListView):
         context = super().get_context_data(**kwargs)
         return context
 
+    def get_queryset(self):
+        if self.request.GET.get('amount') == None:
+            return GlobalAnnouncement.objects.all().order_by('-date')
+        else:
+            return GlobalAnnouncement.objects.all().order_by('-date')[:int(self.request.GET.get('amount'))]
+
     def get(self, request, *args, **kwargs):
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
