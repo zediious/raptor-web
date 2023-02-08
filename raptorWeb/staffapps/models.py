@@ -5,19 +5,23 @@ class StaffApplication(models.Model):
     Applications for Staff
     """
     age = models.IntegerField(
-        verbose_name="Applicant age")
+        verbose_name="Applicant age",
+        default="Default")
 
     time = models.CharField(
         max_length=500, 
-        verbose_name="Time Zone and alottable time")
+        verbose_name="Time Zone and alottable time",
+        default="Default")
 
     mc_name = models.CharField(
         max_length=500, 
-        verbose_name="Minecraft Username")
+        verbose_name="Minecraft Username",
+        default="Default")
 
     discord_name = models.CharField(
         max_length=500, 
-        verbose_name="Discord Username/ID")
+        verbose_name="Discord Username/ID",
+        default="Default")
 
     voice_chat = models.BooleanField(
         max_length=500,
@@ -26,24 +30,31 @@ class StaffApplication(models.Model):
 
     description = models.TextField(
         max_length=500, 
-        verbose_name="General self-description")
+        verbose_name="General self-description",
+        default="Default")
 
     modpacks = models.TextField(
         max_length=500, 
-        verbose_name="Knowledge of server modpacks/general Modded Minecraft")
+        verbose_name="Knowledge of server modpacks/general Modded Minecraft",
+        default="Default")
 
     experience = models.TextField(
         max_length=500, 
-        verbose_name="Experience on other servers")
+        verbose_name="Experience on other servers",
+        default="Default")
 
     why_join = models.TextField(
         max_length=500, 
-        verbose_name="Reasons for wanting to be staff.")
+        verbose_name="Reasons for wanting to be staff.",
+        default="Default")
 
     def __str__(self):
         return str(
             "Application from: {}".format(self.discord_name)
             )
+
+    class Meta:
+        abstract = True
 
 class AdminApplication(StaffApplication):
     """
@@ -57,23 +68,28 @@ class AdminApplication(StaffApplication):
     
     plugins = models.TextField(
         max_length=500, 
-        verbose_name="Knowledge of plugins/server mods and adaptability")
+        verbose_name="Knowledge of plugins/server mods and adaptability",
+        default="Default")
 
     api = models.TextField(
         max_length=500, 
-        verbose_name="Knowledge of server APIs and Minecraft proxies.")
+        verbose_name="Knowledge of server APIs and Minecraft proxies.",
+        default="Default")
 
     it_knowledge = models.TextField(
         max_length=500, 
-        verbose_name="IT/Software/Networking knowledge, as well as whether one's work involves these topics.")
+        verbose_name="IT/Software/Networking knowledge, as well as whether one's work involves these topics.",
+        default="Default")
 
     linux = models.TextField(
         max_length=500, 
-        verbose_name="Knowledge in Linux System Administration and CLI use.")
+        verbose_name="Knowledge in Linux System Administration and CLI use.",
+        default="Default")
 
     ptero = models.TextField(
         max_length=500, 
-        verbose_name="Knowledge of Pterodactyl Panel")
+        verbose_name="Knowledge of Pterodactyl Panel",
+        default="Default")
 
     class Meta:
         verbose_name = 'Admin Application'
@@ -92,7 +108,8 @@ class ModeratorApplication(StaffApplication):
     
     contact_uppers = models.TextField(
         max_length=500, 
-        verbose_name="Ability to reach higher-ups")
+        verbose_name="Ability to reach higher-ups",
+        default="Default")
 
     class Meta:
         verbose_name = 'Moderator Application'
