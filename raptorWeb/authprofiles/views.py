@@ -27,13 +27,11 @@ class RegisterUser(TemplateView):
     template_name = join(AUTH_TEMPLATE_DIR, 'registration.html')
     registered = False
     register_form = UserRegisterForm()
-    extra_form = UserProfileEditForm()
 
     def get(self, request):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {}
-            dictionary['user_path'] = BASE_USER_URL
             dictionary["registered"] = self.registered
             dictionary["register_form"] = self.register_form
             
@@ -47,7 +45,6 @@ class RegisterUser(TemplateView):
         register_form = UserRegisterForm(request.POST)
 
         dictionary = {}
-        dictionary['user_path'] = BASE_USER_URL
         dictionary["registered"] = self.registered
         dictionary["register_form"] = register_form        
 
@@ -82,7 +79,6 @@ class User_Login_Form(TemplateView):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {}
-            dictionary['user_path'] = BASE_USER_URL
             dictionary["login_form"] = self.login_form
             template_name = join(AUTH_TEMPLATE_DIR, 'login.html')
             return render(request, template_name, context=dictionary)
@@ -93,7 +89,6 @@ class User_Login_Form(TemplateView):
 
         login_form = UserLoginForm(request.POST)
         dictionary = {}
-        dictionary['user_path'] = BASE_USER_URL
         dictionary["login_form"] = self.login_form
 
         if login_form.is_valid():
@@ -151,7 +146,6 @@ class User_Dropdown(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             instance_dict = {}
-            instance_dict['user_path'] = BASE_USER_URL
             if request.user.is_authenticated:
                 instance_dict['loaded_user'] = RaptorUser.objects.get(
                     user_slug = find_slugged_user(str(request.user)).user_slug)
@@ -203,7 +197,6 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
         if request.headers.get('HX-Request') == "true":
             if slugify(str(request.user)) == slugify(profile_name):
                 instance_dict = {}
-                instance_dict['user_path'] = BASE_USER_URL
                 instance_dict["extra_edit_form"] = self.extra_edit_form
                 displayed_user = find_slugged_user(profile_name)
 
@@ -224,7 +217,6 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
         extra_edit_form = UserProfileEditForm(request.POST, request.FILES)
         instance_dict = {}
-        instance_dict['user_path'] = BASE_USER_URL
         instance_dict["extra_edit_form"] = self.extra_edit_form
         instance_dict["displayed_profile"] = find_slugged_user(profile_name)
         if extra_edit_form.is_valid():
@@ -260,7 +252,6 @@ class Access_Denied(TemplateView):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {}
-            dictionary['user_path'] = BASE_USER_URL
             return render(request, self.template_name, context=dictionary)
         else:
             return HttpResponseRedirect('../')
@@ -275,7 +266,6 @@ class No_User_Found(TemplateView):
 
         if request.headers.get('HX-Request') == "true":
             dictionary = {}
-            dictionary['user_path'] = BASE_USER_URL
             return render(request, self.template_name, context=dictionary)
         else:
             return HttpResponseRedirect('../')
