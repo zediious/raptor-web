@@ -182,7 +182,7 @@ class User_Profile(DetailView):
             return HttpResponseRedirect('../../')
 
     def get_object(self):
-        return RaptorUser.objects.get(user_slug = slugify(self.request.GET.get('requested_user')))
+        return RaptorUser.objects.get(user_slug = slugify(self.request.path.split('/')[2]))
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     """
