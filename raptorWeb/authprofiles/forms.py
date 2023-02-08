@@ -4,7 +4,23 @@ from django.contrib.auth import authenticate
 from captcha.fields import CaptchaField
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo
-from raptorWeb.authprofiles.util.usergather import find_slugged_user, check_profile_picture_dimensions
+from raptorWeb.authprofiles.util.usergather import find_slugged_user
+
+def check_profile_picture_dimensions(image):
+    """
+    Check if an image's aspect ratio is 1x1 or very close to.
+    Will return True if so. Return False if not.
+    """
+    if image.image.width > image.image.height:
+        if (abs(image.image.width-image.image.height) / image.image.height) * 100 <= 30:
+            return True
+        return False
+    elif image.image.height > image.image.width:
+        if (abs(image.image.height-image.image.width) / image.image.width) * 100 <= 30:
+            return True
+        return False
+    else:
+        return True
 
 class UserRegisterForm(forms.ModelForm):
     """
