@@ -3,7 +3,7 @@
     <div class="row">
         {% for object in object_list reversed %}
         <div class="col-md-4 col-12">
-            <a href="{{request.META.HTTP_REFERER}}{{object.username}}">
+            <a href="{{request.META.HTTP_REFERER}}{{object.username|slugify}}">
                 <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                     <div id="profile_picture_box" class="mx-auto d-block">
                         {% if object.user_profile_info.profile_picture %}

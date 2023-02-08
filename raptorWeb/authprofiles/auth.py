@@ -25,7 +25,7 @@ class DiscordAuthBackend(BaseBackend):
 
     def authenticate(self, request, user):
         try:
-            find_user = RaptorUser.objects.get(user_slug=slugify(user["username"]))
+            find_user = RaptorUser.objects.get(user_slug=slugify(user["username"]), is_discord_user=True)
             return find_user
         except RaptorUser.DoesNotExist:
             LOGGER.info("No user found with Username, creating now")
@@ -45,12 +45,16 @@ class DiscordAuthBackend(BaseBackend):
             new_extra_info = UserProfileInfo.objects.create()
             save_image_from_url_to_profile_info(new_extra_info, avatar_url)
 
-            username = discord_tag.split('#')[0]
+            if RaptorUser.objects.filter(user_slug=slugify(user["username"])).count() > 0:
+                username = discord_tag
+            else:
+                username = discord_tag.split('#')[0]
             new_user = RaptorUser.objects.create( 
                 is_discord_user = True,
                 username = username,
                 user_slug = slugify(username),
                 password = randint(100000000, 999999999),
+                email = user["email"],
                 user_profile_info = new_extra_info,
                 discord_user_info = new_discord_info
             )
