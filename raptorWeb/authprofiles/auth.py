@@ -28,37 +28,41 @@ class DiscordAuthBackend(BaseBackend):
             find_user = RaptorUser.objects.get(user_slug=slugify(user["username"]), is_discord_user=True)
             return find_user
         except RaptorUser.DoesNotExist:
-            LOGGER.info("No user found with Username, creating now")
-            discord_tag = f'{user["username"]}#{user["discriminator"]}'
-            avatar_url = f'https://cdn.discordapp.com/avatars/{user["id"]}/{user["avatar"]}.png'
+            try: 
+                find_user = RaptorUser.objects.get(user_slug=slugify(f'{user["username"]}#{user["discriminator"]}'), is_discord_user=True)
+                return find_user
+            except RaptorUser.DoesNotExist:
+                LOGGER.info("No user found with Username, creating now")
+                discord_tag = f'{user["username"]}#{user["discriminator"]}'
+                avatar_url = f'https://cdn.discordapp.com/avatars/{user["id"]}/{user["avatar"]}.png'
 
-            new_discord_info = DiscordUserInfo.objects.create(
-                id = user["id"],
-                tag = discord_tag,
-                pub_flags = user["public_flags"],
-                flags = user["flags"],
-                locale = user["locale"],
-                mfa_enabled = user["mfa_enabled"],
-                avatar_string = user["avatar"]
-            )
+                new_discord_info = DiscordUserInfo.objects.create(
+                    id = user["id"],
+                    tag = discord_tag,
+                    pub_flags = user["public_flags"],
+                    flags = user["flags"],
+                    locale = user["locale"],
+                    mfa_enabled = user["mfa_enabled"],
+                    avatar_string = user["avatar"]
+                )
 
-            new_extra_info = UserProfileInfo.objects.create()
-            save_image_from_url_to_profile_info(new_extra_info, avatar_url)
+                new_extra_info = UserProfileInfo.objects.create()
+                save_image_from_url_to_profile_info(new_extra_info, avatar_url)
 
-            if RaptorUser.objects.filter(user_slug=slugify(user["username"])).count() > 0:
-                username = discord_tag
-            else:
-                username = discord_tag.split('#')[0]
-            new_user = RaptorUser.objects.create( 
-                is_discord_user = True,
-                username = username,
-                user_slug = slugify(username),
-                password = randint(100000000, 999999999),
-                email = user["email"],
-                user_profile_info = new_extra_info,
-                discord_user_info = new_discord_info
-            )
-            return new_user
+                if RaptorUser.objects.filter(user_slug=slugify(user["username"])).count() > 0:
+                    username = discord_tag
+                else:
+                    username = discord_tag.split('#')[0]
+                new_user = RaptorUser.objects.create( 
+                    is_discord_user = True,
+                    username = username,
+                    user_slug = slugify(username),
+                    password = randint(100000000, 999999999),
+                    email = user["email"],
+                    user_profile_info = new_extra_info,
+                    discord_user_info = new_discord_info
+                )
+                return new_user
 
 
     def get_user(self, user_id):
