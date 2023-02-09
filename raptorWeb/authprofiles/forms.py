@@ -46,6 +46,27 @@ class UserRegisterForm(forms.ModelForm):
 
             raise forms.ValidationError("Password fields must match")
 
+class UserPasswordResetForm(forms.Form):
+    """
+    Form returned for resetting a non-discord user's password
+    """
+    username = forms.CharField()
+    email = forms.EmailField(widget=forms.EmailInput())
+    captcha = CaptchaField()
+
+    def clean(self):
+        """
+        Ensure a user with supplied username and email exists
+        """
+        clean_data = super().clean()
+        username = clean_data.get("username")
+        email = clean_data.get("email")
+        found_user = RaptorUser.objects.filter(username = username, email = email)
+        if found_user.count() == 0:
+            raise forms.ValidationError("No user with submitted username and email exists")
+        elif found_user.count() > 1:
+            raise forms.ValidationError("There was an error processing this request, please contact a site admin.")
+
 class UserLoginForm(forms.Form):
     """
     Form returned for logging into a user with a password

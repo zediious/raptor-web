@@ -14,6 +14,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name="logout"),
     path('accessdenied/', views.Access_Denied.as_view(), name="access_denied"),
     path('nouserfound/', views.No_User_Found.as_view(), name="no_user_found"),
+    # Password Resets
+    path('reset_password/', views.UserResetPasswordForm.as_view(), name="reset_password_form"),
     # Profiles
     path('profile/<slug:user_slug>/', views.User_Profile.as_view(), name="user_profile"),
     path('profile/<str:profile_name>/edit/', views.User_Profile_Edit.as_view(), name="user_profile_edit"),

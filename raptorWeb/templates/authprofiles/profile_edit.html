@@ -1,7 +1,7 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-<form class="form p-3 text-white" enctype="multipart/form-data" hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %} ">
+<form class="form p-3 text-white" enctype="multipart/form-data" hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}" hx-swap="outerHTML">
 
     {% if messages %}
     <ul class="messages alert alert-warning">
