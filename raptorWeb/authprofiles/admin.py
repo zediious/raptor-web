@@ -35,7 +35,7 @@ class RaptorUserAdmin(UserAdmin):
         }),
         ('Sensitive', {
             'classes': ('collapse',),
-            'fields': ('is_superuser', 'is_staff', 'password')
+            'fields': ('is_superuser', 'is_staff', 'password', 'password_reset_token')
         })
     )
 

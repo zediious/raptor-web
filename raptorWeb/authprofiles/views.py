@@ -12,14 +12,17 @@ from django.utils.timezone import localtime, now
 from django.utils.text import slugify
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
 from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
+from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
 
 LOGGER = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR = getattr(settings, 'AUTH_TEMPLATE_DIR')
 DISCORD_AUTH_URL = getattr(settings, 'DISCORD_AUTH_URL')
 BASE_USER_URL = getattr(settings, 'BASE_USER_URL')
+
+token_generator = RaptorUserTokenGenerator()
 
 class RegisterUser(TemplateView):
 
@@ -54,8 +57,8 @@ class UserResetPasswordForm(TemplateView):
     send an email to submitted email detailing a password reset, if the
     entered email matches a non-discord user.
     """
-    password_reset_form = UserPasswordResetForm
-    template_name = join(AUTH_TEMPLATE_DIR, 'password_reset.html')
+    password_reset_form = UserPasswordResetEmailForm
+    template_name = join(AUTH_TEMPLATE_DIR, 'password_reset_email_form.html')
 
     def get(self, request):
         if request.headers.get('HX-Request') != "true":
@@ -68,11 +71,55 @@ class UserResetPasswordForm(TemplateView):
         password_reset_form = self.password_reset_form(request.POST)
         dictionary = {"password_reset_form": password_reset_form}
         if password_reset_form.is_valid():
+            resetting_user = RaptorUser.objects.get(username = password_reset_form.cleaned_data["username"], email = password_reset_form.cleaned_data["email"])
+            if resetting_user.is_discord_user == True:
+                messages.error(request, "Discord users cannot reset their password")
+                return render(request, self.template_name, context=dictionary)
+            resetting_user.password_reset_token = token_generator.make_token(resetting_user)
+            resetting_user.save()
             LOGGER.info(f"Password reset submitted")
             messages.error(request, "Await reset link at user email")
             return render(request, self.template_name, context=dictionary)
         else:
             dictionary = {"password_reset_form": password_reset_form}
+            return render(request, self.template_name, context=dictionary)
+
+class UserResetPasswordConfirm(TemplateView):
+    """
+    View returned from password reset links emailed to users. Will confirm that
+    token in PATH matches user's reset token, then return form to reset password.
+    """
+    final_password_reset_form = UserPasswordResetForm
+    template_name = join(AUTH_TEMPLATE_DIR, 'password_reset_form.html')
+
+    def get(self, request, user_reset_token):
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('../')
+        else:
+            try:
+                resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
+                if resetting_user.password_reset_token == "":
+                    return redirect('/accessdenied')
+                return render(request, self.template_name, context={
+                    "final_password_reset_form": self.final_password_reset_form,
+                    "resetting_user_token": resetting_user.password_reset_token})
+            except RaptorUser.DoesNotExist:
+                return redirect('/accessdenied')
+
+    def post(self, request, user_reset_token):
+        final_password_reset_form = self.final_password_reset_form(request.POST)
+        dictionary = {"final_password_reset_form": final_password_reset_form}
+        if final_password_reset_form.is_valid():
+            resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
+            resetting_user.set_password(final_password_reset_form.cleaned_data["password"])
+            resetting_user.password_reset_token = ""
+            resetting_user.save()
+            LOGGER.info(f"A User has reset their password")
+            return render(request, join(AUTH_TEMPLATE_DIR, 'reset_successful.html'), context=dictionary)
+        else:
+            resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
+            dictionary = {"final_password_reset_form": final_password_reset_form}
+            dictionary["resetting_user_token"] = resetting_user.password_reset_token
             return render(request, self.template_name, context=dictionary)
 
 

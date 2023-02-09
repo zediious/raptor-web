@@ -16,6 +16,7 @@ urlpatterns = [
     path('nouserfound/', views.No_User_Found.as_view(), name="no_user_found"),
     # Password Resets
     path('reset_password/', views.UserResetPasswordForm.as_view(), name="reset_password_form"),
+    path('reset_password_confirm/<str:user_reset_token>', views.UserResetPasswordConfirm.as_view(), name="reset_password_confirm_form"),
     # Profiles
     path('profile/<slug:user_slug>/', views.User_Profile.as_view(), name="user_profile"),
     path('profile/<str:profile_name>/edit/', views.User_Profile_Edit.as_view(), name="user_profile_edit"),

@@ -120,3 +120,18 @@ class ShadowRaptor():
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
                 return get_or_create_informative_text(context = context)
+
+        class User_Pass_Reset(TemplateView):
+            """
+            Page to reset user password
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user_pass_reset.html'))
+
+            def get_context_data(self, **kwargs):
+                context = super().get_context_data(**kwargs)
+                print(self.request.path.split('/')[3])
+                context.update({
+                    "active_user_for_reset": self.request.path.split('/')[3],
+                    "active_user_password_reset_token": self.request.path.split('/')[4]
+                })
+                return get_or_create_informative_text(context = context)

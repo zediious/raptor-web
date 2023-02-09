@@ -182,6 +182,13 @@ class RaptorUser(AbstractUser):
     and DiscordUserInfo Model. Inherits from default Django user.
     """
     objects = RaptorUserManager()
+
+    password_reset_token = models.CharField(
+        null=True,
+        blank=True,
+        max_length=250,
+        verbose_name="Password Reset Token"
+    )
     
     user_slug = models.SlugField(
         null=True,
