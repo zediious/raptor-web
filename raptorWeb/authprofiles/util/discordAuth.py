@@ -35,7 +35,7 @@ def update_user_details(discord_user, new_info):
         username = discord_tag.split('#')[0]
     if discord_user.avatar_string != new_info["avatar"] and base_user.user_profile_info.picture_changed_manually != True:
         RaptorUser.objects.save_image_from_url_to_profile_info(
-            model=base_user.user_profile_info,
+            user_profile_info=base_user.user_profile_info,
             url=f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
         )
     discord_user.tag = f'{new_info["username"]}#{new_info["discriminator"]}'
