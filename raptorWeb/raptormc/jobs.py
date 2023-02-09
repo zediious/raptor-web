@@ -253,7 +253,7 @@ def export_users():
                 }
             }
         })
-    normal_user_list_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
+    normal_user_list_json = open(join(settings.BASE_DIR, 'normal_user_list.json'), "w")
     normal_user_list_json.write(dumps(normal_user_into_raptoruser, indent=4))
     normal_user_list_json.close()
     discord_user_list = DiscordUserInfo.objects.all()
@@ -282,6 +282,6 @@ def export_users():
                 }
             }
         })
-    discord_user_list_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
+    discord_user_list_json = open(join(settings.BASE_DIR, 'discord_user_list.json'), "w")
     discord_user_list_json.write(dumps(discord_user_into_raptoruser, indent=4))
     discord_user_list_json.close()
