@@ -236,7 +236,10 @@ def export_users():
     discord_user_into_raptoruser = {}
     normal_user_list = UserProfileInfo.objects.all()
     for user in normal_user_list:
-        local_image_file = copy_image_from_prod_to_folder_default(user)
+        try:
+            local_image_file = copy_image_from_prod_to_folder_default(user)
+        except AttributeError:
+            local_image_file = "none"
         normal_user_into_raptoruser.update({
             f'{user.user.username}': {
                 "username": user.user.username,
