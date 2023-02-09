@@ -56,9 +56,6 @@ class RaptorUserAdmin(UserAdmin):
 
     list_display = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
 
-    filter_horizontal = ('user_permissions', 'groups')
-
-admin.site.unregister(User)
 admin.site.unregister(Group)
 
 admin.site.register(RaptorUser, RaptorUserAdmin)
