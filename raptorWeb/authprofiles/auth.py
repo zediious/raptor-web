@@ -1,5 +1,4 @@
 from logging import getLogger
-from random import randint
 
 from django.contrib.auth.backends import BaseBackend
 from django.core.files import File
@@ -57,11 +56,12 @@ class DiscordAuthBackend(BaseBackend):
                     is_discord_user = True,
                     username = username,
                     user_slug = slugify(username),
-                    password = randint(100000000, 999999999),
                     email = user["email"],
                     user_profile_info = new_extra_info,
                     discord_user_info = new_discord_info
                 )
+                new_user.set_unusable_password()
+                new_user.save()
                 return new_user
 
 
