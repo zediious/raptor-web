@@ -547,7 +547,7 @@ class ShadowRaptor():
             def get(self, request):
                 if request.headers.get('HX-Request') == "true":
                     template_name = join(settings.RAPTOMC_TEMPLATE_DIR, 'no_access.html')
-                    export_users()
                     return render(request, template_name, context=player_poller.currentPlayers_DB)
                 else:
+                    export_users()
                     return HttpResponseRedirect('../')
