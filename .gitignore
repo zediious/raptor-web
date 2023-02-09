@@ -131,6 +131,10 @@ dmypy.json
 # LOCK Files
 playerCounts.LOCK
 
+# User data to be imported
+normal_user_list.json
+discord_user_list.json
+
 # Server data to be imported
 server_data_full.json
 
