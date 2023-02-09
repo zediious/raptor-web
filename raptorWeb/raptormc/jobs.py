@@ -219,12 +219,28 @@ def export_server_data():
     server_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
     server_json.write(dumps(current_servers, indent=4))
     server_json.close()
-  
+
+def save_image_from_url_to_folder_discord(url, user):
+    local_image_path = join(settings.BASE_DIR, f'/newpics/profile_picture_{user.id}_{localtime(now())}')
+    img_data = requests.get(url).content
+    handler = open(join(settings.BASE_DIR, local_image_path), 'w')
+    handler.write(img_data)
+    handler.close()
+    return local_image_path
+
+def copy_image_from_prod_to_folder_default(user):
+    copyfile(join(settings.BASE_DIR, f'raptorWeb/media/profile_pictures/{user.user.profile_picture}'), join(settings.BASE_DIR, f'newpics/profile_picture_{user.id}_{localtime(now())}'))
+    return f'newpics/profile_picture_{user.id}_{localtime(now())}'
+    
 def export_users():
     normal_user_into_raptoruser = {}
     discord_user_into_raptoruser = {}
     normal_user_list = UserProfileInfo.objects.all()
     for user in normal_user_list:
+        try:
+            local_image_file = copy_image_from_prod_to_folder_default(user)
+        except AttributeError:
+            local_image_file = "none"
         normal_user_into_raptoruser.update({
             f'{user.user.username}': {
                 "username": user.user.username,
@@ -235,6 +251,7 @@ def export_users():
                 "password": user.user.password,
                 "user_profile_info": {
                     "picture_has_been_changed": True,
+                    "profile_picture": local_image_file,
                     "minecraft_username": user.minecraft_username,
                     "favorite_modpack": user.favorite_modpack
                 }
@@ -245,14 +262,17 @@ def export_users():
     normal_user_list_json.close()
     discord_user_list = DiscordUserInfo.objects.all()
     for user in discord_user_list:
+        local_image_path = save_image_from_url_to_folder_discord(url=f'https://cdn.discordapp.com/avatars/{user.id}/{user.profile_picture}.png', user=user)
         discord_user_into_raptoruser.update({
             f'{user.username}': {
                 "username": user.username,
                 "user_slug": slugify(user.username),
                 "date_joined": str(localtime(now())),
                 "last_login": str(localtime(now())),
+                "temp_profilepic_path": local_image_path,
                 "user_profile_info": {
                     "picture_has_been_changed": True,
+                    "profile_picture": user.profile_picture,
                     "minecraft_username": user.minecraft_username,
                     "favorite_modpack": user.favorite_modpack
                 },
