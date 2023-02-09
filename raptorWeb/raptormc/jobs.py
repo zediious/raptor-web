@@ -223,9 +223,8 @@ def export_server_data():
 def save_image_from_url_to_folder_discord(url, user):
     local_image_path = f'newpics/profile_picture_{user.id}_{localtime(now())}'
     img_data = requests.get(url).content
-    handler = open(join(settings.BASE_DIR, local_image_path), 'wb')
-    handler.write(img_data)
-    handler.close()
+    with open(join(settings.BASE_DIR, local_image_path), 'wb') as handler:
+        handler.write(img_data)
     return local_image_path
 
 def copy_image_from_prod_to_folder_default(user):
