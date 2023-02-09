@@ -315,6 +315,8 @@ DISCORD_APP_SECRET = getenv('DISCORD_OAUTH_APP_SECRET')
 DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
 DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 
+IMPORT_USERS = True if getenv('IMPORT_USERS') == 'True' else False
+
 # ** Settings for "raptorbot" app **
 # Set to True to enable website using scraped Global Announcements
 USE_GLOBAL_ANNOUNCEMENT = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
