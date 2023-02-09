@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from captcha.fields import CaptchaField
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo
-from raptorWeb.authprofiles.util.usergather import find_slugged_user
+from raptorWeb.authprofiles.util.userUtil import find_slugged_user
 
 def check_profile_picture_dimensions(image):
     """
