@@ -12,7 +12,7 @@ from django.utils.timezone import localtime, now
 from django.utils.text import slugify
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
 from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
 
@@ -25,56 +25,68 @@ class RegisterUser(TemplateView):
 
     template_name = join(AUTH_TEMPLATE_DIR, 'registration.html')
     registered = False
-    register_form = UserRegisterForm()
+    register_form = UserRegisterForm
 
     def get(self, request):
-
-        if request.headers.get('HX-Request') == "true":
-            dictionary = {}
-            dictionary["registered"] = self.registered
-            dictionary["register_form"] = self.register_form
-            
-            return render(request, self.template_name, context=dictionary)
-
-        else:
+        if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('../')
+        else:
+            return render(request, self.template_name, context={
+                "register_form": self.register_form,
+                "registered": self.registered})
 
-    def post(self,request):
-
-        register_form = UserRegisterForm(request.POST)
-
-        dictionary = {}
-        dictionary["registered"] = self.registered
-        dictionary["register_form"] = register_form        
-
+    def post(self, request):
+        register_form = self.register_form(request.POST)
+        dictionary = {"register_form": register_form}
         if register_form.is_valid():
-
             LOGGER.info("A new User has been registered!")
             new_user = RaptorUser.objects.create_user(register_form)
-            registered = True
-            dictionary["registered"] = registered
-            login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')
-            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
-
+            self.registered = True
+            dictionary["registered"] = self.registered
+            return render(request, self.template_name, context=dictionary)
         else:
+            dictionary = {"register_form": register_form}
+            return render(request, self.template_name, context=dictionary)
 
-            dictionary["register_form"] = register_form
-            messages.error(request, register_form.errors.as_text().replace('* __all__', ''))
-            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+class UserResetPasswordForm(TemplateView):
+    """
+    Returns a form for a non-discord user to enter an email, which will
+    send an email to submitted email detailing a password reset, if the
+    entered email matches a non-discord user.
+    """
+    password_reset_form = UserPasswordResetForm
+    template_name = join(AUTH_TEMPLATE_DIR, 'password_reset.html')
+
+    def get(self, request):
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('../')
+        else:
+            return render(request, self.template_name, context={
+                "password_reset_form": self.password_reset_form})
+
+    def post(self, request):
+        password_reset_form = self.password_reset_form(request.POST)
+        dictionary = {"password_reset_form": password_reset_form}
+        if password_reset_form.is_valid():
+            LOGGER.info(f"Password reset submitted")
+            messages.error(request, "Await reset link at user email")
+            return render(request, self.template_name, context=dictionary)
+        else:
+            dictionary = {"password_reset_form": password_reset_form}
+            return render(request, self.template_name, context=dictionary)
+
 
 class User_Login_Form(TemplateView):
     """
     Returns a form for a user to login with Username and Password
     """
     login_form = UserLoginForm()
+    template_name = join(AUTH_TEMPLATE_DIR, 'login.html')
 
     def get(self, request):
 
         if request.headers.get('HX-Request') == "true":
-            dictionary = {}
-            dictionary["login_form"] = self.login_form
-            template_name = join(AUTH_TEMPLATE_DIR, 'login.html')
-            return render(request, template_name, context=dictionary)
+            return render(request, self.template_name, context={"login_form": self.login_form})
         else:
             return HttpResponseRedirect('../')
 

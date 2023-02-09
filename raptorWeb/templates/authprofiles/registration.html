@@ -1,52 +1,19 @@
 {% load django_bootstrap5 %}
 
-<div class="modal fade" id="register_modal" tabindex="-1" aria-labelledby="Create Account" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content bg-dark text-white">
-          <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-header">
-            Create Account
-          </div>
-          <div class="modal-body" id="mod_app_modal_body">
-
-              <header class="bg-dark text-white p-1">
-                <p class="pageContent">User profiles, and functionality that comes with it, are still under development. Feel free to create an account now, to have access to it when it is finished.</p>
-                <p class="pageContent">You can either register manually with the form, or with Discord</p>
-              </header>
-          
-              <section>
-    
-                <div class="p-3 container">
-                  <a role="button" href="{% url 'authprofiles:login_oauth' %}" class="btn btn-discord w-100">
-                    Register with Discord
-                  </a>
-                </div>
-              
-              </section>
-              
-              <section>
-          
-                {% if registered %}
-                  <div class="card bg-light p-3 opacity-75 container">
-                    <h3 class="pageHeader fw-bold text-center">Thank you for creating an account!</h3>
-                  </div>
-                {% else %}
-                  <div class="bg-dark p-3 opacity-75 container">
-                    <form action="{% url 'authprofiles:register' %}" method="POST" enctype="multipart/form-data">
-          
-                      {% csrf_token %}
-                      {{ form.captcha }} 
-                      {% bootstrap_form register_form %}
-                      {% bootstrap_button button_type="submit" content="Create Account" %}
-                      {% bootstrap_button button_type="reset" content="Reset" %}
-          
-                    </form>
-                  </div>
-                {% endif %}
-          
-              </section>
-          
-          </div>
-      </div>
-  </div>
+{% if registered %}
+<div class="container">
+    <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+        <h3 class="pageHeader fw-bold text-center">Thank you for creating an account! You can now log in using the user dropdown menu.</h3>
+    </header>
 </div>
+{% else %}
+<form class="form p-3 text-white" hx-post="{% url 'authprofiles:register' %}" hx-swap="outerHTML">
+          
+  {% csrf_token %}
+  {{ form.captcha }} 
+  {% bootstrap_form register_form %}
+  {% bootstrap_button button_type="submit" content="Create Account" %}
+  {% bootstrap_button button_type="reset" content="Reset" %}
+
+</form>
+{% endif %}
