@@ -46,9 +46,9 @@ class UserRegisterForm(forms.ModelForm):
 
             raise forms.ValidationError("Password fields must match")
 
-class UserPasswordResetForm(forms.Form):
+class UserPasswordResetEmailForm(forms.Form):
     """
-    Form returned for resetting a non-discord user's password
+    Form returned for sending a password reset email
     """
     username = forms.CharField()
     email = forms.EmailField(widget=forms.EmailInput())
@@ -66,6 +66,24 @@ class UserPasswordResetForm(forms.Form):
             raise forms.ValidationError("No user with submitted username and email exists")
         elif found_user.count() > 1:
             raise forms.ValidationError("There was an error processing this request, please contact a site admin.")
+
+class UserPasswordResetForm(forms.Form):
+    """
+    Form returned for resetting a non-discord user's password
+    """
+    password = forms.CharField(label="Enter your new password", widget=forms.PasswordInput())
+    password_v = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
+    captcha = CaptchaField()
+
+    def clean(self):
+        """
+        Ensure new password fields match
+        """
+        clean_data = super().clean()
+        password = clean_data.get("password")
+        v_password = clean_data.get("password_v")
+        if not(password == v_password):
+            raise forms.ValidationError("Password fields must match")
 
 class UserLoginForm(forms.Form):
     """

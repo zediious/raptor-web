@@ -18,6 +18,7 @@ urlpatterns = [
     path('applications/', SR.Info.StaffApps.as_view(), name="staff_apps"),
     # Users
     path('user/', SR.User_Views.SiteMembers.as_view(), name='site_members'),
-    path('user/<str:profile_name>', SR.User_Views.User_Page.as_view(), name="user_page")
+    path('user/<str:profile_name>', SR.User_Views.User_Page.as_view(), name="user_page"),
+    path('user/reset/<str:profile_name>/<str:user_reset_token>', SR.User_Views.User_Pass_Reset.as_view(), name="user_reset_pass")
 
 ]

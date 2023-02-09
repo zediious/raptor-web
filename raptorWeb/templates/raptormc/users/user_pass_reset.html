@@ -1,0 +1,13 @@
+{% extends 'raptormc/base.html' %}
+{% load static %}
+
+{% block main_block %}
+
+<div hx-get="/reset_password_confirm/{{active_user_password_reset_token}}" hx-trigger="load" hx-target="#reset_form" hx-swap="innerHTML"></div>
+<div id="reset_form">
+    <div class="container-flex text-center">
+        <img class="" id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">
+    </div>
+</div>
+
+{% endblock %}

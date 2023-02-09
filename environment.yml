@@ -29,4 +29,5 @@ dependencies:
     - discord.py==2.0.1
     - django-ranged-response==0.2.0
     - django-simple-captcha==0.5.17
+    - six==1.16.0
 prefix: /home/jack/software/anaconda3/envs/djangoWork
