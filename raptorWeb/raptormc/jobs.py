@@ -234,54 +234,50 @@ def copy_image_from_prod_to_folder_default(user):
 def export_users():
     normal_user_into_raptoruser = {}
     discord_user_into_raptoruser = {}
-    normal_user_list = UserProfileInfo.objects.all()
-    for user in normal_user_list:
-        local_image_file = copy_image_from_prod_to_folder_default(user)
-        normal_user_into_raptoruser.update({
-            f'{user.user.username}': {
-                "username": user.user.username,
-                "user_slug": slugify(user.user.username),
-                "email": user.user.email,
-                "date_joined": user.user.date_joined,
-                "last_login": user.user.last_login,
-                "password": user.user.password,
-                "user_profile_info": {
-                    "picture_has_been_changed": True,
-                    "profile_picture": local_image_file,
-                    "minecraft_username": user.minecraft_username,
-                    "favorite_modpack": user.favorite_modpack
+    with open(join(settings.BASE_DIR, 'defaultUserExport.json' 'w+')):
+        normal_user_list = UserProfileInfo.objects.all()
+        for user in normal_user_list:
+            local_image_file = copy_image_from_prod_to_folder_default(user)
+            normal_user_into_raptoruser.update({
+                f'{user.user.username}': {
+                    "username": user.user.username,
+                    "user_slug": slugify(user.user.username),
+                    "email": user.user.email,
+                    "date_joined": user.user.date_joined,
+                    "last_login": user.user.last_login,
+                    "password": user.user.password,
+                    "user_profile_info": {
+                        "picture_has_been_changed": True,
+                        "profile_picture": local_image_file,
+                        "minecraft_username": user.minecraft_username,
+                        "favorite_modpack": user.favorite_modpack
+                    }
                 }
-            }
-        })
-    normal_user_list_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
-    normal_user_list_json.write(dumps(normal_user_into_raptoruser, indent=4))
-    normal_user_list_json.close()
-    discord_user_list = DiscordUserInfo.objects.all()
-    for user in discord_user_list:
-        local_image_path = save_image_from_url_to_folder_discord()
-        discord_user_into_raptoruser.update({
-            f'{user.username}': {
-                "username": user.username,
-                "user_slug": slugify(user.username),
-                "date_joined": localtime(now()),
-                "last_login": user.last_login,
-                "temp_profilepic_path": local_image_path,
-                "user_profile_info": {
-                    "picture_has_been_changed": True,
-                    "profile_picture": user.profile_picture,
-                    "minecraft_username": user.minecraft_username,
-                    "favorite_modpack": user.favorite_modpack
-                },
-                "discord_user_info": {
-                    "id": user.id,
-                    "tag": user.tag,
-                    "pub_flags": user.pub_flags,
-                    "flags": user.flags,
-                    "locale": user.locale,
-                    "mfa_enabled": user.mfa_enabled
+            })
+    with open(join(settings.BASE_DIR, 'discordUserExport.json' 'w+')):
+        discord_user_list = DiscordUserInfo.objects.all()
+        for user in discord_user_list:
+            local_image_path = save_image_from_url_to_folder_discord()
+            discord_user_into_raptoruser.update({
+                f'{user.username}': {
+                    "username": user.username,
+                    "user_slug": slugify(user.username),
+                    "date_joined": localtime(now()),
+                    "last_login": user.last_login,
+                    "temp_profilepic_path": local_image_path,
+                    "user_profile_info": {
+                        "picture_has_been_changed": True,
+                        "profile_picture": user.profile_picture,
+                        "minecraft_username": user.minecraft_username,
+                        "favorite_modpack": user.favorite_modpack
+                    },
+                    "discord_user_info": {
+                        "id": user.id,
+                        "tag": user.tag,
+                        "pub_flags": user.pub_flags,
+                        "flags": user.flags,
+                        "locale": user.locale,
+                        "mfa_enabled": user.mfa_enabled
+                    }
                 }
-            }
-        })
-    discord_user_list_json = open(join(settings.BASE_DIR, 'server_data.json'), "w")
-    discord_user_list_json.write(dumps(discord_user_into_raptoruser, indent=4))
-    discord_user_list_json.close()
+            })
