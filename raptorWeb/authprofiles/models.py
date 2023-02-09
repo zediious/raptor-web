@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
@@ -89,7 +89,7 @@ class UserProfileInfo(models.Model):
         verbose_name = "User - Extra Information"
         verbose_name_plural = "Users - Extra Information"
 
-class RaptorUser(User):
+class RaptorUser(AbstractUser):
     """
     A Base user. Has optional OneToOne Fields to UserProfileInfo Model
     and DiscordUserInfo Model. Inherits from default Django user.

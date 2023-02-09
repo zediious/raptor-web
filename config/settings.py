@@ -306,6 +306,7 @@ IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
 LOCK_FILE_PATH = join(BASE_DIR, 'playerCounts.LOCK')
 
 # ** Settings for "authprofiles" app **
+AUTH_USER_MODEL = 'authprofiles.RaptorUser'
 LOGIN_URL = '/login/'
 BASE_USER_URL = 'user'
 
