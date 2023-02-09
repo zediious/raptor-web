@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from captcha.fields import CaptchaField
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo
-from raptorWeb.authprofiles.util.userUtil import find_slugged_user
 
 def check_profile_picture_dimensions(image):
     """
@@ -65,7 +64,7 @@ class UserLoginForm(forms.Form):
         password = clean_data.get("password")
         user_exists = False
 
-        if find_slugged_user(username).is_discord_user:
+        if RaptorUser.objects.find_slugged_user(username).is_discord_user:
             raise forms.ValidationError("The entered Username does not exist")
 
         for user in RaptorUser.objects.all():
