@@ -245,8 +245,8 @@ def export_users():
                 "username": user.user.username,
                 "user_slug": slugify(user.user.username),
                 "email": user.user.email,
-                "date_joined": localtime(now()),
-                "last_login": localtime(now()),
+                "date_joined": str(localtime(now())),
+                "last_login": str(localtime(now())),
                 "password": user.user.password,
                 "user_profile_info": {
                     "picture_has_been_changed": True,
@@ -266,8 +266,8 @@ def export_users():
             f'{user.username}': {
                 "username": user.username,
                 "user_slug": slugify(user.username),
-                "date_joined": localtime(now()),
-                "last_login": localtime(now()),
+                "date_joined": str(localtime(now())),
+                "last_login": str(localtime(now())),
                 "temp_profilepic_path": local_image_path,
                 "user_profile_info": {
                     "picture_has_been_changed": True,
