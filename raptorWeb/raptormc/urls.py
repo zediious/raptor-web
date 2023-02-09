@@ -34,8 +34,6 @@ urlpatterns = [
     # Ajax
     path('server_button_poll/', SR.Ajax_Views.Server_Buttons.as_view(), name="server_buttons_poll"),
     path('server_modal_poll/', SR.Ajax_Views.Server_Modals.as_view(), name="server_modals_poll"),
-    path('total_count_poll/', SR.Ajax_Views.Total_Count.as_view(), name="totol_counts_poll"),
-    # Temp debug
-    path('thisisatestingdebugurlandifyouareseeingthisshameonyousadface/', SR.Ajax_Views.Temp_Debug_View.as_view(), name="testingdebugview")
+    path('total_count_poll/', SR.Ajax_Views.Total_Count.as_view(), name="totol_counts_poll")
 
 ]
