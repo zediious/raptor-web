@@ -21,13 +21,15 @@ def import_users():
     discord_users = load(open(join(BASE_DIR, 'discord_user_list.json')))
 
     for user in default_users:
+        default_user_profile_info = default_users[user].get('user_profile_info')
         new_extra = UserProfileInfo.objects.create(
             picture_changed_manually = False
         )
         try:
-            new_extra.minecraft_username = default_users[user]["user_profile_info"]["minecraft_username"],
-            new_extra.favorite_modpack = default_users[user]["user_profile_info"]["favorite_modpack"]
-        except:
+            new_extra.minecraft_username = default_user_profile_info["minecraft_username"],
+            new_extra.favorite_modpack = default_user_profile_info["favorite_modpack"]
+        except AttributeError as e:
+            print(e)
             new_extra.minecraft_username = "",
             new_extra.favorite_modpack = ""
         new_user = RaptorUser.objects.create(
@@ -40,17 +42,20 @@ def import_users():
             last_login = localtime(now()),
             user_profile_info = new_extra
         )
+        new_extra.save()
         new_user.password = default_users[user]["password"]
         new_user.save()
 
     for user in discord_users:
+        discord_user_profile_info = discord_users[user].get('user_profile_info')
         new_extra = UserProfileInfo.objects.create(
             picture_changed_manually = False
         )
         try:
-            new_extra.minecraft_username = discord_users[user]["user_profile_info"]["minecraft_username"],
-            new_extra.favorite_modpack = discord_users[user]["user_profile_info"]["favorite_modpack"]
-        except:
+            new_extra.minecraft_username = discord_user_profile_info["minecraft_username"],
+            new_extra.favorite_modpack = discord_user_profile_info["favorite_modpack"]
+        except AttributeError as e:
+            print(e)
             new_extra.minecraft_username = "",
             new_extra.favorite_modpack = ""
         new_discord = DiscordUserInfo.objects.create(
@@ -74,3 +79,6 @@ def import_users():
             user_profile_info = new_extra,
             discord_user_info = new_discord
         )
+        new_extra.save()
+        new_discord.save()
+        new_user.save()
