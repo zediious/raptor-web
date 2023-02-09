@@ -1,7 +1,65 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
+from django.utils.text import slugify
+
+from raptorWeb.authprofiles.util.userUtil import save_image_from_url_to_profile_info
+
+class RaptorUserManager(BaseUserManager):
+    """
+    User Manager for RaptorUser
+    """
+    def create_user(self, registration_form):
+        """
+        Create a RaptorUser who was registered using the website form
+        """
+        new_user = registration_form.save()
+        new_user_extra = UserProfileInfo.objects.create()
+        new_user.set_password(new_user.password)
+        new_user.user_slug = slugify(new_user.username)
+        new_user.user_profile_info = new_user_extra
+        new_user.is_discord_user = False
+        new_user_extra.save()
+        new_user.save()
+        return new_user
+
+    def create_discord_user(self, discord_info):
+        """
+        Create a RaptorUser who was registered using Discord OAuth2
+        """
+        discord_tag = f'{discord_info["username"]}#{discord_info["discriminator"]}'
+        avatar_url = f'https://cdn.discordapp.com/avatars/{discord_info["id"]}/{discord_info["avatar"]}.png'
+        new_discord_info = DiscordUserInfo.objects.create(
+            id = discord_info["id"],
+            tag = discord_tag,
+            pub_flags = discord_info["public_flags"],
+            flags = discord_info["flags"],
+            locale = discord_info["locale"],
+            mfa_enabled = discord_info["mfa_enabled"],
+            avatar_string = discord_info["avatar"]
+        )
+
+        new_extra_info = UserProfileInfo.objects.create()
+        save_image_from_url_to_profile_info(new_extra_info, avatar_url)
+
+        # Set username to discord tag instead of just username, if a user with username exists already
+        if RaptorUser.objects.filter(user_slug=slugify(discord_info["username"])).count() > 0:
+            username = discord_tag
+        else:
+            username = discord_tag.split('#')[0]
+        new_user = RaptorUser.objects.create( 
+            is_discord_user = True,
+            username = username,
+            user_slug = slugify(username),
+            email = discord_info["email"],
+            user_profile_info = new_extra_info,
+            discord_user_info = new_discord_info
+        )
+        # Discord-registered RaptorUsers will never/cannot authenticate with password.
+        new_user.set_unusable_password()
+        new_user.save()
+        return new_user
 
 class DiscordUserInfo(models.Model):
     """
@@ -94,6 +152,8 @@ class RaptorUser(AbstractUser):
     A Base user. Has optional OneToOne Fields to UserProfileInfo Model
     and DiscordUserInfo Model. Inherits from default Django user.
     """
+    objects = RaptorUserManager()
+    
     user_slug = models.SlugField(
         null=True,
         help_text="A user's username that has been converted to a slug/URL friendly format.",

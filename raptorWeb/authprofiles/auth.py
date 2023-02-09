@@ -1,24 +1,11 @@
 from logging import getLogger
 
 from django.contrib.auth.backends import BaseBackend
-from django.core.files import File
 from django.utils.text import slugify
-from django.utils.timezone import localtime, now
 
-from urllib.request import urlopen, Request
-from tempfile import NamedTemporaryFile
-
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser
 
 LOGGER = getLogger('raptorWeb.authprofiles.auth')
-
-def save_image_from_url_to_profile_info(model, url):
-    image_request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    temp_image = NamedTemporaryFile(delete=True)
-    temp_image.write(urlopen(image_request).read())
-    temp_image.flush()
-    model.profile_picture.save(f"profile_picture_{model.pk}_{localtime(now())}.png", File(temp_image))
-    model.save()
 
 class DiscordAuthBackend(BaseBackend):
 
@@ -32,42 +19,11 @@ class DiscordAuthBackend(BaseBackend):
                 return find_user
             except RaptorUser.DoesNotExist:
                 LOGGER.info("No user found with Username, creating now")
-                discord_tag = f'{user["username"]}#{user["discriminator"]}'
-                avatar_url = f'https://cdn.discordapp.com/avatars/{user["id"]}/{user["avatar"]}.png'
-
-                new_discord_info = DiscordUserInfo.objects.create(
-                    id = user["id"],
-                    tag = discord_tag,
-                    pub_flags = user["public_flags"],
-                    flags = user["flags"],
-                    locale = user["locale"],
-                    mfa_enabled = user["mfa_enabled"],
-                    avatar_string = user["avatar"]
-                )
-
-                new_extra_info = UserProfileInfo.objects.create()
-                save_image_from_url_to_profile_info(new_extra_info, avatar_url)
-
-                if RaptorUser.objects.filter(user_slug=slugify(user["username"])).count() > 0:
-                    username = discord_tag
-                else:
-                    username = discord_tag.split('#')[0]
-                new_user = RaptorUser.objects.create( 
-                    is_discord_user = True,
-                    username = username,
-                    user_slug = slugify(username),
-                    email = user["email"],
-                    user_profile_info = new_extra_info,
-                    discord_user_info = new_discord_info
-                )
-                new_user.set_unusable_password()
-                new_user.save()
-                return new_user
-
+                return RaptorUser.objects.create_discord_user(user)
 
     def get_user(self, user_id):
 
         try:
-            return RaptorUser.objects.get(pk=user_id)
+            return RaptorUser.objects.get(pk=user_id, is_discord_user=True)
         except RaptorUser.DoesNotExist:
             return None

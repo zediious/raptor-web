@@ -13,9 +13,9 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
-from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo, UserProfileInfo
+from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
-from raptorWeb.authprofiles.util.usergather import find_slugged_user
+from raptorWeb.authprofiles.util.userUtil import find_slugged_user
 
 LOGGER = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR = getattr(settings, 'AUTH_TEMPLATE_DIR')
@@ -51,14 +51,7 @@ class RegisterUser(TemplateView):
         if register_form.is_valid():
 
             LOGGER.info("A new User has been registered!")
-            new_user = register_form.save()
-            new_user_extra = UserProfileInfo.objects.create()
-            new_user.set_password(new_user.password)
-            new_user.user_slug = slugify(new_user.username)
-            new_user.user_profile_info = new_user_extra
-            new_user.is_discord_user = False
-            new_user_extra.save()
-            new_user.save()
+            new_user = RaptorUser.objects.create_user(register_form)
             registered = True
             dictionary["registered"] = registered
             login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')
