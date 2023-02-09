@@ -111,6 +111,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
+# Email
+USE_CONSOLE_EMAIL = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+if DEBUG and USE_CONSOLE_EMAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = str(getenv('EMAIL_HOST'))
+EMAIL_PORT = int(getenv('EMAIL_PORT'))
+EMAIL_HOST_USER = str(getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(getenv('EMAIL_HOST_PASSWORD'))
+
 # Database
 DATABASES = {}
 
