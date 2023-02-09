@@ -261,7 +261,7 @@ def export_users():
     normal_user_list_json.close()
     discord_user_list = DiscordUserInfo.objects.all()
     for user in discord_user_list:
-        local_image_path = save_image_from_url_to_folder_discord(url=f'https://cdn.discordapp.com/avatars/{user["id"]}/{user["profile_picture"]}.png', user=user)
+        local_image_path = save_image_from_url_to_folder_discord()
         discord_user_into_raptoruser.update({
             f'{user.username}': {
                 "username": user.username,
