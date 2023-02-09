@@ -4,7 +4,6 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.models import RaptorUser
-from raptorWeb.authprofiles.auth import save_image_from_url_to_profile_info
 
 def exchange_code(discord_code):
 
@@ -35,7 +34,7 @@ def update_user_details(discord_user, new_info):
     else:
         username = discord_tag.split('#')[0]
     if discord_user.avatar_string != new_info["avatar"] and base_user.user_profile_info.picture_changed_manually != True:
-        save_image_from_url_to_profile_info(
+        RaptorUser.objects.save_image_from_url_to_profile_info(
             model=base_user.user_profile_info,
             url=f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
         )

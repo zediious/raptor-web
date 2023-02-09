@@ -15,7 +15,6 @@ from django.conf import settings
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserProfileEditForm, UserLoginForm
 from raptorWeb.authprofiles.models import RaptorUser, DiscordUserInfo
 from raptorWeb.authprofiles.util import discordAuth
-from raptorWeb.authprofiles.util.userUtil import find_slugged_user
 
 LOGGER = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR = getattr(settings, 'AUTH_TEMPLATE_DIR')
@@ -142,7 +141,7 @@ class User_Dropdown(TemplateView):
             instance_dict = {}
             if request.user.is_authenticated:
                 instance_dict['loaded_user'] = RaptorUser.objects.get(
-                    user_slug = find_slugged_user(str(request.user)).user_slug)
+                    user_slug = RaptorUser.objects.find_slugged_user(str(request.user)).user_slug)
             return render(request, self.template_name, context=instance_dict)
         else:
             return HttpResponseRedirect('../')
@@ -192,7 +191,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
             if slugify(str(request.user)) == slugify(profile_name):
                 instance_dict = {}
                 instance_dict["extra_edit_form"] = self.extra_edit_form
-                displayed_user = find_slugged_user(profile_name)
+                displayed_user = RaptorUser.objects.find_slugged_user(profile_name)
 
                 if displayed_user == None:
                     return redirect('/nouserfound')
@@ -212,7 +211,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
         extra_edit_form = UserProfileEditForm(request.POST, request.FILES)
         instance_dict = {}
         instance_dict["extra_edit_form"] = self.extra_edit_form
-        instance_dict["displayed_profile"] = find_slugged_user(profile_name)
+        instance_dict["displayed_profile"] = RaptorUser.objects.find_slugged_user(profile_name)
         if extra_edit_form.is_valid():
             changed_user = RaptorUser.objects.get(username=request.user)
             if extra_edit_form.cleaned_data["minecraft_username"] != '':

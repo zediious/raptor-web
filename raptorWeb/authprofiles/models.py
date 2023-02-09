@@ -3,8 +3,11 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from django.utils.text import slugify
+from django.utils.timezone import localtime, now
+from django.core.files import File
 
-from raptorWeb.authprofiles.util.userUtil import save_image_from_url_to_profile_info
+from urllib.request import urlopen, Request
+from tempfile import NamedTemporaryFile
 
 class RaptorUserManager(BaseUserManager):
     """
@@ -41,7 +44,7 @@ class RaptorUserManager(BaseUserManager):
         )
 
         new_extra_info = UserProfileInfo.objects.create()
-        save_image_from_url_to_profile_info(new_extra_info, avatar_url)
+        self.save_image_from_url_to_profile_info(new_extra_info, avatar_url)
 
         # Set username to discord tag instead of just username, if a user with username exists already
         if RaptorUser.objects.filter(user_slug=slugify(discord_info["username"])).count() > 0:
@@ -60,6 +63,32 @@ class RaptorUserManager(BaseUserManager):
         new_user.set_unusable_password()
         new_user.save()
         return new_user
+
+    def find_slugged_user(self, slugged_username):
+        """
+        Given a username, find the user 
+        associated with that username.
+        Input username and found username are
+        compared after slugifying both.
+        """
+        users_list = RaptorUser.objects.all()
+
+        for saved_user in users_list:
+            if str(slugify(saved_user.username)) == slugify(slugged_username):
+                return saved_user
+
+    def save_image_from_url_to_profile_info(self, user_profile_info, url):
+        """
+        Given a UserProfileInfo and an image URL, save the image at the URL to the
+        profile_picture ImageField, persisting it to disk.
+        """
+        image_request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        temp_image = NamedTemporaryFile(delete=True)
+        temp_image.write(urlopen(image_request).read())
+        temp_image.flush()
+        user_profile_info.profile_picture.save(f"profile_picture_{user_profile_info.pk}_{localtime(now())}.png", File(temp_image))
+        user_profile_info.save()
+
 
 class DiscordUserInfo(models.Model):
     """
