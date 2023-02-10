@@ -220,6 +220,7 @@ class All_User_Profile(ListView):
     """
     ListView for all Users
     """
+    paginate_by = 9
     model = RaptorUser
 
     def get_context_data(self, **kwargs):
