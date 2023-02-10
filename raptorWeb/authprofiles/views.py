@@ -295,7 +295,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 changed_user.user_profile_info.profile_picture.name = f"profile_picture_{changed_user.pk}_{localtime(now())}.png"
                 changed_user.user_profile_info.picture_changed_manually = True
             if extra_edit_form.cleaned_data["picture_changed_manually"] == True and changed_user.is_discord_user == True:
-                discordAuth.save_image_from_url_to_profile_info(
+                RaptorUser.objects.save_image_from_url_to_profile_info(
                     changed_user.user_profile_info,
                     f'https://cdn.discordapp.com/avatars/{changed_user.discord_user_info.id}/{changed_user.discord_user_info.avatar_string}.png')
             changed_user.user_profile_info.picture_changed_manually = False
