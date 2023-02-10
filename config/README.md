@@ -36,6 +36,14 @@ STAFF_ROLE_ID=
 
 USE_GLOBAL_ANNOUNCEMENT=
 SCRAPE_SERVER_ANNOUNCEMENT=
+
+IMPORT_USERS=False
+
+USE_CONSOLE_EMAIL=
+EMAIL_HOST=''
+EMAIL_PORT=
+EMAIL_HOST_USER=''
+EMAIL_HOST_PASSWORD=''
 ```
 ## *General*
 
@@ -103,3 +111,25 @@ The Channel ID of the Discord Channel you designate as the Global Announcement C
 
 ### **STAFF_ROLE_ID**
 The Role ID of the Discord Role you designate as a Staff Member.
+
+## *Users*
+
+### **IMPORT_USERS**
+If this is set to True, then new RaptorUsers will be created based on `normal_user_list.json` and `discord_user_list.json` present at the BASE_DIR of the project. This setting is likely temporary, used to import users from a previous user model schema.
+
+## *Email*
+
+### **USE_CONSOLE_EMAIL**
+If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to True until you have configured the below settings and are ready to send emails.
+
+### **EMAIL_HOST**
+The domain name/IP address for the SMPT server you wish to use. For example, gmail's SMPT domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
+
+### **EMAIL_PORT**
+The port used for connecting to the SMPT server. This is typically `587`, but it may be different.
+
+### **EMAIL_HOST_USER**
+The User/email address you will be using to send email. This should be an email address.
+
+### **EMAIL_HOST_PASSWORD**
+The password for the supplied `EMAIL_HOST_USER`
