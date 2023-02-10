@@ -1,19 +1,19 @@
 {% load static %}
-<div class="container-flex">
+<div id="user_list_container" class="container-flex">
     <div class="row">
-        {% for object in object_list reversed %}
+        {% for raptoruser in page_obj reversed %}
         <div class="col-md-4 col-12">
-            <a href="{{request.META.HTTP_REFERER}}{{object.username|slugify}}">
+            <a href="{{request.META.HTTP_REFERER}}{{raptoruser.username|slugify}}">
                 <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
                     <div id="profile_picture_box" class="mx-auto d-block">
-                        {% if object.user_profile_info.profile_picture %}
-                            {% if object.is_staff == True %}
-                            <img class="border border-2 border-danger w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="">
+                        {% if raptoruser.user_profile_info.profile_picture %}
+                            {% if raptoruser.is_staff == True %}
+                            <img class="border border-2 border-danger w-100" src="{{raptoruser.user_profile_info.profile_picture.url}}" alt="">
                             {% else %}
-                            <img class="border border-2 border-secondary w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="">
+                            <img class="border border-2 border-secondary w-100" src="{{raptoruser.user_profile_info.profile_picture.url}}" alt="">
                             {% endif %}
                         {% else %}
-                            {% if object.is_staff == True %}
+                            {% if raptoruser.is_staff == True %}
                             <img id="noProfilePicture" class="border border-2 border-danger w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
                             {% else %}
                             <img id="noProfilePicture" class="border border-2 border-secondary w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
@@ -21,11 +21,28 @@
                         {% endif %}
                     </div>
                     <div class="col-10 w-100 text-center">
-                        <strong>{{object.username}}</strong>
+                        <strong>{{raptoruser.username}}</strong>
                     </div>
                 </div>
             </a>
         </div>
         {% endfor %}
     </div>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page=1" hx-target="#user_list_container">&laquo; first</a>
+            <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}" hx-target="#user_list_container">previous</a>
+        {% endif %}
+
+        <span class="current text-white">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}" hx-target="#user_list_container">next</a>
+            <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#user_list_container">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 </div>
