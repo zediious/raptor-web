@@ -19,7 +19,7 @@
     </div>
     
     <div class="row">
-        {% for raptoruser in page_obj reversed %}
+        {% for raptoruser in page_obj %}
         <div class="col-md-4 col-12">
             <a href="{{request.META.HTTP_REFERER}}{{raptoruser.username|slugify}}">
                 <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
