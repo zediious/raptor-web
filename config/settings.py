@@ -321,6 +321,8 @@ LOCK_FILE_PATH = join(BASE_DIR, 'playerCounts.LOCK')
 AUTH_USER_MODEL = 'authprofiles.RaptorUser'
 LOGIN_URL = '/login/'
 BASE_USER_URL = 'user'
+BASE_USER_URL = getenv('BASE_USER_URL')
+USER_RESET_URL = getenv('USER_RESET_URL')
 
 DISCORD_APP_ID = getenv('DISCORD_OAUTH_APP_ID')
 DISCORD_APP_SECRET = getenv('DISCORD_OAUTH_APP_SECRET')

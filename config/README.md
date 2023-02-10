@@ -27,6 +27,9 @@ DELETE_EXISTING=
 
 DISCORD_OAUTH_APP_ID=
 DISCORD_OAUTH_APP_SECRET=
+IMPORT_USERS=False
+BASE_USER_URL='user'
+USER_RESET_URL='reset'
 
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
@@ -36,8 +39,6 @@ STAFF_ROLE_ID=
 
 USE_GLOBAL_ANNOUNCEMENT=
 SCRAPE_SERVER_ANNOUNCEMENT=
-
-IMPORT_USERS=False
 
 USE_CONSOLE_EMAIL=
 EMAIL_HOST=''
@@ -87,13 +88,22 @@ If this is set to `True`, then Servers will be imported from a `server_data_full
 ### **DELETE_EXISTING**
 If this set to `True`, then when `IMPORT_SERVERS` is set to `True`, all existing serves will be deleted before importing. This setting has no effect when `IMPORT_SERVERS` is set to `False`
 
-## *Discord OAuth*
+## *Users / Auth*
 
 ### **DISCORD_OAUTH_APP_ID**
 The app ID of the Discord Application you will be using to process OAuth login requests.
 
 ### **DISCORD_OAUTH_APP_SECRET**
 The app secret of the Discord Application you will be using to process OAuth login requests
+
+### **IMPORT_USERS**
+If this is set to True, then new RaptorUsers will be created based on `normal_user_list.json` and `discord_user_list.json` present at the BASE_DIR of the project. This setting is likely temporary, used to import users from a previous user model schema.
+
+### **BASE_USER_URL**
+The first element of the path for the `raptormc` application's urlpatterns leading to the `authprofiles` app views. **Only change this if you are modifying the URL structure of the application.**
+
+### **USER_RESET_URL**
+The element of the path used to point from the `raptormc` application to `authprofiles` password reset views. **Only change this if you are modifying the URL structure of the application.**
 
 ## *Discord Bot*
 
@@ -111,11 +121,6 @@ The Channel ID of the Discord Channel you designate as the Global Announcement C
 
 ### **STAFF_ROLE_ID**
 The Role ID of the Discord Role you designate as a Staff Member.
-
-## *Users*
-
-### **IMPORT_USERS**
-If this is set to True, then new RaptorUsers will be created based on `normal_user_list.json` and `discord_user_list.json` present at the BASE_DIR of the project. This setting is likely temporary, used to import users from a previous user model schema.
 
 ## *Email*
 
