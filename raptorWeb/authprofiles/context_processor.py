@@ -26,7 +26,7 @@ def import_users():
             picture_changed_manually = False
         )
         try:
-            new_extra.minecraft_username = default_user_profile_info["minecraft_username"],
+            new_extra.minecraft_username = default_user_profile_info["minecraft_username"].replace('(', '').replace(')', '').replace('"', '').replace(',', ''),
             new_extra.favorite_modpack = default_user_profile_info["favorite_modpack"]
         except AttributeError as e:
             print(e)
