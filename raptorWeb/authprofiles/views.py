@@ -87,7 +87,7 @@ class UserResetPasswordForm(TemplateView):
                 from_email = EMAIL_HOST_USER,
                 recipient_list = [resetting_user.email]
             )
-            LOGGER.info(f"Password reset submitted")
+            LOGGER.info(f"Password reset submitted for {resetting_user.username}. Email has been sent.")
             messages.error(request, "Await reset link at user email")
             return render(request, self.template_name, context=dictionary)
         else:
@@ -124,7 +124,7 @@ class UserResetPasswordConfirm(TemplateView):
             resetting_user.set_password(final_password_reset_form.cleaned_data["password"])
             resetting_user.password_reset_token = ""
             resetting_user.save()
-            LOGGER.info(f"A User has reset their password")
+            LOGGER.info(f"User: {resetting_user.username} has reset their password")
             return render(request, join(AUTH_TEMPLATE_DIR, 'reset_successful.html'), context=dictionary)
         else:
             resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
