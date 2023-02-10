@@ -222,6 +222,7 @@ class All_User_Profile(ListView):
     """
     paginate_by = 9
     model = RaptorUser
+    queryset = RaptorUser.objects.order_by('-date_joined')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
