@@ -22,6 +22,7 @@ LOGGER = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR = getattr(settings, 'AUTH_TEMPLATE_DIR')
 DISCORD_AUTH_URL = getattr(settings, 'DISCORD_AUTH_URL')
 BASE_USER_URL = getattr(settings, 'BASE_USER_URL')
+USER_RESET_URL = getattr(settings, 'USER_RESET_URL')
 DOMAIN_NAME = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO = getattr(settings, 'WEB_PROTO')
 EMAIL_HOST_USER = getattr(settings, 'EMAIL_HOST_USER')
@@ -83,7 +84,7 @@ class UserResetPasswordForm(TemplateView):
             resetting_user.save()
             send_mail(
                 subject = f"User password reset for: {resetting_user.username}",
-                message = f"Click the following link to enter a password reset form for your account: {WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/reset/{resetting_user.user_slug}/{resetting_user.password_reset_token}",
+                message = f"Click the following link to enter a password reset form for your account: {WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/{USER_RESET_URL}/{resetting_user.user_slug}/{resetting_user.password_reset_token}",
                 from_email = EMAIL_HOST_USER,
                 recipient_list = [resetting_user.email]
             )
