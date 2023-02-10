@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.mail import send_mail
 from django.utils.timezone import localtime, now
 from django.utils.text import slugify
 from django.conf import settings
@@ -21,6 +22,9 @@ LOGGER = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR = getattr(settings, 'AUTH_TEMPLATE_DIR')
 DISCORD_AUTH_URL = getattr(settings, 'DISCORD_AUTH_URL')
 BASE_USER_URL = getattr(settings, 'BASE_USER_URL')
+DOMAIN_NAME = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO = getattr(settings, 'WEB_PROTO')
+EMAIL_HOST_USER = getattr(settings, 'EMAIL_HOST_USER')
 
 token_generator = RaptorUserTokenGenerator()
 
@@ -43,7 +47,7 @@ class RegisterUser(TemplateView):
         dictionary = {"register_form": register_form}
         if register_form.is_valid():
             LOGGER.info("A new User has been registered!")
-            new_user = RaptorUser.objects.create_user(register_form)
+            RaptorUser.objects.create_user(register_form)
             self.registered = True
             dictionary["registered"] = self.registered
             return render(request, self.template_name, context=dictionary)
@@ -77,6 +81,12 @@ class UserResetPasswordForm(TemplateView):
                 return render(request, self.template_name, context=dictionary)
             resetting_user.password_reset_token = token_generator.make_token(resetting_user)
             resetting_user.save()
+            send_mail(
+                subject = f"User password reset for: {resetting_user.username}",
+                message = f"Click the following link to enter a password reset form for your account: {WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/reset/{resetting_user.user_slug}/{resetting_user.password_reset_token}",
+                from_email = EMAIL_HOST_USER,
+                recipient_list = [resetting_user.email]
+            )
             LOGGER.info(f"Password reset submitted")
             messages.error(request, "Await reset link at user email")
             return render(request, self.template_name, context=dictionary)

@@ -112,9 +112,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
 # Email
-USE_CONSOLE_EMAIL = False
+USE_CONSOLE_EMAIL = True if getenv('USE_CONSOLE_EMAIL') == "True" else False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-if DEBUG and USE_CONSOLE_EMAIL:
+if USE_CONSOLE_EMAIL:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS = True
