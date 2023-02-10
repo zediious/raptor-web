@@ -13,6 +13,16 @@ class RaptorUserManager(BaseUserManager):
     """
     User Manager for RaptorUser
     """
+    def create_superuser(self, username, email, password):
+        superuser = RaptorUser.objects.create(
+            username = username,
+            email = email,
+            is_staff = True,
+            is_superuser = True
+        ) 
+        superuser.set_password(password)
+        return superuser
+    
     def create_user(self, registration_form):
         """
         Create a RaptorUser who was registered using the website form
