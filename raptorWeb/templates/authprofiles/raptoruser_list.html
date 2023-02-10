@@ -1,5 +1,23 @@
 {% load static %}
 <div id="user_list_container" class="container-flex">
+    <div class="pagination d-flex align-items-center justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page=1" hx-target="#user_list_container">&laquo; first</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}" hx-target="#user_list_container">previous</a>
+            {% endif %}
+
+            <span class="current text-white">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}" hx-target="#user_list_container">next</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#user_list_container">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
     <div class="row">
         {% for raptoruser in page_obj reversed %}
         <div class="col-md-4 col-12">
@@ -27,22 +45,5 @@
             </a>
         </div>
         {% endfor %}
-    </div>
-    <div class="pagination d-flex align-items-center justify-content-center">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page=1" hx-target="#user_list_container">&laquo; first</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}" hx-target="#user_list_container">previous</a>
-            {% endif %}
-
-            <span class="current text-white">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}" hx-target="#user_list_container">next</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#user_list_container">last &raquo;</a>
-            {% endif %}
-        </span>
     </div>
 </div>

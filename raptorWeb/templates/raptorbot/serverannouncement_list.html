@@ -1,11 +1,31 @@
 {% load markdownStrip %}
 {% load serverContext %}
 
-{% for object in object_list %}
-<div>
-<div class="pageContent card bg-dark text-white opacity-100 mt-4 mb-4">
-    <p class="pageContent p-4">{{ object.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
-    <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ object.author }} on {{ object.date }}</p>
+<div id="server_announcement_container">
+    <div class="pagination d-flex align-items-center justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page=1&server_address={{current_listed_server}}" hx-target="#server_announcement_container">&laquo; first</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.previous_page_number }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.next_page_number }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">next</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.paginator.num_pages }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
+    {% for object in object_list %}
+    <div>
+    <div class="pageContent card bg-dark text-white opacity-100 mt-4 mb-4">
+        <p class="pageContent p-4">{{ object.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+        <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ object.author }} on {{ object.date }}</p>
+    </div>
+    </div>
+    {% endfor %}
 </div>
-</div>
-{% endfor %}

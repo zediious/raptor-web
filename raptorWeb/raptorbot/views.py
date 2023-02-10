@@ -17,6 +17,7 @@ class Global_Announcements(ListView):
     """
     ListView for all ServerAnnouncements
     """
+    paginate_by = 5
     model = GlobalAnnouncement
     queryset = GlobalAnnouncement.objects.order_by('-date')
 
@@ -40,10 +41,12 @@ class Server_Announcements(ListView):
         """
         ListView for all ServerAnnouncements
         """
+        paginate_by = 5
         model = ServerAnnouncement
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
+            context["current_listed_server"] = self.request.GET.get('server_address')
             return context
 
         def get_queryset(self):
