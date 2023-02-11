@@ -1,19 +1,15 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 
-class RaptorUserAdminForm(forms.ModelForm):
-    class Meta:
-        model = RaptorUser
-        widgets: dict = {
-            'password': forms.PasswordInput()
-        }
-        fields: str = '__all__'
-
 class RaptorUserAdmin(UserAdmin):
+    """
+    Object defining behavior and display of 
+    RaptorUsers in the Django admin interface.
+    """
     fieldsets: tuple[tuple] = (
         ('General', {
             'fields': (
@@ -54,7 +50,8 @@ class RaptorUserAdmin(UserAdmin):
         'discord_user_info__tag'
     ]
 
-    list_display = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
+    list_display: list[str] = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
+
 
 admin.site.unregister(Group)
 

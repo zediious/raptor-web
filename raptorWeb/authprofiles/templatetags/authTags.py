@@ -8,6 +8,7 @@ WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 BASE_USER_URL_NUM: int = (len(BASE_USER_URL) + 1)
 
+
 @register.filter
 def get_user_from_url(value: str) -> str:
     """

@@ -6,6 +6,7 @@ from captcha.fields import CaptchaField
 
 from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, UserProfileInfo
 
+
 def check_profile_picture_dimensions(image: InMemoryUploadedFile) -> bool:
     """
     Check if an image's aspect ratio is 1x1 or very close to.
@@ -14,13 +15,17 @@ def check_profile_picture_dimensions(image: InMemoryUploadedFile) -> bool:
     if image.image.width > image.image.height:
         if (abs(image.image.width-image.image.height) / image.image.height) * 100 <= 30:
             return True
+
         return False
+
     elif image.image.height > image.image.width:
         if (abs(image.image.height-image.image.width) / image.image.width) * 100 <= 30:
             return True
+
         return False
-    else:
-        return True
+
+    return True
+
 
 class UserRegisterForm(forms.ModelForm):
     """
@@ -40,79 +45,15 @@ class UserRegisterForm(forms.ModelForm):
         Ensures password fields are the same.
         """
         clean_data: dict = super().clean()
+
         if not(clean_data.get("password") == clean_data.get("password_v")):
             raise forms.ValidationError("Password fields must match")
-
-class UserPasswordResetEmailForm(forms.Form):
-    """
-    Form returned for sending a password reset email
-    """
-    username: forms.CharField = forms.CharField()
-    email: forms.CharField = forms.EmailField(widget=forms.EmailInput())
-    captcha: CaptchaField = CaptchaField()
-
-    def clean(self):
-        """
-        Ensure a user with supplied username and email exists
-        """
-        clean_data: dict = super().clean()
-        username: str = clean_data.get("username")
-        email: str = clean_data.get("email")
-        found_user: RaptorUserManager = RaptorUser.objects.filter(username = username, email = email)
-        if found_user.count() == 0:
-            raise forms.ValidationError("No user with submitted username and email exists")
-        elif found_user.count() > 1:
-            raise forms.ValidationError("There was an error processing this request, please contact a site admin.")
-
-class UserPasswordResetForm(forms.Form):
-    """
-    Form returned for resetting a non-discord user's password
-    """
-    password: forms.CharField = forms.CharField(label="Enter your new password", widget=forms.PasswordInput())
-    password_v: forms.CharField = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
-    captcha: CaptchaField = CaptchaField()
-
-    def clean(self):
-        """
-        Ensure new password fields match
-        """
-        clean_data: dict = super().clean()
-        if not(clean_data.get("password") == clean_data.get("password_v")):
-            raise forms.ValidationError("Password fields must match")
-
-class UserLoginForm(forms.Form):
-    """
-    Form returned for logging into a user with a password
-    """
-    username: forms.CharField = forms.CharField(max_length=100)
-    password: forms.CharField = forms.CharField(widget=forms.PasswordInput())
-
-    def clean(self):
-        """
-        Overrides default clean, while calling the superclass clean()
-        Ensures a User exists and that password is correct before 
-        returning clean data to view
-        """
-        clean_data: dict = super().clean()
-        username: str = clean_data.get("username")
-        password: str = clean_data.get("password")
-
-        try:
-            queried_user: RaptorUser = RaptorUser.objects.get(username=username)
-            if queried_user.is_discord_user == True:
-                raise forms.ValidationError("The entered Username does not exist")
-            if authenticate(username=username, password=password) == None:
-                raise forms.ValidationError("The entered Password was incorrect")
-        except RaptorUser.DoesNotExist:
-            raise forms.ValidationError("The entered Username does not exist")
-            
 
 class UserProfileEditForm(forms.ModelForm):
     """
     Form returned for editing profile information
     """  
     captcha: CaptchaField = CaptchaField()
-
     picture_changed_manually: forms.BooleanField = forms.BooleanField(
         label = "Reset Profile Picture",
         help_text = "If this is checked, your Profile Picture will be reset to your current Discord Avatar. This setting has no effect for Users that did not sign up with Discord.",
@@ -133,3 +74,73 @@ class UserProfileEditForm(forms.ModelForm):
         if image != None:
             if check_profile_picture_dimensions(image) == False:
                 raise forms.ValidationError("Aspect ratio of profile picture must be relatively close to 1x1.")
+
+class UserLoginForm(forms.Form):
+    """
+    Form returned for logging into a user with a password
+    """
+    username: forms.CharField = forms.CharField(max_length=100)
+    password: forms.CharField = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        """
+        Overrides default clean, while calling the superclass clean()
+        Ensures a User exists and that password is correct before 
+        returning clean data to view
+        """
+        clean_data: dict = super().clean()
+        username: str = clean_data.get("username")
+        password: str = clean_data.get("password")
+
+        try:
+            queried_user: RaptorUser = RaptorUser.objects.get(username=username)
+            
+            if queried_user.is_discord_user == True:
+                raise forms.ValidationError("The entered Username does not exist")
+
+            if authenticate(username=username, password=password) == None:
+                raise forms.ValidationError("The entered Password was incorrect")
+
+        except RaptorUser.DoesNotExist:
+            raise forms.ValidationError("The entered Username does not exist")
+
+class UserPasswordResetEmailForm(forms.Form):
+    """
+    Form returned for sending a password reset email
+    """
+    username: forms.CharField = forms.CharField()
+    email: forms.CharField = forms.EmailField(widget=forms.EmailInput())
+    captcha: CaptchaField = CaptchaField()
+
+    def clean(self):
+        """
+        Ensure a user with supplied username and email exists
+        """
+        clean_data: dict = super().clean()
+        username: str = clean_data.get("username")
+        email: str = clean_data.get("email")
+        found_user: RaptorUserManager = RaptorUser.objects.filter(username = username, email = email)
+
+        if found_user.count() == 0:
+            raise forms.ValidationError("No user with submitted username and email exists")
+
+        elif found_user.count() > 1:
+            raise forms.ValidationError("There was an error processing this request, please contact a site admin.")
+
+class UserPasswordResetForm(forms.Form):
+    """
+    Form returned for resetting a non-discord user's password
+    """
+    password: forms.CharField = forms.CharField(label="Enter your new password", widget=forms.PasswordInput())
+    password_v: forms.CharField = forms.CharField(label="Verify Password", widget=forms.PasswordInput())
+    captcha: CaptchaField = CaptchaField()
+
+    def clean(self):
+        """
+        Ensure new password fields match
+        """
+        clean_data: dict = super().clean()
+
+        if not(clean_data.get("password") == clean_data.get("password_v")):
+            raise forms.ValidationError("Password fields must match")
+            
