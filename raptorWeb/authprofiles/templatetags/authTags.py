@@ -3,14 +3,15 @@ from django.conf import settings
 
 register = template.Library()
 
-DOMAIN_NAME = getattr(settings, 'DOMAIN_NAME')
-WEB_PROTO = getattr(settings, 'WEB_PROTO')
-BASE_USER_URL = getattr(settings, 'BASE_USER_URL')
-BASE_USER_URL_NUM = (len(BASE_USER_URL) + 1)
+DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
+BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
+BASE_USER_URL_NUM: int = (len(BASE_USER_URL) + 1)
 
 @register.filter
-def get_user_from_url(value):
+def get_user_from_url(value: str) -> str:
     """
-    Get's a user from main applications user path, and returns only the username
+    Get a user from main application's user path, and return only
+    the username from that path.
     """
     return value[BASE_USER_URL_NUM:]
