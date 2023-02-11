@@ -11,11 +11,14 @@ BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 BASE_DIR: str = getattr(settings, 'BASE_DIR')
 IMPORT_USERS: bool = getattr(settings, 'IMPORT_USERS')
 
+
 def all_users_to_context(request: HttpResponse) -> dict:
     if IMPORT_USERS == True:
         import_users()
+
     return {"current_members": RaptorUser.objects.all(),
             "user_path": BASE_USER_URL}
+
 
 def import_users() -> None:
     """

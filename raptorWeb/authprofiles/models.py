@@ -18,7 +18,12 @@ DISCORD_APP_ID: str = getattr(settings, 'DISCORD_APP_ID')
 DISCORD_APP_SECRET: str = getattr(settings, 'DISCORD_APP_SECRET'),
 DISCORD_REDIRECT_URL: str = getattr(settings, 'DISCORD_REDIRECT_URL'),
 
+
 class RaptorUserManager(BaseUserManager):
+    """
+    UserManager for RaptorUsers. Handles the creating, updating, and fetching
+    of RaptorUsers.
+    """
     def create_superuser(self, username: str, email: str, password: str) -> 'RaptorUser':
         """
         Return a newly created RaptorUser with is_superuser attribute to true.
@@ -74,6 +79,7 @@ class RaptorUserManager(BaseUserManager):
             username: str = discord_tag
         else:
             username: str = discord_tag.split('#')[0]
+
         new_user: RaptorUser = RaptorUser.objects.create( 
             is_discord_user = True,
             username = username,
@@ -105,9 +111,12 @@ class RaptorUserManager(BaseUserManager):
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        oauth_post_response: Response = post("https://discord.com/api/oauth2/token", data=data, headers=headers)
-        return get("https://discord.com/api/v6/users/@me", headers={
-            'Authorization': f'Bearer {oauth_post_response.json()["access_token"]}'
+        oauth_post_response: Response = post(
+            "https://discord.com/api/oauth2/token",
+            data=data, headers=headers)
+
+        return get("https://discord.com/api/v6/users/@me",
+            headers={'Authorization': f'Bearer {oauth_post_response.json()["access_token"]}'
         }).json()
 
     def update_user_profile_details(self, profile_edit_form: ModelForm, request: HttpRequest) -> 'RaptorUser':
@@ -116,20 +125,33 @@ class RaptorUserManager(BaseUserManager):
         the request's User with the new form data, and save the user.
         """
         changed_user = RaptorUser.objects.get(username=request.user)
+        user_profile_info = changed_user.user_profile_info
+
         if profile_edit_form.cleaned_data["minecraft_username"] != '':
-            changed_user.user_profile_info.minecraft_username = profile_edit_form.cleaned_data["minecraft_username"]
+            user_profile_info.minecraft_username = \
+                profile_edit_form.cleaned_data["minecraft_username"]
+
         if profile_edit_form.cleaned_data["favorite_modpack"] != '':
-            changed_user.user_profile_info.favorite_modpack = profile_edit_form.cleaned_data["favorite_modpack"]
+            user_profile_info.favorite_modpack = \
+                profile_edit_form.cleaned_data["favorite_modpack"]
+
         if "profile_picture" in request.FILES:
-            changed_user.user_profile_info.profile_picture = request.FILES["profile_picture"]
-            changed_user.user_profile_info.profile_picture.name = RaptorUser.objects.create_profile_picture_filename(changed_user.user_profile_info)
-            changed_user.user_profile_info.picture_changed_manually = True
-        if profile_edit_form.cleaned_data["picture_changed_manually"] == True and changed_user.is_discord_user == True:
-            RaptorUser.objects.save_image_from_url_to_profile_info(
-                changed_user.user_profile_info,
-                f'https://cdn.discordapp.com/avatars/{changed_user.discord_user_info.id}/{changed_user.discord_user_info.avatar_string}.png')
-        changed_user.user_profile_info.picture_changed_manually = False
-        changed_user.user_profile_info.save()
+            user_profile_info.profile_picture = \
+                request.FILES["profile_picture"]
+            user_profile_info.profile_picture.name = \
+                RaptorUser.objects.create_profile_picture_filename(changed_user.user_profile_info)
+            user_profile_info.picture_changed_manually = True
+
+        if changed_user.is_discord_user == True:
+            if profile_edit_form.cleaned_data["picture_changed_manually"] == True:
+                RaptorUser.objects.save_image_from_url_to_profile_info(
+                    user_profile_info,
+                    ('https://cdn.discordapp.com/avatars/'
+                        f'{changed_user.discord_user_info.id}/'
+                        f'{changed_user.discord_user_info.avatar_string}.png'))               
+            user_profile_info.picture_changed_manually = False
+
+        user_profile_info.save()
         changed_user.save()
         return changed_user
 
@@ -146,16 +168,23 @@ class RaptorUserManager(BaseUserManager):
         """
         base_user = RaptorUser.objects.get(discord_user_info = discord_user)
         discord_tag = f'{new_info["username"]}#{new_info["discriminator"]}'
-        if RaptorUser.objects.filter(user_slug=slugify(new_info["username"]), is_discord_user = False).count() > 0:
-            username = discord_tag
+
+        if RaptorUser.objects.filter(
+            user_slug=slugify(new_info["username"]),
+            is_discord_user = False
+            ).count() > 0:
+                username = discord_tag
+
         else:
             username = discord_tag.split('#')[0]
+
         if discord_user.avatar_string != new_info["avatar"] and base_user.user_profile_info.picture_changed_manually != True:
+            discord_user.avatar_string = new_info["avatar"]
             RaptorUser.objects.save_image_from_url_to_profile_info(
                 user_profile_info=base_user.user_profile_info,
                 url=f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
             )
-            discord_user.avatar_string = new_info["avatar"]
+
         discord_user.tag = discord_tag
         base_user.username = username
         discord_user.save()
@@ -169,9 +198,7 @@ class RaptorUserManager(BaseUserManager):
         Input username and found username are
         compared after slugifying both.
         """
-        users_list: RaptorUserManager = RaptorUser.objects.all()
-
-        for saved_user in users_list:
+        for saved_user in  RaptorUser.objects.all():
             if str(slugify(saved_user.username)) == slugify(slugged_username):
                 return saved_user
 
@@ -180,11 +207,18 @@ class RaptorUserManager(BaseUserManager):
         Given a UserProfileInfo and an image URL, save the image at the URL to the
         profile_picture ImageField, persisting it to disk.
         """
-        image_request: Request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        image_request: Request = Request(
+            url, 
+            headers={'User-Agent': 'Mozilla/5.0'})
         temp_image: NamedTemporaryFile = NamedTemporaryFile(delete=True)
-        temp_image.write(urlopen(image_request).read())
+        temp_image.write(
+            urlopen(image_request).read()
+            )
         temp_image.flush()
-        user_profile_info.profile_picture.save(self.create_profile_picture_filename(user_profile_info), File(temp_image))
+
+        user_profile_info.profile_picture.save(
+            self.create_profile_picture_filename(user_profile_info),
+            File(temp_image))
         user_profile_info.save()
 
     def create_profile_picture_filename(self, user_profile_info: 'UserProfileInfo') -> str:
@@ -192,7 +226,7 @@ class RaptorUserManager(BaseUserManager):
         Construct a filename for a profile picture based on the
         UserProfileInfo's pk and the current timestamp.
         """
-        return f"profile_picture_{user_profile_info.pk}_{localtime(now())}.png"
+        return f"profile_picture_{user_profile_info.pk}_{ localtime(now()) }.png"
 
 
 class DiscordUserInfo(models.Model):
@@ -244,6 +278,7 @@ class DiscordUserInfo(models.Model):
         verbose_name = "User - Discord Information"
         verbose_name_plural = "Users - Discord Information"
 
+
 class UserProfileInfo(models.Model):
     """
     A User's extra profile information
@@ -274,12 +309,14 @@ class UserProfileInfo(models.Model):
         verbose_name="Favorite Modpack",
         blank=True
     )
+
     def __str__(self):
         return f'UserProfileInfo#{self.id}'
 
     class Meta:
         verbose_name = "User - Extra Information"
         verbose_name_plural = "Users - Extra Information"
+
 
 class RaptorUser(AbstractUser):
     """
@@ -336,8 +373,14 @@ class RaptorUser(AbstractUser):
         self.discord_user_info.delete()
         return super(self.__class__, self).delete(*args, **kwargs)
 
+
 @receiver(post_delete, sender=RaptorUser)
 def post_delete_user(sender, instance, *args, **kwargs):
+    """
+    Receiver to delete the UserProfileInfo and DiscordUserInfo models
+    with a OneToOne relationship to a RaptorUser when the RaptorUser
+    is deleted from the Django Admin interface.
+    """
     if instance.user_profile_info and instance.discord_user_info:
         instance.user_profile_info.delete()
         instance.discord_user_info.delete()
