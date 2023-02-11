@@ -4,59 +4,59 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Define project directories
-BASE_DIR = Path(__file__).resolve().parent.parent
-RAPTORWEB_DIR = join(BASE_DIR, 'raptorWeb')
-TEMPLATE_DIR = join(RAPTORWEB_DIR, "templates")
-STATIC_DIR = join(RAPTORWEB_DIR, "static")
-MEDIA_DIR = join(RAPTORWEB_DIR, "media")
+BASE_DIR: str = Path(__file__).resolve().parent.parent
+RAPTORWEB_DIR: str = join(BASE_DIR, 'raptorWeb')
+TEMPLATE_DIR: str = join(RAPTORWEB_DIR, "templates")
+STATIC_DIR: str = join(RAPTORWEB_DIR, "static")
+MEDIA_DIR: str = join(RAPTORWEB_DIR, "media")
 
-RAPTORMC_TEMPLATE_DIR = join(TEMPLATE_DIR, "raptormc")
-GAMESERVERS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'gameservers')
-STAFFAPPS_TEMPLATE_DIR = join(TEMPLATE_DIR, 'staffapps')
-AUTH_TEMPLATE_DIR = join(TEMPLATE_DIR, 'authprofiles')
+RAPTORMC_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "raptormc")
+GAMESERVERS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'gameservers')
+STAFFAPPS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'staffapps')
+AUTH_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'authprofiles')
 
 # Load .env file
 load_dotenv()
 
 # Django secret key from .env
-SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+SECRET_KEY: str = getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: Neither of the below two True in production!
-DEBUG = True if getenv('DEBUG') == "True" else False
-USE_SQLITE = True if getenv('USE_SQLITE') == "True" else False
+DEBUG: bool = True if getenv('DEBUG') == "True" else False
+USE_SQLITE: bool = True if getenv('USE_SQLITE') == "True" else False
 
 # Set RUNNING_IN_DOCKER to True if you are running this in a Docker container
-RUNNING_IN_DOCKER = True if getenv('RUNNING_IN_DOCKER') == "True" else False
+RUNNING_IN_DOCKER: bool = True if getenv('RUNNING_IN_DOCKER') == "True" else False
 
 # Configure "DOMAIN_NAME" to match the domain name you will use (no www)
-DOMAIN_NAME = getenv('DOMAIN_NAME'),
+DOMAIN_NAME: str = getenv('DOMAIN_NAME'),
 
 # Configure web protocol based on DEBUG status
-WEB_PROTO = ""
+WEB_PROTO: str = ""
 if DEBUG and RUNNING_IN_DOCKER:
-    DOMAIN_NAME = "localhost"
-    WEB_PROTO = "https"
+    DOMAIN_NAME: str = "localhost"
+    WEB_PROTO: str = "https"
 if DEBUG and not RUNNING_IN_DOCKER:
-    DOMAIN_NAME = "127.0.0.1:8000"
-    WEB_PROTO = "http"
+    DOMAIN_NAME: str = "127.0.0.1:8000"
+    WEB_PROTO: str = "http"
 else:
-    WEB_PROTO = "https"
+    WEB_PROTO: str = "https"
 
 # Addresses the Django app can be directly accessed from.
-ALLOWED_HOSTS = ['raptorapp', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS: list[str] = ['raptorapp', '127.0.0.1', 'localhost']
 
-# List of Super Users to create when no users are present. To be changed immediately after creation
-ADMINS = (
-    ('sradmin', 'sradmin@shadowraptor.net'),
+# Superuser to create when no users are present. To be changed immediately after creation
+ADMINS: tuple(str) = (
+    (getenv('DEFAULT_SUPERUSER_USERNAME'), getenv('DEFAULT_SUPERUSER_EMAIL')),
 )
 
 # CSRF
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = [f'{WEB_PROTO}://{DOMAIN_NAME}']
+SESSION_COOKIE_SECURE: bool = True
+CSRF_COOKIE_SECURE: bool = True
+CSRF_TRUSTED_ORIGINS: list[str] = [f'{WEB_PROTO}://{DOMAIN_NAME}']
 
-# Application definition
-INSTALLED_APPS = [
+# Application/Middleware definitions
+INSTALLED_APPS: list[str] = [
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,7 +74,7 @@ INSTALLED_APPS = [
     'raptorWeb.raptorbot'
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE: list[str] = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -87,9 +87,9 @@ MIDDLEWARE = [
     'raptorWeb.raptorbot.botware.RaptorBotWare'
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF: str = 'config.urls'
 
-TEMPLATES = [
+TEMPLATES: list[dict] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_DIR],
@@ -108,27 +108,27 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
+WSGI_APPLICATION: str = 'config.wsgi.application'
+ASGI_APPLICATION: str = 'config.asgi.application'
 
 # Email
-USE_CONSOLE_EMAIL = True if getenv('USE_CONSOLE_EMAIL') == "True" else False
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+USE_CONSOLE_EMAIL: bool = True if getenv('USE_CONSOLE_EMAIL') == "True" else False
+EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
 if USE_CONSOLE_EMAIL:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = str(getenv('EMAIL_HOST'))
-EMAIL_PORT = int(getenv('EMAIL_PORT'))
-EMAIL_HOST_USER = str(getenv('EMAIL_HOST_USER'))
-EMAIL_HOST_PASSWORD = str(getenv('EMAIL_HOST_PASSWORD'))
+EMAIL_USE_TLS: bool = True
+EMAIL_HOST: str = str(getenv('EMAIL_HOST'))
+EMAIL_PORT: int = int(getenv('EMAIL_PORT'))
+EMAIL_HOST_USER: str = str(getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD: str = str(getenv('EMAIL_HOST_PASSWORD'))
 
 # Database
-DATABASES = {}
+DATABASES: dict = {}
 
 if USE_SQLITE:
 
-    DATABASES = {
+    DATABASES: dict = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
@@ -137,7 +137,7 @@ if USE_SQLITE:
 
 else:
 
-    DATABASES = {
+    DATABASES: dict = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': getenv('MYSQL_DATABASE'),
@@ -149,7 +149,7 @@ else:
     }
 
 # Password validation
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict] = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -168,7 +168,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Hashing algorithms
-PASSWORD_HASHERS = [
+PASSWORD_HASHERS: list[str] = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
@@ -176,13 +176,13 @@ PASSWORD_HASHERS = [
 ]
 
 # Django Authentication
-AUTHENTICATION_BACKENDS = [
+AUTHENTICATION_BACKENDS: list[str] = [
     'raptorWeb.authprofiles.auth.DiscordAuthBackend',
     'django.contrib.auth.backends.ModelBackend'
 ]
 
 # Logging configuration
-LOGGING = {
+LOGGING: dict = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -280,71 +280,62 @@ LOGGING = {
 }
 
 # Internationalization
-LANGUAGE_CODE = getenv('LANGUAGE_CODE')
-TIME_ZONE = getenv('TIME_ZONE')
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
+LANGUAGE_CODE: str = getenv('LANGUAGE_CODE')
+TIME_ZONE: str = getenv('TIME_ZONE')
+USE_I18N: bool = True
+USE_L10N: bool = True
+USE_TZ: bool = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATIC_ROOT = join(join(BASE_DIR, '..'), join('config', 'static'))
+STATIC_URL: str = '/static/'
+STATIC_ROOT: str = join(join(BASE_DIR, '..'), join('config', 'static'))
 
 # THIS MUST BE NAMED `STATICFILES_DIRS`
-STATICFILES_DIRS = [
+STATICFILES_DIRS: list[str] = [
     STATIC_DIR,
 ]
 
 # Media files (User submitted content)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = MEDIA_DIR
-DEFAULT_MEDIA = f'{WEB_PROTO}://{DOMAIN_NAME}/media/'
+MEDIA_URL: str = '/media/'
+MEDIA_ROOT: str = MEDIA_DIR
+DEFAULT_MEDIA: str = f'{WEB_PROTO}://{DOMAIN_NAME}/media/'
 
 # Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
-BACKGROUND_TASK_RUN_ASYNC = True
+BACKGROUND_TASK_RUN_ASYNC: bool = True
 
 # ** Settings for "gameservers" app **
-# Set to True to query addresses of Servers
-ENABLE_SERVER_QUERY = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
-# Set to True to import a server_data_full.json on start
-IMPORT_SERVERS = True if getenv('IMPORT_SERVERS') == "True" else False
-# Set to True to delete existing servers when performing an import
-DELETE_EXISTING = True if getenv('DELETE_EXISTING') == "True" else False
-# Location of json file to import servers from
-IMPORT_JSON_LOCATION = join(BASE_DIR, 'server_data_full.json')
-# Location of LOCk file used to time gameserver queries
-LOCK_FILE_PATH = join(BASE_DIR, 'playerCounts.LOCK')
+ENABLE_SERVER_QUERY: bool = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
+IMPORT_SERVERS: bool = True if getenv('IMPORT_SERVERS') == "True" else False
+DELETE_EXISTING: bool = True if getenv('DELETE_EXISTING') == "True" else False
+# Path to json file to import servers from
+IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
+# Path to LOCK file used to time gameserver queries
+LOCK_FILE_PATH: str = join(BASE_DIR, 'playerCounts.LOCK')
 
 # ** Settings for "authprofiles" app **
-AUTH_USER_MODEL = 'authprofiles.RaptorUser'
-LOGIN_URL = '/login/'
-BASE_USER_URL = 'user'
-BASE_USER_URL = getenv('BASE_USER_URL')
-USER_RESET_URL = getenv('USER_RESET_URL')
-
-DISCORD_APP_ID = getenv('DISCORD_OAUTH_APP_ID')
-DISCORD_APP_SECRET = getenv('DISCORD_OAUTH_APP_SECRET')
-DISCORD_AUTH_URL = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
-DISCORD_REDIRECT_URL = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
-
-IMPORT_USERS = True if getenv('IMPORT_USERS') == 'True' else False
+AUTH_USER_MODEL: str = 'authprofiles.RaptorUser'
+LOGIN_URL: str = '/login/'
+BASE_USER_URL: str = getenv('BASE_USER_URL')
+USER_RESET_URL: str = getenv('USER_RESET_URL')
+DISCORD_APP_ID: str = getenv('DISCORD_OAUTH_APP_ID')
+DISCORD_APP_SECRET: str = getenv('DISCORD_OAUTH_APP_SECRET')
+DISCORD_AUTH_URL: str = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
+IMPORT_USERS: bool = True if getenv('IMPORT_USERS') == 'True' else False
 
 # ** Settings for "raptorbot" app **
-# Set to True to enable website using scraped Global Announcements
-USE_GLOBAL_ANNOUNCEMENT = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
-# Set to True to enable Raptor Bot scraping Discord announcements for each server
-SCRAPE_SERVER_ANNOUNCEMENT = True if getenv('SCRAPE_SERVER_ANNOUNCEMENT') == "True" else False
-# Settings for the Discord Bot
-DISCORD_BOT_TOKEN = getenv('DISCORD_BOT_TOKEN')
-DISCORD_BOT_DESCRIPTION = getenv('DISCORD_BOT_DESCRIPTION')
-DISCORD_GUILD = int(getenv('DISCORD_GUILD'))
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID = int(getenv('GLOBAL_ANNOUNCEMENT_CHANNEL_ID'))
-STAFF_ROLE_ID = int(getenv('STAFF_ROLE_ID'))
+USE_GLOBAL_ANNOUNCEMENT: bool = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
+SCRAPE_SERVER_ANNOUNCEMENT: bool = True if getenv('SCRAPE_SERVER_ANNOUNCEMENT') == "True" else False
+DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
+DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
+DISCORD_GUILD: int = int(getenv('DISCORD_GUILD'))
+GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = int(getenv('GLOBAL_ANNOUNCEMENT_CHANNEL_ID'))
+STAFF_ROLE_ID: int = int(getenv('STAFF_ROLE_ID'))
 
 # ** Settings for "django_bootstrap5" app **
-BOOTSTRAP5 = {
+BOOTSTRAP5: dict = {
 
     # Set placeholder attributes to label if no placeholder is provided.
     'set_placeholder': False,
@@ -352,7 +343,7 @@ BOOTSTRAP5 = {
 }
 
 # ** Settings for "CKEditor-django" app **
-CKEDITOR_CONFIGS = {
+CKEDITOR_CONFIGS: dict = {
     'default': {
         'toolbar': 'full',
         'width': '120%',
