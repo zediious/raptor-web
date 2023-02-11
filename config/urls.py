@@ -16,7 +16,7 @@ Including another URLconf
 from os.path import join
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import URLResolver, path, include
 from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
@@ -27,12 +27,12 @@ from raptorWeb.staffapps import urls as app_urls
 from raptorWeb.authprofiles import urls as auth_urls
 from raptorWeb.raptorbot import urls as bot_urls
 
-DEBUG = getattr(settings, 'DEBUG')
-RAPTORMC_TEMPLATE_DIR = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
-MEDIA_URL = getattr(settings, 'MEDIA_URL')
-MEDIA_ROOT = getattr(settings, 'MEDIA_ROOT')
+DEBUG: bool = getattr(settings, 'DEBUG')
+RAPTORMC_TEMPLATE_DIR: str = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
+MEDIA_URL: str = getattr(settings, 'MEDIA_URL')
+MEDIA_ROOT: str = getattr(settings, 'MEDIA_ROOT')
 
-urlpatterns = [
+urlpatterns: list[URLResolver] = [
 
     path('admin/', admin.site.urls, name="admin"),
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),

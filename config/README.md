@@ -1,10 +1,8 @@
-# Configuring raptorWeb
+# Configuring raptor-web
 
-## Before you can start the application successfully, you need to create a file with the filename `.env` in the same location of this `README.md` file. Into the `.env` file, you need to copy the text within the code block below. After doing so, you will need to put information into each element that does not have a value. If a key has a value, except `''`, **it MUST stay as it is**. If an element has a pair of quotes `''`, **you must enter your value inside of those quotes**.
-
-## The exception to this is `LANGUAGE_CODE` and `TIME_ZONE`. Preferred defaults are set, but you may change them.
-
-## Below the code block you will find an explanation for each field, and what you should put in them.
+### Before you can start the application successfully, you need to create a file with the filename `.env` in the same location of this `README.md` file. Into the `.env` file, you need to copy the text within the code block below.<br></br>
+### After doing so, you will need to put information into each element that does not have a value. If a key has a value, except `''`, **it MUST stay as it is**. If an element has a pair of quotes `''`, **you must enter your value inside of those quotes**. The exception to this is `LANGUAGE_CODE` and `TIME_ZONE`. Preferred defaults are set, but you may change them.<br></br>
+### Below the code block you will find an explanation for each field, and what you should put in them.
 
 ```
 DJANGO_SECRET_KEY=''
@@ -30,6 +28,8 @@ DISCORD_OAUTH_APP_SECRET=
 IMPORT_USERS=False
 BASE_USER_URL='user'
 USER_RESET_URL='reset'
+DEFAULT_SUPERUSER_USERNAME=''
+DEFAULT_SUPERUSER_EMAIL=''
 
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
@@ -46,7 +46,7 @@ EMAIL_PORT=
 EMAIL_HOST_USER=''
 EMAIL_HOST_PASSWORD=''
 ```
-## *General*
+# *General*
 
 ### **DJANGO_SECRET_KEY**
 This value must be a long and random set of numbers, letters, and special characters. I recommend using a Password Generator from something like BitWarden to generate these values. There are other resources available to create these as well https://docs.djangoproject.com/en/4.1/ref/settings/#secret-key
@@ -66,7 +66,7 @@ A code representing the language used by Django. This is set to `en-us` by defau
 ### **TIME_ZONE**
 The time zone used by Django. This is set to `America/New_York` by default, but can be changed. https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-TIME_ZONE
 
-## *Database*
+# *Database*
 
 ### **USE_SQLITE**
 Setting this to `True` will use a SQLite driver instead of a MYSQL driver. This should be set to `False`, and you should use MYSQL unless you have a specific reason.
@@ -88,7 +88,7 @@ If this is set to `True`, then Servers will be imported from a `server_data_full
 ### **DELETE_EXISTING**
 If this set to `True`, then when `IMPORT_SERVERS` is set to `True`, all existing serves will be deleted before importing. This setting has no effect when `IMPORT_SERVERS` is set to `False`
 
-## *Users / Auth*
+# *Users / Auth*
 
 ### **DISCORD_OAUTH_APP_ID**
 The app ID of the Discord Application you will be using to process OAuth login requests.
@@ -105,7 +105,13 @@ The first element of the path for the `raptormc` application's urlpatterns leadi
 ### **USER_RESET_URL**
 The element of the path used to point from the `raptormc` application to `authprofiles` password reset views. **Only change this if you are modifying the URL structure of the application.**
 
-## *Discord Bot*
+### **DEFAULT_SUPERUSER_USERNAME**
+The username for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
+
+### **DEFAULT_SUPERUSER_EMAIL**
+The email for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
+
+# *Discord Bot*
 
 ### **DISCORD_BOT_TOKEN**
 The Bot Token for the Discord Application Bot you will use for the Discord Bot
@@ -122,7 +128,7 @@ The Channel ID of the Discord Channel you designate as the Global Announcement C
 ### **STAFF_ROLE_ID**
 The Role ID of the Discord Role you designate as a Staff Member.
 
-## *Email*
+# *Email*
 
 ### **USE_CONSOLE_EMAIL**
 If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to True until you have configured the below settings and are ready to send emails.
