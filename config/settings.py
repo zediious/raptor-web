@@ -104,6 +104,7 @@ TEMPLATES: list[dict] = [
                 'raptorWeb.raptormc.context_processor.context_process',
                 'raptorWeb.authprofiles.context_processor.all_users_to_context',
                 'raptorWeb.raptorbot.context_processor.add_discord_guild_data',
+                'raptorWeb.gameservers.context_processor.server_settings_to_context',
             ],
         },
     },
