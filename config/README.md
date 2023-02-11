@@ -80,7 +80,7 @@ The root password to the MYSQL database. This password is only used for debug pu
 ## *Game Servers*
 
 ### **ENABLE_SERVER_QUERY**
-If this is set to `False`, the entire gameservers logic will be disabled.
+If this is set to `False`, the Domain name/port of created Servers will not be queried for player data. They will still appear everywhere on the website as normal.
 
 ### **IMPORT_SERVERS**
 If this is set to `True`, then Servers will be imported from a `server_data_full.json` located at the top level directory of the app, alongside `manage.py`. After this process has completed, you MUST stop the server and restart it with this setting back to `False`.

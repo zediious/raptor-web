@@ -69,11 +69,12 @@ def refresh_server_data():
     PlayerCount objects to the database with a foreign key for each Server and
     update instanced PlayerCount class attribute playerPoller_DB with updated data
     """
-    if ENABLE_SERVER_QUERY and Server.objects.count() > 0:
+    if Server.objects.count() > 0:
 
         # Retrieve all Server Models from database, and update server_data class attribute with retreived data
         server_data = Server.objects.all()
         server_key = 0
+        local_do_query = True
         for server in server_data:
 
             player_poller.server_data.update({
@@ -85,11 +86,15 @@ def refresh_server_data():
                 }
             })
 
-            if server.server_address == "Default":
+            if ENABLE_SERVER_QUERY == False:
+                player_poller.server_data[f'server{server_key}']["do_query"] = False
+                local_do_query = False
+
+            if server.server_address == "Default" and local_do_query == True:
                 LOGGER.error(f'The server "{server.modpack_name}" still has a default address, so it will not be queried.')
                 player_poller.server_data[f'server{server_key}']["is_default"] = True
 
-            if server.in_maintenance == True:
+            if server.in_maintenance == True and local_do_query == True:
                 LOGGER.error(f'The server "{server.modpack_name}" is in Maintenance Mode, so it will not be queried')
                 player_poller.server_data[f'server{server_key}']["do_query"] = False
 
