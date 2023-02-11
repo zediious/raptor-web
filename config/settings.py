@@ -2,6 +2,7 @@ from os.path import join
 from os import getenv
 from pathlib import Path
 from dotenv import load_dotenv
+from typing import Tuple
 
 # Define project directories
 BASE_DIR: str = Path(__file__).resolve().parent.parent
@@ -46,7 +47,7 @@ else:
 ALLOWED_HOSTS: list[str] = ['raptorapp', '127.0.0.1', 'localhost']
 
 # Superuser to create when no users are present. To be changed immediately after creation
-ADMINS: tuple(str) = (
+ADMINS: tuple[str] = (
     (getenv('DEFAULT_SUPERUSER_USERNAME'), getenv('DEFAULT_SUPERUSER_EMAIL')),
 )
 

@@ -1,10 +1,10 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
 from raptorWeb.authprofiles import views
 
-app_name = "authprofiles"
+app_name: str = "authprofiles"
 
-urlpatterns = [
+urlpatterns: list[URLPattern] = [
 
     # Auth
     path('register/', views.RegisterUser.as_view(), name="register"),

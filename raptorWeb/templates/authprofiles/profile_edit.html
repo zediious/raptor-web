@@ -13,7 +13,6 @@
     
     {% csrf_token %} 
     {{ form.captcha }} 
-    {% bootstrap_form_errors extra_edit_form %}
     {% bootstrap_form extra_edit_form %}
     {% bootstrap_button button_type="submit" content="Edit Details" %}
     {% bootstrap_button button_type="reset" content="Reset" %}

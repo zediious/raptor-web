@@ -2,21 +2,25 @@ from os.path import join
 from json import load
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.utils.timezone import now, localtime
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 
-BASE_USER_URL = getattr(settings, 'BASE_USER_URL')
-BASE_DIR = getattr(settings, 'BASE_DIR')
-IMPORT_USERS = getattr(settings, 'IMPORT_USERS')
+BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
+BASE_DIR: str = getattr(settings, 'BASE_DIR')
+IMPORT_USERS: bool = getattr(settings, 'IMPORT_USERS')
 
-def all_users_to_context(request):
+def all_users_to_context(request: HttpResponse) -> dict:
     if IMPORT_USERS == True:
         import_users()
     return {"current_members": RaptorUser.objects.all(),
             "user_path": BASE_USER_URL}
 
-def import_users():
+def import_users() -> None:
+    """
+    Temporary function to import users from old database schema.
+    """
     default_users = load(open(join(BASE_DIR, 'normal_user_list.json')))
     discord_users = load(open(join(BASE_DIR, 'discord_user_list.json')))
 

@@ -8,13 +8,13 @@ from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUs
 class RaptorUserAdminForm(forms.ModelForm):
     class Meta:
         model = RaptorUser
-        widgets = {
+        widgets: dict = {
             'password': forms.PasswordInput()
         }
-        fields = '__all__'
+        fields: str = '__all__'
 
 class RaptorUserAdmin(UserAdmin):
-    fieldsets = (
+    fieldsets: tuple[tuple] = (
         ('General', {
             'fields': (
                 'user_profile_info',
@@ -39,7 +39,7 @@ class RaptorUserAdmin(UserAdmin):
         })
     )
 
-    readonly_fields = (
+    readonly_fields: tuple[str] = (
         'is_discord_user',
         'date_joined',
         'last_login',
@@ -47,7 +47,7 @@ class RaptorUserAdmin(UserAdmin):
         'discord_user_info'
     )
 
-    search_fields = [
+    search_fields: list[str] = [
         'username',
         'user_slug',
         'email',
