@@ -1,6 +1,7 @@
 {% load static %}
 {% load serverContext %}
 
+{% if server_query_enabled %}
 <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
     <div class="modal-dialog modal-sm">
       <div class="modal-content bg-dark text-white">
@@ -30,3 +31,5 @@
     <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
 </button>
 <span id="spacer" class="mt-auto"></span>
+{% else %}
+{% endif %}
