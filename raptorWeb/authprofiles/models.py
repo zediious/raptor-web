@@ -17,6 +17,7 @@ from tempfile import NamedTemporaryFile
 DISCORD_APP_ID: str = getattr(settings, 'DISCORD_APP_ID')
 DISCORD_APP_SECRET: str = getattr(settings, 'DISCORD_APP_SECRET'),
 DISCORD_REDIRECT_URL: str = getattr(settings, 'DISCORD_REDIRECT_URL'),
+BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 
 
 class RaptorUserManager(BaseUserManager):
@@ -372,6 +373,9 @@ class RaptorUser(AbstractUser):
 
     def get_discord_info(self):
         return self.discord_user_info
+
+    def get_absolute_url(self):
+        return f"/{BASE_USER_URL}/{self.user_slug}"
 
     def delete(self, *args, **kwargs):
         self.user_profile_info.delete()
