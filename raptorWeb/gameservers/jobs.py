@@ -120,13 +120,15 @@ def refresh_server_data():
 
             if key == "totalCount":
                 continue
+
+            server_info = Server.objects.get(server_address=player_data[key]["address"])
+            server_info.server_state = player_data[key]["online"]
             
             for player in player_data[key]["names"]:
 
-                PlayerName.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), name=player).save()
+                PlayerName.objects.create(server=server_info, name=player).save()
 
-            PlayerCount.objects.create(server=Server.objects.get(server_address=player_data[key]["address"]), player_count=player_data[key]["count"]).save()
-            server_info = Server.objects.get(server_address=player_data[key]["address"])
+            PlayerCount.objects.create(server=server_info, player_count=player_data[key]["count"]).save()
 
             # Get announcements counts
             if SCRAPE_SERVER_ANNOUNCEMENT:
@@ -140,7 +142,6 @@ def refresh_server_data():
                     LOGGER.info(f'No announcements have been made regarding the server "{server_info.modpack_name}". Skipping.')
 
             # Finalize currentPlayers_DB with updated information for current iterated server
-            server_from_db = Server.objects.get(server_address=player_data[key]["address"])
             player_poller.currentPlayers_DB["server_info"].append({
                 f"server{server_number}": {
                     "key": key,
@@ -148,7 +149,7 @@ def refresh_server_data():
                     "maintenance": server_info.in_maintenance,
                     "player_count": player_data[key]["count"],
                     "address": server_info.server_address,
-                    "names": PlayerName.objects.all().filter(server=server_from_db),
+                    "names": PlayerName.objects.all().filter(server=server_info),
                     "modpack_name": server_info.modpack_name,
                     "modpack_version": server_info.modpack_version,
                     "modpack_description": server_info.modpack_description,
@@ -158,10 +159,11 @@ def refresh_server_data():
                     "server_rules": server_info.server_rules,
                     "server_banned_items": server_info.server_banned_items,
                     "server_vote_links": server_info.server_vote_links,
-                    "modpack_image": server_from_db.modpack_picture
+                    "modpack_image": server_info.modpack_picture
                 }
             })
 
+            server_info.save()
             server_number += 1
 
         LOGGER.info("Server data has been retrieved and saved")

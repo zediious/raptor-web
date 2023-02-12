@@ -5,10 +5,43 @@ from django.db import models
 from raptorWeb.gameservers.models import Server, PlayerCount, PlayerName
 
 class ServerAdmin(admin.ModelAdmin):
-    formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size':'35'})},
-        models.TextField: {'widget': Textarea(attrs={'rows':6, 'cols':60})},
-    }
+    """
+    Object defining behavior and display of 
+    RaptorUsers in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Server Information', {
+            'fields': (
+                'modpack_picture',
+                'modpack_url',
+                'modpack_name',
+                'modpack_version',
+                'server_address',
+                'modpack_description',
+                'server_description',
+                'server_rules',
+                'server_banned_items',
+                'server_vote_links')
+        }),
+        ('Server Querying', {
+            'classes': ('collapse',),
+            'fields': ('server_state', 'in_maintenance', 'server_port')
+        }),
+        ('Discord Announcements', {
+            'classes': ('collapse',),
+            'fields': ('discord_announcement_channel_id', 'discord_modpack_role_id')
+        })
+    )
+
+    readonly_fields: tuple[str] = (
+        'server_state',
+    )
+
+    search_fields: list[str] = [
+        'modpack_name',
+    ]
+
+    list_display: list[str] = ['modpack_name', 'modpack_version', 'in_maintenance']
 
 admin.site.register(Server, ServerAdmin)
 admin.site.register(PlayerCount)
