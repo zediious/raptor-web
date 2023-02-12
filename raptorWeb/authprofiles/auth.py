@@ -22,11 +22,15 @@ class DiscordAuthBackend(BaseBackend):
         based on the Response object data and return that new RaptorUser.
         """
         try:
-            return RaptorUser.objects.get(user_slug=slugify(user["username"]), is_discord_user=True)
+            return RaptorUser.objects.get(
+                user_slug=slugify(user["username"]),
+                is_discord_user=True)
 
         except RaptorUser.DoesNotExist:
             try: 
-                return RaptorUser.objects.get(user_slug=slugify(f'{user["username"]}#{user["discriminator"]}'), is_discord_user=True)
+                return RaptorUser.objects.get(
+                    user_slug=slugify(f'{user["username"]}#{user["discriminator"]}'),
+                    is_discord_user=True)
 
             except RaptorUser.DoesNotExist:
                 LOGGER.info("No user found with Username, creating now")

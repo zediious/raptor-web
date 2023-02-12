@@ -29,11 +29,11 @@ class RaptorUserManager(BaseUserManager):
         Return a newly created RaptorUser with is_superuser attribute to true.
         Only to be called in management commands.
         """
-        superuser: RaptorUser = RaptorUser.objects.create(
-            username = username,
-            email = email,
-            is_staff = True,
-            is_superuser = True
+        superuser: RaptorUser = self.create(
+            username=username,
+            email=email,
+            is_staff=True,
+            is_superuser=True
         ) 
         superuser.set_password(password)
         return superuser
@@ -60,33 +60,36 @@ class RaptorUserManager(BaseUserManager):
         Discord OAuth2.
         """
         discord_tag: str = f'{discord_info["username"]}#{discord_info["discriminator"]}'
-        avatar_url: str = f'https://cdn.discordapp.com/avatars/{discord_info["id"]}/{discord_info["avatar"]}.png'
+        avatar_url: str = ('https://cdn.discordapp.com/avatars/'
+                            f'{discord_info["id"]}/{discord_info["avatar"]}.png')
+
         new_discord_info: DiscordUserInfo = DiscordUserInfo.objects.create(
-            id = discord_info["id"],
-            tag = discord_tag,
-            pub_flags = discord_info["public_flags"],
-            flags = discord_info["flags"],
-            locale = discord_info["locale"],
-            mfa_enabled = discord_info["mfa_enabled"],
-            avatar_string = discord_info["avatar"]
+            id=discord_info["id"],
+            tag=discord_tag,
+            pub_flags=discord_info["public_flags"],
+            flags=discord_info["flags"],
+            locale=discord_info["locale"],
+            mfa_enabled=discord_info["mfa_enabled"],
+            avatar_string=discord_info["avatar"]
         )
 
         new_extra_info: UserProfileInfo = UserProfileInfo.objects.create()
         self.save_image_from_url_to_profile_info(new_extra_info, avatar_url)
 
         # Set username to discord tag instead of just username, if a user with username exists already
-        if RaptorUser.objects.filter(user_slug=slugify(discord_info["username"])).count() > 0:
-            username: str = discord_tag
+        if self.filter(
+            user_slug=slugify(discord_info["username"])).count() > 0:
+                username: str = discord_tag
         else:
             username: str = discord_tag.split('#')[0]
 
-        new_user: RaptorUser = RaptorUser.objects.create( 
-            is_discord_user = True,
-            username = username,
-            user_slug = slugify(username),
-            email = discord_info["email"],
-            user_profile_info = new_extra_info,
-            discord_user_info = new_discord_info
+        new_user: RaptorUser = self.create( 
+            is_discord_user=True,
+            username=username,
+            user_slug=slugify(username),
+            email=discord_info["email"],
+            user_profile_info=new_extra_info,
+            discord_user_info=new_discord_info
         )
         # Discord-registered RaptorUsers will never/cannot authenticate with password.
         new_user.set_unusable_password()
@@ -99,7 +102,7 @@ class RaptorUserManager(BaseUserManager):
         request to Discord's user API and retrieve information regarding that user, and
         return the get() Response object in .json format.
         """
-        data: dict = {
+        data: dict[str, str] = {
             "client_id": DISCORD_APP_ID,
             "client_secret": DISCORD_APP_SECRET,
             "grant_type": "authorization_code",
@@ -107,7 +110,7 @@ class RaptorUserManager(BaseUserManager):
             "redirect_uri": DISCORD_REDIRECT_URL,
             "scope": "identify email guilds"
         }
-        headers: dict = {
+        headers: dict[str, str] = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
@@ -124,8 +127,8 @@ class RaptorUserManager(BaseUserManager):
         Given a validated UserProfileInfo ModelForm and a request, update the details for
         the request's User with the new form data, and save the user.
         """
-        changed_user = RaptorUser.objects.get(username=request.user)
-        user_profile_info = changed_user.user_profile_info
+        changed_user: RaptorUser = self.get(username=request.user)
+        user_profile_info: UserProfileInfo = changed_user.user_profile_info
 
         if profile_edit_form.cleaned_data["minecraft_username"] != '':
             user_profile_info.minecraft_username = \
@@ -139,17 +142,17 @@ class RaptorUserManager(BaseUserManager):
             user_profile_info.profile_picture = \
                 request.FILES["profile_picture"]
             user_profile_info.profile_picture.name = \
-                RaptorUser.objects.create_profile_picture_filename(changed_user.user_profile_info)
+                self.create_profile_picture_filename(changed_user.user_profile_info)
             user_profile_info.picture_changed_manually = True
 
-        if changed_user.is_discord_user == True:
-            if profile_edit_form.cleaned_data["picture_changed_manually"] == True:
-                RaptorUser.objects.save_image_from_url_to_profile_info(
-                    user_profile_info,
-                    ('https://cdn.discordapp.com/avatars/'
-                        f'{changed_user.discord_user_info.id}/'
-                        f'{changed_user.discord_user_info.avatar_string}.png'))               
+        if (changed_user.is_discord_user == True
+        and profile_edit_form.cleaned_data["picture_changed_manually"] == True):
             user_profile_info.picture_changed_manually = False
+            self.save_image_from_url_to_profile_info(
+                user_profile_info,
+                ('https://cdn.discordapp.com/avatars/'
+                f'{changed_user.discord_user_info.id}/'
+                f'{changed_user.discord_user_info.avatar_string}.png'))               
 
         user_profile_info.save()
         changed_user.save()
@@ -166,23 +169,25 @@ class RaptorUserManager(BaseUserManager):
         username. If a RaptorUser does exist, the new username will have the Discord
         user's discriminator (#1234) appended to it.
         """
-        base_user = RaptorUser.objects.get(discord_user_info = discord_user)
-        discord_tag = f'{new_info["username"]}#{new_info["discriminator"]}'
+        base_user: RaptorUser = self.get(discord_user_info=discord_user)
+        discord_tag: str = f'{new_info["username"]}#{new_info["discriminator"]}'
 
-        if RaptorUser.objects.filter(
+        if self.filter(
             user_slug=slugify(new_info["username"]),
-            is_discord_user = False
+            is_discord_user=False
             ).count() > 0:
                 username = discord_tag
 
         else:
             username = discord_tag.split('#')[0]
 
-        if discord_user.avatar_string != new_info["avatar"] and base_user.user_profile_info.picture_changed_manually != True:
+        if (discord_user.avatar_string != new_info["avatar"]
+        and base_user.user_profile_info.picture_changed_manually != True):
             discord_user.avatar_string = new_info["avatar"]
-            RaptorUser.objects.save_image_from_url_to_profile_info(
+            self.save_image_from_url_to_profile_info(
                 user_profile_info=base_user.user_profile_info,
-                url=f'https://cdn.discordapp.com/avatars/{new_info["id"]}/{new_info["avatar"]}.png'
+                url=('https://cdn.discordapp.com/avatars/'
+                    f'{new_info["id"]}/{new_info["avatar"]}.png')
             )
 
         discord_user.tag = discord_tag
@@ -198,7 +203,7 @@ class RaptorUserManager(BaseUserManager):
         Input username and found username are
         compared after slugifying both.
         """
-        for saved_user in  RaptorUser.objects.all():
+        for saved_user in  self.all():
             if str(slugify(saved_user.username)) == slugify(slugged_username):
                 return saved_user
 
