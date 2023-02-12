@@ -134,10 +134,10 @@ The Role ID of the Discord Role you designate as a Staff Member.
 If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to True until you have configured the below settings and are ready to send emails.
 
 ### **EMAIL_HOST**
-The domain name/IP address for the SMPT server you wish to use. For example, gmail's SMPT domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
+The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
 
 ### **EMAIL_PORT**
-The port used for connecting to the SMPT server. This is typically `587`, but it may be different.
+The port used for connecting to the SMTP server. This is typically `587`, but it may be different.
 
 ### **EMAIL_HOST_USER**
 The User/email address you will be using to send email. This should be an email address.
