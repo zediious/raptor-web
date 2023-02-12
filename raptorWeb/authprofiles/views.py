@@ -93,13 +93,13 @@ class UserResetPasswordForm(TemplateView):
 
             resetting_user.password_reset_token = token_generator.make_token(resetting_user)
             resetting_user.save()
-            send_mail(subject = f"User password reset for: {resetting_user.username}",
-                message = ("Click the following link to enter a password reset form for your account: "
-                            f"{WEB_PROTO}://{DOMAIN_NAME}/"
-                            f"{BASE_USER_URL}/{USER_RESET_URL}/"
-                            f"{resetting_user.user_slug}/{resetting_user.password_reset_token}"),
-                from_email = EMAIL_HOST_USER,
-                recipient_list = [resetting_user.email]
+            send_mail(subject=f"User password reset for: {resetting_user.username}",
+                message=("Click the following link to enter a password reset form for your account: "
+                        f"{WEB_PROTO}://{DOMAIN_NAME}/"
+                        f"{BASE_USER_URL}/{USER_RESET_URL}/"
+                        f"{resetting_user.user_slug}/{resetting_user.password_reset_token}"),
+                from_email=EMAIL_HOST_USER,
+                recipient_list=[resetting_user.email]
             )
             LOGGER.info(f"Password reset submitted for {resetting_user.username}. Email has been sent.")
             messages.error(request, "Await reset link at user email")

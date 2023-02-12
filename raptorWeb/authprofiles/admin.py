@@ -10,7 +10,7 @@ class RaptorUserAdmin(UserAdmin):
     Object defining behavior and display of 
     RaptorUsers in the Django admin interface.
     """
-    fieldsets: tuple[tuple] = (
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('General', {
             'fields': (
                 'user_profile_info',
