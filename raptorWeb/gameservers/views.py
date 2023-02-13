@@ -1,51 +1,130 @@
 from os.path import join
 
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.http import HttpResponseRedirect
 from django.conf import settings
 
-from raptorWeb.gameservers.models import Server
+from raptorWeb.gameservers.models import ServerStatistic, Server, Player
 
-GAMESERVERS_TEMPLATE_DIR = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
-SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
+SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
-class Server_Buttons(TemplateView):
+
+class Server_Buttons(ListView):
     """
     Returns Bootstrap buttons for each server
     Buttons used to open Server Modals
     """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
+    paginate_by = 6
+    model = Server
 
-class Server_Buttons_Loading(TemplateView):
-    """
-    Returns loading-image buttons for each server
-    """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons_loading.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
+    def get_queryset(self):
+        return Server.objects.filter().order_by('-pk')
 
-class Server_Modals(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+class Server_Buttons_Loading(ListView):
+    """
+    Returns Bootstrap buttons for each server
+    Display loading spinner in each button
+    """
+    paginate_by = 6
+    model = Server
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+class Server_Modals(ListView):
     """
     Returns Bootstrap Modals for each server, containing
-    all information regarding it
+    all information regarding it.
     """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverModals.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
+    model = Server
 
-class Total_Count(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+class Server_Rules(ListView):
+    """
+    Returns a Bootstrap Accordion containing Server Rules
+    for each Server
+    """
+    model = Server
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+class Server_Banned_Items(ListView):
+    """
+    Returns a Bootstrap Accordion containing Server Banned
+    Items for each Server
+    """
+    model = Server
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+class Server_Voting(ListView):
+    """
+    Returns a Bootstrap Accordion containing Server Voting
+    Information for each Server
+    """
+    model = Server
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('../../')
+
+
+if SCRAPE_SERVER_ANNOUNCEMENT:
+
+
+    class Server_Announcements_Base(ListView):
+        """
+        Returns a Bootstrap Accordion to contain Server Announcement
+        Information for each Server
+        """
+        model = Server
+
+        def get(self, request, *args, **kwargs):
+            if request.headers.get('HX-Request') == "true":
+                return super().get(request, *args, **kwargs)
+
+            else:
+                return HttpResponseRedirect('../../')
+
+
+class Player_List(ListView):
     """
     Returns button showing total player count
     and Bootstrap Modal containing names of online players
@@ -53,60 +132,18 @@ class Total_Count(TemplateView):
     This view will also call the update_servers() method of
     the Server Manager.
     """
-    def get(self, request):
+    model = Player
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stat_object"] = ServerStatistic.objects.get_or_create(name='gameservers-stat')[0]
+        context["server_list"] = Server.objects.all()
+        return context
+
+    def get(self, request, *args, **kwargs):
         if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'playerCounts.html')
             Server.objects.update_servers()
-            return render(request, template_name, context={})
+            return super().get(request, *args, **kwargs)
+
         else:
-            return HttpResponseRedirect('../')
-
-class Server_Rules(TemplateView):
-    """
-    Returns a Bootstrap Accordion containing Server Rules
-    for each Server
-    """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverRules.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
-
-class Server_Banned_Items(TemplateView):
-    """
-    Returns a Bootstrap Accordion containing Server Banned
-    Items for each Server
-    """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverBannedItems.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
-
-class Server_Voting(TemplateView):
-    """
-    Returns a Bootstrap Accordion containing Server Voting
-    Information for each Server
-    """
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverVoting.html')
-            return render(request, template_name, context={})
-        else:
-            return HttpResponseRedirect('../')
-
-if SCRAPE_SERVER_ANNOUNCEMENT:
-
-    class Server_Announcements_Base(TemplateView):
-        """
-        Returns a Bootstrap Accordion to contain Server Announcement
-        Information for each Server
-        """
-        def get(self, request):
-            if request.headers.get('HX-Request') == "true":
-                template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
-                return render(request, template_name, context={})
-            else:
-                return HttpResponseRedirect('../')
+            return HttpResponseRedirect('../../')

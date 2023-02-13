@@ -13,11 +13,12 @@ from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER: Logger = getLogger('gameservers.models')
 IMPORT_JSON_LOCATION = getattr(settings, 'IMPORT_JSON_LOCATION')
+ENABLE_SERVER_QUERY = getattr(settings, 'ENABLE_SERVER_QUERY')
 SCRAPE_SERVER_ANNOUNCEMENT: str = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class ServerManager(models.Manager):
 
-    class PlayerPoller():
+    class _PlayerPoller():
         """
         Object containing data structures and methods used for polling
         addresses of Server models for state and player information.
@@ -62,9 +63,36 @@ class ServerManager(models.Manager):
                 _set_offline_server(server)
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
-            """
+            minutes_since_poll = int(str(
+                (localtime() - statistic_model.time_last_polled.astimezone())
+                ).split(":")[1])
 
-            Query a list of Server objects. Will do the following;
+            if minutes_since_poll > 1 or self._has_run == False:
+                statistic_model.total_player_count = 0
+                Player.objects.all().delete()
+
+                for server in servers:
+                    if (server.server_address == "Default"
+                    or server.in_maintenance == True
+                    or ENABLE_SERVER_QUERY == False):
+                        self._query_and_update_server(
+                            server,
+                            do_query = False)
+
+                    else:
+                        self._query_and_update_server(server)
+                        statistic_model.total_player_count += server.player_count
+
+                self._has_run = True
+                statistic_model.time_last_polled = localtime()
+                statistic_model.save()
+                LOGGER.info("Server data has been retrieved and saved")
+    
+    _player_poller: _PlayerPoller = _PlayerPoller()
+    
+    def update_servers(self):
+        """
+        Through the use of PlayerCounts, do the following;
 
             - Query the server_address/server_port attributes of each server
             - Save the player_count and server_state attributes of iterated server to
@@ -75,36 +103,8 @@ class ServerManager(models.Manager):
             server they were on.
             - Save the total count of all online players to the total_player_count attribute of
             the ServerStatistic model passed as an argument.
-
-            """
-            minutes_since_poll = int(str(
-                (localtime() - statistic_model.time_last_polled.astimezone())
-                ).split(":")[1])
-
-            if minutes_since_poll > 1:
-                statistic_model.total_player_count = 0
-                Player.objects.all().delete()
-
-                for server in servers:
-                    if (server.server_address == "Default"
-                    or server.in_maintenance == True):
-                        self._query_and_update_server(
-                            server,
-                            do_query = False)
-                        statistic_model.total_player_count += server.player_count
-
-                    else:
-                        self._query_and_update_server(server)
-
-                self._has_run = True
-                statistic_model.time_last_polled = localtime()
-                statistic_model.save()
-                LOGGER.info("Server data has been retrieved and saved")
-    
-    player_poller: PlayerPoller = PlayerPoller()
-    
-    def update_servers(self):
-        self.player_poller.poll_servers(
+        """
+        self._player_poller.poll_servers(
             [server for server in self.all()],
              ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
         )

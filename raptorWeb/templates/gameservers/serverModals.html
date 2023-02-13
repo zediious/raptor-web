@@ -3,71 +3,71 @@
 
 <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
-    {% for server in server_info reversed %} 
+    {% for server in object_list %} 
     
-      <div class="modal fade" id="{{ server|get_key }}Info" tabindex="-1" aria-labelledby="{{ server|get_modpack_name }} Information" aria-hidden="true">
+      <div class="modal fade" id="{{ server.server_address|get_key }}Info" tabindex="-1" aria-labelledby="{{ server.modpack_name }} Information" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content bg-dark text-white">
             <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-header">
               <div class="row">
-                <h3 class="col-12 modal-title" id="{{ server|get_key }}InfoModal"><a href="{{ server|get_modpack_url }}" target="_blank">
-                  <img class="w-100" src="/media/{{server|get_modpack_image}}" alt="{{ server|get_modpack_name }}"></a>
+                <h3 class="col-12 modal-title" id="{{ server.server_address|get_key }}InfoModal"><a href="{{ server.modpack_url }}" target="_blank">
+                  <img class="w-100" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}"></a>
                 </h3>
                 <div class="text-center">
-                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server|get_key }}Address" data-clipboard-text={{ server|get_address }}
+                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.server_address|get_key }}Address" data-clipboard-text={{ server.server_address }}
                   data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                    <p class="fs-4"> Join at: <span id="{{ server|get_key }}Address" class="fs-2 fw-semibold">{{ server|get_address }}</span></p>
+                    <p class="fs-4"> Join at: <span id="{{ server.server_address|get_key }}Address" class="fs-2 fw-semibold">{{ server.server_address }}</span></p>
                   </button>
                 </div>
               </div>
             </div>
-            <div class="modal-body" id="{{ server|get_key }}Desc">
-              {{ server|get_modpack_desc|safe }}
+            <div class="modal-body" id="{{ server.server_address|get_key }}Desc">
+              {{ server.modpack_description|safe }}
               <hr>
-              {{ server|get_server_desc|safe }}
+              {{ server.server_description|safe }}
               <p class="text-center">
-                <span class="pageContent">The server is running: <strong>v{{ server|get_modpack_version}}</strong></span>
+                <span class="pageContent">The server is running: <strong>v{{ server.modpack_version}}</strong></span>
               </p>
             </div>
             <div class="modal-footer justify-content-center">
 
               {% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.server_address|get_key }}">
                   Announcements
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.server_address|get_key }}">
                   Announcements
                 </a>
               {% endif %}
               
               {% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.server_address|get_key }}">
                   Rules
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.server_address|get_key }}">
                   Rules
                 </a>
               {% endif %}
 
               {% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.server_address|get_key }}">
                   Banned Items
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.server_address|get_key }}">
                   Banned Items
                 </a>
               {% endif %}
 
               {% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.server_address|get_key }}">
                   Vote
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.server_address|get_key }}">
                   Vote
                 </a>
               {% endif %}
@@ -84,10 +84,10 @@
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     
     $( document ).ready(function() {
-    {% for server in server_info reversed %}
+    {% for server in object_list %}
 
-            new ClipboardJS('.copy{{ server|get_key}}Address', {
-                container: document.getElementById('{{ server|get_key}}Desc')
+            new ClipboardJS('.copy{{ server.server_address|get_key}}Address', {
+                container: document.getElementById('{{ server.server_address|get_key}}Desc')
             });
 
     {% endfor %}
