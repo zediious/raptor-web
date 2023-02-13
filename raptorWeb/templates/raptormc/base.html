@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 {% load static %}
-{% load serverContext %}
 {% load django_bootstrap5 %}
 
 <html lang="en" dir="ltr">
@@ -24,9 +23,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
   </head>
 
-  <body id="body" style="background-color: rgba(0,13,33,255)">
+  <body id="body" style="background-color: rgba(0,25,45,255)">
 
-    <div id="topBox" style="background-image: url({% static 'image/background.webp' %}); background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
+    <div id="topBox" style="background-image: url(); background-attachment: scroll;">
     
       <div class="container-flex" style="position: relative; z-index: 1">
 
@@ -159,7 +158,7 @@
               <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
                 hx-get="/servers/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
           {% else %}
-          <header class="m-2 mt-0">
+          <header id="serverBoxNoQuery" class="m-2 mt-0">
 
           <section id="playerCountBox" hx-get="/servers/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
             <div class="d-flex align-items-center justify-content-center" id="copyAddress">

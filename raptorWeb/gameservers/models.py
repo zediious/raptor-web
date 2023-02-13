@@ -1,4 +1,5 @@
 from json import dumps, load
+from io import TextIOWrapper
 from logging import Logger, getLogger
 
 from django.db import models
@@ -12,9 +13,9 @@ from ckeditor.fields import RichTextField
 from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER: Logger = getLogger('gameservers.models')
-IMPORT_JSON_LOCATION = getattr(settings, 'IMPORT_JSON_LOCATION')
-ENABLE_SERVER_QUERY = getattr(settings, 'ENABLE_SERVER_QUERY')
-SCRAPE_SERVER_ANNOUNCEMENT: str = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+IMPORT_JSON_LOCATION: str = getattr(settings, 'IMPORT_JSON_LOCATION')
+ENABLE_SERVER_QUERY: bool = getattr(settings, 'ENABLE_SERVER_QUERY')
+SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class ServerManager(models.Manager):
 
@@ -109,13 +110,13 @@ class ServerManager(models.Manager):
              ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
         )
 
-    def export_server_data_full():
+    def export_server_data_full() -> dict:
         """
         Export all server data for importing to a new instance
         Does not export server images
         """
-        current_servers = {}
-        server_num = 0
+        current_servers: dict = {}
+        server_num: int = 0
 
         for server in Server.objects.all():
             current_servers.update({
@@ -137,12 +138,12 @@ class ServerManager(models.Manager):
             })
             server_num += 1
 
-        server_json = open(IMPORT_JSON_LOCATION, "w")
+        server_json: TextIOWrapper = open(IMPORT_JSON_LOCATION, "w")
         server_json.write(dumps(current_servers, indent=4))
         server_json.close()
         return current_servers
 
-    def import_server_data(delete_existing):
+    def import_server_data(delete_existing: bool) -> None:
         """
         Create server objects based on an exsiting server_data_full.json
         Will delete existing servers first
@@ -183,12 +184,17 @@ class ServerStatistic(models.Model):
     )
 
     total_player_count = models.IntegerField(
+        verbose_name="Total Player Count",
         default=0)
 
     time_last_polled = models.DateTimeField(
         default=None,
         null=True
     )
+
+    class Meta:
+        verbose_name = "Server Statistics"
+        verbose_name_plural = "Server Statistics"
 
 class Server(models.Model):
     """

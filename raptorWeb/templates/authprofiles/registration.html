@@ -11,7 +11,7 @@
           
   {% csrf_token %}
   {{ form.captcha }} 
-  {% bootstrap_form register_form %}
+  <span class="text-white">{% bootstrap_form register_form %}</span>
   {% bootstrap_button button_type="submit" content="Create Account" %}
   {% bootstrap_button button_type="reset" content="Reset" %}
 

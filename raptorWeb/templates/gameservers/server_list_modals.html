@@ -1,28 +1,27 @@
 {% load static %}
-{% load serverContext %}
 
 <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
     {% for server in object_list %} 
     
-      <div class="modal fade" id="{{ server.server_address|get_key }}Info" tabindex="-1" aria-labelledby="{{ server.modpack_name }} Information" aria-hidden="true">
+      <div class="modal fade" id="modal_{{ server.pk }}_Info" tabindex="-1" aria-labelledby="{{ server.modpack_name }} Information" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content bg-dark text-white">
             <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-header">
               <div class="row">
-                <h3 class="col-12 modal-title" id="{{ server.server_address|get_key }}InfoModal"><a href="{{ server.modpack_url }}" target="_blank">
+                <h3 class="col-12 modal-title" id="inner_{{ server.pk }}InfoModal"><a href="{{ server.modpack_url }}" target="_blank">
                   <img class="w-100" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}"></a>
                 </h3>
                 <div class="text-center">
-                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.server_address|get_key }}Address" data-clipboard-text={{ server.server_address }}
+                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.pk }}Address" data-clipboard-text={{ server.server_address }}
                   data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                    <p class="fs-4"> Join at: <span id="{{ server.server_address|get_key }}Address" class="fs-2 fw-semibold">{{ server.server_address }}</span></p>
+                    <p class="fs-4"> Join at: <span id="{{ server.pk }}Address" class="fs-2 fw-semibold">{{ server.server_address }}</span></p>
                   </button>
                 </div>
               </div>
             </div>
-            <div class="modal-body" id="{{ server.server_address|get_key }}Desc">
+            <div class="modal-body" id="{{ server.pk }}Desc">
               {{ server.modpack_description|safe }}
               <hr>
               {{ server.server_description|safe }}
@@ -33,41 +32,41 @@
             <div class="modal-footer justify-content-center">
 
               {% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Announcements
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Announcements
                 </a>
               {% endif %}
               
               {% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Rules
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Rules
                 </a>
               {% endif %}
 
               {% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Banned Items
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Banned Items
                 </a>
               {% endif %}
 
               {% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Vote
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.server_address|get_key }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.modpack_name|lower|cut:" " }}">
                   Vote
                 </a>
               {% endif %}
@@ -86,8 +85,8 @@
     $( document ).ready(function() {
     {% for server in object_list %}
 
-            new ClipboardJS('.copy{{ server.server_address|get_key}}Address', {
-                container: document.getElementById('{{ server.server_address|get_key}}Desc')
+            new ClipboardJS('.copy{{ server.pk}}Address', {
+                container: document.getElementById('{{ server.pk}}Desc')
             });
 
     {% endfor %}
