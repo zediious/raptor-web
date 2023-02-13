@@ -30,25 +30,3 @@ class ServerWare:
         response = self.get_response(request)
         
         return response
-
-def update_context():
-    """
-    Update view context with new information
-    Will only run if created .LOCK file hasn't been written to in 2 minutes.
-    """
-    pass
-    # try:
-    #     lock_time = time() - getmtime(join(LOCK_FILE_PATH))
-
-    # except FileNotFoundError as e:
-    #     LOGGER.error(f"playerCounts.LOCK file not present at {e}")
-    #     with open(LOCK_FILE_PATH, 'w') as lock_file:
-    #         lock_file.write("playerCounts.PY LOCK File. Do not modify manually.")
-
-    #     LOGGER.error("playerCounts.LOCK has been created.")
-
-    # lock_time = time() - getmtime(join(LOCK_FILE_PATH))
-
-    # if lock_time >= 120 or player_poller.has_run == False:
-    #     pass
-

@@ -1,0 +1,17 @@
+{% load serverContext %}
+
+{% for server in object_list %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="{{ server.server_address|get_key }}BannedItems">
+    <a id="{{ server.server_address|get_key }}"></a>
+    <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ server.server_address|get_key }}" aria-expanded="true" aria-controls="collapse{{ server.server_address|get_key }}">
+        {{ server.modpack_name }} Banned Items
+    </button>
+    </h2>
+    <div id="collapse{{ server.server_address|get_key }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server.server_address|get_key }}">
+    <div class="accordion-body pageContent p-4">
+        {{ server.server_banned_items|safe }}
+    </div>
+    </div>
+</div>
+{% endfor %}

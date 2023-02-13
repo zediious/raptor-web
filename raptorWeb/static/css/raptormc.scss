@@ -104,7 +104,7 @@ body {
 }
 
 #loadingSpinnerButtons {
-    width: 90.5%;
+    width: 90%;
 }
 
 #profile_box {
@@ -224,8 +224,8 @@ body {
         width: 30%;
     }
 
-    #server_button {
-        min-width: 50vh;
+    .server_button {
+        min-width: 20vh;
     }
     
 }
