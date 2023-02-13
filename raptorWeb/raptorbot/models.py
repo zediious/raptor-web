@@ -45,14 +45,13 @@ class GlobalAnnouncement(Announcement):
         verbose_name_plural = "Global Announcements"
 
 if SCRAPE_SERVER_ANNOUNCEMENT:
-    from raptorWeb.gameservers.models import Server
     class ServerAnnouncement(Announcement):
         """
         Represents an announcement made for a game server.
         Takes a Server as a Foreign Key.
         """
         server = models.ForeignKey(
-            Server, 
+            'gameservers.Server', 
             default=0, 
             on_delete=models.CASCADE)
 

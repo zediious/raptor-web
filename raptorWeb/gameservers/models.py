@@ -1,12 +1,216 @@
-from django.db import models
+from json import dumps, load
+from logging import Logger, getLogger
 
+from django.db import models
+from django.utils.timezone import localtime
+from django.conf import settings
+
+from mcstatus import JavaServer
+from mcstatus.querier import QueryResponse
 from ckeditor.fields import RichTextField
+
+from raptorWeb.raptorbot.models import ServerAnnouncement
+
+LOGGER: Logger = getLogger('gameservers.models')
+IMPORT_JSON_LOCATION = getattr(settings, 'IMPORT_JSON_LOCATION')
+SCRAPE_SERVER_ANNOUNCEMENT: str = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+
+class ServerManager(models.Manager):
+
+    class PlayerPoller():
+        """
+        Object containing data structures and methods used for polling
+        addresses of Server models for state and player information.
+
+        Use the poll_servers() method to utilize this object.
+        """
+        _has_run: bool = False
+
+        def _query_and_update_server(self, server: 'Server', do_query: bool = True) -> None:
+
+            def _set_offline_server(server: Server) -> None:
+                server.player_count = 0
+                server.server_state = False
+                _update_announcement_count(server)
+                server.save()
+
+            def _update_announcement_count(server: Server) -> None:
+                if SCRAPE_SERVER_ANNOUNCEMENT:
+                    server.announcement_count = ServerAnnouncement.objects.filter(
+                                                    server=server
+                                                ).count()
+
+            if do_query == True:
+                try:
+                    serverJSON: QueryResponse = JavaServer(
+                        server.server_address,
+                        server.server_port
+                        ).query()
+
+                    server.player_count = serverJSON.players.online
+                    server.server_state = True
+                    _update_announcement_count(server)
+                    server.save()
+                    [Player.objects.create(
+                        name=player,
+                        server=server).save() for player in serverJSON.players.names]
+
+                except TimeoutError:
+                    _set_offline_server(server)
+
+            else:
+                _set_offline_server(server)
+
+        def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
+            """
+
+            Query a list of Server objects. Will do the following;
+
+            - Query the server_address/server_port attributes of each server
+            - Save the player_count and server_state attributes of iterated server to
+            the newly queried results
+            - If SCRAPE_SERVER_ANNOUNCEMENT setting is True, set announcement_count class
+            attribute to the count of ServerAnnouncements that exist for the server
+            - Create Player models for each player that is online, with a ForeignKey to the
+            server they were on.
+            - Save the total count of all online players to the total_player_count attribute of
+            the ServerStatistic model passed as an argument.
+
+            """
+            minutes_since_poll = int(str(
+                (localtime() - statistic_model.time_last_polled.astimezone())
+                ).split(":")[1])
+
+            if minutes_since_poll > 1:
+                statistic_model.total_player_count = 0
+                Player.objects.all().delete()
+
+                for server in servers:
+                    if (server.server_address == "Default"
+                    or server.in_maintenance == True):
+                        self._query_and_update_server(
+                            server,
+                            do_query = False)
+                        statistic_model.total_player_count += server.player_count
+
+                    else:
+                        self._query_and_update_server(server)
+
+                self._has_run = True
+                statistic_model.time_last_polled = localtime()
+                statistic_model.save()
+                LOGGER.info("Server data has been retrieved and saved")
+    
+    player_poller: PlayerPoller = PlayerPoller()
+    
+    def update_servers(self):
+        self.player_poller.poll_servers(
+            [server for server in self.all()],
+             ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
+        )
+
+    def export_server_data_full():
+        """
+        Export all server data for importing to a new instance
+        Does not export server images
+        """
+        current_servers = {}
+        server_num = 0
+
+        for server in Server.objects.all():
+            current_servers.update({
+                f'server{server_num}': {
+                    "in_maintenance": server.in_maintenance,
+                    "server_address": server.server_address,
+                    "server_port": server.server_port,
+                    "modpack_name": server.modpack_name,
+                    "modpack_version": server.modpack_version,
+                    "modpack_description": server.modpack_description,
+                    "server_description": server.server_description,
+                    "server_rules": server.server_rules,
+                    "server_banned_items": server.server_banned_items,
+                    "server_vote_links": server.server_vote_links,
+                    "modpack": server.modpack_url,
+                    "modpack_discord_channel": server.discord_announcement_channel_id,
+                    "modpack_discord_role": server.discord_modpack_role_id
+                }
+            })
+            server_num += 1
+
+        server_json = open(IMPORT_JSON_LOCATION, "w")
+        server_json.write(dumps(current_servers, indent=4))
+        server_json.close()
+        return current_servers
+
+    def import_server_data(delete_existing):
+        """
+        Create server objects based on an exsiting server_data_full.json
+        Will delete existing servers first
+        """
+        try:
+            if delete_existing == True:
+                Server.objects.all().delete()
+            with open(IMPORT_JSON_LOCATION, "r+") as import_json:
+                import_json_dict = load(import_json)
+                for server in import_json_dict:
+                    new_server = Server.objects.create(
+                        in_maintenance = import_json_dict[server]["in_maintenance"],
+                        server_address = import_json_dict[server]["server_address"],
+                        server_port = import_json_dict[server]["server_port"],
+                        modpack_name = import_json_dict[server]["modpack_name"],
+                        modpack_version = import_json_dict[server]["modpack_version"],
+                        modpack_description = import_json_dict[server]["modpack_description"],
+                        server_description = import_json_dict[server]["server_description"],
+                        server_rules = import_json_dict[server]["server_rules"],
+                        server_banned_items = import_json_dict[server]["server_banned_items"],
+                        server_vote_links = import_json_dict[server]["server_vote_links"],
+                        modpack_url = import_json_dict[server]["modpack"],
+                        discord_announcement_channel_id = import_json_dict[server]["discord_announcement_channel_id"],
+                        discord_modpack_role_id = import_json_dict[server]["discord_modpack_role_id"]
+                    )
+                    new_server.save()
+        except FileNotFoundError:
+            LOGGER.error("You enabled IMPORT_SERVERS in settings.py, but you did not place server_data_full.json in your BASE_DIR")
+
+class ServerStatistic(models.Model):
+    """
+    Represents a collection of statistics for all servers.
+    This model is used internally, not displayed in the Admin.
+    """
+    name = models.CharField(
+        default="gameservers-stat",
+        max_length=150
+    )
+
+    total_player_count = models.IntegerField(
+        default=0)
+
+    time_last_polled = models.DateTimeField(
+        default=None,
+        null=True
+    )
 
 class Server(models.Model):
     """
     Represents a Minecraft Server
     Includes all information about a server
     """
+    objects = ServerManager()
+
+    player_count = models.IntegerField(
+        default=0,
+        verbose_name="Player Count",
+        help_text=("The amount of players that were on this server the last time it was queried. Will always be zero "
+            "if ENABLE_SERVER_QUERY is False.")
+    )
+
+    announcement_count = models.IntegerField(
+        default=0,
+        verbose_name="Announcement Count",
+        help_text=("The amount of announcements that were made for this server and retrieved by the Discord Bot. "
+            "Only relevant if SCRAPE_SERVER_ANNOUNCEMENT is True and the Discord Bot is running..")
+    )
+
     server_state = models.BooleanField(
         default=False,
         verbose_name="Online/Offline",
@@ -118,36 +322,9 @@ class Server(models.Model):
         verbose_name = "Server"
         verbose_name_plural = "Servers"
 
-class PlayerCount(models.Model):
+class Player(models.Model):
     """
-    Represents a count of players on a Minecraft Server.
-    Takes a Server as a Foreign Key.
-    """
-    server = models.ForeignKey(
-        Server, 
-        default=0, 
-        on_delete=models.CASCADE)
-    
-    player_count = models.IntegerField(
-        default=0, 
-        unique=False)
-
-    def __str__(self) -> str:
-        return str("Player Counts for: {}").format(self.server)
-
-    def get_count(self):
-        return self.player_count
-
-    def get_state(self):
-        return self.server_state
-
-    class Meta:
-        verbose_name = "Player Count"
-        verbose_name_plural = "Player Counts"
-
-class PlayerName(models.Model):
-    """
-    Represents the name of a player that is on a Minecraft Server.
+    Represents a player that is on a Minecraft Server.
     Takes a Server as a Foreign Key.
     """
     server = models.ForeignKey(
@@ -169,5 +346,5 @@ class PlayerName(models.Model):
         return self.server
 
     class Meta:
-        verbose_name = "Player Name"
-        verbose_name_plural = "Player Names"
+        verbose_name = "Player"
+        verbose_name_plural = "Players"
