@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import TextInput, Textarea
 from django.db import models
 
-from raptorWeb.gameservers.models import Server, PlayerCount, PlayerName
+from raptorWeb.gameservers.models import Server, Player, ServerStatistic
 
 class ServerAdmin(admin.ModelAdmin):
     """
@@ -25,7 +25,7 @@ class ServerAdmin(admin.ModelAdmin):
         }),
         ('Server Querying', {
             'classes': ('collapse',),
-            'fields': ('server_state', 'in_maintenance', 'server_port')
+            'fields': ('server_state', 'player_count', 'announcement_count', 'in_maintenance', 'server_port')
         }),
         ('Discord Announcements', {
             'classes': ('collapse',),
@@ -44,5 +44,5 @@ class ServerAdmin(admin.ModelAdmin):
     list_display: list[str] = ['modpack_name', 'modpack_version', 'in_maintenance']
 
 admin.site.register(Server, ServerAdmin)
-admin.site.register(PlayerCount)
-admin.site.register(PlayerName)
+admin.site.register(Player)
+admin.site.register(ServerStatistic)

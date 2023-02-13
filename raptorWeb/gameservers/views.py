@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.conf import settings
 
-from raptorWeb.gameservers.jobs import player_poller, update_context
+from raptorWeb.gameservers.models import Server
 
 GAMESERVERS_TEMPLATE_DIR = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
 SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
@@ -18,7 +18,7 @@ class Server_Buttons(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -29,7 +29,7 @@ class Server_Buttons_Loading(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverButtons_loading.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -41,7 +41,7 @@ class Server_Modals(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverModals.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -49,12 +49,15 @@ class Total_Count(TemplateView):
     """
     Returns button showing total player count
     and Bootstrap Modal containing names of online players
+
+    This view will also call the update_servers() method of
+    the Server Manager.
     """
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'playerCounts.html')
-            update_context()
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            Server.objects.update_servers()
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -66,7 +69,7 @@ class Server_Rules(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverRules.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -78,7 +81,7 @@ class Server_Banned_Items(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverBannedItems.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -90,7 +93,7 @@ class Server_Voting(TemplateView):
     def get(self, request):
         if request.headers.get('HX-Request') == "true":
             template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverVoting.html')
-            return render(request, template_name, context=player_poller.currentPlayers_DB)
+            return render(request, template_name, context={})
         else:
             return HttpResponseRedirect('../')
 
@@ -104,6 +107,6 @@ if SCRAPE_SERVER_ANNOUNCEMENT:
         def get(self, request):
             if request.headers.get('HX-Request') == "true":
                 template_name = join(GAMESERVERS_TEMPLATE_DIR, 'serverAnnouncements.html')
-                return render(request, template_name, context=player_poller.currentPlayers_DB)
+                return render(request, template_name, context={})
             else:
                 return HttpResponseRedirect('../')
