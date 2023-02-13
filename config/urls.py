@@ -35,6 +35,7 @@ MEDIA_ROOT: str = getattr(settings, 'MEDIA_ROOT')
 urlpatterns: list[URLResolver] = [
 
     path('admin/', admin.site.urls, name="admin"),
+    path('tinymce/', include('tinymce.urls')),
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
     path('captcha/', include('captcha.urls')),
     path('servers/', include(server_urls), name="gameservers"),

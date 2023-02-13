@@ -1,12 +1,29 @@
 from django.contrib import admin
+from django.forms import ModelForm
+
+from tinymce.widgets import TinyMCE
 
 from raptorWeb.gameservers.models import Server, Player, ServerStatistic
+
+class ServerAdminForm(ModelForm):
+    class Meta:
+        model = Server
+        widgets = {
+            'modpack_description': TinyMCE,
+            'server_description': TinyMCE,
+            'server_rules': TinyMCE,
+            'server_banned_items': TinyMCE,
+            'server_vote_links': TinyMCE
+        }
+        fields = '__all__'
 
 class ServerAdmin(admin.ModelAdmin):
     """
     Object defining behavior and display of 
     Servers in the Django admin interface.
     """
+    form = ServerAdminForm
+
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('Server Information', {
             'fields': (

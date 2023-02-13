@@ -66,7 +66,7 @@ INSTALLED_APPS: list[str] = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
-    'ckeditor',
+    'tinymce',
     'captcha',
     'raptorWeb.raptormc',
     'raptorWeb.staffapps',
@@ -313,8 +313,6 @@ IMPORT_SERVERS: bool = True if getenv('IMPORT_SERVERS') == "True" else False
 DELETE_EXISTING: bool = True if getenv('DELETE_EXISTING') == "True" else False
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
-# Path to LOCK file used to time gameserver queries
-LOCK_FILE_PATH: str = join(BASE_DIR, 'playerCounts.LOCK')
 
 # ** Settings for "authprofiles" app **
 AUTH_USER_MODEL: str = 'authprofiles.RaptorUser'
@@ -323,7 +321,10 @@ BASE_USER_URL: str = getenv('BASE_USER_URL')
 USER_RESET_URL: str = getenv('USER_RESET_URL')
 DISCORD_APP_ID: str = getenv('DISCORD_OAUTH_APP_ID')
 DISCORD_APP_SECRET: str = getenv('DISCORD_OAUTH_APP_SECRET')
-DISCORD_AUTH_URL: str = f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_APP_ID}&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email"
+DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
+                        f"client_id={DISCORD_APP_ID}"
+                        f"&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}"
+                        "%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email")
 DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
 IMPORT_USERS: bool = True if getenv('IMPORT_USERS') == 'True' else False
 
@@ -344,10 +345,17 @@ BOOTSTRAP5: dict = {
 
 }
 
-# ** Settings for "CKEditor-django" app **
-CKEDITOR_CONFIGS: dict = {
-    'default': {
-        'toolbar': 'full',
-        'width': '120%',
-    },
-}
+# ** Settings for "django-tinymce" app **
+TINYMCE_DEFAULT_CONFIG: dict = {
+        "theme": "silver",
+        "height": 500,
+        "menubar": True,
+        "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+        "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+        "code,help,wordcount",
+        "toolbar": "undo redo | formatselect | "
+        "bold italic forecolor backcolor | alignleft aligncenter "
+        "alignright alignjustify | bullist numlist outdent indent | "
+        "removeformat | help",
+    }
+
