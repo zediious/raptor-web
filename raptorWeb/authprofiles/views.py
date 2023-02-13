@@ -137,10 +137,11 @@ class UserResetPasswordConfirm(TemplateView):
 
     def post(self, request: HttpRequest, user_reset_token: str) -> HttpResponse:
         final_password_reset_form: UserPasswordResetForm = self.final_password_reset_form(request.POST)
+        resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
         dictionary: dict = {"final_password_reset_form": final_password_reset_form}
+        dictionary["resetting_user_token"]: str = resetting_user.password_reset_token
 
         if final_password_reset_form.is_valid():
-            resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
             resetting_user.set_password(final_password_reset_form.cleaned_data["password"])
             resetting_user.password_reset_token = ""
             resetting_user.save()
@@ -148,7 +149,6 @@ class UserResetPasswordConfirm(TemplateView):
             return render(request, join(AUTH_TEMPLATE_DIR, 'reset_successful.html'), context=dictionary)
 
         else:
-            dictionary["resetting_user_token"]: str = resetting_user.password_reset_token
             return render(request, self.template_name, context=dictionary)
 
 
