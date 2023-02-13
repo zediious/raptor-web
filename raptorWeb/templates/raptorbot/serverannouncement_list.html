@@ -1,12 +1,11 @@
 {% load markdownStrip %}
-{% load serverContext %}
 
-<div id="server_announcement_container">
+<div id="announcement_container_{{current_listed_server|slice:":3"}}">
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page=1&server_address={{current_listed_server}}" hx-target="#server_announcement_container">&laquo; first</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.previous_page_number }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">previous</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page=1&pk={{current_listed_server}}" hx-target="#announcement_container_{{current_listed_server|slice:":3"}}">&laquo; first</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.previous_page_number }}&pk={{current_listed_server}}" hx-target="#announcement_container_{{current_listed_server|slice:":3"}}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -14,13 +13,13 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.next_page_number }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">next</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.paginator.num_pages }}&server_address={{current_listed_server}}" hx-target="#server_announcement_container">last &raquo;</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.next_page_number }}&pk={{current_listed_server}}" hx-target="#announcement_container_{{current_listed_server|slice:":3"}}">next</a>
+                <a role="button" class="btn btn-secondary" hx-get="{% url 'raptorbot:server_announcements_list' %}?page={{ page_obj.paginator.num_pages }}&pk={{current_listed_server}}" hx-target="#announcement_container_{{current_listed_server|slice:":3"}}">last &raquo;</a>
             {% endif %}
         </span>
     </div>
     
-    {% for object in object_list %}
+    {% for object in page_obj %}
     <div>
     <div class="pageContent card bg-dark text-white opacity-100 mt-4 mb-4">
         <p class="pageContent p-4">{{ object.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>

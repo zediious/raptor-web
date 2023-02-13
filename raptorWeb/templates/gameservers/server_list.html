@@ -1,22 +1,17 @@
 {% load static %}
-{% load serverContext %}
 
 <div id="server_button_container">
-    {% if page_obj.has_next %}
+    {% if page_obj.has_next or page_obj.has_previous%}
         <div class="pagination d-flex align-items-center justify-content-center">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    <a role="button" class="btn btn-secondary" hx-get="{% url 'gameservers:server_button_poll' %}?page=1" hx-target="#server_button_container">&laquo; first</a>
-                    <a role="button" class="btn btn-secondary" hx-get="{% url 'gameservers:server_button_poll' %}?page={{ page_obj.previous_page_number }}" hx-target="#server_button_container">previous</a>
+                    <a role="button" class="btn btn-dark opacity-75" hx-get="{% url 'gameservers:server_buttons_poll' %}?page=1" hx-target="#server_button_container">&laquo; first</a>
+                    <a role="button" class="btn btn-dark opacity" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.previous_page_number }}" hx-target="#server_button_container">previous</a>
                 {% endif %}
 
-                <span class="current text-white">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
                 {% if page_obj.has_next %}
-                    <a role="button" class="btn btn-secondary" hx-get="{% url 'gameservers:server_button_poll' %}?page={{ page_obj.next_page_number }}" hx-target="#server_button_container">next</a>
-                    <a role="button" class="btn btn-secondary" hx-get="{% url 'gameservers:server_button_poll' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#server_button_container">last &raquo;</a>
+                    <a role="button" class="btn btn-dark opacity" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.next_page_number }}" hx-target="#server_button_container">next</a>
+                    <a role="button" class="btn btn-dark opacity" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#server_button_container">last &raquo;</a>
                 {% endif %}
             </span>
         </div>
@@ -26,9 +21,9 @@
         {% for server in page_obj %} 
                             
             {% if server_query_enabled %}
-            <span id="serverButton" class="fade-in-button col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex mt-2" data-bs-toggle="modal" data-bs-target="#{{ server.server_address|get_key }}Info">
+            <span id="serverButton" class="fade-in-button col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
             {% else %}
-            <span id="serverButton" class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2" data-bs-toggle="modal" data-bs-target="#{{ server.server_address|get_key }}Info">
+            <span id="serverButton" class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
             {% endif %}
                 <img class="w-100 fade-in" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
                 {% if server_query_enabled %}

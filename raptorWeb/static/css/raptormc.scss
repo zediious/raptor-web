@@ -194,6 +194,10 @@ body {
     .indicatorImage {
         width: 25%;
     }
+
+    #serverBoxNoQuery {
+        width: 75%;
+    }
     
 }
 
@@ -225,7 +229,11 @@ body {
     }
 
     .server_button {
-        min-width: 20vh;
+        min-width: 40vh;
+    }
+
+    #serverBoxNoQuery {
+        width: 100%;
     }
     
 }

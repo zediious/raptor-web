@@ -46,11 +46,11 @@ class Server_Announcements(ListView):
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
-            context["current_listed_server"] = self.request.GET.get('server_address')
+            context["current_listed_server"] = self.request.GET.get('pk')
             return context
 
         def get_queryset(self):
-            server = Server.objects.get(server_address=self.request.GET.get('server_address'))
+            server = Server.objects.get(pk=self.request.GET.get('pk'))
             return ServerAnnouncement.objects.filter(server=server).order_by('-date')
 
         def get(self, request, *args, **kwargs):

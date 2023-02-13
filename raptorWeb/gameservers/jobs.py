@@ -1,12 +1,12 @@
-from logging import getLogger
+from logging import Logger, getLogger
 
 from django.conf import settings
 
 from raptorWeb.gameservers.models import Server
 
-LOGGER = getLogger('gameservers.jobs')
-IMPORT_SERVERS = getattr(settings, 'IMPORT_SERVERS')
-DELETE_EXISTING = getattr(settings, 'DELETE_EXISTING')
+LOGGER: Logger = getLogger('gameservers.jobs')
+IMPORT_SERVERS: bool = getattr(settings, 'IMPORT_SERVERS')
+DELETE_EXISTING: bool= getattr(settings, 'DELETE_EXISTING')
 
 class ServerWare:
     """
@@ -27,6 +27,4 @@ class ServerWare:
         Code to be executed for each request before
         the view (and later middleware) are called.
         """
-        response = self.get_response(request)
-        
-        return response
+        return self.get_response(request)
