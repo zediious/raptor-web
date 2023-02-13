@@ -238,16 +238,6 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'raptormc.jobs': {
-            'handlers': ['console', 'log_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-         'raptormc.auth': {
-            'handlers': ['console', 'log_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
         'staffapps.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
@@ -263,17 +253,27 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'gameservers.views': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'gameservers.models': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.botware': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'discordbot.bot': {
+        'raptorbot.discordbot.bot': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
         },
-        'discordbot.util': {
+        'raptorbot.discordbot.util': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,

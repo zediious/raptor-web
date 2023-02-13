@@ -9,6 +9,7 @@ from discord.ext import commands
 
 from raptorWeb.raptorbot.discordbot.util import raptorbot_util
 
+LOGGER = getLogger('raptorbot.discordbot.bot')
 SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 DISCORD_BOT_DESCRIPTION = getattr(settings, 'DISCORD_BOT_DESCRIPTION')
 GLOBAL_ANNOUNCEMENT_CHANNEL_ID = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
@@ -18,9 +19,6 @@ WEB_PROTO = getattr(settings, 'WEB_PROTO')
 
 if SCRAPE_SERVER_ANNOUNCEMENT:
     from raptorWeb.gameservers.models import Server
-
-# Configure basic logger
-LOGGER = getLogger('discordbot.bot')
 
 def _bot_start(bot_instance, bot_token):
     """
