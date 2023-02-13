@@ -1,6 +1,5 @@
 from django.db import models
 
-from ckeditor.fields import RichTextField
 
 class InformativeText(models.Model):
     """
@@ -18,7 +17,7 @@ class InformativeText(models.Model):
         verbose_name="Content Name"
     )
 
-    content = RichTextField(
+    content = models.CharField(
         max_length=15000,
         default = "",
         verbose_name="Content"

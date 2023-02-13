@@ -8,7 +8,6 @@ from django.conf import settings
 
 from mcstatus import JavaServer
 from mcstatus.querier import QueryResponse
-from ckeditor.fields import RichTextField
 
 from raptorWeb.raptorbot.models import ServerAnnouncement
 
@@ -259,33 +258,33 @@ class Server(models.Model):
         default="1.0"
     )
 
-    modpack_description = RichTextField(
+    modpack_description = models.CharField(
         max_length=1500,
         verbose_name="Modpack Description",
         help_text="A description of the modpack you are hosting on this server. Generally should describe the gameplay of the modpack itself.",
         default="Modpack Description")
 
-    server_description = RichTextField(
+    server_description = models.CharField(
         max_length=1500, 
         verbose_name="Server Description",
         help_text="A description of the features that this particular server has.",
         default="Server Description")
 
-    server_rules = RichTextField(
+    server_rules = models.CharField(
         max_length=1500,
         verbose_name="Server-Specific Rules",
         help_text="Rules that are specific to this server.",
         default="Server-specific Rules"
     )
 
-    server_banned_items = RichTextField(
+    server_banned_items = models.CharField(
         max_length=1500,
         verbose_name="Server-specific Banned Items",
         help_text="Items that are banned from being used on this server.",
         default="Server-specific Banned Items"
     )
 
-    server_vote_links = RichTextField(
+    server_vote_links = models.CharField(
         max_length=1500,
         verbose_name="Voting Site Links",
         help_text="A list of links to forum/vote listings for this server.",
