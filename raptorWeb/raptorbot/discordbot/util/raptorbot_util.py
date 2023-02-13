@@ -8,6 +8,7 @@ import discord
 from raptorWeb.raptorbot.models import GlobalAnnouncement
 from raptorWeb.raptorbot.models import DiscordGuild
 
+LOGGER = getLogger('raptorbot.discordbot.util')
 SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 GLOBAL_ANNOUNCEMENT_CHANNEL_ID = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
 DISCORD_GUILD = getattr(settings, 'DISCORD_GUILD')
@@ -16,8 +17,6 @@ STAFF_ROLE_ID = getattr(settings, 'STAFF_ROLE_ID')
 if SCRAPE_SERVER_ANNOUNCEMENT:
     from raptorWeb.gameservers.models import Server
     from raptorWeb.raptorbot.models import ServerAnnouncement
-
-LOGGER = getLogger('discordbot.util')
 
 async def check_if_global_announcement_exists(message):
     """
