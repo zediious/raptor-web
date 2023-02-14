@@ -6,6 +6,7 @@ from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server,
 
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+SERVER_PAGINATION_COUNT: int = getattr(settings, 'SERVER_PAGINATION_COUNT')
 
 
 class Server_List_Base(ListView):
@@ -30,7 +31,7 @@ class Server_Buttons(Server_List_Base):
     Returns Bootstrap buttons for each server
     Buttons used to open Server Modals
     """
-    paginate_by: int = 6
+    paginate_by: int = SERVER_PAGINATION_COUNT
 
 
 class Player_List(ListView):

@@ -309,6 +309,7 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 
 # ** Settings for "gameservers" app **
 ENABLE_SERVER_QUERY: bool = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
+SERVER_PAGINATION_COUNT: int = int(getenv('SERVER_PAGINATION_COUNT'))
 IMPORT_SERVERS: bool = True if getenv('IMPORT_SERVERS') == "True" else False
 DELETE_EXISTING: bool = True if getenv('DELETE_EXISTING') == "True" else False
 # Path to json file to import servers from
