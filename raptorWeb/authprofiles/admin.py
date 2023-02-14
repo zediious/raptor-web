@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
 
+
 class RaptorUserAdmin(UserAdmin):
     """
     Object defining behavior and display of 
@@ -52,6 +53,7 @@ class RaptorUserAdmin(UserAdmin):
 
     list_display: list[str] = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
 
+
 class UserProfileInfoAdmin(admin.ModelAdmin):
     """
     Object defining behavior and display of 
@@ -76,6 +78,7 @@ class UserProfileInfoAdmin(admin.ModelAdmin):
     search_fields: list[str] = [
         'minecraft_username',
     ]
+
 
 class DiscordUserInfoAdmin(admin.ModelAdmin):
     """
