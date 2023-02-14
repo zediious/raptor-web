@@ -117,7 +117,7 @@
                 <span></span>
               </div>
 
-              <div hx-get="/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
+              <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
               <div id="profile_drowdown"></div>
 
             </div>
@@ -132,14 +132,14 @@
       <div class="container d-flex align-items-center justify-content-center">
 
           <div id="server_modals"
-            hx-get="/servers/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
+            hx-get="/api/servers/html/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
           </div>
 
           {% if server_query_enabled %}
           <header class="row m-2 mt-0 w-100">
 
           <section id="playerCountBox" class="col-lg col-12 fs-2 mt-3 d-flex align-items-center flex-column"
-            hx-get="/servers/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
+            hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
   
             <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
               <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
@@ -154,14 +154,14 @@
             <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
   
               <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
-                hx-get="/servers/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+                hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
           {% else %}
           <header id="serverBoxNoQuery" class="m-2 mt-0">
 
-          <section id="playerCountBox" hx-get="/servers/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
+          <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
             <div class="d-flex align-items-center justify-content-center" id="copyAddress">
               <div id="server_buttons" class="col-lg-12 col-12 row mb-0 p-5 d-flex align-items-center justify-content-center"
-                hx-get="/servers/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+                hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
           {% endif %}
               </div>
   

@@ -2,9 +2,9 @@
 
 {% if user.is_authenticated %}
 {% else %}
-    <div hx-get="/login" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
-    <div hx-get="/register" hx-trigger="load" hx-target="#register_form_replace" hx-swap="innerHTML"></div>
-    <div hx-get="/reset_password" hx-trigger="load" hx-target="#reset_password_form_replace" hx-swap="outerHTML"></div>
+    <div hx-get="{% url 'authprofiles:login' %}" hx-trigger="load" hx-target="#user_login_form" hx-swap="innerHTML"></div>
+    <div hx-get="{% url 'authprofiles:register' %}" hx-trigger="load" hx-target="#register_form_replace" hx-swap="innerHTML"></div>
+    <div hx-get="{% url 'authprofiles:reset_password_form' %}" hx-trigger="load" hx-target="#reset_password_form_replace" hx-swap="outerHTML"></div>
 {% endif %}
 
 {% if user.is_authenticated %}

@@ -43,13 +43,13 @@
         </h2>
         <div id="collapseGlobal" class="accordion-collapse collapse" aria-labelledby="collapseGlobal">
           <div class="accordion-body pageContent p-4">
-            <div hx-get="/raptorbot/global_announcements_list/dark" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
+            <div hx-get="{% url 'raptorbot:global_announcements_list_dark' %}" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
             <div id="global_announcements"></div>
           </div>
         </div>
       </div>
       
-      <div id="server_announcements" hx-get="/servers/server_announcements_poll" hx-trigger="load" hx-target="#server_announcements" hx-swap="outerHTML"></div>
+      <div id="server_announcements" hx-get="{% url 'gameservers:server_announcements_poll' %}" hx-trigger="load" hx-target="#server_announcements" hx-swap="outerHTML"></div>
   </header>
   {% endautoescape %}
 

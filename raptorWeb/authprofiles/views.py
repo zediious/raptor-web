@@ -211,10 +211,10 @@ class UserLogin_OAuth_Success(TemplateView):
             login(request, 
                 discord_user,
                 backend='raptorWeb.authprofiles.auth.DiscordAuthBackend')
-            return redirect('../../')
+            return redirect('/')
             
         except KeyError:
-            return HttpResponseRedirect("../login")
+            return HttpResponseRedirect("/")
 
 
 @login_required
@@ -243,7 +243,7 @@ class User_Dropdown(TemplateView):
             return render(request, self.template_name, context=instance_dict)
 
         else:
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect('/')
 
 
 class All_User_Profile(ListView):
@@ -258,7 +258,7 @@ class All_User_Profile(ListView):
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect('/')
 
 
 class User_Profile(DetailView):
@@ -271,10 +271,10 @@ class User_Profile(DetailView):
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('../../')
+            return HttpResponseRedirect('/')
 
     def get_object(self):
-        return RaptorUser.objects.get(user_slug = slugify(self.request.path.split('/')[2]))
+        return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
@@ -302,7 +302,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 return redirect('/accessdenied')
 
         else:
-            return HttpResponseRedirect('../../../')
+            return HttpResponseRedirect('/')
 
     def post(self, request: HttpRequest, profile_name: str) -> HttpResponse:
         extra_edit_form: UserProfileEditForm = UserProfileEditForm(request.POST, request.FILES)
@@ -332,7 +332,7 @@ class Access_Denied(TemplateView):
             return render(request, self.template_name, context={})
 
         else:
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect('/')
 
 class No_User_Found(TemplateView):
     """

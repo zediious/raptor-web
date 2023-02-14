@@ -14,7 +14,6 @@
 {% endblock %}
 
 {% block main_block %}
-<div hx-get="/staffapps" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
 
 <section id="welcome" class="container">
 
@@ -31,7 +30,7 @@
 
 </section>
 
-<div id="staffapps"></div>
+<div id="staffapps" hx-get="{% url 'staffapps:all_apps' %}" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
 
 
 {% endblock %}
