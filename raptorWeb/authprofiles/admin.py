@@ -52,9 +52,66 @@ class RaptorUserAdmin(UserAdmin):
 
     list_display: list[str] = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
 
+class UserProfileInfoAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    UserProfileInfos in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('General', {
+            'fields': (
+                'minecraft_username',
+                'favorite_modpack')
+        }),
+        ('Profile Picture', {
+            'classes': ('collapse',),
+            'fields': ('profile_picture','picture_changed_manually')
+        })
+    )
+
+    readonly_fields: tuple[str] = (
+        'picture_changed_manually',
+    )
+
+    search_fields: list[str] = [
+        'minecraft_username',
+    ]
+
+class DiscordUserInfoAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    DiscordUserInfos in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('General', {
+            'fields': (
+                'tag',
+                'avatar_string',
+                'pub_flags',
+                'flags',
+                'locale')
+        }),
+        ('Sensitive', {
+            'classes': ('collapse',),
+            'fields': ('id','mfa_enabled')
+        })
+    )
+
+    readonly_fields: tuple[str] = (
+        'id',
+        'mfa_enabled',
+        'pub_flags',
+        'flags',
+        'locale',
+    )
+
+    search_fields: list[str] = [
+        'tag',
+    ]
+
 
 admin.site.unregister(Group)
 
 admin.site.register(RaptorUser, RaptorUserAdmin)
-admin.site.register(UserProfileInfo)
-admin.site.register(DiscordUserInfo)
+admin.site.register(UserProfileInfo, UserProfileInfoAdmin)
+admin.site.register(DiscordUserInfo, DiscordUserInfoAdmin)
