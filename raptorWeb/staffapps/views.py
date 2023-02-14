@@ -23,7 +23,7 @@ class AllApps(TemplateView):
         if request.headers.get('HX-Request') == "true":
             return render(request, self.template_name)
         else:
-            return HttpResponseRedirect('../')
+            return HttpResponseRedirect('/')
 
 class AppView(TemplateView):
     """
@@ -36,7 +36,7 @@ class AppView(TemplateView):
 
     def get(self, request):
         if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('../../')
+            return HttpResponseRedirect('/')
         else:
             return render(request, self.template_name, context={
                 self.get_app_name(): self.staff_app})

@@ -23,7 +23,7 @@ class Server_List_Base(ListView):
             return super().get(request, *args, **kwargs)
 
         else:
-            return HttpResponseRedirect('../../')
+            return HttpResponseRedirect('/')
 
 
 class Server_Buttons(Server_List_Base):
@@ -56,4 +56,4 @@ class Player_List(ListView):
             return super().get(request, *args, **kwargs)
 
         else:
-            return HttpResponseRedirect('../../')
+            return HttpResponseRedirect('/')

@@ -1,4 +1,5 @@
 from django import template
+from django.utils.text import slugify
 from django.conf import settings
 
 register = template.Library()
@@ -15,4 +16,4 @@ def get_user_from_url(value: str) -> str:
     Get a user from main application's user path, and return only
     the username from that path.
     """
-    return value[BASE_USER_URL_NUM:]
+    return slugify(value[BASE_USER_URL_NUM:].replace('/', ''))

@@ -322,11 +322,10 @@ BASE_USER_URL: str = getenv('BASE_USER_URL')
 USER_RESET_URL: str = getenv('USER_RESET_URL')
 DISCORD_APP_ID: str = getenv('DISCORD_OAUTH_APP_ID')
 DISCORD_APP_SECRET: str = getenv('DISCORD_OAUTH_APP_SECRET')
+DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/api/user/oauth2/login/redirect"
 DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
                         f"client_id={DISCORD_APP_ID}"
-                        f"&redirect_uri={WEB_PROTO}%3A%2F%2F{DOMAIN_NAME}"
-                        "%2Foauth2%2Flogin%2Fredirect&response_type=code&scope=identify%20email")
-DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/oauth2/login/redirect"
+                        f"&redirect_uri={DISCORD_REDIRECT_URL}&response_type=code&scope=identify%20email")
 IMPORT_USERS: bool = True if getenv('IMPORT_USERS') == 'True' else False
 
 # ** Settings for "raptorbot" app **

@@ -1,8 +1,5 @@
 {% load django_bootstrap5 %}
 
-<div hx-get="/staffapps/mod" hx-trigger="load" hx-target="#mod_form_replace" hx-swap="innerHTML"></div>
-<div hx-get="/staffapps/admin" hx-trigger="load" hx-target="#admin_form_replace" hx-swap="innerHTML"></div>
-
 <section class="container">
     <div class="row m-4">
 
@@ -26,7 +23,7 @@
           </div>
           <div class="modal-body" id="mod_app_modal_body">
           
-              <div id="mod_form_replace"></div>
+              <div id="mod_form_replace" hx-get="{% url 'staffapps:mod_app' %}" hx-trigger="load" hx-target="#mod_form_replace" hx-swap="innerHTML"></div>
           
           </div>
       </div>
@@ -42,7 +39,7 @@
           </div>
           <div class="modal-body" id="admin_app_modal_body">
           
-              <div id="admin_form_replace"></div>
+              <div id="admin_form_replace" hx-get="{% url 'staffapps:admin_app' %}" hx-trigger="load" hx-target="#admin_form_replace" hx-swap="innerHTML"></div>
           
           </div>
       </div>

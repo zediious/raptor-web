@@ -16,7 +16,7 @@
 
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
-    <div hx-get="/profile{{request.path|slice:'8:'}}edit" hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
+    <div hx-get="{% url 'authprofiles:user_profile_edit' profile_name=object.user_slug %}" hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
     <div class="modal fade" id="edit_profile_modal" tabindex="-1" aria-labelledby="Edit Profile" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content bg-dark text-white">

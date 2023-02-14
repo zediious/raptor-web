@@ -4,7 +4,7 @@
 
 {% block main_block %}
 
-<div hx-get="/profile{{request.path|get_user_from_url}}" hx-trigger="load delay:0.1s" hx-target="#user_box" hx-swap="innerHTML"></div>
+<div hx-get="{% url 'authprofiles:user_profile' user_slug=request.path|get_user_from_url %}" hx-trigger="load delay:0.1s" hx-target="#user_box" hx-swap="innerHTML"></div>
 <div id="user_box">
     <div class="container-flex text-center">
         <img class="" id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">

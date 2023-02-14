@@ -34,7 +34,7 @@
 
   <header class="p-0 mt-4">
     {% autoescape off %}
-        <div hx-get="/raptorbot/global_announcements_list/light?amount=5" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
+        <div hx-get="{% url 'raptorbot:global_announcements_list' amount=5 %}" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
         <div id="global_announcements"></div>
     {% endautoescape %}
 

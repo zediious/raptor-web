@@ -38,10 +38,10 @@ urlpatterns: list[URLResolver] = [
     path('tinymce/', include('tinymce.urls')),
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
     path('captcha/', include('captcha.urls')),
-    path('servers/', include(server_urls), name="gameservers"),
-    path('staffapps/', include(app_urls), name="staffapps"),
-    path('raptorbot/', include(bot_urls), name="raptorbot"),
-    path('', include(auth_urls), name="authprofiles"),
+    path('api/servers/', include(server_urls), name="gameservers"),
+    path('api/staffapps/', include(app_urls), name="staffapps"),
+    path('api/raptorbot/', include(bot_urls), name="raptorbot"),
+    path('api/user/', include(auth_urls), name="authprofiles"),
     path('', include(SR_urls), name="shadowraptormc"),
 
 ]

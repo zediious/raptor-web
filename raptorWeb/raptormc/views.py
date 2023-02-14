@@ -129,7 +129,6 @@ class ShadowRaptor():
 
             def get_context_data(self, **kwargs):
                 context = super().get_context_data(**kwargs)
-                print(self.request.path.split('/')[3])
                 context.update({
                     "active_user_for_reset": self.request.path.split('/')[3],
                     "active_user_password_reset_token": self.request.path.split('/')[4]

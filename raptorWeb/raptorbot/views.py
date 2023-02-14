@@ -21,21 +21,17 @@ class Global_Announcements(ListView):
     model = GlobalAnnouncement
     queryset = GlobalAnnouncement.objects.order_by('-date')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
     def get_queryset(self):
-        if self.request.GET.get('amount') == None:
+        try:
+            return GlobalAnnouncement.objects.all().order_by('-date')[:self.kwargs['amount']]
+        except KeyError:
             return GlobalAnnouncement.objects.all().order_by('-date')
-        else:
-            return GlobalAnnouncement.objects.all().order_by('-date')[:int(self.request.GET.get('amount'))]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, amount=0, *args, **kwargs):
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('../../')
+            return HttpResponseRedirect('/')
 
 class Server_Announcements(ListView):
         """
@@ -46,15 +42,15 @@ class Server_Announcements(ListView):
 
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
-            context["current_listed_server"] = self.request.GET.get('pk')
+            context["current_listed_server"] = self.kwargs['server_pk']
             return context
 
         def get_queryset(self):
-            server = Server.objects.get(pk=self.request.GET.get('pk'))
+            server = Server.objects.get(pk=self.kwargs['server_pk'])
             return ServerAnnouncement.objects.filter(server=server).order_by('-date')
 
         def get(self, request, *args, **kwargs):
             if request.headers.get('HX-Request') == "true":
                 return super().get(request, *args, **kwargs)
             else:
-                return HttpResponseRedirect('../../')
+                return HttpResponseRedirect('/')
