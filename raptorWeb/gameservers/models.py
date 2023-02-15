@@ -63,6 +63,8 @@ class ServerManager(models.Manager):
                 _set_offline_server(server)
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
+            if statistic_model.time_last_polled == None:
+                statistic_model.time_last_polled = localtime()
             minutes_since_poll = int(str(
                 (localtime() - statistic_model.time_last_polled.astimezone())
                 ).split(":")[1])
@@ -104,10 +106,11 @@ class ServerManager(models.Manager):
             - Save the total count of all online players to the total_player_count attribute of
             the ServerStatistic model passed as an argument.
         """
-        self._player_poller.poll_servers(
-            [server for server in self.all()],
-             ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
-        )
+        if self.all().count() > 0:
+            self._player_poller.poll_servers(
+                [server for server in self.all()],
+                ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
+            )
 
     def export_server_data_full() -> dict:
         """

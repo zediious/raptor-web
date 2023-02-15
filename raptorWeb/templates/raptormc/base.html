@@ -25,162 +25,163 @@
 
   <body id="body" style="background-color: rgba(0,25,45,255)">
 
-    <div id="topBox" style="background-image: url(); background-attachment: scroll; position: relative; z-index: 1">
+    <div id="backgroundWrapper" style="background-image: url(); background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
+      <div id="topBox" style="position: relative; z-index: 1">
 
-      <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
-        <div class="offcanvas-header text-white">
-          <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="m-4"></div>
-        <div class="offcanvas-body text-white">
-          <div class="navbar-collapse text-center">
-            <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
-  
-              <li class="btn btn-secondary m-2 p-2"> 
-                <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:announcements' %}">Announcements</a> 
-              </li>
-              
-              <li class="btn btn-secondary m-2 p-2"> 
-                <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
-              </li>
-  
-              <li class="btn btn-secondary m-2 p-2">
-                <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
-              </li>
-
-              <li class="btn btn-secondary m-2 p-2">
-                <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:voting' %}">Vote for Us</a>
-              </li>
-  
-              <li class="btn btn-secondary m-2 p-2">
-                <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
-              </li>
-  
-              <li class="btn btn-secondary m-2 p-2">
-                <a class="nav-link text-white text-nowrap fs-5" href="https://discord.com/channels/740388741079760937/976667149986852984" target="_blank">Get Support <img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a>
-              </li>
-  
-              <li class="btn btn-secondary m-2 p-2 dropdown">
-                <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Donate</a>
-                <ul class="dropdown-menu bg-dark text-center">
-                  <li><a class="dropdown-item text-white" href="https://donate.shadowraptor.net/" target="_blank">Packages <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
-                  <li><a class="dropdown-item text-white" href="https://www.patreon.com/shadowraptornetwork" target="_blank">Patreon <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
-                </ul>
-              </li>
-  
-              <li class="btn btn-secondary m-2 p-2 dropdown">
-                <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
-                <ul class="dropdown-menu bg-dark text-center">
-                  <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
-                  <li><a class="dropdown-item text-white" href={% url 'raptormc:site_members' %}>Site Members</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
-                </ul>
-              </li>
-  
-            </ul>
+        <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
+          <div class="offcanvas-header text-white">
+            <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-        </div>
-      </div>
+          <div class="m-4"></div>
+          <div class="offcanvas-body text-white">
+            <div class="navbar-collapse text-center">
+              <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
     
-      <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-          <div class="navbar-header d-flex">
-            <div class="row p-2 pt-1 pb-1">
-              <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" 
-              {% if discord_guild %}
-              data-bs-title="{{ discord_guild.online_members }}/{{ discord_guild.total_members }} Members Online" href="https://discord.gg/GEhyhku" target="_blank">
-              {% else %}
-              data-bs-title="No Guld" href="https://discord.com" target="_blank">
-              {% endif %}
-                <img id="discordBanner" src="{% static 'image/discord_banner.webp' %}" alt="Discord">
-              </a>
+                <li class="btn btn-secondary m-2 p-2"> 
+                  <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:announcements' %}">Announcements</a> 
+                </li>
+                
+                <li class="btn btn-secondary m-2 p-2"> 
+                  <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
+                </li>
+    
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
+                </li>
+
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:voting' %}">Vote for Us</a>
+                </li>
+    
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
+                </li>
+    
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" href="https://discord.com/channels/740388741079760937/976667149986852984" target="_blank">Get Support <img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a>
+                </li>
+    
+                <li class="btn btn-secondary m-2 p-2 dropdown">
+                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Donate</a>
+                  <ul class="dropdown-menu bg-dark text-center">
+                    <li><a class="dropdown-item text-white" href="https://donate.shadowraptor.net/" target="_blank">Packages <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
+                    <li><a class="dropdown-item text-white" href="https://www.patreon.com/shadowraptornetwork" target="_blank">Patreon <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
+                  </ul>
+                </li>
+    
+                <li class="btn btn-secondary m-2 p-2 dropdown">
+                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
+                  <ul class="dropdown-menu bg-dark text-center">
+                    <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
+                    <li><a class="dropdown-item text-white" href={% url 'raptormc:site_members' %}>Site Members</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
+                  </ul>
+                </li>
+    
+              </ul>
             </div>
           </div>
         </div>
-      </nav>
       
-      <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-          <div class="d-flex w-100">
+        <nav class="navbar navbar-dark bg-dark">
+          <div class="container">
             <div class="navbar-header d-flex">
-              <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
-                <span class="navbar-toggler-icon" ></span>
-              </button>
-              <a class="navbar-brand m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
-                <img id="navImage" class="w-75" src="{% static 'image/letters.webp' %}" alt="ShadowRaptor">
-              </a>
-            </div>
-            <div class="navbar-header d-flex w-25">
-              <div id="spacer" class="col-lg-2 col-0">
-                <span></span>
+              <div class="row p-2 pt-1 pb-1">
+                <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" 
+                {% if discord_guild %}
+                data-bs-title="{{ discord_guild.online_members }}/{{ discord_guild.total_members }} Members Online" href="https://discord.gg/GEhyhku" target="_blank">
+                {% else %}
+                data-bs-title="No Guld" href="https://discord.com" target="_blank">
+                {% endif %}
+                  <img id="discordBanner" src="{% static 'image/discord_banner.webp' %}" alt="Discord">
+                </a>
               </div>
-
-              <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
-              <div id="profile_drowdown"></div>
-
             </div>
           </div>
-        </div>
-      </nav>
-
-    </div>
-
-    <div id="headerBox" class="d-flex align-items-center justify-content-center" style="position: relative;">
-      
-      <div class="container d-flex align-items-center justify-content-center">
-
-          <div id="server_modals"
-            hx-get="/api/servers/html/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
-          </div>
-
-          {% if server_query_enabled %}
-          <header class="row m-2 mt-0 w-100">
-
-          <section id="playerCountBox" class="col-lg col-12 fs-2 mt-3 d-flex align-items-center flex-column"
-            hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
-  
-            <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
-              <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
-              <img id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading..."></span></aside>
-              <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
-            </button>
-  
-          </section>
-
-          <section class="col-lg col-12 fs-4 mt-2 mb-3">
-  
-            <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
-  
-              <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
-                hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
-          {% else %}
-          <header id="serverBoxNoQuery" class="m-2 mt-0">
-
-          <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
-            <div class="d-flex align-items-center justify-content-center" id="copyAddress">
-              <div id="server_buttons" class="col-lg-12 col-12 row mb-0 p-5 d-flex align-items-center justify-content-center"
-                hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
-          {% endif %}
+        </nav>
+        
+        <nav class="navbar navbar-dark bg-dark">
+          <div class="container">
+            <div class="d-flex w-100">
+              <div class="navbar-header d-flex">
+                <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
+                  <span class="navbar-toggler-icon" ></span>
+                </button>
+                <a class="navbar-brand m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
+                  <img id="navImage" class="w-75" src="{% static 'image/letters.webp' %}" alt="ShadowRaptor">
+                </a>
               </div>
-  
+              <div class="navbar-header d-flex w-25">
+                <div id="spacer" class="col-lg-2 col-0">
+                  <span></span>
+                </div>
+
+                <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
+                <div id="profile_drowdown"></div>
+
+              </div>
             </div>
-  
-          </section>
-  
-        </header>
+          </div>
+        </nav>
 
       </div>
-      
-    </div>
+
+      {% if total_server_count > 0 %}
+      <div id="headerBox" class="d-flex align-items-center justify-content-center mb-0" style="position: relative;">
+        
+        <div class="container d-flex align-items-center justify-content-center">
+
+            <div id="server_modals"
+              hx-get="/api/servers/html/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
+            </div>
+
+            {% if server_query_enabled %}
+            <header class="row m-2 mt-0 w-100">
+
+            <section id="playerCountBox" class="col-lg col-12 fs-2 mt-3 d-flex align-items-center flex-column"
+              hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
     
+              <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
+                <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
+                <img id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading..."></span></aside>
+                <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
+              </button>
+    
+            </section>
+
+            <section class="col-lg col-12 fs-4 mt-2 mb-3">
+    
+              <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
+    
+                <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
+                  hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+            {% else %}
+            <header id="serverBoxNoQuery" class="m-2 mt-0">
+
+            <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
+              <div class="d-flex align-items-center justify-content-center" id="copyAddress">
+                <div id="server_buttons" class="col-lg-12 col-12 row mb-0 p-5 d-flex align-items-center justify-content-center"
+                  hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+            {% endif %}
+                </div>
+    
+              </div>
+    
+            </section>
+    
+          </header>
+
+        </div>
+        
+      </div>
+      {% endif %}
+      
+      </div>
     </div>
 
-
-    <div id="scrollStopper"></div>
-
-    <main id="home" class="container-flex m-5 mt-4">
+    <main id="home" class="container-flex m-5 mt-0">
       {% block main_block %}
       {% endblock %}
     </main>
