@@ -2,7 +2,7 @@ console.log("raptormc.js loaded")
 
 document.getElementById("body").onscroll = function myFunction() {  
     var scrolltotop = document.scrollingElement.scrollTop;
-    var target = document.getElementById("topBox");
+    var target = document.getElementById("backgroundWrapper");
     var xvalue = "center";
     var factor = 0.5;
     var yvalue = scrolltotop * factor;
