@@ -32,7 +32,7 @@
 <section id="voteBoxes" class="m-0 mb-3 mt-4">
 
   <div class="accordion opacity-75 mt-2 container" id="votingAccordion">
-  <div id="server_voting" hx-get="/servers/server_voting_poll" hx-trigger="load" hx-target="#server_voting" hx-swap="outerHTML"></div>
+  <div id="server_voting" hx-get="{% url 'gameservers:server_voting_poll' %}" hx-trigger="load" hx-target="#server_voting" hx-swap="outerHTML"></div>
 
 </section>
 {% endblock %}

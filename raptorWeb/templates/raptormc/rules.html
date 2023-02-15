@@ -47,7 +47,7 @@
     </div>
   {% endif %}
   
-  <div id="server_rules" hx-get="/servers/server_rules_poll" hx-trigger="load" hx-target="#server_rules" hx-swap="outerHTML"></div>
+  <div id="server_rules" hx-get="{% url 'gameservers:server_rules_poll' %}" hx-trigger="load" hx-target="#server_rules" hx-swap="outerHTML"></div>
 
 </section>
 {% endblock %}

@@ -32,7 +32,7 @@
 <section id="bannedItemBoxes" class="m-0 mb-3 mt-4">
 
   <div class="accordion opacity-75 mt-2 container" id="bannedItemAccordion">
-  <div id="server_banned_items" hx-get="/servers/server_banned_items_poll" hx-trigger="load" hx-target="#server_banned_items" hx-swap="outerHTML"></div>
+  <div id="server_banned_items" hx-get="{% url 'gameservers:server_banned_items_poll' %}" hx-trigger="load" hx-target="#server_banned_items" hx-swap="outerHTML"></div>
 
 </section>
 {% endblock %}
