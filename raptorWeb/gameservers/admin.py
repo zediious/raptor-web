@@ -40,7 +40,7 @@ class ServerAdmin(admin.ModelAdmin):
         }),
         ('Server Querying', {
             'classes': ('collapse',),
-            'fields': ('server_state', 'player_count', 'announcement_count', 'in_maintenance', 'server_port')
+            'fields': ('in_maintenance', 'server_port', 'server_state', 'player_count', 'announcement_count')
         }),
         ('Discord Announcements', {
             'classes': ('collapse',),
@@ -50,6 +50,8 @@ class ServerAdmin(admin.ModelAdmin):
 
     readonly_fields: tuple[str] = (
         'server_state',
+        'announcement_count',
+        'player_count'
     )
 
     search_fields: list[str] = [
