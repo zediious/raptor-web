@@ -21,7 +21,7 @@ dependencies:
     - gunicorn==19.6.0
     - daphne==3.0.2
     - whitenoise==6.2.0
-    - django-tinymce-3.5.0 
+    - django-tinymce==3.5.0 
     - django-js-asset==2.0.0
     - python-dotenv==0.20.0
     - mysqlclient==2.1.1
