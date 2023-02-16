@@ -207,7 +207,7 @@ class Server(models.Model):
 
     archived = models.BooleanField(
         default=False,
-        verbose_name="Archive Server",
+        verbose_name="Archived",
         help_text="If a server is archived, it will not be displayed on the website or queried. Use this instead of deleting servers."
     )
 
