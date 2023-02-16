@@ -2,7 +2,6 @@ from os.path import join
 from os import getenv
 from pathlib import Path
 from dotenv import load_dotenv
-from typing import Tuple
 
 # Define project directories
 BASE_DIR: str = Path(__file__).resolve().parent.parent
