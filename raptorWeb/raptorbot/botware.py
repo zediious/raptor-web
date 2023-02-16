@@ -1,12 +1,12 @@
-from logging import getLogger
+from logging import Logger, getLogger
 
 from django.conf import settings
 
 from raptorWeb.raptorbot.discordbot.bot import BotProcessManager
 
-DISCORD_BOT_TOKEN = getattr(settings, 'DISCORD_BOT_TOKEN')
-LOGGER = getLogger('raptorbot.botware')
-bot_process_manager = BotProcessManager(bot_token=DISCORD_BOT_TOKEN)
+DISCORD_BOT_TOKEN: str = getattr(settings, 'DISCORD_BOT_TOKEN')
+LOGGER: Logger = getLogger('raptorbot.botware')
+bot_process_manager: BotProcessManager = BotProcessManager(bot_token=DISCORD_BOT_TOKEN)
 
 class RaptorBotWare:
     """

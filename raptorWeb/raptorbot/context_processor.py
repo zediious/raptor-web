@@ -2,7 +2,7 @@ from django.conf import settings
 
 from raptorWeb.raptorbot.models import DiscordGuild
 
-DISCORD_GUILD = getattr(settings, 'DISCORD_GUILD')
+DISCORD_GUILD: int = getattr(settings, 'DISCORD_GUILD')
 
 def add_discord_guild_data(request):
     try:

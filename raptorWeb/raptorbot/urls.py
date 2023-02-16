@@ -1,10 +1,10 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
 from raptorWeb.raptorbot import views
 
-app_name = "raptorbot"
+app_name: str = "raptorbot"
 
-urlpatterns = [
+urlpatterns: list[URLPattern] = [
 
     path('html/global_announcements_list/light/<int:amount>/', views.Global_Announcements.as_view(template_name='raptorbot/globalannouncement_list.html'), name="global_announcements_list"),
     path('html/global_announcements_list/dark/', views.Global_Announcements.as_view(template_name='raptorbot/globalannouncement_list_dark.html'), name="global_announcements_list_dark"),
