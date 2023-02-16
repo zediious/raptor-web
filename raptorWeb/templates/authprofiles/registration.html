@@ -7,7 +7,7 @@
     </header>
 </div>
 {% else %}
-<form class="form p-3 text-white" hx-post="{% url 'authprofiles:register' %}" hx-swap="outerHTML">
+<form id="register_form_alone" class="form p-3 text-white" hx-post="{% url 'authprofiles:register' %}" hx-swap="outerHTML" hx-target="#register_form_alone">
           
   {% csrf_token %}
   {{ form.captcha }} 

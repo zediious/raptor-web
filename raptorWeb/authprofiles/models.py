@@ -1,3 +1,5 @@
+from logging import Logger, getLogger
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.http import HttpRequest
@@ -7,6 +9,7 @@ from django.utils.text import slugify
 from django.utils.timezone import localtime, now
 from django.forms import ModelForm
 from django.core.files import File
+from django.core.mail import send_mail
 from django.conf import settings
 
 from requests import Response, get, post
@@ -14,10 +17,19 @@ from requests import Response, get, post
 from urllib.request import urlopen, Request
 from tempfile import NamedTemporaryFile
 
+from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
+
+LOGGER: Logger = getLogger('authprofiles.models')
 DISCORD_APP_ID: str = getattr(settings, 'DISCORD_APP_ID')
 DISCORD_APP_SECRET: str = getattr(settings, 'DISCORD_APP_SECRET'),
 DISCORD_REDIRECT_URL: str = getattr(settings, 'DISCORD_REDIRECT_URL'),
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
+USER_RESET_URL: str = getattr(settings, 'USER_RESET_URL')
+DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
+EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
+
+token_generator: RaptorUserTokenGenerator = RaptorUserTokenGenerator()
 
 
 class RaptorUserManager(BaseUserManager):
@@ -96,6 +108,31 @@ class RaptorUserManager(BaseUserManager):
         new_user.set_unusable_password()
         new_user.save()
         return new_user
+
+    def send_reset_email(self, reset_form):
+        """
+        Given a valid password reset email sending form, send a password
+        reset email to a user's email, if the user is not a Discord user.
+        Return True, if an email was sent, False if not.
+        """
+        resetting_user: RaptorUser = self.get(
+            username = reset_form.cleaned_data["username"],
+            email = reset_form.cleaned_data["email"])
+        if resetting_user.is_discord_user == True:
+            return False
+
+        resetting_user.password_reset_token = token_generator.make_token(resetting_user)
+        resetting_user.save()
+        send_mail(subject=f"User password reset for: {resetting_user.username}",
+            message=("Click the following link to enter a password reset form for your account: "
+                    f"{WEB_PROTO}://{DOMAIN_NAME}/"
+                    f"{BASE_USER_URL}/{USER_RESET_URL}/"
+                    f"{resetting_user.user_slug}/{resetting_user.password_reset_token}"),
+            from_email=EMAIL_HOST_USER,
+            recipient_list=[resetting_user.email]
+        )
+        LOGGER.info(f"Password reset submitted for {resetting_user.username}. Email has been sent.")
+        return True
 
     def exchange_discord_code(self, discord_code: str) -> Response:
         """

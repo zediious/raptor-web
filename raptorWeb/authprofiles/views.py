@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
-from django.core.mail import send_mail
 from django.utils.text import slugify
 from django.conf import settings
 
@@ -21,10 +20,6 @@ AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
 DISCORD_AUTH_URL: str = getattr(settings, 'DISCORD_AUTH_URL')
 LOGIN_URL: str = getattr(settings, 'LOGIN_URL')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
-USER_RESET_URL: str = getattr(settings, 'USER_RESET_URL')
-DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
-WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
-EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
 
 token_generator: RaptorUserTokenGenerator = RaptorUserTokenGenerator()
 
@@ -84,24 +79,10 @@ class UserResetPasswordForm(TemplateView):
         dictionary: dict = {"password_reset_form": password_reset_form}
 
         if password_reset_form.is_valid():
-            resetting_user: RaptorUser = RaptorUser.objects.get(
-                username = password_reset_form.cleaned_data["username"],
-                email = password_reset_form.cleaned_data["email"])
-            if resetting_user.is_discord_user == True:
+            email_sent = RaptorUser.objects.send_reset_email(password_reset_form)
+            if email_sent == False:
                 messages.error(request, "Discord users cannot reset their password")
                 return render(request, self.template_name, context=dictionary)
-
-            resetting_user.password_reset_token = token_generator.make_token(resetting_user)
-            resetting_user.save()
-            send_mail(subject=f"User password reset for: {resetting_user.username}",
-                message=("Click the following link to enter a password reset form for your account: "
-                        f"{WEB_PROTO}://{DOMAIN_NAME}/"
-                        f"{BASE_USER_URL}/{USER_RESET_URL}/"
-                        f"{resetting_user.user_slug}/{resetting_user.password_reset_token}"),
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[resetting_user.email]
-            )
-            LOGGER.info(f"Password reset submitted for {resetting_user.username}. Email has been sent.")
             messages.error(request, "Await reset link at user email")
             return render(request, self.template_name, context=dictionary)
 
@@ -126,14 +107,14 @@ class UserResetPasswordConfirm(TemplateView):
                 resetting_user: RaptorUser = RaptorUser.objects.get(
                                         password_reset_token=user_reset_token)
                 if resetting_user.password_reset_token == "":
-                    return redirect('/accessdenied')
+                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
 
                 return render(request, self.template_name, context={
                     "final_password_reset_form": self.final_password_reset_form,
                     "resetting_user_token": resetting_user.password_reset_token})
 
             except RaptorUser.DoesNotExist:
-                return redirect('/accessdenied')
+                return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
 
     def post(self, request: HttpRequest, user_reset_token: str) -> HttpResponse:
         final_password_reset_form: UserPasswordResetForm = self.final_password_reset_form(request.POST)
@@ -296,10 +277,10 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                     return render(request, self.template_name, context=instance_dict)
 
                 else:
-                    return redirect('/nouserfound')
+                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
 
             else: 
-                return redirect('/accessdenied')
+                return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
 
         else:
             return HttpResponseRedirect('/')
@@ -319,30 +300,3 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
         else:
             return render(request, self.template_name, context=instance_dict)
-
-
-class Access_Denied(TemplateView):
-    """
-    Page displayed when a resource cannot be accessed by a user
-    """
-    template_name: str = join(AUTH_TEMPLATE_DIR, 'no_access.html')
-
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            return render(request, self.template_name, context={})
-
-        else:
-            return HttpResponseRedirect('/')
-
-class No_User_Found(TemplateView):
-    """
-    Page displayed when a requested user is not found
-    """
-    template_name: str = join(AUTH_TEMPLATE_DIR, 'no_user.html')
-
-    def get(self, request):
-        if request.headers.get('HX-Request') == "true":
-            return render(request, self.template_name, context={})
-
-        else:
-            return HttpResponseRedirect('../')

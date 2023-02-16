@@ -1,7 +1,6 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.models import AbstractUser
 import six
-
-from raptorWeb.authprofiles.models import RaptorUser
 
 
 class RaptorUserTokenGenerator(PasswordResetTokenGenerator):
@@ -9,7 +8,7 @@ class RaptorUserTokenGenerator(PasswordResetTokenGenerator):
     Password reset token generator used for the RaptorUser
     password reset process.
     """
-    def _make_hash_value(self, user: RaptorUser, timestamp: int) -> str:
+    def _make_hash_value(self, user: AbstractUser, timestamp: int) -> str:
         """
         Return a hash value derived from a RaptorUser's pk,
         """
