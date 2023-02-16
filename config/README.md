@@ -20,6 +20,7 @@ MYSQL_USER=raptor
 BASE_PATH=/tmp
 
 ENABLE_SERVER_QUERY=
+SERVER_PAGINATION_COUNT=
 IMPORT_SERVERS=
 DELETE_EXISTING=
 
@@ -81,6 +82,9 @@ The root password to the MYSQL database. This password is only used for debug pu
 
 ### **ENABLE_SERVER_QUERY**
 If this is set to `False`, the Domain name/port of created Servers will not be queried for player data. They will still appear everywhere on the website as normal.
+
+### **SERVER_PAGINATION_COUNT**
+The amount of server buttons that will appear per page. If there are more servers than this value, a "Next" button will appear to cycle through the next X amount of servers. A suitable default for this would be 6.
 
 ### **IMPORT_SERVERS**
 If this is set to `True`, then Servers will be imported from a `server_data_full.json` located at the top level directory of the app, alongside `manage.py`. After this process has completed, you MUST stop the server and restart it with this setting back to `False`.
