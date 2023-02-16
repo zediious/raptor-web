@@ -140,7 +140,7 @@
             {% if server_query_enabled %}
             <header class="row m-2 mt-0 w-100">
 
-            <section id="playerCountBox" class="col-lg col-12 fs-2 mt-3 d-flex align-items-center flex-column"
+            <section id="playerCountBox" class="col-lg col-12 fs-2 mt-lg-2 mt-4 d-flex align-items-center flex-column"
               hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
     
               <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
@@ -151,7 +151,7 @@
     
             </section>
 
-            <section class="col-lg col-12 fs-4 mt-2 mb-3">
+            <section class="col-lg col-12 fs-4 mt-3 mb-3">
     
               <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
     
@@ -203,6 +203,13 @@
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
+
+    {% if total_server_count == 0 %}
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    {% endif %}
     
   </body>
 

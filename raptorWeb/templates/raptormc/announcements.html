@@ -19,7 +19,7 @@
 <section id="welcome" class="container mb-0">
 
   {% if Announcements_Information.enabled %}
-    <header class="card bg-dark opacity-75 text-white p-4 mt-4">
+    <header class="card bg-dark opacity-75 text-white p-4 {% if total_server_count == 0 %}mt-4{% endif %}">
       <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
       <hr>
       <div class="pageContent">

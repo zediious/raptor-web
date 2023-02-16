@@ -17,7 +17,7 @@
 <section id="bannedItemsIntro" class="container">
 
   {% if Banned_Items_Information.enabled %}
-  <header class="card bg-dark opacity-75 text-white p-4 m-0 mt-4">
+  <header class="card bg-dark opacity-75 text-white p-4 {% if total_server_count == 0 %}mt-4{% endif %}">
     <h3 class="pageHeader fw-bold text-center mb-2">ShadowRaptor Banned Items</h3>
     <hr>
     <div class="pageContent">

@@ -11,7 +11,7 @@
     </div>
 {% endif %}
 
-<div class="row w-100 h-100">
+<div class="{% if total_server_count > 1 %}row{% endif %} w-100 h-100">
     {% for server in page_obj %}
         {% if server_query_enabled %}
         <span id="serverButton" class="col-lg-12 col-6 opacity-50">
