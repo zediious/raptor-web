@@ -115,6 +115,11 @@ body {
     width: 100%;
 }
 
+#navImage {
+    width: 100%;
+    height: 100%;
+}
+
 .fade-in-button {
     opacity: 1;
     animation-name: fadeInOpacityButton;
@@ -182,11 +187,6 @@ body {
         font-size: large;
     }
 
-    #navImage {
-        width: 80%;
-        height: 80%;
-    }
-
     .navbar-brand {
         width: 25%;
     }
@@ -197,6 +197,10 @@ body {
 
     #serverBoxNoQuery {
         width: 75%;
+    }
+
+    #navBrand {
+        width: 50%;
     }
     
 }
@@ -209,11 +213,6 @@ body {
 
     .pageContent > * {
         font-size: small;
-    }
-
-    #navImage {
-        width: 100%;
-        height: 75%;
     }
 
     #profile_picture_box {
@@ -233,6 +232,10 @@ body {
     }
 
     #serverBoxNoQuery {
+        width: 100%;
+    }
+
+    #navBrand {
         width: 100%;
     }
     

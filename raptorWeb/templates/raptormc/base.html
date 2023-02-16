@@ -31,7 +31,7 @@
         <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
           <div class="offcanvas-header text-white">
             <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="m-4"></div>
           <div class="offcanvas-body text-white">
@@ -102,25 +102,25 @@
           </div>
         </nav>
         
-        <nav class="navbar navbar-dark bg-dark">
-          <div class="container">
-            <div class="d-flex w-100">
-              <div class="navbar-header d-flex">
-                <button id="navToggle" class="navbar-toggler m-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
-                  <span class="navbar-toggler-icon" ></span>
-                </button>
-                <a class="navbar-brand m-3 mt-0 mb-0" href="{% url 'raptormc:home' %}">
-                  <img id="navImage" class="w-75" src="{% static 'image/letters.webp' %}" alt="ShadowRaptor">
-                </a>
-              </div>
-              <div class="navbar-header d-flex w-25">
-                <div id="spacer" class="col-lg-2 col-0">
-                  <span></span>
+        <nav class="navbar navbar-dark bg-dark d-flex align-items-center justify-content-center">
+          <div class="container d-flex align-items-center justify-content-center">
+            <div class="row w-100">
+              <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
+                <div class="navbar-header d-flex h-100">
+                  <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
+                    <span class="navbar-toggler-icon" ></span>
+                  </button>
+                  <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
+                    <img id="navImage" src="{% static 'image/letters.webp' %}" alt="ShadowRaptor">
+                  </a>
                 </div>
+              </div>
+              <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
+                <div class="navbar-header d-flex">
+                  <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
+                  <div id="profile_drowdown"></div>
 
-                <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
-                <div id="profile_drowdown"></div>
-
+                </div>
               </div>
             </div>
           </div>
