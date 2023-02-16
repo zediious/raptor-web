@@ -253,6 +253,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'authprofiles.models': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'gameservers.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
