@@ -32,41 +32,41 @@
             <div class="modal-footer justify-content-center">
 
               {% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
                   Announcements
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
                   Announcements
                 </a>
               {% endif %}
               
               {% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
                   Rules
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
                   Rules
                 </a>
               {% endif %}
 
               {% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
                   Banned Items
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
                   Banned Items
                 </a>
               {% endif %}
 
               {% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
                   Vote
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.modpack_name|lower|cut:" " }}">
+                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
                   Vote
                 </a>
               {% endif %}
