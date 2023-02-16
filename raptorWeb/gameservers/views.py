@@ -16,7 +16,7 @@ class Server_List_Base(ListView):
     model: Server = Server
 
     def get_queryset(self) -> ServerManager:
-        return Server.objects.filter().order_by('-pk')
+        return Server.objects.filter(archived=False).order_by('-pk')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
@@ -47,7 +47,7 @@ class Player_List(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["stat_object"] = ServerStatistic.objects.get_or_create(name='gameservers-stat')[0]
-        context["server_list"] = Server.objects.all()
+        context["server_list"] = Server.objects.filter(archived=False)
         return context
 
     def get(self, request, *args, **kwargs):
