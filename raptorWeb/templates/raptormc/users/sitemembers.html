@@ -17,8 +17,6 @@
 
 {% block main_block %}
 
-<div hx-get="{% url 'authprofiles:all_user_profile' %}" hx-trigger="load" hx-target="#all_profiles" hx-swap="innerHTML"></div>
-
-<div class="container" id="all_profiles"></div>
+<div class="container mt-4" id="all_profiles" hx-get="{% url 'authprofiles:all_user_profile' %}" hx-trigger="load" hx-target="#all_profiles" hx-swap="innerHTML"></div>
 
 {% endblock %}
