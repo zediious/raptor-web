@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='server',
             name='archived',
-            field=models.BooleanField(default=False, help_text='If a server is archived, it will not be displayed on the website or queried. Use this instead of deleting servers.', verbose_name='Archive Server'),
+            field=models.BooleanField(default=False, help_text='If a server is archived, it will not be displayed on the website or queried. Use this instead of deleting servers.', verbose_name='Archived'),
         ),
     ]
