@@ -103,6 +103,9 @@ class ServerStatisticAdmin(admin.ModelAdmin):
 
     list_display: list[str] = ['total_player_count']
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
 admin.site.register(Server, ServerAdmin)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(ServerStatistic, ServerStatisticAdmin)
