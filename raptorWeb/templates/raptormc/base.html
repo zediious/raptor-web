@@ -23,9 +23,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
   </head>
 
-  <body id="body" style="background-color: rgba(0,25,45,255)">
+  <body id="body" style="background-color: {{ site_info_model.main_color }}">
 
-    <div id="backgroundWrapper" style="background-image: url(); background-color: rgba(0,35,60,255); background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
+    <div id="backgroundWrapper" style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %}); background-color: {{ site_info_model.secondary_color }}; background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
       <div id="topBox" style="position: relative; z-index: 1">
 
         <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
@@ -111,7 +111,7 @@
                     <span class="navbar-toggler-icon" ></span>
                   </button>
                   <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
-                    <img id="navImage" src="{% static 'image/letters.webp' %}" alt="ShadowRaptor">
+                    <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
                   </a>
                 </div>
               </div>

@@ -19,7 +19,7 @@
 
   {% if Homepage_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">Welcome to ShadowRaptor</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">Welcome to {{ site_info_model.brand_name }}</h3>
     <hr>
     <div class="pageContent">
       {{ Homepage_Information.content|safe }}
