@@ -27,6 +27,7 @@ class ServerAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('Server Information', {
             'fields': (
+                'archived',
                 'modpack_picture',
                 'modpack_url',
                 'modpack_name',
@@ -58,7 +59,7 @@ class ServerAdmin(admin.ModelAdmin):
         'modpack_name',
     ]
 
-    list_display: list[str] = ['modpack_name', 'modpack_version', 'in_maintenance']
+    list_display: list[str] = ['modpack_name', 'modpack_version', 'in_maintenance', 'archived']
 
 class PlayerAdmin(admin.ModelAdmin):
     """

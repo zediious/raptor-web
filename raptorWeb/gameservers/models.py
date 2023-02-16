@@ -108,7 +108,7 @@ class ServerManager(models.Manager):
         """
         if self.all().count() > 0:
             self._player_poller.poll_servers(
-                [server for server in self.all()],
+                [server for server in self.filter(archived=False)],
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
 
@@ -204,6 +204,12 @@ class Server(models.Model):
     Includes all information about a server
     """
     objects = ServerManager()
+
+    archived = models.BooleanField(
+        default=False,
+        verbose_name="Archive Server",
+        help_text="If a server is archived, it will not be displayed on the website or queried. Use this instead of deleting servers."
+    )
 
     player_count = models.IntegerField(
         default=0,
