@@ -7,7 +7,7 @@ DEFAULT_MEDIA = getattr(settings, 'DEFAULT_MEDIA')
 WEB_PROTO = getattr(settings, 'WEB_PROTO')
 
 def context_process(request):
-    site_info = SiteInformation.objects.get_or_create(pk=0)[0]
+    site_info = SiteInformation.objects.get_or_create(pk=1)[0]
     nav_links = NavbarLink.objects.all().order_by('priority')
     nav_dropdowns = NavbarDropdown.objects.all().order_by('priority')
 
