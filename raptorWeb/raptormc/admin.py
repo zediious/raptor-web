@@ -5,7 +5,7 @@ from django.db import models
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown
 
 
 class InformativeTextAdminForm(ModelForm):
@@ -24,6 +24,52 @@ class SiteInformationAdminForm(ModelForm):
             'secondary_color': TextInput(attrs={'type': 'color'})
         }
         fields = '__all__'
+
+
+class NavbarDropdownAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    NavbarDropdowns in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'enabled',
+                'priority',
+                'name')
+        }),
+    )
+
+    search_fields: list[str] = [
+        'name',
+    ]
+
+    list_display: list[str] = ['name', 'priority', 'enabled']
+
+
+class NavbarLinkAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    NavbarLinks in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'enabled',
+                'priority',
+                'parent_dropdown',
+                'new_tab',
+                'name',
+                'url')
+        }),
+    )
+
+    search_fields: list[str] = [
+        'name',
+        'url'
+    ]
+
+    list_display: list[str] = ['name', 'url', 'parent_dropdown', 'priority', 'enabled']
 
 
 class InformativeTextAdmin(admin.ModelAdmin):
@@ -93,3 +139,5 @@ class SiteInformationAdmin(admin.ModelAdmin):
 
 admin.site.register(InformativeText, InformativeTextAdmin)
 admin.site.register(SiteInformation, SiteInformationAdmin)
+admin.site.register(NavbarLink, NavbarLinkAdmin)
+admin.site.register(NavbarDropdown, NavbarDropdownAdmin)
