@@ -116,10 +116,8 @@
                 </div>
               </div>
               <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
-                <div class="navbar-header d-flex">
-                  <div hx-get="/api/user/html/profile_dropdown" hx-trigger="load" hx-target="#profile_drowdown" hx-swap="innerHTML"></div>
-                  <div id="profile_drowdown"></div>
-
+                <div class="navbar-header d-flex align-items-end justify-content-end h-100">
+                  <div class="h-100" id="profile_dropdown" hx-get="{% url 'authprofiles:user_dropdown' %}" hx-trigger="load" hx-target="#profile_dropdown" hx-swap="innerHTML"></div>
                 </div>
               </div>
             </div>
