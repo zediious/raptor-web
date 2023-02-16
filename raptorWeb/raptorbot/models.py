@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-SCRAPE_SERVER_ANNOUNCEMENT = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
+SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
     
 class Announcement(models.Model):
     """
