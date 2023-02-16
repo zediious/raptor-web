@@ -57,28 +57,40 @@
                 <li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
                 </li>
-    
+                
                 <li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="https://discord.com/channels/740388741079760937/976667149986852984" target="_blank">Get Support <img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a>
+                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:staff_apps' %}">Staff Applications</a>
                 </li>
-    
+
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:site_members' %}">Site Members</a>
+                </li>
+
+                {% for link in nav_links %}
+                {% if not link.parent_dropdown %}
+                <li class="btn btn-secondary m-2 p-2">
+                  <a class="nav-link text-white text-nowrap fs-5" 
+                  href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{link.name}}
+                    {% if link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
+                  </a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% for dropdown in nav_dropdowns %}
                 <li class="btn btn-secondary m-2 p-2 dropdown">
-                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Donate</a>
+                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dropdown.name }}</a>
                   <ul class="dropdown-menu bg-dark text-center">
-                    <li><a class="dropdown-item text-white" href="https://donate.shadowraptor.net/" target="_blank">Packages <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
-                    <li><a class="dropdown-item text-white" href="https://www.patreon.com/shadowraptornetwork" target="_blank">Patreon <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
+                    {% for nested_link in dropdown.nestedlink.all|dictsort:'priority' %}
+                    <li>
+                      <a class="dropdown-item text-white" href="{{nested_link.url}}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
+                        {% if nested_link.new_tab %}<img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
+                      </a>
+                    </li>
+                    {% endfor %}
                   </ul>
                 </li>
-    
-                <li class="btn btn-secondary m-2 p-2 dropdown">
-                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
-                  <ul class="dropdown-menu bg-dark text-center">
-                    <li><a class="dropdown-item text-white" href={% url 'raptormc:staff_apps' %}>Staff Applications</a></li>
-                    <li><a class="dropdown-item text-white" href={% url 'raptormc:site_members' %}>Site Members</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-white" href="https://bans.shadowraptor.net/" target="_blank">Punishments <img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></li>
-                  </ul>
-                </li>
+                {% endfor %}
     
               </ul>
             </div>

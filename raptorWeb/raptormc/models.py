@@ -1,6 +1,91 @@
 from django.db import models
 
 
+class NavbarDropdown(models.Model):
+    """
+    Represents a dropdown menu for the Navigation bar
+    """
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Navigation Link Name",
+        help_text=("The name of this Navigation Dropdown. Will be displayed on the website."),
+        default="Default"
+    )
+
+    enabled = models.BooleanField(
+        verbose_name="Enabled",
+        help_text="Whether this Navigation Link will appear on the website.",
+        default=True
+    )
+
+    priority = models.IntegerField(
+        verbose_name="Priority",
+        help_text="Controls the order this Navigation Dropdown will be placed in. Lower numbers appear first.",
+        default=0
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Navigation Drodown",
+        verbose_name_plural = "Navigation Dropdowns"
+
+
+class NavbarLink(models.Model):
+    """
+    Represents an added Navigation link
+    """
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Navigation Link Name",
+        help_text=("The name of this Navigation Link. Will be displayed on the website."),
+        default="Default"
+    )
+
+    url = models.URLField(
+        max_length=250,
+        verbose_name="Navigation URL",
+        help_text="The link this Navigation Link will take the user to.",
+        default="/"
+    )
+
+    enabled = models.BooleanField(
+        verbose_name="Enabled",
+        help_text="Whether this Navigation Link will appear on the website.",
+        default=True
+    )
+
+    priority = models.IntegerField(
+        verbose_name="Priority",
+        help_text="Controls the order this Navigation Link will be placed in. Lower numbers appear first.",
+        default=0
+    )
+
+    new_tab = models.BooleanField(
+        verbose_name="Opens in New Tab",
+        help_text="If this is True, this link will open in a new tab.",
+        default=False
+    )
+
+    parent_dropdown = models.ForeignKey(
+        NavbarDropdown,
+        verbose_name="Dropdown Menu",
+        help_text="The Dropdown Menu this link is attached to. This is not required",
+        related_name='nestedlink',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Navigation Link",
+        verbose_name_plural = "Navigation Links"
+
+
 class SiteInformation(models.Model):
     """
     Represents site information such as branding images, colors, etc
@@ -43,6 +128,9 @@ class SiteInformation(models.Model):
                     " is 1920x1080 or within the same aspect ratio."),
         blank=True
     )
+
+    def __str__(self):
+        return str(self.brand_name)
 
     class Meta:
         verbose_name = "Site Information",
