@@ -17,7 +17,7 @@
         </div>
     {% endif %}
 
-    <div class="row">
+    <div class="{% if total_server_count > 1 %}row{% endif %}">
         {% for server in page_obj %} 
                             
             {% if server_query_enabled %}
