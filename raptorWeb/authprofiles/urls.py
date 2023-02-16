@@ -12,8 +12,6 @@ urlpatterns: list[URLPattern] = [
     path('oauth2/login/', views.UserLogin_OAuth.as_view(), name="login_oauth"),
     path('oauth2/login/redirect', views.UserLogin_OAuth_Success.as_view(), name="login_oauth_success"),
     path('auth/logout/', views.user_logout, name="logout"),
-    path('html/accessdenied/', views.Access_Denied.as_view(), name="access_denied"),
-    path('html/nouserfound/', views.No_User_Found.as_view(), name="no_user_found"),
     # Password Resets
     path('html/reset_password/', views.UserResetPasswordForm.as_view(), name="reset_password_form"),
     path('auth/reset_password_confirm/<str:user_reset_token>', views.UserResetPasswordConfirm.as_view(), name="reset_password_confirm_form"),
