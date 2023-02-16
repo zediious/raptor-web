@@ -8,8 +8,8 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-    <div class="float-end">
-        <div class="dropstart">
+    <div class="float-end h-100 d-flex">
+        <div class="dropstart m-auto">
         <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <div id="profile_picture_box">
             {% if loaded_user.user_profile_info.profile_picture %}
