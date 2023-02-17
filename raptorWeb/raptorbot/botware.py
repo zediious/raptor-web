@@ -42,11 +42,10 @@ def start_bot_process():
 
 def stop_bot_process():
     """
-    Terminate the current Discord Bot thread, re-instantiate the bot and thread
-    and start the new thread
+    Terminate the current Discord Bot thread
     """
     result = bot_process_manager.stop_process()
     if result == True:
-        LOGGER.info("The previous Discord Bot Thread has been stopped and a new one is now running")
+        LOGGER.info("The previous Discord Bot Thread has been stopped.")
     else:
         LOGGER.info("There was an error stopping the Discord Bot")
