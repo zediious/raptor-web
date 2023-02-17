@@ -81,7 +81,7 @@
                 <li class="btn btn-secondary m-2 p-2 dropdown">
                   <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dropdown.name }}</a>
                   <ul class="dropdown-menu bg-dark text-center">
-                    {% for nested_link in dropdown.nestedlink.all|dictsort:'priority' %}
+                    {% for nested_link in dropdown.enabled_links_in_dropdown %}
                     <li>
                       <a class="dropdown-item text-white" href="{{nested_link.url}}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
                         {% if nested_link.new_tab %}<img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
