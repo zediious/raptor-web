@@ -42,7 +42,7 @@ urlpatterns: list[URLResolver] = [
     path('api/staffapps/', include(app_urls), name="staffapps"),
     path('api/raptorbot/', include(bot_urls), name="raptorbot"),
     path('api/user/', include(auth_urls), name="authprofiles"),
-    path('', include(SR_urls), name="shadowraptormc"),
+    path('', include(SR_urls), name="shadowraptormc")
 
 ]
 # If in Debug mode, serve media files

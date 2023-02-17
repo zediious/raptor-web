@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block title %}Control Panel | {{ jazzmin_settings.site_title }}{% endblock %}
+
+{% block extrahead %}
+<script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+{% endblock %}
+
+{% block page_content %}
+
+<div class="container text-center text-white m-5 mt-5">
+    <p class="fs-4">Here you can execute certain actions pertaining to the Discord Bot and Servers.</p>
+</div>
+
+<div class="container text-center text-white m-5 mt-5">
+    <div id="action_status"></div>
+</div>
+
+<div class="container-flex m-5 mt-4 p-5">
+    <div class="d-flex align-items-start justify-content-start m-3 p-3">
+        <div class="dropdown m-2">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Discord Bot
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <form>{% csrf_token %}<a role="button" class="btn btn-success p-1" hx-post="{% url 'raptormc:start_bot' %}" hx-target="#action_status">Start Bot</a></form>
+                </li>
+                <li class="dropdown-item">
+                    <form>{% csrf_token %}<a role="button" class="btn btn-danger p-1" hx-post="{% url 'raptormc:stop_bot' %}" hx-target="#action_status">Stop Bot</a></form>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown m-2">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Server Import/Export
+            </button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <a role="button" class="btn btn-danger p-1" hx-post="" hx-target="#action_status">Import Servers</a>
+                </li>
+                <li class="dropdown-item">
+                    <a role="button" class="btn btn-success p-1" hx-post="" hx-target="#action_status">Export Servers</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}

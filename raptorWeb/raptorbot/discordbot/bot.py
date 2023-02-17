@@ -1,5 +1,6 @@
 from logging import Logger, getLogger
 from threading import Thread
+from typing import Optional
 import ctypes
 
 from django.conf import settings
@@ -40,12 +41,12 @@ class BotProcessManager:
 
     def start_process(self) -> None:
         """
-        If a Thread is not currently running, start a new Thread running the bot and set
-        the running thread to class attribute "active_process"
+        If a Thread is not currently running, create a new Thread object and set
+        to class attribute "active_process", then start the Thread running the bot
         """
         if self.is_running == True:
-            message: str = ("You cannot start a process when one is currently running."
-                            f"Currently running function: {self.active_process}")
+            message: str = ("You cannot start a Thread when one is currently running."
+                            f"Currently running Thread: {self.active_process}")
             raise Exception(message)
 
         intents: discord.Intents = discord.Intents.all()
@@ -60,7 +61,7 @@ class BotProcessManager:
         self.active_process = Thread(
             target = _bot_start,
             args=(raptor_bot,
-            self.bot_token),)
+                self.bot_token),)
         self.active_process.start()
 
         """
@@ -184,7 +185,7 @@ class BotProcessManager:
                 ephemeral=True)
 
 
-    def stop_process(self):
+    def stop_process(self) -> Optional[bool]:
         """
         If a Thread is currently running. raise an Exception to 
         terminate the current class attribute "active_process"
@@ -193,15 +194,14 @@ class BotProcessManager:
             message: str = f"You cannot stop a process when there are none currently running."
             raise Exception(message)
 
-        thread_id = self.get_thread_id()
+        thread_id: int = self.get_thread_id()
 
         if thread_id != None:
-            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 
-            ctypes.py_object(SystemExit))
-            if res > 1: 
-                ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0) 
-                LOGGER.error('Exception raise failure')
-                return None
+            if ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(thread_id), 
+                ctypes.py_object(SystemExit)) > 1: 
+                    ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0) 
+                    return None
 
             self.active_process = None
             self.is_running = False
+            return True
