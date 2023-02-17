@@ -12,7 +12,6 @@
     
     {% csrf_token %} 
     {{ form.captcha }} 
-    {% bootstrap_form_errors AdminApp %}
     {% bootstrap_form AdminApp %}
     {% bootstrap_button button_type="submit" content="Submit Application" %}
     {% bootstrap_button button_type="reset" content="Reset" %}

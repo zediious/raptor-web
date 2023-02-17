@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from raptorWeb.staffapps.models import ModeratorApplication, AdminApplication
 
+
 class AdminAppAdmin(admin.ModelAdmin):
     fields = (
+        'approved',
         'age',
         'time',
         'mc_name',
@@ -37,8 +39,13 @@ class AdminAppAdmin(admin.ModelAdmin):
         'ptero'
     )
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
 class ModAppAdmin(admin.ModelAdmin):
     fields = (
+        'approved',
         'age',
         'time',
         'mc_name',
@@ -63,6 +70,11 @@ class ModAppAdmin(admin.ModelAdmin):
         'why_join',
         'contact_uppers'
     )
+
+    list_display: list[str] = ['discord_name', 'approved']
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 admin.site.register(AdminApplication, AdminAppAdmin)
