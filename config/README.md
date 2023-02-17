@@ -61,6 +61,9 @@ Set this to `True` if you are running this in a Docker Container (you would/shou
 ### **DOMAIN_NAME**
 Set this to the public domain that you will be connecting to the server with in production. This is the domain that NGINX is listening for requests on. This is only relevant when running in production/Docker, and is overriden when in a development environment.
 
+### **ADMIN_BRAND_NAME**
+The brand name used in admin interfaces. This will not be displayed on the typical user front end.
+
 ### **LANGUAGE_CODE**
 A code representing the language used by Django. This is set to `en-us` by default, but can be changed. https://docs.djangoproject.com/en/4.1/ref/settings/#language-code
 
