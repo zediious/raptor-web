@@ -419,8 +419,14 @@ JAZZMIN_SETTINGS = {
         "raptorbot": [{
             "name": "Bot Actions", 
             "url": "../../../panel", 
-            "icon": "fas fa-joystick",
+            "icon": "fas fa-terminal",
             "permissions": ["raptorbot.view_discordguild"]
+        }],
+         "gameservers": [{
+            "name": "Server Actions", 
+            "url": "../../../panel", 
+            "icon": "fas fa-terminal",
+            "permissions": ["gameservers.view_server"]
         }]
     },
 
@@ -430,8 +436,24 @@ JAZZMIN_SETTINGS = {
         "raptormc": "fas fa-book",
         "raptormc.InformativeText": "fas fa-scroll",
         "raptormc.NavbarLink": "fas fa-map-marker",
-        "raptormc.NavbarDropdown": "fas fa-map-marker-plus",
+        "raptormc.NavbarDropdown": "fas fa-map-marker",
         "raptormc.SiteInformation": "fas fa-clipboard-list",
+        "gameservers": "fas fa-gamepad",
+        "gameservers.Player": "fas fa-headset",
+        "gameservers.ServerStatistic": "fas fa-signal",
+        "gameservers.Server": "fas fa-server",
+        "raptorbot": "fas fa-robot",
+        "raptorbot.DiscordGuild": "fas fa-building",
+        "raptorbot.GlobalAnnouncement": "fas fa-bullhorn",
+        "raptorbot.ServerAnnouncement": "fas fa-bullhorn",
+        "staffapps": "fas fa-book-reader",
+        "staffapps.ModeratorApplication": "fas fa-book-open",
+        "staffapps.AdminApplication": "fas fa-book-open",
+        "authprofiles": "fas fa-users",
+        "authprofiles.RaptorUser": "fas fa-user",
+        "authprofiles.UserProfileInfo": "fas fa-user-tag",
+        "authprofiles.DiscordUserInfo": "fas fa-user-tag",
+        
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -464,23 +486,8 @@ JAZZMIN_UI_TWEAKS = {
     "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
-    "sidebar_fixed": False,
-    "sidebar": "sidebar-dark-info",
-    "sidebar_nav_small_text": True,
     "sidebar_disable_expand": True,
-    "sidebar_nav_child_indent": True,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
     "theme": "cyborg",
-    "button_classes": {
-        "primary": "btn-outline-primary",
-        "secondary": "btn-outline-secondary",
-        "info": "btn-outline-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-outline-success"
-    },
     "actions_sticky_top": False
 }
 

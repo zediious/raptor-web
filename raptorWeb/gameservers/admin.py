@@ -85,6 +85,12 @@ class PlayerAdmin(admin.ModelAdmin):
 
     list_display: list[str] = ['name', 'server']
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 class ServerStatisticAdmin(admin.ModelAdmin):
     """
     Object defining behavior and display of 
@@ -104,6 +110,9 @@ class ServerStatisticAdmin(admin.ModelAdmin):
     list_display: list[str] = ['total_player_count']
 
     def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
         return False
 
 admin.site.register(Server, ServerAdmin)
