@@ -8,8 +8,8 @@ WEB_PROTO = getattr(settings, 'WEB_PROTO')
 
 def context_process(request):
     site_info = SiteInformation.objects.get_or_create(pk=1)[0]
-    nav_links = NavbarLink.objects.all().order_by('priority')
-    nav_dropdowns = NavbarDropdown.objects.all().order_by('priority')
+    nav_links = NavbarLink.objects.filter(enabled=True).order_by('priority')
+    nav_dropdowns = NavbarDropdown.objects.filter(enabled=True).order_by('priority')
 
     return {
             "pub_domain": DOMAIN_NAME,

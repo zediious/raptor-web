@@ -27,6 +27,9 @@ class NavbarDropdown(models.Model):
     def __str__(self):
         return str(self.name)
 
+    def enabled_links_in_dropdown(self):
+        return self.nestedlink.filter(enabled=True).order_by('priority')
+
     class Meta:
         verbose_name = "Navigation Drodown",
         verbose_name_plural = "Navigation Dropdowns"
