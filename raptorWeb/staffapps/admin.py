@@ -39,6 +39,8 @@ class AdminAppAdmin(admin.ModelAdmin):
         'ptero'
     )
 
+    list_display: list[str] = ['discord_name', 'approved']
+
     def has_add_permission(self, request, obj=None):
         return False
 
