@@ -7,7 +7,7 @@ from django.conf import settings
 import discord
 from discord.ext import commands
 
-from raptorWeb.raptorbot.discordbot.util import raptorbot_util
+from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
@@ -73,7 +73,6 @@ class BotProcessManager:
         @raptor_bot.event
         async def on_ready() -> None:
             LOGGER.info(f'Logged in as {raptor_bot.user} (ID: {raptor_bot.user.id})')
-
             try:
                 synced: list[discord.app_commands.AppCommand] = await raptor_bot.tree.sync()
                 LOGGER.info(f"Synced {len(synced)} command(s)")
@@ -83,8 +82,9 @@ class BotProcessManager:
 
 
         @raptor_bot.event
-        async def on_presence_update() -> None:
-            await raptorbot_util.update_member_count(raptor_bot)
+        async def on_presence_update(before, after) -> None:
+            await presence.update_member_count(raptor_bot)
+            await presence.update_invite_link(raptor_bot)
         
 
         @raptor_bot.event
@@ -93,7 +93,7 @@ class BotProcessManager:
                 int(GLOBAL_ANNOUNCEMENT_CHANNEL_ID))
 
             if message.channel == channel:
-                await raptorbot_util.update_global_announcements(raptor_bot)
+                await announcements.update_global_announcements(raptor_bot)
 
             if SCRAPE_SERVER_ANNOUNCEMENT:
                 server_data: Server.objects = Server.objects.all()
@@ -106,8 +106,8 @@ class BotProcessManager:
                             continue
 
                         if server.discord_modpack_role_id in str(message.content):
-                            await raptorbot_util.update_server_announce(
-                                server_address=server.server_address,
+                            await announcements.update_server_announce(
+                                server.modpack_name,
                                 bot_instance=raptor_bot)
             
 
@@ -115,7 +115,7 @@ class BotProcessManager:
         async def on_raw_message_edit(message: discord.Message) -> None:
             if message.data["author"]["id"] != raptor_bot.user.id:
                 if message.channel_id == GLOBAL_ANNOUNCEMENT_CHANNEL_ID:
-                        await raptorbot_util.update_global_announcements(raptor_bot)
+                        await announcements.update_global_announcements(raptor_bot)
 
                 if SCRAPE_SERVER_ANNOUNCEMENT:
                     try:
@@ -124,12 +124,13 @@ class BotProcessManager:
                             
                         if server_queryset != None:
                             server: Server = await server_queryset.aget()
-                            await raptorbot_util.update_server_announce(
-                                server_address=server.server_address,
+                            await announcements.update_server_announce(
+                                server.modpack_name,
                                 bot_instance=raptor_bot)
 
                     except Server.DoesNotExist:
                         pass
+
 
         # Commands
         @raptor_bot.tree.command(
@@ -145,7 +146,7 @@ class BotProcessManager:
 
             async for server in server_data:
                 if server.server_address.split(".")[0] == key:
-                    message_embeds: list[discord.Embed] = await raptorbot_util.craft_embed(server)
+                    message_embeds: list[discord.Embed] = await embed.craft_embed(server)
                     await interaction.response.send_message(embeds=message_embeds)
 
 
@@ -156,7 +157,7 @@ class BotProcessManager:
             """
             Update Global Announcements models with new announcements from defined Global Announcement channel
             """
-            await raptorbot_util.update_global_announcements(raptor_bot)
+            await announcements.update_global_announcements(raptor_bot)
 
             await interaction.response.send_message(
                 embed=discord.Embed(
@@ -173,7 +174,7 @@ class BotProcessManager:
             Update Server Announcement models for all servers with new announcements from
             defined announcement channels for each server.
             """
-            await raptorbot_util.update_all_server_announce(raptor_bot)
+            await announcements.update_all_server_announce(raptor_bot)
             
             await interaction.response.send_message(
                 embed=discord.Embed(

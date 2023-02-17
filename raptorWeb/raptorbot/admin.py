@@ -24,7 +24,8 @@ class DiscordGuildAdmin(admin.ModelAdmin):
         ('General', {
             'fields': (
                 'guild_name',
-                'guild_id')
+                'guild_id',
+                'invite_link')
         }),
         ('Members', {
             'classes': ('collapse',),
@@ -35,6 +36,7 @@ class DiscordGuildAdmin(admin.ModelAdmin):
     readonly_fields: tuple[str] = (
         'guild_name',
         'guild_id',
+        'invite_link',
         'total_members',
         'online_members'
     )
