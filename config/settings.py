@@ -387,7 +387,7 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         {"name": "Return to Site", "url": "/", "new_window": False},
-        {"name": "Control Panel", "url": "/admin/panel", "new_window": False},
+        {"name": "Control Panel", "url": "/panel", "new_window": False},
 
         {"app": "raptormc"},
         {"app": "gameservers"},
@@ -418,7 +418,7 @@ JAZZMIN_SETTINGS = {
     "custom_links": {
         "raptorbot": [{
             "name": "Bot Actions", 
-            "url": "../../panel", 
+            "url": "../../../panel", 
             "icon": "fas fa-joystick",
             "permissions": ["raptorbot.view_discordguild"]
         }]

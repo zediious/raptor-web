@@ -2,9 +2,11 @@ from os.path import join
 from logging import getLogger
 
 from django.views.generic import TemplateView
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
 from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
+from raptorWeb.raptorbot.botware import get_bot_status, start_bot_process, stop_bot_process
 
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 USE_GLOBAL_ANNOUNCEMENT = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
@@ -134,3 +136,55 @@ class ShadowRaptor():
                     "active_user_password_reset_token": self.request.path.split('/')[4]
                 })
                 return get_or_create_informative_text(context = context)
+
+
+    class Admin_Views():
+        """
+        Views related to the Admin Panel
+        """
+        class Admin_Panel(TemplateView):
+            """
+            Base Admin Panel view
+            """
+            template_name = join(TEMPLATE_DIR_RAPTORMC, join('panel', 'panel.html'))
+
+            def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+                if not request.user.is_staff:
+                    return HttpResponseRedirect('/')
+                return super().get(request, *args, **kwargs)
+
+        
+        class Start_Bot(TemplateView):
+            """
+            Start the Discord Bot if it is stopped
+            """
+            def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+                return HttpResponseRedirect('/')
+
+            def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+                if not request.user.is_staff:
+                    return HttpResponseRedirect('/')
+
+                if get_bot_status() == True:
+                    return HttpResponse("You cannot start the Discord Bot when it is currently running")
+                
+                start_bot_process()
+                return HttpResponse("The Discord Bot has been started.")
+
+
+        class Stop_Bot(TemplateView):
+            """
+            Stop the Discord Bot if it is currently running
+            """
+            def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+                return HttpResponseRedirect('/')
+
+            def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+                if not request.user.is_staff:
+                    return HttpResponseRedirect('/')
+
+                if get_bot_status() == False:
+                    return HttpResponse("You cannot stop the Discord Bot when it is not running")
+                
+                stop_bot_process()
+                return HttpResponse("The Discord Bot has been stopped.")

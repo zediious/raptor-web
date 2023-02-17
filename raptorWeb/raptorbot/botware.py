@@ -27,6 +27,12 @@ class RaptorBotWare:
         response = self.get_response(request)
         return response
 
+def get_bot_status():
+    """
+    Return the is_active class attribute of bot_process_manager
+    """
+    return bot_process_manager.is_running
+
 def start_bot_process():
     """
     Run the Discord Bot in a new thread
@@ -39,5 +45,8 @@ def stop_bot_process():
     Terminate the current Discord Bot thread, re-instantiate the bot and thread
     and start the new thread
     """
-    bot_process_manager.stop_process()
-    LOGGER.info("The previous Discord Bot Thread has been stopped and a new one is now running")
+    result = bot_process_manager.stop_process()
+    if result == True:
+        LOGGER.info("The previous Discord Bot Thread has been stopped and a new one is now running")
+    else:
+        LOGGER.info("There was an error stopping the Discord Bot")

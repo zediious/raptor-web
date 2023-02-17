@@ -19,6 +19,10 @@ urlpatterns = [
     # Users
     path('user/', SR.User_Views.SiteMembers.as_view(), name='site_members'),
     path('user/<str:profile_name>', SR.User_Views.User_Page.as_view(), name="user_page"),
-    path('user/reset/<str:profile_name>/<str:user_reset_token>', SR.User_Views.User_Pass_Reset.as_view(), name="user_reset_pass")
+    path('user/reset/<str:profile_name>/<str:user_reset_token>', SR.User_Views.User_Pass_Reset.as_view(), name="user_reset_pass"),
+    # Admin Panel
+    path('panel/', SR.Admin_Views.Admin_Panel.as_view(), name='admin_panel_base'),
+    path('panel/botaction/start/', SR.Admin_Views.Start_Bot.as_view(), name='start_bot'),
+    path('panel/botaction/stop/', SR.Admin_Views.Stop_Bot.as_view(), name='stop_bot')
 
 ]
