@@ -142,7 +142,7 @@ class AdminApp(StaffAppForm):
 
     class Meta:
         model = AdminApplication
-        exclude = ['verify_mc', 'verify_discord', 'trap']
+        exclude = ['verify_mc', 'verify_discord', 'trap', 'approved']
 
 class ModApp(StaffAppForm):
     """
@@ -158,4 +158,4 @@ class ModApp(StaffAppForm):
 
     class Meta:
         model = ModeratorApplication
-        exclude = ['verify_mc', 'verify_discord', 'trap']
+        exclude = ['verify_mc', 'verify_discord', 'trap', 'approved']

@@ -1,9 +1,22 @@
+from django.utils.translation import gettext_lazy as _
+
 from django.db import models
 
 class StaffApplication(models.Model):
     """
     Applications for Staff
     """
+    class ApplicationStatusChoices(models.TextChoices):
+        APPROVED = 'A', _('Approved')
+        DENIED = 'D', _('Denied')
+        PENDING = 'P', _('Pending')
+
+    approved = models.CharField(
+        max_length=1,
+        choices=ApplicationStatusChoices.choices,
+        default=ApplicationStatusChoices.PENDING
+    )
+
     age = models.IntegerField(
         verbose_name="Applicant age",
         default="Default")
