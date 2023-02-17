@@ -166,10 +166,10 @@ class ShadowRaptor():
                     return HttpResponseRedirect('/')
 
                 if get_bot_status() == True:
-                    return HttpResponse("You cannot start the Discord Bot when it is currently running")
+                    return HttpResponse('<div class= "alert alert-danger">You cannot start the Discord Bot when it is currently running</div>')
                 
                 start_bot_process()
-                return HttpResponse("The Discord Bot has been started.")
+                return HttpResponse('<div class= "alert alert-success">The Discord Bot has been started.</div>')
 
 
         class Stop_Bot(TemplateView):
@@ -184,7 +184,7 @@ class ShadowRaptor():
                     return HttpResponseRedirect('/')
 
                 if get_bot_status() == False:
-                    return HttpResponse("You cannot stop the Discord Bot when it is not running")
+                    return HttpResponse('<div class= "alert alert-danger">You cannot stop the Discord Bot when it is not running</div>')
                 
                 stop_bot_process()
-                return HttpResponse("The Discord Bot has been stopped.")
+                return HttpResponse('<div class= "alert alert-success">The Discord Bot has been stopped.</div>')
