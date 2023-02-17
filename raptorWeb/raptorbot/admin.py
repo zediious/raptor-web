@@ -43,6 +43,12 @@ class DiscordGuildAdmin(admin.ModelAdmin):
 
     list_display: list[str] = ['guild_name', 'guild_id', 'total_members', 'online_members']
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 class GlobalAnnouncementAdmin(admin.ModelAdmin):
     """
     Object defining behavior and display of 
