@@ -8,7 +8,7 @@ from django.conf import settings
 import discord
 from discord.ext import commands
 
-from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence
+from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence, task_check
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
@@ -77,6 +77,9 @@ class BotProcessManager:
             try:
                 synced: list[discord.app_commands.AppCommand] = await raptor_bot.tree.sync()
                 LOGGER.info(f"Synced {len(synced)} command(s)")
+
+                task_check.check_tasks.start(raptor_bot)
+                LOGGER.info("Started task check loop")
 
             except Exception as e:
                 LOGGER.error(e)

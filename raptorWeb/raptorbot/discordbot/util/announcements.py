@@ -1,4 +1,3 @@
-from logging import Logger, getLogger
 from typing import Optional
 
 from django.conf import settings
@@ -8,7 +7,6 @@ from discord.ext import commands
 
 from raptorWeb.raptorbot.models import GlobalAnnouncement
 
-LOGGER: Logger = getLogger('raptorbot.discordbot.util')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
 STAFF_ROLE_ID: int = getattr(settings, 'STAFF_ROLE_ID')

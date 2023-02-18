@@ -7,7 +7,7 @@ from discord.ext import commands
 
 from raptorWeb.raptorbot.models import DiscordGuild
 
-LOGGER: Logger = getLogger('raptorbot.discordbot.util')
+LOGGER: Logger = getLogger('raptorbot.discordbot.util.presence')
 GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
 DISCORD_GUILD: int = getattr(settings, 'DISCORD_GUILD')
 
