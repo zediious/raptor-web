@@ -1,5 +1,3 @@
-from logging import Logger, getLogger
-
 from django.utils.html import strip_tags
 from django.conf import settings
 
@@ -7,7 +5,6 @@ import discord
 
 from raptorWeb.gameservers.models import Server
 
-LOGGER: Logger = getLogger('raptorbot.discordbot.util')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 

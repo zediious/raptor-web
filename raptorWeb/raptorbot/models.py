@@ -107,3 +107,24 @@ class DiscordGuild(models.Model):
         class Meta:
             verbose_name = "Discord Guild"
             verbose_name_plural = "Discord Guild"
+
+
+class DiscordBotTasks(models.Model):
+        """
+        List of tasks the Discord Bot can perform.
+        """
+        refresh_global_announcements = models.BooleanField(
+            default=False)
+        
+        refresh_server_announcements = models.BooleanField(
+            default=False)
+
+        update_members = models.BooleanField(
+            default=False,)
+
+        def __str__(self) -> str:
+            return f'DiscordBotTasks#{self.pk}'
+
+        class Meta:
+            verbose_name = "Discord Bot Tasks"
+            verbose_name_plural = "Discord Bot Tasks"
