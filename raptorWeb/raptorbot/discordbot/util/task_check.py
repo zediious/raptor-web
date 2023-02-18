@@ -17,15 +17,12 @@ async def check_tasks(bot_instance):
 
     if tasks[0].refresh_global_announcements:
         await announcements.update_global_announcements(bot_instance)
-        LOGGER.error("ran a task")
 
     if tasks[0].refresh_server_announcements:
         await announcements.update_all_server_announce(bot_instance)
-        LOGGER.error("ran a task")
 
     if tasks[0].update_members:
         await presence.update_member_count(bot_instance)
-        LOGGER.error("ran a task")
 
     await DiscordBotTasks.objects.aupdate(
         id=1,
