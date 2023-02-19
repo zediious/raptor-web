@@ -1,10 +1,10 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
 from raptorWeb.raptormc import views
 
-app_name = "raptormc"
+app_name: str = "raptormc"
 
-urlpatterns = [
+urlpatterns: list[URLPattern] = [
 
     path('', views.HomeServers.as_view(), name="home"),
     path('home/', views.HomeServers.as_view(), name="home_alt"),
