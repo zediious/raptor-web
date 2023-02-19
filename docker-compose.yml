@@ -7,7 +7,7 @@ services:
     expose:
       - 3306
     env_file:
-    - ./config/.env
+    - stack.env
     volumes:
       - raptor-db:/var/lib/mysql/
 
