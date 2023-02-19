@@ -3,7 +3,8 @@ from django.db import models
 
 class NotificationToast(models.Model):
     """
-    Represents a website notification toast
+    A Notification/Toast that will appear on the bottom right of the website.
+    Users will only see these messages once, until their session expires.
     """
     enabled = models.BooleanField(
         default=True,
@@ -38,7 +39,8 @@ class NotificationToast(models.Model):
 
 class NavbarDropdown(models.Model):
     """
-    Represents a dropdown menu for the Navigation bar
+    A Dropdown Menu for the Navigation sidebar. Add Links to a Dropdown
+    Menu from within a Navigation Link's configuration.
     """
     name = models.CharField(
         max_length=100,
@@ -72,7 +74,8 @@ class NavbarDropdown(models.Model):
 
 class NavbarLink(models.Model):
     """
-    Represents an added Navigation link
+    A Navigation Link which will be added to the Navigation sidebar. Can be placed inside
+    of a created Dropdown Menu.
     """
     name = models.CharField(
         max_length=100,
@@ -126,7 +129,7 @@ class NavbarLink(models.Model):
 
 class SiteInformation(models.Model):
     """
-    Represents site information such as branding images, colors, etc
+    Website information such as Brand Name, images, colors, and more.
     """
     brand_name = models.CharField(
         max_length=100,
@@ -177,8 +180,9 @@ class SiteInformation(models.Model):
 
 class InformativeText(models.Model):
     """
-    Represents a general block of information 
-    which is placed in the website.
+    A block of information which is placed at the header of most
+    default pages. A page must be visited first for it's InformativeText
+    to appear here.
     """
     enabled = models.BooleanField(
         default=True,

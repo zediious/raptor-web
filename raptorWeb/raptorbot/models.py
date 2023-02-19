@@ -38,7 +38,7 @@ class Announcement(models.Model):
 
 class GlobalAnnouncement(Announcement):
     """
-    Represents a global announcement.
+    Announcements that have been made to the entire network.
     """
     class Meta:
         verbose_name = "Global Announcement"
@@ -47,8 +47,7 @@ class GlobalAnnouncement(Announcement):
 if SCRAPE_SERVER_ANNOUNCEMENT:
     class ServerAnnouncement(Announcement):
         """
-        Represents an announcement made for a game server.
-        Takes a Server as a Foreign Key.
+        Announcements that have been made for a specific Minecraft server.
         """
         server = models.ForeignKey(
             'gameservers.Server', 
@@ -67,7 +66,7 @@ if SCRAPE_SERVER_ANNOUNCEMENT:
 
 class DiscordGuild(models.Model):
         """
-        Represents a Discord Community/Guild.
+        The Discord Community/Guild that the Discord Bot is linked to.
         """
         guild_name = models.CharField(
              max_length=200,

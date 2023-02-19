@@ -177,8 +177,7 @@ class ServerManager(models.Manager):
 
 class ServerStatistic(models.Model):
     """
-    Represents a collection of statistics for all servers.
-    This model is used internally, not displayed in the Admin.
+    Statistics for all added servers.
     """
     name = models.CharField(
         default="gameservers-stat",
@@ -200,8 +199,9 @@ class ServerStatistic(models.Model):
 
 class Server(models.Model):
     """
-    Represents a Minecraft Server
-    Includes all information about a server
+    A Minecraft server. Created Servers will appear on the website on all
+    relevant pages, and it's domain name/port will be queried for server
+    state and player information.
     """
     objects = ServerManager()
 
@@ -338,8 +338,7 @@ class Server(models.Model):
 
 class Player(models.Model):
     """
-    Represents a player that is on a Minecraft Server.
-    Takes a Server as a Foreign Key.
+    Playesr that are currently logged in to a Server
     """
     server = models.ForeignKey(
         Server, 

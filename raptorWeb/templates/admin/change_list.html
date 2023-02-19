@@ -1,0 +1,4 @@
+{% extends 'admin/change_list.html' %}
+{% load adminDoc %}
+
+{% block content_title %}{{ block.super }}<br>{% get_admin_documentation cl.model %}{% endblock %}
