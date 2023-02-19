@@ -2,11 +2,13 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
+from raptorWeb.raptormc.models import Page
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
@@ -107,6 +109,16 @@ class StaffApps(TemplateView):
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Staff App Information"])
+
+
+class PageView(DetailView):
+    """
+    Generic view for user created pages
+    """
+    model: Page = Page
+
+    def get_object(self):
+        return Page.objects.get_slugged_page(self.kwargs['page_name'])
 
 
 class SiteMembers(TemplateView):

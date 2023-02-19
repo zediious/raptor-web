@@ -15,6 +15,8 @@ urlpatterns: list[URLPattern] = [
     path('voting/', views.Voting.as_view(), name="voting"),
     path('howtojoin/', views.HowToJoin.as_view(), name="joining"),
     path('applications/', views.StaffApps.as_view(), name="staff_apps"),
+    # Created Pages
+    path('pages/<str:page_name>/', views.PageView.as_view(), name="pages"),
     # Users
     path('user/', views.SiteMembers.as_view(), name='site_members'),
     path('user/<str:profile_name>', views.User_Page.as_view(), name="user_page"),
