@@ -82,10 +82,22 @@
             </button>
             <ul class="dropdown-menu bg-transparent border-0">
                 <li class="dropdown-item">
-                    <a role="button" class="btn btn-danger p-1 w-100" hx-post="" hx-target="#action_status">Import Servers</a>
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-danger p-1 w-100"
+                        hx-post="{% url 'gameservers:action_import_server_data' %}" hx-target="#action_status"
+                        data-bs-toggle="tooltip" data-bs-title="Import Servers from a server_data_full.json located in the app's root directory. This can potentially be destructive!">Import Servers
+                        </a>
+                    </form>
                 </li>
                 <li class="dropdown-item">
-                    <a role="button" class="btn btn-success p-1 w-100" hx-post="" hx-target="#action_status">Export Servers</a>
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-success p-1 w-100"
+                        hx-post="{% url 'gameservers:action_export_server_data' %}" hx-target="#action_status"
+                        data-bs-toggle="tooltip" data-bs-title="Export Servers to a server_data_full.json located in the app's root directory.">Export Servers
+                        </a>
+                    </form>
                 </li>
             </ul>
         </div>

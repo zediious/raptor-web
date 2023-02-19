@@ -1,6 +1,7 @@
 from json import dumps, load
 from io import TextIOWrapper
 from logging import Logger, getLogger
+from typing import Optional
 
 from django.db import models
 from django.utils.timezone import localtime
@@ -112,7 +113,7 @@ class ServerManager(models.Manager):
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
 
-    def export_server_data_full() -> dict:
+    def export_server_data(self) -> dict:
         """
         Export all server data for importing to a new instance
         Does not export server images
@@ -120,7 +121,7 @@ class ServerManager(models.Manager):
         current_servers: dict = {}
         server_num: int = 0
 
-        for server in Server.objects.all():
+        for server in self.all():
             current_servers.update({
                 f'server{server_num}': {
                     "in_maintenance": server.in_maintenance,
@@ -145,18 +146,16 @@ class ServerManager(models.Manager):
         server_json.close()
         return current_servers
 
-    def import_server_data(delete_existing: bool) -> None:
+    def import_server_data(self) -> Optional[bool]:
         """
         Create server objects based on an exsiting server_data_full.json
         Will delete existing servers first
         """
         try:
-            if delete_existing == True:
-                Server.objects.all().delete()
             with open(IMPORT_JSON_LOCATION, "r+") as import_json:
                 import_json_dict = load(import_json)
                 for server in import_json_dict:
-                    new_server = Server.objects.create(
+                    new_server = self.create(
                         in_maintenance = import_json_dict[server]["in_maintenance"],
                         server_address = import_json_dict[server]["server_address"],
                         server_port = import_json_dict[server]["server_port"],
@@ -168,12 +167,13 @@ class ServerManager(models.Manager):
                         server_banned_items = import_json_dict[server]["server_banned_items"],
                         server_vote_links = import_json_dict[server]["server_vote_links"],
                         modpack_url = import_json_dict[server]["modpack"],
-                        discord_announcement_channel_id = import_json_dict[server]["discord_announcement_channel_id"],
-                        discord_modpack_role_id = import_json_dict[server]["discord_modpack_role_id"]
+                        discord_announcement_channel_id = import_json_dict[server]["modpack_discord_channel"],
+                        discord_modpack_role_id = import_json_dict[server]["modpack_discord_role"]
                     )
                     new_server.save()
         except FileNotFoundError:
-            LOGGER.error("You enabled IMPORT_SERVERS in settings.py, but you did not place server_data_full.json in your BASE_DIR")
+            LOGGER.error("You attempted to import servers, but you did not place server_data_full.json in your BASE_DIR")
+            return False
 
 class ServerStatistic(models.Model):
     """
