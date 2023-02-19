@@ -86,7 +86,8 @@
                         {% csrf_token %}
                         <a role="button" class="btn btn-danger p-1 w-100"
                         hx-post="{% url 'gameservers:action_import_server_data' %}" hx-target="#action_status"
-                        data-bs-toggle="tooltip" data-bs-title="Import Servers from a server_data_full.json located in the app's root directory. This can potentially be destructive!">Import Servers
+                        data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="WARNING: Ensure that you do not have any duplicate servers in the database. This can be a destructive action if so!<br><br>
+                        Import Servers from a server_data_full.json located in the app's root directory.">Import Servers
                         </a>
                     </form>
                 </li>
