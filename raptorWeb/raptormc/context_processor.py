@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.raptormc.models import SiteInformation, NavbarLink, NavbarDropdown, NotificationToast
@@ -13,7 +14,20 @@ def context_process(request: HttpRequest) -> dict:
     nav_dropdowns: NavbarDropdown.objects = NavbarDropdown.objects.filter(enabled=True).order_by('priority')
     notification_toasts: NotificationToast.objects = NotificationToast.objects.filter(enabled=True).order_by('created')
 
-    request.session['seen_notifications'] = True
+    for toast in notification_toasts:
+        slugged_toast = slugify(toast.name)
+        try:
+            if request.session[slugged_toast] == 1:
+                request.session[slugged_toast] = 2
+
+            elif request.session[slugged_toast] == 2:
+                request.session[slugged_toast] = 3
+
+            elif request.session[slugged_toast] == 3:
+                request.session[slugged_toast] = 4
+
+        except KeyError:
+            request.session[slugged_toast] = 1
 
     return {
             "pub_domain": DOMAIN_NAME,
