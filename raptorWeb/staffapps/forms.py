@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from django import forms
 from django.core import validators
@@ -10,7 +11,7 @@ from raptorWeb.staffapps.util import form_labels
 
 LOGGER = logging.Logger("form_validator_logger")
 
-def check_for_hash(value):
+def check_for_hash(value: str) -> None:
     """
     Ensure Discord name value contains a '#' symbol
     """
@@ -18,7 +19,7 @@ def check_for_hash(value):
 
         raise forms.ValidationError("Format your Discord Username as indicated in the help text.")
 
-def validate_age(value):
+def validate_age(value: int) -> None:
     """
     Ensure age value is at least 10
     """
@@ -26,7 +27,7 @@ def validate_age(value):
 
         raise forms.ValidationError("You must be at least ten years old to apply for staff")
 
-def validate_admin_age(value):
+def validate_admin_age(value: int) -> None:
     """
     Ensure age value is at least 18
     """
@@ -34,22 +35,22 @@ def validate_admin_age(value):
 
         raise forms.ValidationError("You must be at least 18 years old to apply directly for Admin. One can still be promoted from a lower rank.")
 
-def verify_minecraft_username(clean_data):
+def verify_minecraft_username(clean_data: dict[str, Any]) -> None:
         """
         Common function for staff application clean() methods to verify Minecraft username
         """
-        minecraft = clean_data.get("mc_name")
-        v_minecraft = clean_data.get("verify_mc")
+        minecraft: str = clean_data.get("mc_name")
+        v_minecraft: str = clean_data.get("verify_mc")
         
         if not(minecraft == v_minecraft):
             raise forms.ValidationError("Minecraft username fields must match")
 
-def verify_discord_username(clean_data):
+def verify_discord_username(clean_data: dict[str, Any]) -> None:
         """
         Common function for staff application clean() methods to verify Discord username
         """
-        discord = clean_data.get("discord_name")
-        v_discord = clean_data.get("verify_discord")
+        discord: str = clean_data.get("discord_name")
+        v_discord: str = clean_data.get("verify_discord")
         
         if not(discord == v_discord):
             raise forms.ValidationError("Discord username fields must match")
@@ -108,7 +109,7 @@ class StaffAppForm(forms.ModelForm):
         """
         Overrides default clean, while calling the superclass clean()
         """
-        cleaned_data = super().clean()
+        cleaned_data: dict[str, Any] = super().clean()
         verify_minecraft_username(cleaned_data)
         verify_discord_username(cleaned_data)
 

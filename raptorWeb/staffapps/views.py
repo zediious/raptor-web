@@ -1,8 +1,8 @@
 from os.path import join
-from logging import getLogger
+from logging import Logger, getLogger
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.views.generic import TemplateView
 from django.forms import ModelForm
 from django.contrib import messages
@@ -10,68 +10,67 @@ from django.conf import settings
 
 from raptorWeb.staffapps.forms import AdminApp, ModApp
 
-LOGGER = getLogger('staffapps.views')
-STAFFAPPS_TEMPLATE_DIR = getattr(settings, 'STAFFAPPS_TEMPLATE_DIR')
+LOGGER: Logger = getLogger('staffapps.views')
+STAFFAPPS_TEMPLATE_DIR: str = getattr(settings, 'STAFFAPPS_TEMPLATE_DIR')
+
 
 class AllApps(TemplateView):
     """
     Buttons/Modals for all Staff Forms
     """
-    template_name = join(STAFFAPPS_TEMPLATE_DIR, 'staffapps.html')
+    template_name: str = join(STAFFAPPS_TEMPLATE_DIR, 'staffapps.html')
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
             return render(request, self.template_name)
+            
         else:
             return HttpResponseRedirect('/')
+
 
 class AppView(TemplateView):
     """
     Abstract Application view
     """
-    APP_LIST = {
-    'ModApp': ModApp, 'AdminApp': AdminApp}
-    template_name: str
     staff_app: ModelForm
+    app_string: str
 
     def get(self, request):
         if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/')
+
         else:
             return render(request, self.template_name, context={
-                self.get_app_name(): self.staff_app})
+                self.app_string: self.staff_app()})
 
     def post(self, request):
-        staff_app = self.APP_LIST[self.get_app_name()](request.POST)
-        dictionary = {self.get_app_name(): staff_app}
+        staff_app = self.staff_app(request.POST)
+        dictionary = {self.app_string: staff_app}
+
         if staff_app.is_valid():
-            LOGGER.info(f"{self.get_app_name().replace('App', ' App')} submitted!")
+            LOGGER.info(f"{self.app_string} submitted!")
             LOGGER.info(f"Discord ID of applicant: {staff_app.cleaned_data['discord_name']}")
             staff_app.save()
             messages.error(request, "Application submitted successfully! Await a response at provided Discord handle.")
             return render(request, self.template_name, context=dictionary)
+
         else:
-            dictionary[self.get_app_name()] = staff_app
             return render(request, self.template_name, context=dictionary)
-    
-    def get_app_name(self):
-        """
-        Return class name of staff_app attribute
-        """
-        return self.staff_app.__repr__(
-        ).split(' ')[0
-        ].replace('<', '')
+
 
 class ModAppView(AppView):
     """
     Moderator Application
     """
     template_name = join(STAFFAPPS_TEMPLATE_DIR, 'modapp.html')
-    staff_app = ModApp()
+    staff_app = ModApp
+    app_string: str = "ModApp"
+
 
 class AdminAppView(AppView):
     """
     Admin Application
     """
     template_name = join(STAFFAPPS_TEMPLATE_DIR, 'adminapp.html')
-    staff_app = AdminApp()
+    staff_app = AdminApp
+    app_string: str = "AdminApp"

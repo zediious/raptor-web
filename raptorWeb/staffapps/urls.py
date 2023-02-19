@@ -1,10 +1,10 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
 from raptorWeb.staffapps import views
 
-app_name = "staffapps"
+app_name: str = "staffapps"
 
-urlpatterns = [
+urlpatterns: list[URLPattern] = [
 
     path('html/all/', views.AllApps.as_view(), name="all_apps"),
     path('html/mod/', views.ModAppView.as_view(), name="mod_app"),

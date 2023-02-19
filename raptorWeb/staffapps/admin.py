@@ -4,7 +4,7 @@ from raptorWeb.staffapps.models import ModeratorApplication, AdminApplication
 
 
 class AdminAppAdmin(admin.ModelAdmin):
-    fields = (
+    fields: tuple[str] = (
         'approved',
         'age',
         'time',
@@ -22,7 +22,7 @@ class AdminAppAdmin(admin.ModelAdmin):
         'ptero'
     )
     
-    readonly_fields = (
+    readonly_fields: tuple[str] = (
         'age',
         'time',
         'mc_name',
@@ -46,7 +46,7 @@ class AdminAppAdmin(admin.ModelAdmin):
 
 
 class ModAppAdmin(admin.ModelAdmin):
-    fields = (
+    fields: tuple[str] = (
         'approved',
         'age',
         'time',
@@ -60,7 +60,7 @@ class ModAppAdmin(admin.ModelAdmin):
         'contact_uppers'
     )
     
-    readonly_fields = (
+    readonly_fields: tuple[str] = (
         'age',
         'time',
         'mc_name',
