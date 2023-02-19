@@ -1,5 +1,6 @@
 {% load markdownStrip %}
 
+{% autoescape off %}
 <div id="announcement_container_{{current_listed_server|slice:":3"}}">
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links">
@@ -28,3 +29,4 @@
     </div>
     {% endfor %}
 </div>
+{% endautoescape %}

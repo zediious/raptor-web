@@ -1,5 +1,6 @@
 {% load markdownStrip %}
 
+{% autoescape off %}
 {% for object in object_list %}
 <div>
 <div class="pageContent card bg-light text-black opacity-75 mt-4 mb-4">
@@ -8,3 +9,4 @@
 </div>
 </div>
 {% endfor %}
+{% endautoescape %}
