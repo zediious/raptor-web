@@ -441,7 +441,8 @@ JAZZMIN_UI_TWEAKS = {
     "footer_fixed": False,
     "sidebar_disable_expand": True,
     "theme": "cyborg",
-    "actions_sticky_top": False
+    "actions_sticky_top": False,
+    "sidebar_nav_child_indent": True
 
 }
 
