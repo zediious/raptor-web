@@ -5,7 +5,16 @@ from django.db import models
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NotificationToast
+
+
+class NotificationToastAdminForm(ModelForm):
+    class Meta:
+        model = NotificationToast
+        widgets = {
+            'message': TinyMCE
+        }
+        fields = '__all__'
 
 
 class InformativeTextAdminForm(ModelForm):
@@ -24,6 +33,34 @@ class SiteInformationAdminForm(ModelForm):
             'secondary_color': TextInput(attrs={'type': 'color'})
         }
         fields = '__all__'
+
+
+class NotificationToastAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    NotificationToasts in the Django admin interface.
+    """
+    form = NotificationToastAdminForm
+
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'enabled',
+                'name',
+                'message',
+                'created')
+        }),
+    )
+
+    readonly_fields: tuple[str] = (
+        'created',
+    )
+
+    search_fields: list[str] = [
+        'name'
+    ]
+
+    list_display: list[str] = ['name', 'created', 'enabled']
 
 
 class NavbarDropdownAdmin(admin.ModelAdmin):
@@ -141,3 +178,4 @@ admin.site.register(InformativeText, InformativeTextAdmin)
 admin.site.register(SiteInformation, SiteInformationAdmin)
 admin.site.register(NavbarLink, NavbarLinkAdmin)
 admin.site.register(NavbarDropdown, NavbarDropdownAdmin)
+admin.site.register(NotificationToast, NotificationToastAdmin)

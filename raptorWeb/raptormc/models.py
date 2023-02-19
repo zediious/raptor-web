@@ -1,6 +1,41 @@
 from django.db import models
 
 
+class NotificationToast(models.Model):
+    """
+    Represents a website notification toast
+    """
+    enabled = models.BooleanField(
+        default=True,
+        verbose_name="Enabled",
+        help_text="Whether this Notification will appear on the website"
+    )
+
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Notification Name",
+        help_text="The title of this notification that will appear on the website"
+    )
+
+    message = models.CharField(
+        max_length=15000,
+        default = "",
+        verbose_name="Message",
+        help_text="The message for this notification"
+    )
+
+    created = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Notification Toast",
+        verbose_name_plural = "Notification Toasts"
+
+
 class NavbarDropdown(models.Model):
     """
     Represents a dropdown menu for the Navigation bar

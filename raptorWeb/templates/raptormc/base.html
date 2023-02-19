@@ -27,7 +27,7 @@
 
     <div id="backgroundWrapper" style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %}); background-color: {{ site_info_model.secondary_color }}; background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
       <div id="topBox" style="position: relative; z-index: 1">
-
+        
         <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
           <div class="offcanvas-header text-white">
             <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
@@ -194,6 +194,24 @@
       {% endblock %}
     </main>
 
+    {% if request.session.seen_notifications == True %}
+    {% else %}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      {% for notification in notification_toasts reversed %}
+      <div id="notificationtoast_{{ notification.pk }}" class="toast border-1 border-dark mt-1 mb-1" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-dark text-white">
+          <strong class="me-auto">{{ notification.name }}</strong>
+          <small>{{notification.created|timesince}} ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body bg-dark text-white">
+          {% autoescape off %}{{ notification.message }}{% endautoescape %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <footer>
 
       <div class="container">
@@ -216,6 +234,17 @@
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    {% endif %}
+
+    {% if request.session.seen_notifications == True %}
+    {% else %}
+    <script>
+      {% for notification in notification_toasts reversed %}
+      const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}')
+      const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}})
+      toast_{{notification.pk}}.show()
+      {% endfor %}
     </script>
     {% endif %}
     
