@@ -400,6 +400,7 @@ JAZZMIN_SETTINGS = {
         "raptormc.NavbarLink": "fas fa-map-marker",
         "raptormc.NavbarDropdown": "fas fa-map-marker",
         "raptormc.SiteInformation": "fas fa-clipboard-list",
+        "raptormc.NotificationToast": "fas fa-envelope-square",
         "gameservers": "fas fa-gamepad",
         "gameservers.Player": "fas fa-headset",
         "gameservers.ServerStatistic": "fas fa-signal",
