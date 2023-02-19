@@ -70,7 +70,7 @@
                 {% if not link.parent_dropdown %}
                 <li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" 
-                  href="{{ link.url }}" {% if link.new_tab %}target="_blank"{% endif %}>{{link.name}}
+                  href="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}" {% if link.new_tab %}target="_blank"{% endif %}>{{link.name}}
                     {% if link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
                   </a>
                 </li>
@@ -79,11 +79,11 @@
 
                 {% for dropdown in nav_dropdowns %}
                 <li class="btn btn-secondary m-2 p-2 dropdown">
-                  <a class="nav-link dropdown-toggle text-white fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dropdown.name }}</a>
+                  <a class="nav-link dropdown-toggle text-white fs-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dropdown.name }}</a>
                   <ul class="dropdown-menu bg-dark text-center">
                     {% for nested_link in dropdown.enabled_links_in_dropdown %}
                     <li>
-                      <a class="dropdown-item text-white" href="{{nested_link.url}}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
+                      <a class="dropdown-item text-white" href="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
                         {% if nested_link.new_tab %}<img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
                       </a>
                     </li>
@@ -136,6 +136,7 @@
 
       </div>
 
+      {% block header_box %}
       {% if total_server_count > 0 %}
       <div id="headerBox" class="d-flex align-items-center justify-content-center mb-0" style="position: relative;">
         
@@ -185,6 +186,7 @@
         
       </div>
       {% endif %}
+      {% endblock %}
       
       </div>
     </div>

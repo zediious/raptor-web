@@ -1,4 +1,61 @@
 from django.db import models
+from django.utils.text import slugify
+
+
+class PageManager(models.Manager):
+    """
+    Manager for Page objects
+    """
+    def get_slugged_page(self, page_name):
+        """
+        Given a page name, find a page whose name attribute
+        matches the slugged page name after both paraneters
+        have been slugified.
+        """
+        for page in self.all():
+            if slugify(page.name) == slugify(page_name):
+                return page
+
+
+class Page(models.Model):
+    """
+    A new webpage with a Title and Content. This page will extend to entire
+    base website, but you can choose whether to include Server buttons or not.
+    """
+    objects = PageManager()
+
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Name",
+        help_text="The name of this page, will be displayed at the top, before the page content."
+    )
+
+    content = models.TextField(
+        max_length=15000,
+        default = "",
+        verbose_name="Content",
+        help_text="The content of this page."
+    )
+
+    created = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    show_gameservers = models.BooleanField(
+        default=True,
+        verbose_name="Show Servers",
+        help_text="If this is checked, this page will display Server buttons in the usual location."
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    def get_absolute_url(self):
+        return f"/pages/{slugify(self.name)}"
+
+    class Meta:
+        verbose_name = "Page",
+        verbose_name_plural = "Pages"
 
 
 class NotificationToast(models.Model):
@@ -88,7 +145,7 @@ class NavbarLink(models.Model):
         max_length=250,
         verbose_name="Navigation URL",
         help_text="The link this Navigation Link will take the user to.",
-        default="/"
+        default="https://google.com"
     )
 
     enabled = models.BooleanField(
@@ -109,6 +166,16 @@ class NavbarLink(models.Model):
         default=False
     )
 
+    linked_page = models.ForeignKey(
+        Page,
+        verbose_name="Linked Page",
+        help_text="The Page Model that this Navigation Link will lead to. If this is set, then the Navigation URL field will be ignored.",
+        related_name='linkedpage',
+        blank=True,
+        null=True,
+        on_delete=models.DO_NOTHING
+    )
+
     parent_dropdown = models.ForeignKey(
         NavbarDropdown,
         verbose_name="Dropdown Menu",
@@ -121,6 +188,9 @@ class NavbarLink(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def get_linked_page_url(self):
+        return self.linked_page.get_absolute_url()
 
     class Meta:
         verbose_name = "Navigation Link",

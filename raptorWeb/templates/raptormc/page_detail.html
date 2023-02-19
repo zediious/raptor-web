@@ -1,0 +1,43 @@
+{% extends 'raptormc/base.html' %}
+
+{% block page_title %}
+<title>
+  
+  ShadowRaptor | {{page.name}}
+  
+</title>
+{% endblock %}
+{% block metadata %}
+<meta property="og:title" content="ShadowRaptor | {{ page.name }}" />
+<meta property="og:description" content="{{ page.content }}" />
+{% endblock %}
+
+{% block header_box %}
+    {% if page.show_gameservers %}
+    {{ block.super }}
+    {% endif%}
+{% endblock %}
+
+{% block main_block %}
+{% autoescape off%}
+
+    <section id="header" class="container mb-0 mt-4">
+
+        <header class="card bg-dark opacity-75 text-white p-4">
+            <h3 class="pageHeader fw-bold text-center mb-2">{{ page.name }}</h3>
+        </header>
+
+    </section>
+
+    <section id="content" class="container mt-0">
+
+        <header class="p-0 mt-4">
+            <div class="pageContent card bg-light text-black opacity-75 mt-4 mb-4 p-4">
+                {{ page.content }}
+            </div>
+        </header>
+
+    </section>
+
+{% endautoescape %}
+{% endblock%}

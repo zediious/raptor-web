@@ -5,7 +5,16 @@ from django.db import models
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NotificationToast
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NotificationToast, Page
+
+
+class PageAdminForm(ModelForm):
+    class Meta:
+        model = Page
+        widgets = {
+            'content': TinyMCE
+        }
+        fields = '__all__'
 
 
 class NotificationToastAdminForm(ModelForm):
@@ -33,6 +42,34 @@ class SiteInformationAdminForm(ModelForm):
             'secondary_color': TextInput(attrs={'type': 'color'})
         }
         fields = '__all__'
+
+
+class PageAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    Pages in the Django admin interface.
+    """
+    form = PageAdminForm
+
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'name',
+                'content',
+                'show_gameservers',
+                'created')
+        }),
+    )
+
+    readonly_fields: tuple[str] = (
+        'created',
+    )
+
+    search_fields: list[str] = [
+        'name'
+    ]
+
+    list_display: list[str] = ['name', 'created', 'show_gameservers']
 
 
 class NotificationToastAdmin(admin.ModelAdmin):
@@ -95,6 +132,7 @@ class NavbarLinkAdmin(admin.ModelAdmin):
                 'enabled',
                 'priority',
                 'parent_dropdown',
+                'linked_page',
                 'new_tab',
                 'name',
                 'url')
@@ -179,3 +217,4 @@ admin.site.register(SiteInformation, SiteInformationAdmin)
 admin.site.register(NavbarLink, NavbarLinkAdmin)
 admin.site.register(NavbarDropdown, NavbarDropdownAdmin)
 admin.site.register(NotificationToast, NotificationToastAdmin)
+admin.site.register(Page, PageAdmin)
