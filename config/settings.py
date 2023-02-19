@@ -16,7 +16,7 @@ STAFFAPPS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'staffapps')
 AUTH_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'authprofiles')
 
 # Load .env file
-load_dotenv()
+load_dotenv(join(BASE_DIR, 'stack.env'))
 
 # Django secret key from .env
 SECRET_KEY: str = getenv('DJANGO_SECRET_KEY')

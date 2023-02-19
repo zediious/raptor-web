@@ -1,6 +1,6 @@
 # Configuring raptor-web
 
-### Before you can start the application successfully, you need to create a file with the filename `.env` in the same location of this `README.md` file. Into the `.env` file, you need to copy the text within the code block below.<br></br>
+### Before you can start the application successfully, you need to create a file with the filename `stack.env` in the same location of the `manage.py` file, one directory above the directory this README file is in. Into the `stack.env` file, you need to copy the text within the code block below.<br></br>
 ### After doing so, you will need to put information into each element that does not have a value. If a key has a value, except `''`, **it MUST stay as it is**. If an element has a pair of quotes `''`, **you must enter your value inside of those quotes**. The exception to this is `LANGUAGE_CODE` and `TIME_ZONE`. Preferred defaults are set, but you may change them.<br></br>
 ### Below the code block you will find an explanation for each field, and what you should put in them.
 
