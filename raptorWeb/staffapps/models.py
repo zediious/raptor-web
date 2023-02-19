@@ -71,7 +71,7 @@ class StaffApplication(models.Model):
 
 class AdminApplication(StaffApplication):
     """
-    Applications for Admin
+    Submitted applications for an Admin position.
     """
     position = models.CharField(
         max_length=100,
@@ -110,7 +110,7 @@ class AdminApplication(StaffApplication):
 
 class ModeratorApplication(StaffApplication):
     """
-    Applications for Moderator
+    Submitted applications for a Moderator position.
     """
 
     position = models.CharField(
