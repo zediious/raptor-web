@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.conf import settings
 
@@ -57,3 +57,36 @@ class Player_List(ListView):
 
         else:
             return HttpResponseRedirect('/')
+
+
+class Import_Servers(TemplateView):
+    """
+    Import servers
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        return HttpResponseRedirect('/')
+
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if Server.objects.import_server_data() == False:
+            return HttpResponse('<div class= "alert alert-danger">You attempted to import servers, but you did not place server_data_full.json '
+                                'in the root directory of the application.</div>')
+
+        return HttpResponse('<div class= "alert alert-success">Servers from server_data_full.json have successfully been imported.</div>')
+
+
+class Export_Servers(TemplateView):
+    """
+    Export servers
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        return HttpResponseRedirect('/')
+
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        Server.objects.export_server_data()
+        return HttpResponse('<div class= "alert alert-success">All Servers have successfully been exported to server_data_full.json.</div>')
