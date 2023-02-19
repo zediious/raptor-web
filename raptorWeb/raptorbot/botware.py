@@ -7,6 +7,7 @@ from raptorWeb.raptorbot.models import DiscordBotTasks
 
 DISCORD_BOT_TOKEN: str = getattr(settings, 'DISCORD_BOT_TOKEN')
 LOGGER: Logger = getLogger('raptorbot.botware')
+
 bot_process_manager: BotProcessManager = BotProcessManager(bot_token=DISCORD_BOT_TOKEN)
 
 
@@ -49,8 +50,7 @@ def stop_bot_process():
     """
     Terminate the current Discord Bot thread
     """
-    result = bot_process_manager.stop_process()
-    if result == True:
+    if bot_process_manager.stop_process() == True:
         LOGGER.info("The previous Discord Bot Thread has been stopped.")
     else:
         LOGGER.info("There was an error stopping the Discord Bot")
