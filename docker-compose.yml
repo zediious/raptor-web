@@ -19,7 +19,9 @@ services:
     expose:
       - 80
     volumes:
-      - ./raptorWeb/media:/raptorWebApp/raptorWeb/media
+      - raptor-app:/raptorWebApp
+      - raptor-nginx:/raptorWebApp/docker/nginx/conf.d/
+      - raptor-media:/raptorWebapp/raptorWeb/media/
     depends_on:
       - mariadb
 
@@ -29,10 +31,13 @@ services:
     ports:
       - 443:443
     volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
-      - ./raptorWeb/media:/raptor_app/media/
+      - raptor-nginx:/etc/nginx/conf.d/
+      - raptor-media:/raptor_app/media/
     depends_on:
       - raptorapp
 
 volumes:
   raptor-db:
+  raptor-app:
+  raptor-nginx:
+  raptor-media:
