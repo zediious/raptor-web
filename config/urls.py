@@ -45,6 +45,9 @@ urlpatterns: list[URLResolver] = [
     path('', include(SR_urls), name="shadowraptormc")
 
 ]
+
+handler404 = 'raptorWeb.raptormc.views.handler404'
+
 # If in Debug mode, serve media files
 if DEBUG:
     urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

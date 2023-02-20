@@ -4,7 +4,6 @@ from typing import Any
 
 from django.views.generic import TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
@@ -159,3 +158,14 @@ class Admin_Panel(TemplateView):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         return super().get(request, *args, **kwargs)
+
+
+class View_404(TemplateView):
+    """
+    Base Admin Panel view
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('404.html'))
+
+
+def handler404(request, *args, **argv):
+    return HttpResponseRedirect('/404')
