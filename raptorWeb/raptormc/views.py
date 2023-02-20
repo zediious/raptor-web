@@ -142,10 +142,13 @@ class User_Pass_Reset(TemplateView):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
-        return context.update({
+        print(self.request.path.split('/')[3])
+        print(self.request.path.split('/')[4])
+        context.update({
             "active_user_for_reset": self.request.path.split('/')[3],
             "active_user_password_reset_token": self.request.path.split('/')[4]
         })
+        return context
 
 
 class Admin_Panel(TemplateView):

@@ -14,7 +14,7 @@ urlpatterns: list[URLPattern] = [
     path('auth/logout/', views.user_logout, name="logout"),
     # Password Resets
     path('html/reset_password/', views.UserResetPasswordForm.as_view(), name="reset_password_form"),
-    path('auth/reset_password_confirm/<str:user_reset_token>', views.UserResetPasswordConfirm.as_view(), name="reset_password_confirm_form"),
+    path('auth/reset_password_confirm/<str:user_reset_token>/', views.UserResetPasswordConfirm.as_view(), name="reset_password_confirm_form"),
     # Profiles
     path('html/profile/<slug:user_slug>/', views.User_Profile.as_view(), name="user_profile"),
     path('html/profile/<str:profile_name>/edit/', views.User_Profile_Edit.as_view(), name="user_profile_edit"),
