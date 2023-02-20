@@ -94,6 +94,115 @@ class NotificationToast(models.Model):
         verbose_name_plural = "Notification Toasts"
 
 
+class NavWidgetBar(models.Model):
+    """
+    A bar at the top of the website that contains Widgets.
+    Newly added bars will always appear below the default bar.
+    """
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Nav Widget Bar Name",
+        help_text=("The name of this Nav Widget Bar. Only used for internal identification."),
+        default="Default"
+    )
+
+    enabled = models.BooleanField(
+        verbose_name="Enabled",
+        help_text="Whether this Nav Widget Bar will appear on the website.",
+        default=True
+    )
+
+    priority = models.IntegerField(
+        verbose_name="Priority",
+        help_text="Controls the order this Nav Widget Bar will be placed in. Lower numbers appear first.",
+        default=0
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    def enabled_links_in_widgetbar(self):
+        return self.nestednavwidget.filter(enabled=True).order_by('priority')
+
+    class Meta:
+        verbose_name = "Nav Widget Bar",
+        verbose_name_plural = "Nav Widget Bars"
+
+
+class NavWidget(models.Model):
+    """
+    A Navigation Button that appears at the very top of the website, alongside the Discord widget.
+    """
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Navigation Link Name",
+        help_text=("The name of this Navigation Button. Will be displayed on the website. "
+                    "if a Widget Image is not used."),
+        default="Default"
+    )
+
+    nav_image = models.ImageField(
+        upload_to='navwidgetimage',
+        verbose_name="Nav Widget Image",
+        help_text=("The image used as an identifier/name for this Nav Widget. "
+                    "Optimal size for this image is w250xh72 or within the same aspect ratio."),
+        blank=True
+    )
+
+    url = models.URLField(
+        max_length=250,
+        verbose_name="Navigation URL",
+        help_text="The link this Navigation button will take the user to.",
+        default="https://google.com"
+    )
+
+    enabled = models.BooleanField(
+        verbose_name="Enabled",
+        help_text="Whether this Navigation Button will appear on the website.",
+        default=True
+    )
+
+    priority = models.IntegerField(
+        verbose_name="Priority",
+        help_text="Controls the order this Navigation Button will be placed in. Lower numbers appear first.",
+        default=0
+    )
+
+    new_tab = models.BooleanField(
+        verbose_name="Opens in New Tab",
+        help_text="If this is True, this Button will open in a new tab.",
+        default=False
+    )
+
+    linked_page = models.ForeignKey(
+        Page,
+        verbose_name="Linked Page",
+        help_text="The Page Model that this Navigation Button will lead to. If this is set, then the Navigation URL field will be ignored.",
+        related_name='widgettopage',
+        blank=True,
+        null=True,
+        on_delete=models.DO_NOTHING
+    )
+
+    parent_bar = models.ForeignKey(
+        NavWidgetBar,
+        verbose_name="Linked Nav Widget Bar",
+        help_text="The Nav Widget Bar this link is attached to. A Nav Widget will appear in the default Nav Widget Bar. "
+                 "if one is not specified here",
+        related_name='nestednavwidget',
+        blank=True,
+        null=True,
+        on_delete=models.DO_NOTHING
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Nav Widget",
+        verbose_name_plural = "Nav Widgets"
+
+
 class NavbarDropdown(models.Model):
     """
     A Dropdown Menu for the Navigation sidebar. Add Links to a Dropdown
@@ -170,7 +279,7 @@ class NavbarLink(models.Model):
         Page,
         verbose_name="Linked Page",
         help_text="The Page Model that this Navigation Link will lead to. If this is set, then the Navigation URL field will be ignored.",
-        related_name='linkedpage',
+        related_name='linktopage',
         blank=True,
         null=True,
         on_delete=models.DO_NOTHING

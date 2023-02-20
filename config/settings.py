@@ -399,6 +399,8 @@ JAZZMIN_SETTINGS = {
         "raptormc.InformativeText": "fas fa-scroll",
         "raptormc.NavbarLink": "fas fa-map-marker",
         "raptormc.NavbarDropdown": "fas fa-map-marker",
+        "raptormc.NavWidget": "fas fa-map-pin",
+        "raptormc.NavWidgetBar": "fas fa-map-pin",
         "raptormc.SiteInformation": "fas fa-clipboard-list",
         "raptormc.NotificationToast": "fas fa-envelope-square",
         "raptormc.Page": "fas fa-file",
