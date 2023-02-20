@@ -143,6 +143,9 @@ async def update_server_announce(modpack_name: str, bot_instance: commands.Bot):
                                 date = message.created_at
                             )
 
+                        else:
+                            continue
+
                     except AttributeError:
                         continue
 
