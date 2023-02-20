@@ -29,7 +29,7 @@ USE_SQLITE: bool = True if getenv('USE_SQLITE') == "True" else False
 RUNNING_IN_DOCKER: bool = True if getenv('RUNNING_IN_DOCKER') == "True" else False
 
 # Configure "DOMAIN_NAME" to match the domain name you will use (no www)
-DOMAIN_NAME: str = getenv('DOMAIN_NAME'),
+DOMAIN_NAME: str = getenv('DOMAIN_NAME')
 
 # Configure web protocol based on DEBUG status
 WEB_PROTO: str = ""
