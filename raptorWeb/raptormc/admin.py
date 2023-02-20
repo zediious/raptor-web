@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.forms import ModelForm
-from django.forms import TextInput, Textarea
-from django.db import models
+from django.forms import TextInput
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NotificationToast, Page
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page
 
 
 class PageAdminForm(ModelForm):
@@ -98,6 +97,54 @@ class NotificationToastAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['name', 'created', 'enabled']
+
+
+class NavWidgetBarAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    NavWidgetBars in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'enabled',
+                'priority',
+                'name')
+        }),
+    )
+
+    search_fields: list[str] = [
+        'name',
+    ]
+
+    list_display: list[str] = ['name', 'priority', 'enabled']
+
+
+class NavWidgetAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    NavWidgets in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Navigation Link', {
+            'fields': (
+                'enabled',
+                'priority',
+                'parent_bar',
+                'linked_page',
+                'new_tab',
+                'name',
+                'nav_image',
+                'url')
+        }),
+    )
+
+    search_fields: list[str] = [
+        'name',
+        'url'
+    ]
+
+    list_display: list[str] = ['name', 'url', 'parent_bar', 'priority', 'enabled']
 
 
 class NavbarDropdownAdmin(admin.ModelAdmin):
@@ -216,5 +263,7 @@ admin.site.register(InformativeText, InformativeTextAdmin)
 admin.site.register(SiteInformation, SiteInformationAdmin)
 admin.site.register(NavbarLink, NavbarLinkAdmin)
 admin.site.register(NavbarDropdown, NavbarDropdownAdmin)
+admin.site.register(NavWidget, NavWidgetAdmin)
+admin.site.register(NavWidgetBar, NavWidgetBarAdmin)
 admin.site.register(NotificationToast, NotificationToastAdmin)
 admin.site.register(Page, PageAdmin)
