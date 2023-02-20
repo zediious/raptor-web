@@ -11,9 +11,6 @@ RUN python -m pip install --upgrade pip
 COPY ../environment.yml environment.yml
 RUN conda env create
 
-# Copy project files to container
-COPY ./ raptorWebApp/
-
 # Add initialization script and define entrypoint
 ADD docker/init init
 RUN chmod +x+r -R init
