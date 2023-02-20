@@ -299,7 +299,7 @@ USE_TZ: bool = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL: str = '/static/'
-STATIC_ROOT: str = join(join(BASE_DIR, '..'), join('config', 'static'))
+STATIC_ROOT: str = join(join(BASE_DIR, 'docker'), join('static'))
 
 # THIS MUST BE NAMED `STATICFILES_DIRS`
 STATICFILES_DIRS: list[str] = [
