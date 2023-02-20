@@ -177,15 +177,15 @@ class BotProcessManager:
             """
             Update Server Announcement models for all servers with new announcements from
             defined announcement channels for each server.
-            """
-            await announcements.update_all_server_announce(raptor_bot)
-            
+            """    
             await interaction.response.send_message(
                 embed=discord.Embed(
-                    description=("Server Announcements have now been updated with the announcements "
+                    description=("Server Announcements are now being updated with the announcements "
                                 "for servers from their respective channels, going back 500 messages."),
                 color=0x00ff00),
                 ephemeral=True)
+
+            await announcements.update_all_server_announce(raptor_bot)
 
 
     def stop_process(self) -> Optional[bool]:
