@@ -185,8 +185,7 @@ class UserLogin_OAuth_Success(TemplateView):
             discord_code = request.GET.get('code')
             user_info = RaptorUser.objects.exchange_discord_code(discord_code)
             discord_user = authenticate(request,user=user_info)
-            RaptorUser.objects.update_discord_user_details(
-                DiscordUserInfo.objects.get(id=user_info["id"]),
+            discord_user.discord_user_info.update_discord_user_details(
                 user_info)
             LOGGER.info(f'{user_info["username"]} logged in')
             login(request, 
@@ -291,10 +290,11 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
         instance_dict["displayed_profile"] = RaptorUser.objects.find_slugged_user(profile_name)
 
         if extra_edit_form.is_valid():
-            changed_user: RaptorUser = RaptorUser.objects.update_user_profile_details(
-                extra_edit_form, 
-                request)
-            LOGGER.info(f"{changed_user.username} modified their profile details")
+            self.request.user.user_profile_info.update_user_profile_details(
+                extra_edit_form,
+                request.FILES
+            )
+            LOGGER.info(f"{self.request.user.username} modified their profile details")
             messages.error(request, "Profile details successfully changed!")
             return render(request, self.template_name, context=instance_dict)
 
