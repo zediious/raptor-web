@@ -83,7 +83,6 @@ MIDDLEWARE: list[str] = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'raptorWeb.gameservers.jobs.ServerWare',
     'raptorWeb.raptorbot.botware.RaptorBotWare'
 ]
 
