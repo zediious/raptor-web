@@ -322,8 +322,7 @@ ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('AD
 # ** Settings for "gameservers" app **
 ENABLE_SERVER_QUERY: bool = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
 SERVER_PAGINATION_COUNT: int = int(getenv('SERVER_PAGINATION_COUNT'))
-IMPORT_SERVERS: bool = True if getenv('IMPORT_SERVERS') == "True" else False
-DELETE_EXISTING: bool = True if getenv('DELETE_EXISTING') == "True" else False
+
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
 
@@ -338,7 +337,6 @@ DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/api/user/oauth2/login/
 DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
                         f"client_id={DISCORD_APP_ID}"
                         f"&redirect_uri={DISCORD_REDIRECT_URL}&response_type=code&scope=identify%20email")
-IMPORT_USERS: bool = True if getenv('IMPORT_USERS') == 'True' else False
 
 # ** Settings for "raptorbot" app **
 USE_GLOBAL_ANNOUNCEMENT: bool = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
