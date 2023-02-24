@@ -53,7 +53,8 @@ ADMINS: tuple[str] = (
 # CSRF
 SESSION_COOKIE_SECURE: bool = True
 CSRF_COOKIE_SECURE: bool = True
-CSRF_TRUSTED_ORIGINS: list[str] = [f'{WEB_PROTO}://{DOMAIN_NAME}']
+CSRF_TRUSTED_ORIGINS: list[str] = [f'{WEB_PROTO}://{DOMAIN_NAME}',
+                                   f'{WEB_PROTO}://www.{DOMAIN_NAME}']
 
 # Application/Middleware definitions
 INSTALLED_APPS: list[str] = [
