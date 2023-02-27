@@ -3,13 +3,13 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | {{object.username}}
+  {{ site_info_model.brand_name }} | {{object.username}}
   
 </title>
 {% endblock %}
 
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | {{object.username}}" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
 <meta property="og:description" content="User Profile for {{object.username}}" />
 <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
 {% endblock %}

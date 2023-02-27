@@ -3,13 +3,14 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | {{page.name}}
+    {{ site_info_model.brand_name }} | {{page.name}}
   
 </title>
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | {{ page.name }}" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | {{ page.name }}" />
 <meta property="og:description" content="{{ page.content }}" />
+<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{page.get_absolute_url}}" />
 {% endblock %}
 
 {% block header_box %}

@@ -4,14 +4,14 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | Announcements
+  {{ site_info_model.brand_name }} | Announcements
   
 </title>
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Announcements" />
-<meta property="og:description" content="The last 30 announcements made by ShadowRaptor Network" />
-<meta property="og:url" content="https://shadowraptor.net/announcements" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" />
+<meta property="og:description" content="The last 30 announcements made by {{ site_info_model.brand_name }}" />
+<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" />
 {% endblock %}
 
 {% block main_block %}

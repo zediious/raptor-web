@@ -42,7 +42,7 @@ ptero_help: str = "Having set up /configuring an instance of Pterodactyl yoursel
 
 experience_help: str = "Any Admin roles you've had outside of Minecraft may also be described here."
 
-why_join: str = "Why do you want to join the ShadowRaptor staff team?"
+why_join: str = "Why do you want to join the the staff team?"
 
 experience: str = "Please provide as much information as you can about any Admin roles you've had on Minecraft servers, whether you owned the server or were staff. Describe what exactly it was you did for the server you were staff of in as much detail as possible."
 

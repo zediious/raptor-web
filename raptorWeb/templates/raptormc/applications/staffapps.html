@@ -3,14 +3,14 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | Staff Applications
+  {{ site_info_model.brand_name }} | Staff Applications
   
 </title>
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Staff Applications" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | Staff Applications" />
 <meta property="og:description" content="{{ staffapp_info.content|striptags }}" />
-<meta property="og:url" content="https://shadowraptor.net/applications" />
+<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/applications" />
 {% endblock %}
 
 {% block main_block %}
@@ -19,7 +19,7 @@
 
   {% if Staff_App_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">ShadowRaptor Staff Applications</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Staff Applications</h3>
     <hr>
     <div class="pageContent">
       {{ Staff_App_Information.content|safe }}
