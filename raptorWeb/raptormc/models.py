@@ -348,6 +348,22 @@ class SiteInformation(models.Model):
                     " is 1920x1080 or within the same aspect ratio."),
         blank=True
     )
+    
+    meta_description = models.CharField(
+        max_length=500,
+        verbose_name="SEO - Meta Description",
+        help_text=("The description for your website provided in search engine results. "
+                    "This will apply to all pages."),
+        default=""
+    )
+    
+    meta_keywords = models.CharField(
+        max_length=500,
+        verbose_name="SEO - Meta Keywords",
+        help_text=("A series of comma-separated values that represent meta keywords used "
+                    "in search engine results. This will apply to all pages."),
+        default=""
+    )
 
     def __str__(self):
         return str(self.brand_name)

@@ -245,6 +245,11 @@ class SiteInformationAdmin(admin.ModelAdmin):
             'fields': (
                 'branding_image',
                 'background_image')
+        }),
+        ('SEO', {
+            'fields': (
+                'meta_description',
+                'meta_keywords')
         })
     )
 
