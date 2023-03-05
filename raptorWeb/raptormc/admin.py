@@ -87,7 +87,7 @@ class NotificationToastAdmin(admin.ModelAdmin):
     form = NotificationToastAdminForm
 
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Notification Toast', {
             'fields': (
                 'enabled',
                 'name',
@@ -113,7 +113,7 @@ class NavWidgetBarAdmin(admin.ModelAdmin):
     NavWidgetBars in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Nav Widget Bar', {
             'fields': (
                 'enabled',
                 'priority',
@@ -134,7 +134,7 @@ class NavWidgetAdmin(admin.ModelAdmin):
     NavWidgets in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Nav Widget', {
             'fields': (
                 'enabled',
                 'priority',
@@ -161,7 +161,7 @@ class NavbarDropdownAdmin(admin.ModelAdmin):
     NavbarDropdowns in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Navigation Dropdown', {
             'fields': (
                 'enabled',
                 'priority',
