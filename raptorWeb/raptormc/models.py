@@ -50,6 +50,7 @@ class Page(models.Model):
     meta_description = models.CharField(
         max_length=500,
         default="",
+        blank=True,
         verbose_name="SEO Description",
         help_text=("The description for this page provided in search engine results. "
                     "This will apply only to this page, overriding default."),
@@ -58,6 +59,7 @@ class Page(models.Model):
     meta_keywords = models.CharField(
         max_length=500,
         default="",
+        blank=True,
         verbose_name="SEO Keywords",
         help_text=("The comma-separated keywords for this page used in search engine results. "
                     "This will apply only to this page, overriding default."),
