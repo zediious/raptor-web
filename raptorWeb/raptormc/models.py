@@ -46,6 +46,22 @@ class Page(models.Model):
         verbose_name="Show Servers",
         help_text="If this is checked, this page will display Server buttons in the usual location."
     )
+    
+    meta_description = models.CharField(
+        max_length=500,
+        default="",
+        verbose_name="SEO Description",
+        help_text=("The description for this page provided in search engine results. "
+                    "This will apply only to this page, overriding default."),
+    )
+    
+    meta_keywords = models.CharField(
+        max_length=500,
+        default="",
+        verbose_name="SEO Keywords",
+        help_text=("The comma-separated keywords for this page used in search engine results. "
+                    "This will apply only to this page, overriding default."),
+    )
 
     def __str__(self):
         return str(self.name)
