@@ -371,16 +371,18 @@ class SiteInformation(models.Model):
         max_length=500,
         verbose_name="SEO - Meta Description",
         help_text=("The description for your website provided in search engine results. "
-                    "This will apply to all pages."),
-        default=""
+                    "This will apply to all pages that do not override."),
+        default="",
+        blank=True
     )
     
     meta_keywords = models.CharField(
         max_length=500,
         verbose_name="SEO - Meta Keywords",
         help_text=("A series of comma-separated values that represent meta keywords used "
-                    "in search engine results. This will apply to all pages."),
-        default=""
+                    "in search engine results. This will apply to all pages that do not override."),
+        default="",
+        blank=True
     )
 
     def __str__(self):
