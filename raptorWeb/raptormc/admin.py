@@ -51,13 +51,21 @@ class PageAdmin(admin.ModelAdmin):
     form = PageAdminForm
 
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Page Content', {
             'fields': (
                 'name',
-                'content',
+                'content')
+        }),
+        ('SEO', {
+            'fields': (
+                'meta_description',
+                'meta_keywords')
+        }),
+        ('Misc', {
+            'fields': (
                 'show_gameservers',
                 'created')
-        }),
+        })
     )
 
     readonly_fields: tuple[str] = (
