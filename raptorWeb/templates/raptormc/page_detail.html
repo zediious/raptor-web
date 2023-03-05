@@ -7,6 +7,14 @@
   
 </title>
 {% endblock %}
+{% block seo_data %}
+    {% if page.meta_description and page.meta_keywords != "" %}
+    <meta name="description" content="{{ page.meta_description }}">
+    <meta name="keywords" content="{{ page.meta_keywords }}">
+    {% else %}
+    {{ block.super }}
+    {% endif %}
+{% endblock %}
 {% block metadata %}
 <meta property="og:title" content="{{ site_info_model.brand_name }} | {{ page.name }}" />
 <meta property="og:description" content="{{ page.content }}" />
