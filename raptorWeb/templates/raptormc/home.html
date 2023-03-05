@@ -8,6 +8,9 @@
   
 </title>
 {% endblock %}
+{% block seo_data %}
+    {{ block.super }}
+{% endblock %}
 {% block metadata %}
 <meta property="og:title" content="{{ site_info_model.brand_name }} | Home" />
 <meta property="og:description" content="{{ home_info.content|striptags }}" />
