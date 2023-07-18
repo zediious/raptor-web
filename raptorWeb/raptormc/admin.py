@@ -252,7 +252,8 @@ class SiteInformationAdmin(admin.ModelAdmin):
         ('Images', {
             'fields': (
                 'branding_image',
-                'background_image')
+                'background_image',
+                'avatar_image')
         }),
         ('SEO', {
             'fields': (
@@ -266,7 +267,8 @@ class SiteInformationAdmin(admin.ModelAdmin):
         'main_color',
         'secondary_color',
         'branding_image',
-        'background_image']
+        'background_image',
+        'avatar_image']
 
     def has_add_permission(self, request, obj=None):
         return False
