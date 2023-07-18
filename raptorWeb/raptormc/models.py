@@ -367,6 +367,14 @@ class SiteInformation(models.Model):
         blank=True
     )
     
+    avatar_image = models.ImageField(
+        upload_to='avatar',
+        verbose_name="Avatar Image",
+        help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
+                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image."),
+        blank=True
+    )
+    
     meta_description = models.CharField(
         max_length=500,
         verbose_name="SEO - Meta Description",
