@@ -359,7 +359,6 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": f"Welcome to {ADMIN_BRAND_NAME}",
     "copyright": "Admin theme by Acme Library Ltd",
     "search_model": ["authprofiles.RaptorUser", "gameservers.Server"],
-    "user_avatar": 'user_profile_info.profile_picture',
     "topmenu_links": [
         {"name": "Return to Site", "url": "/", "new_window": False},
         {"name": "Control Panel", "url": "/panel", "new_window": False},
