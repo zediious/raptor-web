@@ -207,8 +207,8 @@ def user_logout(request: HttpRequest) -> HttpResponse:
     """
     Log out the signed in user
     """
+    LOGGER.info(f"{request.user} logging out!")
     logout(request)
-    LOGGER.info(f"{request.user} logged out!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
