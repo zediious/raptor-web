@@ -459,6 +459,62 @@ class InformativeText(models.Model):
     class Meta:
         verbose_name = "Informative Text",
         verbose_name_plural = "Informative Texts"
+        
+        
+class DefaultPages(models.Model):
+    """
+    Enable or disable the default pages supplied with the website. If you uncheck a page here, it will
+    not appear in the navigation sidebar, and attempts to manually access the URL will lead to the 404
+    page.
+    """
+    announcements = models.BooleanField(
+        default=True,
+        verbose_name="Announcements Page",
+        help_text="Whether the default Announcement page is enabled or not."
+    )
+    
+    rules = models.BooleanField(
+        default=True,
+        verbose_name="Rules Page",
+        help_text="Whether the default Rules page is enabled or not."
+    )
+    
+    banned_items = models.BooleanField(
+        default=True,
+        verbose_name="Banned Items Page",
+        help_text="Whether the default Banned Items page is enabled or not."
+    )
+    
+    voting = models.BooleanField(
+        default=True,
+        verbose_name="Voting Page",
+        help_text="Whether the default Vote for Us page is enabled or not."
+    )
+    
+    joining = models.BooleanField(
+        default=True,
+        verbose_name="How to Join Page",
+        help_text="Whether the default How to Join page is enabled or not."
+    )
+    
+    staff_apps = models.BooleanField(
+        default=True,
+        verbose_name="Staff Applications Page",
+        help_text="Whether the default Staff Applications page is enabled or not."
+    )
+    
+    members = models.BooleanField(
+        default=True,
+        verbose_name="Site Members Page",
+        help_text="Whether the default Site Members page is enabled or not."
+    )
+
+    def __str__(self):
+        return "Default Pages"
+
+    class Meta:
+        verbose_name = "Default Pages",
+        verbose_name_plural = "Default Pages"
 
 
 @receiver(post_save, sender=SiteInformation)
