@@ -374,7 +374,8 @@ class SiteInformation(models.Model):
         upload_to='avatar',
         verbose_name="Avatar Image",
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
-                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image."),
+                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
+                   "This will also be used as your Favicon, after being converted to a .ico file."),
         blank=True
     )
     
@@ -402,7 +403,27 @@ class SiteInformation(models.Model):
     class Meta:
         verbose_name = "Site Information",
         verbose_name_plural = "Site Information"
+        
+        
+class SmallSiteInformation(models.Model):
+    """
+    Extra site information. Hidden from the user.
+    """
+    ico_image = ResizedImageField(
+        upload_to="ico",
+        force_format="ICO",
+        size=[64, 64],
+        quality=5,
+        blank=True
+    )
 
+    def __str__(self):
+        return str(self.brand_name)
+
+    class Meta:
+        verbose_name = "Site Information",
+        verbose_name_plural = "Site Information"
+            
 
 class InformativeText(models.Model):
     """
