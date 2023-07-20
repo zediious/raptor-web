@@ -28,3 +28,4 @@ dependencies:
     - django-ranged-response==0.2.0
     - django-simple-captcha==0.5.18
     - six==1.16.0
+    - django-resized==1.0.2
