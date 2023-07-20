@@ -12,8 +12,13 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
+
+try:
+    from raptorWeb.raptormc.models import DefaultPages
+except ModuleNotFoundError:
+    pass
 
 LOGGER: Logger = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
@@ -235,6 +240,13 @@ class All_User_Profile(ListView):
     queryset: RaptorUserManager = RaptorUser.objects.order_by('-date_joined')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
@@ -248,6 +260,19 @@ class User_Profile(DetailView):
     model: RaptorUser = RaptorUser
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+                if (request.headers.get('HX-Request') == "true"
+                and request.user.user_slug == self.kwargs['user_slug']
+                or request.user.is_staff):
+                    return super().get(request, *args, **kwargs)
+                
+                else:
+                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:

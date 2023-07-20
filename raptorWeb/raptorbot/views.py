@@ -7,6 +7,11 @@ from django.conf import settings
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorWeb.raptorbot import botware
 
+try:
+    from raptorWeb.raptormc.models import DefaultPages
+except ModuleNotFoundError:
+    pass
+
 USE_GLOBAL_ANNOUNCEMENT: bool = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
 
 if USE_GLOBAL_ANNOUNCEMENT:
@@ -31,6 +36,13 @@ class Global_Announcements(ListView):
             return GlobalAnnouncement.objects.all().order_by('-date')
 
     def get(self, request: HttpRequest, amount: int=0, *args, **kwargs) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
 
@@ -54,6 +66,13 @@ class Server_Announcements(ListView):
             return ServerAnnouncement.objects.filter(server=server).order_by('-date')
 
         def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+            try:
+                if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
+                    return HttpResponseRedirect('/404')
+                
+            except ModuleNotFoundError:
+                pass
+            
             if request.headers.get('HX-Request') == "true":
                 return super().get(request, *args, **kwargs)
             else:
