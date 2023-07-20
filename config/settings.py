@@ -405,6 +405,7 @@ JAZZMIN_SETTINGS = {
         "raptormc.NavWidget": "fas fa-map-pin",
         "raptormc.NavWidgetBar": "fas fa-map-pin",
         "raptormc.SiteInformation": "fas fa-clipboard-list",
+        "raptormc.DefaultPages": "fas fa-clipboard-list",
         "raptormc.NotificationToast": "fas fa-envelope-square",
         "raptormc.Page": "fas fa-file",
         "gameservers": "fas fa-gamepad",
