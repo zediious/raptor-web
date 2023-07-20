@@ -41,33 +41,33 @@
             <div class="navbar-collapse text-center">
               <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
     
-                <li class="btn btn-secondary m-2 p-2"> 
+                {% if default_pages.announcements %}<li class="btn btn-secondary m-2 p-2"> 
                   <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:announcements' %}">Announcements</a> 
-                </li>
+                </li>{% endif %}
                 
-                <li class="btn btn-secondary m-2 p-2"> 
+                {% if default_pages.rules %}<li class="btn btn-secondary m-2 p-2"> 
                   <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
-                </li>
+                </li>{% endif %}
     
-                <li class="btn btn-secondary m-2 p-2">
+                {% if default_pages.banned_items %}<li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
-                </li>
+                </li>{% endif %}
 
-                <li class="btn btn-secondary m-2 p-2">
+                {% if default_pages.voting %}<li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:voting' %}">Vote for Us</a>
-                </li>
+                </li>{% endif %}
     
-                <li class="btn btn-secondary m-2 p-2">
+                {% if default_pages.joining %}<li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
-                </li>
+                </li>{% endif %}
                 
-                <li class="btn btn-secondary m-2 p-2">
+                {% if default_pages.staff_apps %}<li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:staff_apps' %}">Staff Applications</a>
-                </li>
+                </li>{% endif %}
 
-                <li class="btn btn-secondary m-2 p-2">
+                {% if default_pages.members %}<li class="btn btn-secondary m-2 p-2">
                   <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:site_members' %}">Site Members</a>
-                </li>
+                </li>{% endif %}
 
                 {% for link in nav_links %}
                 {% if not link.parent_dropdown %}
