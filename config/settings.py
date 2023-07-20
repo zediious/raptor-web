@@ -359,8 +359,6 @@ JAZZMIN_SETTINGS = {
     "site_title": f"{ADMIN_BRAND_NAME} Admin",
     "site_header": f"{ADMIN_BRAND_NAME}",
     "site_brand": f"{ADMIN_BRAND_NAME}",
-    "site_logo": "image/ShadowRaptorAvatar.webp",
-    "login_logo": "image/ShadowRaptorAvatar.webp",
     "site_logo_classes": "img-circle",
     "welcome_sign": f"Welcome to {ADMIN_BRAND_NAME}",
     "copyright": "Admin theme by Acme Library Ltd",
