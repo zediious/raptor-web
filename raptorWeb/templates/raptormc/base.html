@@ -113,8 +113,7 @@
                 {% for widget in nav_widgets %}
                 {% if not widget.parent_bar %}
                 <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
-                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}">
-                {% if widget.new_tab%}target="_blank">{% endif %}
+                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
                   {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
                 </a>
                 {% endif %}
@@ -132,8 +131,7 @@
                 {% for widget in nav_widgets %}
                 {% if widget.parent_bar %}
                 <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
-                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}">
-                {% if widget.new_tab%}target="_blank">{% endif %}
+                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
                   {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
                 </a>
                 {% endif %}
