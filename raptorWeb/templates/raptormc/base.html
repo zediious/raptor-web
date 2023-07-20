@@ -20,7 +20,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="{% if site_info_model.avatar_image %}{{site_info_model.avatar_image.url}}{% endif %}" />
     <meta property="og:locale" content="en_US" />
-    <meta name="theme-color" content="#39912b">
+    <meta name="theme-color" content="{{ site_info_model.main_color }}">
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/favicon.ico' %}">
