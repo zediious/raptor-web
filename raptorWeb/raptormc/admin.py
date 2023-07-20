@@ -4,7 +4,7 @@ from django.forms import TextInput
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page, DefaultPages
 
 
 class PageAdminForm(ModelForm):
@@ -77,6 +77,16 @@ class PageAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['name', 'created', 'show_gameservers']
+    
+    
+class DefaultPageAdmin(admin.ModelAdmin):
+    """
+    Object tracking enabled state of default pages
+    """
+    list_display: list[str] = ['announcements', 'rules', 'banned_items', 'voting', 'joining', 'staff_apps', 'members']
+    
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class NotificationToastAdmin(admin.ModelAdmin):
@@ -282,3 +292,4 @@ admin.site.register(NavWidget, NavWidgetAdmin)
 admin.site.register(NavWidgetBar, NavWidgetBarAdmin)
 admin.site.register(NotificationToast, NotificationToastAdmin)
 admin.site.register(Page, PageAdmin)
+admin.site.register(DefaultPages, DefaultPageAdmin)
