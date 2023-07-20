@@ -16,7 +16,7 @@ LOGGER = getLogger('raptorbot.views')
 
 class Global_Announcements(ListView):
     """
-    ListView for all ServerAnnouncements
+    ListView for all Global Announcements
     """
     paginate_by: int = 5
     model: GlobalAnnouncement = GlobalAnnouncement
@@ -39,7 +39,7 @@ class Global_Announcements(ListView):
 
 class Server_Announcements(ListView):
         """
-        ListView for all ServerAnnouncements
+        ListView for all Server Announcements
         """
         paginate_by: int = 5
         model: ServerAnnouncement = ServerAnnouncement
