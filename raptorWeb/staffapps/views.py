@@ -13,6 +13,11 @@ from raptorWeb.staffapps.forms import AdminApp, ModApp
 LOGGER: Logger = getLogger('staffapps.views')
 STAFFAPPS_TEMPLATE_DIR: str = getattr(settings, 'STAFFAPPS_TEMPLATE_DIR')
 
+try:
+    from raptorWeb.raptormc.models import DefaultPages
+except ModuleNotFoundError:
+    pass
+
 
 class AllApps(TemplateView):
     """
@@ -21,6 +26,13 @@ class AllApps(TemplateView):
     template_name: str = join(STAFFAPPS_TEMPLATE_DIR, 'staffapps.html')
 
     def get(self, request: HttpRequest) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return render(request, self.template_name)
             
@@ -36,6 +48,13 @@ class AppView(TemplateView):
     app_string: str
 
     def get(self, request):
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/')
 
@@ -46,6 +65,13 @@ class AppView(TemplateView):
     def post(self, request):
         staff_app = self.staff_app(request.POST)
         dictionary = {self.app_string: staff_app}
+        
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
 
         if staff_app.is_valid():
             LOGGER.info(f"{self.app_string} submitted!")
