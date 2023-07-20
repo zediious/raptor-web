@@ -2,13 +2,14 @@ from django.http import HttpRequest
 from django.utils.text import slugify
 from django.conf import settings
 
-from raptorWeb.raptormc.models import SiteInformation, SmallSiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast
+from raptorWeb.raptormc.models import SiteInformation, SmallSiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, DefaultPages
 
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 DEFAULT_MEDIA: str = getattr(settings, 'DEFAULT_MEDIA')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 
 def context_process(request: HttpRequest) -> dict:
+    default_pages: DefaultPages.objects = DefaultPages.objects.get_or_create(pk=1)[0]
     site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
     small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
     nav_links: NavbarLink.objects = NavbarLink.objects.filter(enabled=True).order_by('priority')
@@ -37,6 +38,7 @@ def context_process(request: HttpRequest) -> dict:
             "pub_domain": DOMAIN_NAME,
             "web_proto": WEB_PROTO,
             "default_media": DEFAULT_MEDIA,
+            "default_pages": default_pages, 
             "site_info_model": site_info,
             "small_site_info": small_site_info,
             "nav_links": nav_links,
