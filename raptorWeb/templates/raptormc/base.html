@@ -18,7 +18,7 @@
     {% block metadata %}
     {% endblock %}
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="{% if site_info_model.avatar_image %}{{site_info_model.avatar_image.url}}{% endif %}" />
+    <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" />
     <meta property="og:locale" content="en_US" />
     <meta name="theme-color" content="{{ site_info_model.main_color }}">
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
