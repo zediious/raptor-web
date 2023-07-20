@@ -362,10 +362,13 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
     "welcome_sign": f"Welcome to {ADMIN_BRAND_NAME}",
     "copyright": "Admin theme by Acme Library Ltd",
-    "search_model": ["authprofiles.RaptorUser", "gameservers.Server"],
+    "search_model": ["authprofiles.RaptorUser"],
     "topmenu_links": [
         {"name": "Return to Site", "url": "/", "new_window": False},
         {"name": "Control Panel", "url": "/panel", "new_window": False},
+        
+        {"model": "raptormc.SiteInformation"},
+        {"model": "raptormc.DefaultPages"},
 
         {"app": "raptormc"},
         {"app": "gameservers"},
