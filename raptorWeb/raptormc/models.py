@@ -2,6 +2,11 @@ from logging import Logger, getLogger
 
 from django.db import models
 from django.utils.text import slugify
+from django.dispatch import receiver
+from django.utils.timezone import localtime, now
+from django.db.models.signals import post_save
+
+from django_resized import ResizedImageField
 
 LOGGER: Logger = getLogger('raptormc.models')
 
@@ -454,3 +459,26 @@ class InformativeText(models.Model):
     class Meta:
         verbose_name = "Informative Text",
         verbose_name_plural = "Informative Texts"
+
+
+@receiver(post_save, sender=SiteInformation)
+def post_save_site_info(sender, instance, *args, **kwargs):
+    """
+    If a new Avatar is added to SiteInformation, convert that image 
+    to a .ICO format and save it to SmallSiteInformation's ico_image
+    attribute.
+    
+    This runs every time SiteInformation model is saved. The function
+    checks to see if the current Avatar Image hash is different than 
+    the .ico filename, which is set to the Avatar Image hash on
+    creation. It will only run if those two values differ.
+    """
+    small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
+    
+    if instance.avatar_image:
+        if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":
+            small_site_info.ico_image.save(
+                f"{hash(instance.avatar_image)}.ico",
+                instance.avatar_image)
+            small_site_info.save()
+            LOGGER.info("New Avatar Image detected, new favicon created from it.")
