@@ -269,6 +269,9 @@ class User_Profile(DetailView):
                 
                 else:
                     return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
+                
+        except AttributeError:
+            return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
             
         except ModuleNotFoundError:
             pass
