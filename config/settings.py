@@ -237,6 +237,12 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptormc.models': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        
         'staffapps.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',

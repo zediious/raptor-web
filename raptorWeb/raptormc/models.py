@@ -1,6 +1,9 @@
+from logging import Logger, getLogger
+
 from django.db import models
 from django.utils.text import slugify
 
+LOGGER: Logger = getLogger('raptormc.models')
 
 class PageManager(models.Manager):
     """
