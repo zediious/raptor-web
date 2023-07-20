@@ -386,13 +386,13 @@ JAZZMIN_SETTINGS = {
     "custom_links": {
         "raptorbot": [{
             "name": "Bot Actions", 
-            "url": "../../../panel", 
+            "url": "/panel", 
             "icon": "fas fa-terminal",
             "permissions": ["raptorbot.view_discordguild"]
         }],
          "gameservers": [{
             "name": "Server Actions", 
-            "url": "../../../panel", 
+            "url": "/panel", 
             "icon": "fas fa-terminal",
             "permissions": ["gameservers.view_server"]
         }]
