@@ -1,0 +1,53 @@
+<div class="dropdown m-2">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Discord Bot
+    </button>
+    <ul class="dropdown-menu bg-transparent border-0">
+        <li class="dropdown-item">
+            <form>
+                {% csrf_token %}
+                <a role="button" class="btn btn-success p-1 w-100"
+                hx-post="{% url 'raptorbot:botstatus_start_bot' %}" hx-target="#action_status"
+                data-bs-toggle="tooltip" data-bs-title="This will start the Discord Bot, if it is currently stopped.">Start Bot
+                </a>
+            </form>
+        </li>
+        <li class="dropdown-item">
+            <form>
+                {% csrf_token %}
+                <a role="button" class="btn btn-danger p-1 w-100"
+                hx-post="{% url 'raptorbot:botstatus_stop_bot' %}" hx-target="#action_status"
+                data-bs-toggle="tooltip" data-bs-title="This will stop the Discord Bot, if it is currently running.">Stop Bot
+                </a>
+            </form>
+        </li>
+        <hr>
+        <li class="dropdown-item">
+            <form>
+                {% csrf_token %}
+                <a role="button" class="btn btn-warning p-1 w-100"
+                hx-post="{% url 'raptorbot:command_update_global_announcements' %}" hx-target="#action_status"
+                data-bs-toggle="tooltip" data-bs-title="This will send the 'update_global_announcements' command to the Bot.">Update Global Announcements
+                </a>
+            </form>
+        </li>
+        <li class="dropdown-item">
+            <form>
+                {% csrf_token %}
+                <a role="button" class="btn btn-warning p-1 w-100"
+                hx-post="{% url 'raptorbot:command_update_all_server_announcements' %}" hx-target="#action_status"
+                data-bs-toggle="tooltip" data-bs-title="This will send the 'update_all_server_announcements' command to the Bot.">Update Server Announcements
+                </a>
+            </form>
+        </li>
+        <li class="dropdown-item">
+            <form>
+                {% csrf_token %}
+                <a role="button" class="btn btn-warning p-1 w-100"
+                hx-post="{% url 'raptorbot:command_update_members' %}" hx-target="#action_status"
+                data-bs-toggle="tooltip" data-bs-title="Tell the Discord Bot to update the Member counts in your Discord Guild model.">Update Member Counts
+                </a>
+            </form>
+        </li>
+    </ul>
+</div>
