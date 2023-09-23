@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
-<div class="card bg-dark text-white p-1 mt-0 mb-0 opacity-75 container">
+<div class="bg-dark text-white p-1 mt-0 mb-0 opacity-75 container">
   <form action="{% url 'authprofiles:login' %}" method="POST">
 
     {% csrf_token %}
