@@ -43,7 +43,7 @@
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% block header_box %}
       
-      {% include "raptormc/serverbox.html" %}
+      {% include "raptormc/components/serverbox.html" %}
 
       {% endblock %}
       
@@ -57,10 +57,10 @@
     </main>
 
     {% comment %} Notification Toast elements and script {% endcomment %}
-    {% include "raptormc/toasts.html" %}
+    {% include "raptormc/components/toasts.html" %}
 
     {% comment %} Static website footer {% endcomment %}
-    {% include "raptormc/footer.html" %}
+    {% include "raptormc/components/footer.html" %}
     
     <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>

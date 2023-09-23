@@ -18,7 +18,7 @@ class HomeServers(TemplateView):
     """
     Homepage with general information
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'home.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/home.html')
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -32,7 +32,7 @@ if USE_GLOBAL_ANNOUNCEMENT:
         """
         Page containing the last 30 announcements from Discord
         """
-        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'announcements.html')
+        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
         
         def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
@@ -51,7 +51,7 @@ class Rules(TemplateView):
     """
     Rules page containing general and server-specific rules
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'rules.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/rules.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].rules:
@@ -70,7 +70,7 @@ class BannedItems(TemplateView):
     """
     Contains lists of items that are banned on each server
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/banneditems.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].banned_items:
@@ -89,7 +89,7 @@ class Voting(TemplateView):
     """
     Contains lists links for each server's voting sites
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'voting.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/voting.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].voting:
@@ -108,7 +108,7 @@ class HowToJoin(TemplateView):
     """
     Contains guides for downloading modpacks and joining servers.
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'joining.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/joining.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].joining:
