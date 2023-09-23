@@ -401,6 +401,21 @@ class SiteInformation(models.Model):
         default="",
         blank=True
     )
+    
+    use_main_color = models.BooleanField(
+        verbose_name="Use Main Color",
+        help_text=("If this is checked, the Main Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead."),
+        default=True
+    )
+    
+    use_secondary_color = models.BooleanField(
+        verbose_name="Use Secondary Color",
+        help_text=("If this is checked, the Secondary Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead. If "
+                   "you are using a Background Image, that will always take precedence."),
+        default=True
+    )
 
     def __str__(self):
         return str(self.brand_name)

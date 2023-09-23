@@ -257,7 +257,9 @@ class SiteInformationAdmin(admin.ModelAdmin):
         ('Colors', {
             'fields': (
                 'main_color',
-                'secondary_color')
+                'use_main_color',
+                'secondary_color',
+                'use_secondary_color')
         }),
         ('Images', {
             'fields': (
