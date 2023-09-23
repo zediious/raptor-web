@@ -252,7 +252,8 @@ class SiteInformationAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('Information', {
             'fields': (
-                'brand_name',)
+                'brand_name',
+                'contact_email')
         }),
         ('Colors', {
             'fields': (
@@ -271,6 +272,12 @@ class SiteInformationAdmin(admin.ModelAdmin):
             'fields': (
                 'meta_description',
                 'meta_keywords')
+        }),
+         ('Misc', {
+            'fields': (
+                'enable_footer',
+                'enable_footer_credit',
+                'enable_footer_contact')
         })
     )
 
