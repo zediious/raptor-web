@@ -15,6 +15,9 @@
 {% endblock %}
 
 {% if object != False %}
+{% if object.is_superuser and request.user.is_superuser != True %}
+{% include "authprofiles/no_user.html" %}
+{% else %}
 
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
@@ -86,6 +89,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% else %}
 {% include "authprofiles/no_user.html" %}
 {% endif %}
