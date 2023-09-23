@@ -237,7 +237,7 @@ class All_User_Profile(ListView):
     """
     paginate_by: int = 9
     model: RaptorUser = RaptorUser
-    queryset: RaptorUserManager = RaptorUser.objects.order_by('-date_joined')
+    queryset: RaptorUserManager = RaptorUser.objects.filter(is_superuser = False).order_by('-date_joined')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
