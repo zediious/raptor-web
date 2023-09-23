@@ -282,7 +282,11 @@ class User_Profile(DetailView):
             return HttpResponseRedirect('/')
 
     def get_object(self):
-        return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        try:
+            return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        
+        except RaptorUser.DoesNotExist:
+            return False
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
