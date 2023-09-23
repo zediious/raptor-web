@@ -12,9 +12,9 @@
     {{ block.super }}
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" />
-<meta property="og:description" content="The last 30 announcements made by {{ site_info_model.brand_name }}" />
-<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" />
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" />
+    <meta property="og:description" content="The last 30 announcements made by {{ site_info_model.brand_name }}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" />
 {% endblock %}
 
 {% block main_block %}
