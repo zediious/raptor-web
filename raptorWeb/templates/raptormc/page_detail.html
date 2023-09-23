@@ -1,11 +1,11 @@
 {% extends 'raptormc/base.html' %}
 
 {% block page_title %}
-<title>
-  
-    {{ site_info_model.brand_name }} | {{page.name}}
-  
-</title>
+    <title>
+    
+        {{ site_info_model.brand_name }} | {{page.name}}
+    
+    </title>
 {% endblock %}
 {% block seo_data %}
     {% if page.meta_description and page.meta_keywords != "" %}
