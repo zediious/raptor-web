@@ -25,7 +25,11 @@
             {% else %}
             <div class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
             {% endif %}
+                {% if server.modpack_picture %}
                 <img class="w-75 fade-in" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
+                {% else %}
+                <div class="w-75 fade-in">{{ server.modpack_name }}</div>
+                {% endif %}
                 {% if server_query_enabled %}
                 {% if server.in_maintenance %}
                 <img class="indicatorImage p-2 fade-in" src="{% static 'image/maintenance_indicator.svg' %}" alt="Maintenance">
