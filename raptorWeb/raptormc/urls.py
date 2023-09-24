@@ -24,6 +24,6 @@ urlpatterns: list[URLPattern] = [
     # Admin Panel
     path('panel/', views.Admin_Panel.as_view(), name='admin_panel_base'),
     # 404
-    path('404/', views.View_404.as_view(), name='404_view')
+    path('404', views.View_404.as_view(), name='404_view')
 
 ]
