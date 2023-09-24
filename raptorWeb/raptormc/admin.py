@@ -4,7 +4,7 @@ from django.forms import TextInput
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page, DefaultPages
 
 
 class PageAdminForm(ModelForm):
@@ -51,13 +51,21 @@ class PageAdmin(admin.ModelAdmin):
     form = PageAdminForm
 
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Page Content', {
             'fields': (
                 'name',
-                'content',
+                'content')
+        }),
+        ('SEO', {
+            'fields': (
+                'meta_description',
+                'meta_keywords')
+        }),
+        ('Misc', {
+            'fields': (
                 'show_gameservers',
                 'created')
-        }),
+        })
     )
 
     readonly_fields: tuple[str] = (
@@ -69,6 +77,16 @@ class PageAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['name', 'created', 'show_gameservers']
+    
+    
+class DefaultPageAdmin(admin.ModelAdmin):
+    """
+    Object tracking enabled state of default pages
+    """
+    list_display: list[str] = ['announcements', 'rules', 'banned_items', 'voting', 'joining', 'staff_apps', 'members']
+    
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class NotificationToastAdmin(admin.ModelAdmin):
@@ -79,7 +97,7 @@ class NotificationToastAdmin(admin.ModelAdmin):
     form = NotificationToastAdminForm
 
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Notification Toast', {
             'fields': (
                 'enabled',
                 'name',
@@ -105,7 +123,7 @@ class NavWidgetBarAdmin(admin.ModelAdmin):
     NavWidgetBars in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Nav Widget Bar', {
             'fields': (
                 'enabled',
                 'priority',
@@ -126,7 +144,7 @@ class NavWidgetAdmin(admin.ModelAdmin):
     NavWidgets in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Nav Widget', {
             'fields': (
                 'enabled',
                 'priority',
@@ -153,7 +171,7 @@ class NavbarDropdownAdmin(admin.ModelAdmin):
     NavbarDropdowns in the Django admin interface.
     """
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Navigation Link', {
+        ('Navigation Dropdown', {
             'fields': (
                 'enabled',
                 'priority',
@@ -234,17 +252,32 @@ class SiteInformationAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('Information', {
             'fields': (
-                'brand_name',)
+                'brand_name',
+                'contact_email')
         }),
         ('Colors', {
             'fields': (
                 'main_color',
-                'secondary_color')
+                'use_main_color',
+                'secondary_color',
+                'use_secondary_color')
         }),
         ('Images', {
             'fields': (
                 'branding_image',
-                'background_image')
+                'background_image',
+                'avatar_image')
+        }),
+        ('SEO', {
+            'fields': (
+                'meta_description',
+                'meta_keywords')
+        }),
+         ('Misc', {
+            'fields': (
+                'enable_footer',
+                'enable_footer_credit',
+                'enable_footer_contact')
         })
     )
 
@@ -253,7 +286,8 @@ class SiteInformationAdmin(admin.ModelAdmin):
         'main_color',
         'secondary_color',
         'branding_image',
-        'background_image']
+        'background_image',
+        'avatar_image']
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -267,3 +301,4 @@ admin.site.register(NavWidget, NavWidgetAdmin)
 admin.site.register(NavWidgetBar, NavWidgetBarAdmin)
 admin.site.register(NotificationToast, NotificationToastAdmin)
 admin.site.register(Page, PageAdmin)
+admin.site.register(DefaultPages, DefaultPageAdmin)

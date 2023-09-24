@@ -31,7 +31,7 @@
             </div>
             <div class="modal-footer justify-content-center">
 
-              {% if request.path == '/announcements/' %}
+              {% if default_pages.announcements %}{% if request.path == '/announcements/' %}
                 <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
                   Announcements
                 </a>
@@ -39,9 +39,9 @@
                 <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
                   Announcements
                 </a>
-              {% endif %}
+              {% endif %}{% endif %}
               
-              {% if request.path == '/rules/' %}
+              {% if default_pages.rules %}{% if request.path == '/rules/' %}
                 <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
                   Rules
                 </a>
@@ -49,9 +49,9 @@
                 <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
                   Rules
                 </a>
-              {% endif %}
+              {% endif %}{% endif %}
 
-              {% if request.path == '/banneditems/' %}
+              {% if default_pages.banned_items %}{% if request.path == '/banneditems/' %}
                 <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
                   Banned Items
                 </a>
@@ -59,9 +59,9 @@
                 <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
                   Banned Items
                 </a>
-              {% endif %}
+              {% endif %}{% endif %}
 
-              {% if request.path == '/voting/' %}
+              {% if default_pages.voting %}{% if request.path == '/voting/' %}
                 <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
                   Vote
                 </a>
@@ -69,7 +69,7 @@
                 <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
                   Vote
                 </a>
-              {% endif %}
+              {% endif %}{% endif %}
 
             </div>
           </div>

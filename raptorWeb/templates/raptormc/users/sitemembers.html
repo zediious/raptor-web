@@ -5,14 +5,17 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | Profiles
+  {{ site_info_model.brand_name }} | Profiles
   
 </title>
 {% endblock %}
+{% block seo_data %}
+    {{ block.super }}
+{% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Profiles" />
-<meta property="og:description" content="All User profiles on ShadowRaptor" />
-<meta property="og:url" content="https://shadowraptor.net/profile/" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | Profiles" />
+<meta property="og:description" content="All User profiles on {{ site_info_model.brand_name }}" />
+<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/profile/" />
 {% endblock %}
 
 {% block main_block %}

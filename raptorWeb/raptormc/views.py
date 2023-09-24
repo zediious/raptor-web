@@ -7,7 +7,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
 from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
-from raptorWeb.raptormc.models import Page
+from raptorWeb.raptormc.models import Page, DefaultPages
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
@@ -18,7 +18,7 @@ class HomeServers(TemplateView):
     """
     Homepage with general information
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'home.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/home.html')
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -32,7 +32,13 @@ if USE_GLOBAL_ANNOUNCEMENT:
         """
         Page containing the last 30 announcements from Discord
         """
-        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'announcements.html')
+        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
+        
+        def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
         def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
             context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -45,7 +51,13 @@ class Rules(TemplateView):
     """
     Rules page containing general and server-specific rules
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'rules.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/rules.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].rules:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -58,7 +70,13 @@ class BannedItems(TemplateView):
     """
     Contains lists of items that are banned on each server
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'banneditems.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/banneditems.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].banned_items:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -71,7 +89,13 @@ class Voting(TemplateView):
     """
     Contains lists links for each server's voting sites
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'voting.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/voting.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].voting:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -84,7 +108,13 @@ class HowToJoin(TemplateView):
     """
     Contains guides for downloading modpacks and joining servers.
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'joining.html')
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/joining.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].joining:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -102,6 +132,12 @@ class StaffApps(TemplateView):
     Provide links to each staff application
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('applications', 'staffapps.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -125,6 +161,12 @@ class SiteMembers(TemplateView):
     Provide links to each Site Member's profile
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('users', 'sitemembers.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+                return HttpResponseRedirect('/404')
+            
+            return super().get(request, *args, **kwargs)
 
 
 class User_Page(TemplateView):

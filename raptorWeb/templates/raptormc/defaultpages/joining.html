@@ -1,16 +1,19 @@
 {% extends 'raptormc/base.html' %}
 
 {% block page_title %}
-<title>
-  
-  ShadowRaptor | How to Join
-  
-</title>
+    <title>
+      
+      {{ site_info_model.brand_name }} | How to Join
+      
+    </title>
+{% endblock %}
+{% block seo_data %}
+    {{ block.super }}
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | How to Join" />
-<meta property="og:description" content="{{ joining_info.content|striptags }}" />
-<meta property="og:url" content="https://shadowraptor.net/howtojoin" />
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | How to Join" />
+    <meta property="og:description" content="{{ joining_info.content|striptags }}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/howtojoin" />
 {% endblock %}
 
 {% block main_block %}
@@ -18,7 +21,7 @@
 
   {% if Joining_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">Joining ShadowRaptor Servers</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">Joining {{ site_info_model.brand_name }} Servers</h3>
     <hr>
     <div class="pageContent">
       {{ Joining_Information.content|safe }}

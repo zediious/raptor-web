@@ -12,8 +12,13 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
+
+try:
+    from raptorWeb.raptormc.models import DefaultPages
+except ModuleNotFoundError:
+    pass
 
 LOGGER: Logger = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
@@ -202,8 +207,8 @@ def user_logout(request: HttpRequest) -> HttpResponse:
     """
     Log out the signed in user
     """
+    LOGGER.info(f"{request.user} logging out!")
     logout(request)
-    LOGGER.info(f"{request.user} logged out!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -232,9 +237,16 @@ class All_User_Profile(ListView):
     """
     paginate_by: int = 9
     model: RaptorUser = RaptorUser
-    queryset: RaptorUserManager = RaptorUser.objects.order_by('-date_joined')
+    queryset: RaptorUserManager = RaptorUser.objects.filter(is_superuser = False).order_by('-date_joined')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+                return HttpResponseRedirect('/404')
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
@@ -248,13 +260,33 @@ class User_Profile(DetailView):
     model: RaptorUser = RaptorUser
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        try:
+            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+                if (request.headers.get('HX-Request') == "true"
+                and request.user.user_slug == self.kwargs['user_slug']
+                or request.user.is_staff):
+                    return super().get(request, *args, **kwargs)
+                
+                else:
+                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
+                
+        except AttributeError:
+            return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
+            
+        except ModuleNotFoundError:
+            pass
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('/')
 
     def get_object(self):
-        return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        try:
+            return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        
+        except RaptorUser.DoesNotExist:
+            return False
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):

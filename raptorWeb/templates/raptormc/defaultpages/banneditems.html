@@ -1,16 +1,19 @@
 {% extends 'raptormc/base.html' %}
 
 {% block page_title %}
-<title>
-  
-  ShadowRaptor | Banned Items
-  
-</title>
+    <title>
+      
+      {{ site_info_model.brand_name }} | Banned Items
+      
+    </title>
+{% endblock %}
+{% block seo_data %}
+    {{ block.super }}
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Banned Items" />
-<meta property="og:description" content="{{ banneditems_info.content|striptags }}" />
-<meta property="og:url" content="https://shadowraptor.net/banneditems" />
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | Banned Items" />
+    <meta property="og:description" content="{{ banneditems_info.content|striptags }}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/banneditems" />
 {% endblock %}
 
 {% block main_block %}
@@ -18,7 +21,7 @@
 
   {% if Banned_Items_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">ShadowRaptor Banned Items</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Banned Items</h3>
     <hr>
     <div class="pageContent">
       {{ Banned_Items_Information.content|safe }}

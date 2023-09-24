@@ -1,6 +1,14 @@
+from logging import Logger, getLogger
+
 from django.db import models
 from django.utils.text import slugify
+from django.dispatch import receiver
+from django.utils.timezone import localtime, now
+from django.db.models.signals import post_save
 
+from django_resized import ResizedImageField
+
+LOGGER: Logger = getLogger('raptormc.models')
 
 class PageManager(models.Manager):
     """
@@ -45,6 +53,24 @@ class Page(models.Model):
         default=True,
         verbose_name="Show Servers",
         help_text="If this is checked, this page will display Server buttons in the usual location."
+    )
+    
+    meta_description = models.CharField(
+        max_length=500,
+        default="",
+        blank=True,
+        verbose_name="SEO Description",
+        help_text=("The description for this page provided in search engine results. "
+                    "This will apply only to this page, overriding default."),
+    )
+    
+    meta_keywords = models.CharField(
+        max_length=500,
+        default="",
+        blank=True,
+        verbose_name="SEO Keywords",
+        help_text=("The comma-separated keywords for this page used in search engine results. "
+                    "This will apply only to this page, overriding default."),
     )
 
     def __str__(self):
@@ -316,6 +342,14 @@ class SiteInformation(models.Model):
         help_text=("The name of your website and/or network"),
         default="Default"
     )
+    
+    contact_email = models.EmailField(
+        max_length=500,
+        verbose_name="Contact Email",
+        help_text=("Email to be linked with a mailto in the footer of the website."),
+        blank=True,
+        default=""
+    )
 
     main_color = models.CharField(
         max_length=7,
@@ -348,6 +382,88 @@ class SiteInformation(models.Model):
                     " is 1920x1080 or within the same aspect ratio."),
         blank=True
     )
+    
+    avatar_image = models.ImageField(
+        upload_to='avatar',
+        verbose_name="Avatar Image",
+        help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
+                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
+                   "This will also be used as your Favicon, after being converted to a .ico file."),
+        blank=True
+    )
+    
+    meta_description = models.CharField(
+        max_length=500,
+        verbose_name="SEO - Meta Description",
+        help_text=("The description for your website provided in search engine results. "
+                    "This will apply to all pages that do not override."),
+        default="",
+        blank=True
+    )
+    
+    meta_keywords = models.CharField(
+        max_length=500,
+        verbose_name="SEO - Meta Keywords",
+        help_text=("A series of comma-separated values that represent meta keywords used "
+                    "in search engine results. This will apply to all pages that do not override."),
+        default="",
+        blank=True
+    )
+    
+    use_main_color = models.BooleanField(
+        verbose_name="Use Main Color",
+        help_text=("If this is checked, the Main Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead."),
+        default=True
+    )
+    
+    use_secondary_color = models.BooleanField(
+        verbose_name="Use Secondary Color",
+        help_text=("If this is checked, the Secondary Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead. If "
+                   "you are using a Background Image, that will always take precedence."),
+        default=True
+    )
+    
+    enable_footer = models.BooleanField(
+        verbose_name="Enable Footer",
+        help_text=("If this is checked, the footer will be enabled"),
+        default=True
+    )
+    
+    enable_footer_credit = models.BooleanField(
+        verbose_name="Enable Credits in Footer",
+        help_text=("If this is checked, link to Zediious' GitHub profile will appear in the footer. "
+                   "This has no effect if Enable Footer is disabled."),
+        default=True
+    )
+    
+    enable_footer_contact = models.BooleanField(
+        verbose_name="Enable Email in Footer",
+        help_text=("If this is checked, a mailto link will appear in the footer, "
+                   "addressed to the defined contact email."),
+        default=True
+    )
+
+    def __str__(self):
+        return str(self.brand_name)
+
+    class Meta:
+        verbose_name = "Site Settings",
+        verbose_name_plural = "Site Settings"
+        
+        
+class SmallSiteInformation(models.Model):
+    """
+    Extra site information. Hidden from the user.
+    """
+    ico_image = ResizedImageField(
+        upload_to="ico",
+        force_format="ICO",
+        size=[64, 64],
+        quality=5,
+        blank=True
+    )
 
     def __str__(self):
         return str(self.brand_name)
@@ -355,7 +471,7 @@ class SiteInformation(models.Model):
     class Meta:
         verbose_name = "Site Information",
         verbose_name_plural = "Site Information"
-
+            
 
 class InformativeText(models.Model):
     """
@@ -386,3 +502,82 @@ class InformativeText(models.Model):
     class Meta:
         verbose_name = "Informative Text",
         verbose_name_plural = "Informative Texts"
+        
+        
+class DefaultPages(models.Model):
+    """
+    Enable or disable the default pages supplied with the website. If you uncheck a page here, it will
+    not appear in the navigation sidebar, and attempts to manually access the URL will lead to the 404
+    page.
+    """
+    announcements = models.BooleanField(
+        default=True,
+        verbose_name="Announcements Page",
+        help_text="Whether the default Announcement page is enabled or not."
+    )
+    
+    rules = models.BooleanField(
+        default=True,
+        verbose_name="Rules Page",
+        help_text="Whether the default Rules page is enabled or not."
+    )
+    
+    banned_items = models.BooleanField(
+        default=True,
+        verbose_name="Banned Items Page",
+        help_text="Whether the default Banned Items page is enabled or not."
+    )
+    
+    voting = models.BooleanField(
+        default=True,
+        verbose_name="Voting Page",
+        help_text="Whether the default Vote for Us page is enabled or not."
+    )
+    
+    joining = models.BooleanField(
+        default=True,
+        verbose_name="How to Join Page",
+        help_text="Whether the default How to Join page is enabled or not."
+    )
+    
+    staff_apps = models.BooleanField(
+        default=True,
+        verbose_name="Staff Applications Page",
+        help_text="Whether the default Staff Applications page is enabled or not."
+    )
+    
+    members = models.BooleanField(
+        default=True,
+        verbose_name="Site Members Page",
+        help_text="Whether the default Site Members page is enabled or not."
+    )
+
+    def __str__(self):
+        return "Default Pages"
+
+    class Meta:
+        verbose_name = "Default Pages",
+        verbose_name_plural = "Default Pages"
+
+
+@receiver(post_save, sender=SiteInformation)
+def post_save_site_info(sender, instance, *args, **kwargs):
+    """
+    If a new Avatar is added to SiteInformation, convert that image 
+    to a .ICO format and save it to SmallSiteInformation's ico_image
+    attribute.
+    
+    This runs every time SiteInformation model is saved. The function
+    checks to see if the current Avatar Image hash is different than 
+    the .ico filename, which is set to the Avatar Image hash on
+    creation. It will only run if those two values differ.
+    """
+    small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
+    
+    if instance.avatar_image:
+        if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":
+            small_site_info.ico_image.save(
+                f"{hash(instance.avatar_image)}.ico",
+                instance.avatar_image)
+            small_site_info.save()
+            LOGGER.info("New Avatar Image detected, new favicon created from it.")

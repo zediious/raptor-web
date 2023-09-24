@@ -237,6 +237,12 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptormc.models': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        
         'staffapps.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
@@ -353,16 +359,16 @@ JAZZMIN_SETTINGS = {
     "site_title": f"{ADMIN_BRAND_NAME} Admin",
     "site_header": f"{ADMIN_BRAND_NAME}",
     "site_brand": f"{ADMIN_BRAND_NAME}",
-    "site_logo": "image/ShadowRaptorAvatar.webp",
-    "login_logo": "image/ShadowRaptorAvatar.webp",
     "site_logo_classes": "img-circle",
     "welcome_sign": f"Welcome to {ADMIN_BRAND_NAME}",
     "copyright": "Admin theme by Acme Library Ltd",
-    "search_model": ["authprofiles.RaptorUser", "gameservers.Server"],
-    "user_avatar": 'user_profile_info.profile_picture',
+    "search_model": ["authprofiles.RaptorUser"],
     "topmenu_links": [
         {"name": "Return to Site", "url": "/", "new_window": False},
         {"name": "Control Panel", "url": "/panel", "new_window": False},
+        
+        {"model": "raptormc.SiteInformation"},
+        {"model": "raptormc.DefaultPages"},
 
         {"app": "raptormc"},
         {"app": "gameservers"},
@@ -381,13 +387,13 @@ JAZZMIN_SETTINGS = {
     "custom_links": {
         "raptorbot": [{
             "name": "Bot Actions", 
-            "url": "../../../panel", 
+            "url": "/panel", 
             "icon": "fas fa-terminal",
             "permissions": ["raptorbot.view_discordguild"]
         }],
          "gameservers": [{
             "name": "Server Actions", 
-            "url": "../../../panel", 
+            "url": "/panel", 
             "icon": "fas fa-terminal",
             "permissions": ["gameservers.view_server"]
         }]
@@ -400,6 +406,7 @@ JAZZMIN_SETTINGS = {
         "raptormc.NavWidget": "fas fa-map-pin",
         "raptormc.NavWidgetBar": "fas fa-map-pin",
         "raptormc.SiteInformation": "fas fa-clipboard-list",
+        "raptormc.DefaultPages": "fas fa-clipboard-list",
         "raptormc.NotificationToast": "fas fa-envelope-square",
         "raptormc.Page": "fas fa-file",
         "gameservers": "fas fa-gamepad",

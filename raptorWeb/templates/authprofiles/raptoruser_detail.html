@@ -3,16 +3,21 @@
 {% block page_title %}
 <title>
   
-  ShadowRaptor | {{object.username}}
+  {{ site_info_model.brand_name }} | {{object.username}}
   
 </title>
 {% endblock %}
 
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | {{object.username}}" />
+<meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
 <meta property="og:description" content="User Profile for {{object.username}}" />
 <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
 {% endblock %}
+
+{% if object != False %}
+{% if object.is_superuser and request.user.is_superuser != True %}
+{% include "authprofiles/no_user.html" %}
+{% else %}
 
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
@@ -84,3 +89,7 @@
         </div>
     </div>
 </div>
+{% endif %}
+{% else %}
+{% include "authprofiles/no_user.html" %}
+{% endif %}

@@ -1,0 +1,18 @@
+{% if site_info_model.enable_footer %}
+    <footer>
+
+        <div class="container">
+            {% if site_info_model.enable_footer_credit %}
+            <p class="pageContent text-center">
+                <a class="text-white" href="https://github.com/zediious" target="_blank">Website created by Zediious</a>
+            </p>
+            {% endif %}
+            {% if site_info_model.enable_footer_contact and site_info_model.contact_email != ""%}
+            <p class="pageContent text-center">
+                <a class="text-white" href="mailto:{{site_info_model.contact_email}}">Contact</a>
+            </p>
+            {% endif %}
+        </div>
+
+    </footer>
+{% endif %}

@@ -1,0 +1,27 @@
+{% load sessionFetch %}
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+{% for notification in notification_toasts reversed %}
+    <div id="notificationtoast_{{ notification.pk }}" class="toast border-1 border-dark mt-1 mb-1" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div class="toast-header bg-dark text-white">
+        <strong class="me-auto">{{ notification.name }}</strong>
+        <small>{{notification.created|timesince}} ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body bg-dark text-white">
+        {% autoescape off %}{{ notification.message }}{% endautoescape %}
+    </div>
+    </div>
+{% endfor %}
+</div>
+
+{% comment %} Display notifications that have not been seen in session {% endcomment %}
+<script>
+{% for notification in notification_toasts reversed %}
+    {% if request.session|fetch_session_id:notification.name != 4 %}
+    const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}')
+    const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}})
+    toast_{{notification.pk}}.show()
+    {% endif %}
+{% endfor %}
+</script>

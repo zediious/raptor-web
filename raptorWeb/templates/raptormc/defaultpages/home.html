@@ -2,16 +2,19 @@
 {% load markdownStrip %}
 
 {% block page_title %}
-<title>
-  
-  ShadowRaptor | Home
-  
-</title>
+    <title>
+      
+      {{ site_info_model.brand_name }} | Home
+      
+    </title>
+{% endblock %}
+{% block seo_data %}
+    {{ block.super }}
 {% endblock %}
 {% block metadata %}
-<meta property="og:title" content="ShadowRaptor | Home" />
-<meta property="og:description" content="{{ home_info.content|striptags }}" />
-<meta property="og:url" content="https://shadowraptor.net" />
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | Home" />
+    <meta property="og:description" content="{{ home_info.content|striptags }}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}.net" />
 {% endblock %}
 
 {% block main_block %}
@@ -30,6 +33,7 @@
 
 </section>
 
+{% if default_pages.announcements %}
 <section id="discordAnnouncements" class="container mt-0">
 
   <header class="p-0 mt-4">
@@ -41,4 +45,5 @@
   </header>
 
 </section>
+{% endif %}
 {% endblock %}

@@ -27,15 +27,15 @@
             {% endif %}
             </div>
         </button>
-        <ul class="dropdown-menu bg-dark">
-            <li><span class="text-center text-white"><p class="text-white m-1">Welcome, {{user}}</p></span></li>
+        <div class="dropdown-menu bg-dark">
+            <div><span class="text-center text-white"><p class="text-white m-1">Welcome, {{user}}</p></span></div>
             <hr style="color: white">
-            <li><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.get_username|slugify}}">Profile</a></li>
+            <div><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.get_username|slugify}}">Profile</a></div>
             {% if user.is_staff %}
-            <li><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></li>
+            <div><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></div>
             {% endif %}
-            <li><a class="dropdown-item text-white" href="{% url 'authprofiles:logout' %}">Logout</a></li>
-        </ul>
+            <div><a class="dropdown-item text-white" href="{% url 'authprofiles:logout' %}">Logout</a></div>
+        </div>
         </div>
     </div>
 {% else %}
