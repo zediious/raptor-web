@@ -96,13 +96,13 @@ class UserLoginForm(forms.Form):
             queried_user: RaptorUser = RaptorUser.objects.get(username=username)
             
             if queried_user.is_discord_user == True:
-                raise forms.ValidationError("The entered Username does not exist")
+                raise forms.ValidationError("The entered Password was incorrect")
 
             if authenticate(username=username, password=password) == None:
                 raise forms.ValidationError("The entered Password was incorrect")
 
         except RaptorUser.DoesNotExist:
-            raise forms.ValidationError("The entered Username does not exist")
+            raise forms.ValidationError("The entered Password was incorrect")
 
 class UserPasswordResetEmailForm(forms.Form):
     """

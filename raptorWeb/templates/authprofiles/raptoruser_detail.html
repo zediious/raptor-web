@@ -14,6 +14,11 @@
 <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
 {% endblock %}
 
+{% if object != False %}
+{% if object.is_superuser and request.user.is_superuser != True %}
+{% include "authprofiles/no_user.html" %}
+{% else %}
+
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
     <div hx-get="{% url 'authprofiles:user_profile_edit' profile_name=object.user_slug %}" hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
@@ -84,3 +89,7 @@
         </div>
     </div>
 </div>
+{% endif %}
+{% else %}
+{% include "authprofiles/no_user.html" %}
+{% endif %}

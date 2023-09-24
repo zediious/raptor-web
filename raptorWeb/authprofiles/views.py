@@ -237,7 +237,7 @@ class All_User_Profile(ListView):
     """
     paginate_by: int = 9
     model: RaptorUser = RaptorUser
-    queryset: RaptorUserManager = RaptorUser.objects.order_by('-date_joined')
+    queryset: RaptorUserManager = RaptorUser.objects.filter(is_superuser = False).order_by('-date_joined')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
@@ -282,7 +282,11 @@ class User_Profile(DetailView):
             return HttpResponseRedirect('/')
 
     def get_object(self):
-        return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        try:
+            return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
+        
+        except RaptorUser.DoesNotExist:
+            return False
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):

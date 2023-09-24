@@ -2,7 +2,6 @@
 
 {% load static %}
 {% load django_bootstrap5 %}
-{% load sessionFetch %}
 
 <html lang="en" dir="ltr">
 
@@ -26,255 +25,54 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
   </head>
 
-  <body id="body" style="background-color: {{ site_info_model.main_color }}">
+  <body id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
 
-    <div id="backgroundWrapper" style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %}); background-color: {{ site_info_model.secondary_color }}; background-size: cover; background-repeat: no-repeat; background-position: top center; background-attachment: scroll;">
+    <div id="backgroundWrapper" 
+      style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
+      {% if site_info_model.use_secondary_color %}background-color: {{ site_info_model.secondary_color }};{% endif %}">
+
+      {% comment %} topBox containing Navigation elements {% endcomment %}
       <div id="topBox" style="position: relative; z-index: 1">
-        
-        <div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
-          <div class="offcanvas-header text-white">
-            <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="m-4"></div>
-          <div class="offcanvas-body text-white">
-            <div class="navbar-collapse text-center">
-              <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
-    
-                {% if default_pages.announcements %}<li class="btn btn-secondary m-2 p-2"> 
-                  <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:announcements' %}">Announcements</a> 
-                </li>{% endif %}
-                
-                {% if default_pages.rules %}<li class="btn btn-secondary m-2 p-2"> 
-                  <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
-                </li>{% endif %}
-    
-                {% if default_pages.banned_items %}<li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
-                </li>{% endif %}
 
-                {% if default_pages.voting %}<li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:voting' %}">Vote for Us</a>
-                </li>{% endif %}
-    
-                {% if default_pages.joining %}<li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
-                </li>{% endif %}
-                
-                {% if default_pages.staff_apps %}<li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:staff_apps' %}">Staff Applications</a>
-                </li>{% endif %}
-
-                {% if default_pages.members %}<li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:site_members' %}">Site Members</a>
-                </li>{% endif %}
-
-                {% for link in nav_links %}
-                {% if not link.parent_dropdown %}
-                <li class="btn btn-secondary m-2 p-2">
-                  <a class="nav-link text-white text-nowrap fs-5" 
-                  href="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}" {% if link.new_tab %}target="_blank"{% endif %}>{{link.name}}
-                    {% if link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
-                  </a>
-                </li>
-                {% endif %}
-                {% endfor %}
-
-                {% for dropdown in nav_dropdowns %}
-                <li class="btn btn-secondary m-2 p-2 dropdown">
-                  <a class="nav-link dropdown-toggle text-white fs-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ dropdown.name }}</a>
-                  <ul class="dropdown-menu bg-dark text-center">
-                    {% for nested_link in dropdown.enabled_links_in_dropdown %}
-                    <li>
-                      <a class="dropdown-item text-white" href="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
-                        {% if nested_link.new_tab %}<img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
-                      </a>
-                    </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-                {% endfor %}
-    
-              </ul>
-            </div>
-          </div>
-        </div>
-      
-        <nav class="navbar navbar-dark bg-dark">
-          <div class="container">
-            <div class="navbar-header d-flex">
-              <div class="row p-2 pt-1 pb-1 gap-2">
-                {% if discord_guild %}
-                <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" 
-                data-bs-title="{{ discord_guild.online_members }}/{{ discord_guild.total_members }} Members Online" href="{{ discord_guild.invite_link }}" target="_blank">
-                  <img id="discordBanner" src="{% static 'image/discord_banner.webp' %}" alt="Discord">
-                </a>
-                {% endif %}
-                {% for widget in nav_widgets %}
-                {% if not widget.parent_bar %}
-                <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
-                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
-                  {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
-                </a>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        {% for widget_bar in nav_widget_bars %}
-        <nav id="widgetbar_{{widget_bar.pk}}" class="navbar navbar-dark bg-dark">
-          <div class="container">
-            <div class="navbar-header d-flex">
-              <div class="row p-2 pt-1 pb-1 gap-2">
-                {% for widget in nav_widgets %}
-                {% if widget.parent_bar %}
-                <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
-                  href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
-                  {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
-                </a>
-                {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </nav>
-        {% endfor %}
-        
-        <nav class="navbar navbar-dark bg-dark d-flex align-items-center justify-content-center">
-          <div class="container d-flex align-items-center justify-content-center">
-            <div class="row w-100">
-              <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
-                <div class="navbar-header d-flex h-100">
-                  <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
-                    <span class="navbar-toggler-icon" ></span>
-                  </button>
-                  <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
-                    <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
-                  </a>
-                </div>
-              </div>
-              <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
-                <div class="navbar-header d-flex align-items-end justify-content-end h-100">
-                  <div class="h-100" id="profile_dropdown" hx-get="{% url 'authprofiles:user_dropdown' %}" hx-trigger="load" hx-target="#profile_dropdown" hx-swap="innerHTML"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
+        {% include "raptormc/navigation/offcanvasnav.html" %}
+        {% include "raptormc/navigation/navwidgets.html" %}
+        {% include "raptormc/navigation/lowernav.html" %}
 
       </div>
 
+      {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% block header_box %}
-      {% if total_server_count > 0 %}
-      <div id="headerBox" class="d-flex align-items-center justify-content-center mb-0" style="position: relative;">
-        
-        <div class="container d-flex align-items-center justify-content-center">
+      
+      {% include "raptormc/components/serverbox.html" %}
 
-            <div id="server_modals"
-              hx-get="/api/servers/html/server_modal_poll" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
-            </div>
-
-            {% if server_query_enabled %}
-            <header class="row m-2 mt-0 w-100">
-
-            <section id="playerCountBox" class="col-lg col-12 fs-2 mt-lg-2 mt-4 d-flex align-items-center flex-column"
-              hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
-    
-              <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
-                <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
-                <img id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading..."></span></aside>
-                <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
-              </button>
-    
-            </section>
-
-            <section class="col-lg col-12 fs-4 mt-3 mb-3">
-    
-              <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
-    
-                <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
-                  hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
-            {% else %}
-            <header id="serverBoxNoQuery" class="m-2 mt-0">
-
-            <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
-              <div class="d-flex align-items-center justify-content-center" id="copyAddress">
-                <div id="server_buttons" class="col-lg-12 col-12 row mb-0 p-5 d-flex align-items-center justify-content-center"
-                  hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
-            {% endif %}
-                </div>
-    
-              </div>
-    
-            </section>
-    
-          </header>
-
-        </div>
-        
-      </div>
-      {% endif %}
       {% endblock %}
       
-      </div>
     </div>
 
+    {% comment %} Main block for page content {% endcomment %}
     <main id="home" class="container-flex m-5 mt-0">
       {% block main_block %}
       {% endblock %}
     </main>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      {% for notification in notification_toasts reversed %}
-        <div id="notificationtoast_{{ notification.pk }}" class="toast border-1 border-dark mt-1 mb-1" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-          <div class="toast-header bg-dark text-white">
-            <strong class="me-auto">{{ notification.name }}</strong>
-            <small>{{notification.created|timesince}} ago</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div class="toast-body bg-dark text-white">
-            {% autoescape off %}{{ notification.message }}{% endautoescape %}
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    {% comment %} Notification Toast elements and script {% endcomment %}
+    {% include "raptormc/components/toasts.html" %}
 
-    <footer>
-
-      <div class="container">
-        <p class="pageContent text-center">
-          <a class="text-white" href="https://github.com/zediious" target="_blank">Website created by Zediious</a>
-        </p>
-        <p class="pageContent text-center">
-          <a class="text-white" href="mailto:shadowraptormc@gmail.com">Contact</a>
-        </p>
-      </div>
-
-    </footer>
+    {% comment %} Static website footer {% endcomment %}
+    {% include "raptormc/components/footer.html" %}
     
     <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
     <script src="{% static 'javascript/src/raptormc.js' %}"></script>
 
+    {% comment %} If serverbox did not load, instantiate Bootstrap tooltip object. {% endcomment %}
     {% if total_server_count == 0 %}
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
     {% endif %}
-
-    <script>
-      {% for notification in notification_toasts reversed %}
-        {% if request.session|fetch_session_id:notification.name != 4 %}
-          const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}')
-          const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}})
-          toast_{{notification.pk}}.show()
-        {% endif %}
-      {% endfor %}
-    </script>
     
   </body>
 

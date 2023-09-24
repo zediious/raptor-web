@@ -64,11 +64,20 @@
 
 // Variable Definitions/Overrides
 $bd-discord-tone: #7289da;
-
+  
 body {
     background-size: auto;
     background-position: center top;
     background-repeat: no-repeat;
+}
+
+#backgroundWrapper {
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-attachment: scroll;
+
 }
 
 #discordBanner {

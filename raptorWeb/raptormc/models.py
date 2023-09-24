@@ -342,6 +342,14 @@ class SiteInformation(models.Model):
         help_text=("The name of your website and/or network"),
         default="Default"
     )
+    
+    contact_email = models.EmailField(
+        max_length=500,
+        verbose_name="Contact Email",
+        help_text=("Email to be linked with a mailto in the footer of the website."),
+        blank=True,
+        default=""
+    )
 
     main_color = models.CharField(
         max_length=7,
@@ -401,13 +409,48 @@ class SiteInformation(models.Model):
         default="",
         blank=True
     )
+    
+    use_main_color = models.BooleanField(
+        verbose_name="Use Main Color",
+        help_text=("If this is checked, the Main Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead."),
+        default=True
+    )
+    
+    use_secondary_color = models.BooleanField(
+        verbose_name="Use Secondary Color",
+        help_text=("If this is checked, the Secondary Color chosen above will be used on the website. If not, "
+                   "the color determined from the user's current Light/Dark theme choice will be used instead. If "
+                   "you are using a Background Image, that will always take precedence."),
+        default=True
+    )
+    
+    enable_footer = models.BooleanField(
+        verbose_name="Enable Footer",
+        help_text=("If this is checked, the footer will be enabled"),
+        default=True
+    )
+    
+    enable_footer_credit = models.BooleanField(
+        verbose_name="Enable Credits in Footer",
+        help_text=("If this is checked, link to Zediious' GitHub profile will appear in the footer. "
+                   "This has no effect if Enable Footer is disabled."),
+        default=True
+    )
+    
+    enable_footer_contact = models.BooleanField(
+        verbose_name="Enable Email in Footer",
+        help_text=("If this is checked, a mailto link will appear in the footer, "
+                   "addressed to the defined contact email."),
+        default=True
+    )
 
     def __str__(self):
         return str(self.brand_name)
 
     class Meta:
-        verbose_name = "Site Information",
-        verbose_name_plural = "Site Information"
+        verbose_name = "Site Settings",
+        verbose_name_plural = "Site Settings"
         
         
 class SmallSiteInformation(models.Model):

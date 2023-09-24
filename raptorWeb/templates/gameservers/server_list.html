@@ -21,24 +21,28 @@
         {% for server in page_obj %} 
                             
             {% if server_query_enabled %}
-            <span id="serverButton" class="fade-in-button col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
+            <div class="fade-in-button col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
             {% else %}
-            <span id="serverButton" class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
+            <div class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
             {% endif %}
-                <img class="w-100 fade-in" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
+                {% if server.modpack_picture %}
+                <img class="w-75 fade-in" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
+                {% else %}
+                <div class="w-75 fade-in">{{ server.modpack_name }}</div>
+                {% endif %}
                 {% if server_query_enabled %}
                 {% if server.in_maintenance %}
-                <img class="indicatorImage p-2 fade-in" src="{% static 'image/maintenance_indicator.svg' %}">
+                <img class="indicatorImage p-2 fade-in" src="{% static 'image/maintenance_indicator.svg' %}" alt="Maintenance">
                 {% else %}
                 {% if server.server_state %}
-                <img class="indicatorImage p-2 fade-in" src="{% static 'image/online_indicator.svg' %}">
+                <img class="w-25 indicatorImage p-2 fade-in" src="{% static 'image/online_indicator.svg' %}" alt="Online">
                 {% else %}
-                <img class="indicatorImage p-2 fade-in" src="{% static 'image/offline_indicator.svg' %}">
+                <img class="w-25 indicatorImage p-2 fade-in" src="{% static 'image/offline_indicator.svg' %}" alt="Offline">
                 {% endif %}
                 {% endif %}
                 {% else %}
                 {% endif %}
-            </button></span>
+            </button></div>
 
         {% endfor %}
     </div>
