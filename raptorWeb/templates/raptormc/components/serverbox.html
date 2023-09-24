@@ -35,7 +35,7 @@
         <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll/" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
             <div class="d-flex align-items-center justify-content-center" id="copyAddress">
             <div id="server_buttons" class="col-lg-12 col-12 row mb-0 p-5 d-flex align-items-center justify-content-center"
-                hx-get="/api/servers/html/server_button_poll_loading" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+                hx-get="/api/servers/html/server_button_poll_loading/" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
         {% endif %}
             </div>
 
