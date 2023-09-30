@@ -127,3 +127,21 @@ class DiscordBotTasks(models.Model):
         class Meta:
             verbose_name = "Discord Bot Tasks"
             verbose_name_plural = "Discord Bot Tasks"
+            
+            
+class DiscordBotInternal(models.Model):
+        """
+        Interal tracking information used by the application to
+        control the discord bot.
+        """
+        time_last_stopped = models.DateTimeField(
+            default=None,
+            null=True
+        )
+
+        def __str__(self) -> str:
+            return f'DiscordBotInternal#{self.pk}'
+
+        class Meta:
+            verbose_name = "Discord Bot Internal"
+            verbose_name_plural = "Discord Bot Internal"
