@@ -10,7 +10,6 @@ DISCORD_BOT_TOKEN: str = getattr(settings, 'DISCORD_BOT_TOKEN')
 LOGGER: Logger = getLogger('raptorbot.botware')
 
 bot_process_manager: BotProcessManager = BotProcessManager(bot_token=DISCORD_BOT_TOKEN)
-bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
 
 
 class RaptorBotWare:
@@ -43,6 +42,7 @@ def is_safe_to_start():
     """
     Return true if it has been one minute since the bot last stopped.
     """
+    bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
     minutes_since_stop = int(str(
         (localtime() - bot_stats.time_last_stopped.astimezone())
         ).split(":")[1])
