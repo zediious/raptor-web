@@ -4,6 +4,7 @@ from typing import Optional
 import ctypes
 
 from django.conf import settings
+from django.utils.timezone import localtime
 
 import discord
 from discord.ext import commands
@@ -59,6 +60,8 @@ class BotProcessManager:
 
         self.is_running = True
         self.active_process = Thread(
+            daemon=True,
+            name=f'raptorbot_{localtime()}',
             target = _bot_start,
             args=(raptor_bot,
                 self.bot_token),)
