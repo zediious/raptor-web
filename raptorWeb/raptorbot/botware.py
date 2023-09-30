@@ -45,7 +45,6 @@ def start_bot_process():
     bot_process_manager.start_process()
     LOGGER.info("A Discord Bot Thread has been created and is now running")
 
-
 def stop_bot_process():
     """
     Terminate the current Discord Bot thread
@@ -54,7 +53,6 @@ def stop_bot_process():
         LOGGER.info("The previous Discord Bot Thread has been stopped.")
     else:
         LOGGER.info("There was an error stopping the Discord Bot")
-
 
 def send_command_update_global_announcements():
     """
@@ -66,7 +64,6 @@ def send_command_update_global_announcements():
     LOGGER.info(("The command 'refresh_global_announcements' has been sent to the Discord Bot "
                 "from the web Control Panel."))
 
-
 def send_command_update_all_server_announcements():
     """
     Update DiscordTasks Model attribute update_server_announcements to True
@@ -76,7 +73,6 @@ def send_command_update_all_server_announcements():
     tasks.save()
     LOGGER.info(("The command 'refresh_server_announcements' has been sent to the Discord Bot "
                 "from the web Control Panel."))
-
 
 def send_command_update_members():
     """
