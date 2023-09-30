@@ -12,8 +12,8 @@ dependencies:
     - asyncio-dgram==2.1.2
     - colorama==0.4.6
     - django-bootstrap5==23.3
-    - dnspython==2.4.0
-    - mcstatus==11.0.0
+    - dnspython==2.4.2
+    - mcstatus==11.0.1
     - pillow==10.0.1
     - prompt-toolkit==3.0.39
     - wcwidth==0.2.6
