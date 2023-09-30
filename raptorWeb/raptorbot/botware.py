@@ -64,6 +64,7 @@ def stop_bot_process():
     Terminate the current Discord Bot thread
     """
     if bot_process_manager.stop_process() == True:
+        bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
         bot_stats.time_last_stopped = localtime()
         LOGGER.info("The previous Discord Bot Thread has been stopped.")
     else:
