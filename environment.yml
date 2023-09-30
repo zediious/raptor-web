@@ -16,7 +16,7 @@ dependencies:
     - mcstatus==11.0.1
     - pillow==10.0.1
     - prompt-toolkit==3.0.39
-    - wcwidth==0.2.6
+    - wcwidth==0.2.7
     - daphne==4.0.0
     - whitenoise==6.5.0
     - django-tinymce==3.6.1
