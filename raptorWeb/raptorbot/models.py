@@ -134,6 +134,11 @@ class DiscordBotInternal(models.Model):
         Interal tracking information used by the application to
         control the discord bot.
         """
+        name = models.CharField(
+            default="botinternal-stat",
+            max_length=150
+        )
+        
         time_last_stopped = models.DateTimeField(
             default=None,
             null=True
