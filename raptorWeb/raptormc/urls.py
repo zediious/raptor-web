@@ -7,14 +7,19 @@ app_name: str = "raptormc"
 urlpatterns: list[URLPattern] = [
 
     path('', views.HomeServers.as_view(), name="home"),
-    path('home/', views.HomeServers.as_view(), name="home_alt"),
     # Information
-    path('announcements/', views.Announcements.as_view(), name="announcements"),
+    path('announcements', views.Announcements.as_view(), name="announcements"),
+    path('announcements/', views.Announcements.as_view(), name="announcements_slash"),
+    path('rules', views.Rules.as_view(), name="rules"),
     path('rules/', views.Rules.as_view(), name="rules"),
-    path('banneditems/', views.BannedItems.as_view(), name="banned_items"),
-    path('voting/', views.Voting.as_view(), name="voting"),
-    path('howtojoin/', views.HowToJoin.as_view(), name="joining"),
-    path('applications/', views.StaffApps.as_view(), name="staff_apps"),
+    path('banneditems', views.BannedItems.as_view(), name="banned_items"),
+    path('banneditems/', views.BannedItems.as_view(), name="banned_items_slash"),
+    path('voting', views.Voting.as_view(), name="voting"),
+    path('voting/', views.Voting.as_view(), name="voting_slash"),
+    path('howtojoin', views.HowToJoin.as_view(), name="joining"),
+    path('howtojoin/', views.HowToJoin.as_view(), name="joining_slash"),
+    path('applications', views.StaffApps.as_view(), name="staff_apps"),
+    path('applications/', views.StaffApps.as_view(), name="staff_apps_slash"),
     # Created Pages
     path('pages/<str:page_name>', views.PageView.as_view(), name="pages"),
     # Users

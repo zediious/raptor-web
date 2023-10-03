@@ -93,6 +93,9 @@ class Start_Bot(TemplateView):
         if botware.get_bot_status() == True:
             return HttpResponse('<div class= "alert alert-danger">You cannot start the Discord Bot when it is currently running</div>')
         
+        if botware.is_safe_to_start() == False:
+            return HttpResponse('<div class= "alert alert-danger">You must wait one minute before re-starting the bot.</div>')
+        
         botware.start_bot_process()
         return HttpResponse('<div class= "alert alert-success">The Discord Bot has been started.</div>')
 

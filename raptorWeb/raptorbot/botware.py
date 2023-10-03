@@ -1,9 +1,10 @@
 from logging import Logger, getLogger
 
 from django.conf import settings
+from django.utils.timezone import localtime
 
 from raptorWeb.raptorbot.discordbot.bot import BotProcessManager
-from raptorWeb.raptorbot.models import DiscordBotTasks
+from raptorWeb.raptorbot.models import DiscordBotTasks, DiscordBotInternal
 
 DISCORD_BOT_TOKEN: str = getattr(settings, 'DISCORD_BOT_TOKEN')
 LOGGER: Logger = getLogger('raptorbot.botware')
@@ -37,6 +38,19 @@ def get_bot_status():
     """
     return bot_process_manager.is_running
 
+def is_safe_to_start():
+    """
+    Return true if it has been one minute since the bot last stopped.
+    """
+    bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
+    minutes_since_stop = int(str(
+        (localtime() - bot_stats.time_last_stopped.astimezone())
+        ).split(":")[1])
+
+    if minutes_since_stop > 1:
+        return True
+
+    return False
 
 def start_bot_process():
     """
@@ -45,16 +59,17 @@ def start_bot_process():
     bot_process_manager.start_process()
     LOGGER.info("A Discord Bot Thread has been created and is now running")
 
-
 def stop_bot_process():
     """
     Terminate the current Discord Bot thread
     """
     if bot_process_manager.stop_process() == True:
+        bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
+        bot_stats.time_last_stopped = localtime()
+        bot_stats.save()
         LOGGER.info("The previous Discord Bot Thread has been stopped.")
     else:
         LOGGER.info("There was an error stopping the Discord Bot")
-
 
 def send_command_update_global_announcements():
     """
@@ -66,7 +81,6 @@ def send_command_update_global_announcements():
     LOGGER.info(("The command 'refresh_global_announcements' has been sent to the Discord Bot "
                 "from the web Control Panel."))
 
-
 def send_command_update_all_server_announcements():
     """
     Update DiscordTasks Model attribute update_server_announcements to True
@@ -76,7 +90,6 @@ def send_command_update_all_server_announcements():
     tasks.save()
     LOGGER.info(("The command 'refresh_server_announcements' has been sent to the Discord Bot "
                 "from the web Control Panel."))
-
 
 def send_command_update_members():
     """
