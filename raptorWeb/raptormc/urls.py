@@ -7,7 +7,6 @@ app_name: str = "raptormc"
 urlpatterns: list[URLPattern] = [
 
     path('', views.HomeServers.as_view(), name="home"),
-    path('home/', views.HomeServers.as_view(), name="home_alt"),
     # Information
     path('announcements/', views.Announcements.as_view(), name="announcements"),
     path('rules/', views.Rules.as_view(), name="rules"),
