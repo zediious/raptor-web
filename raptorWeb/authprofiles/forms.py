@@ -59,10 +59,15 @@ class UserProfileEditForm(forms.ModelForm):
         help_text = "If this is checked, your Profile Picture will be reset to your current Discord Avatar. This setting has no effect for Users that did not sign up with Discord.",
         required = False
     )
+    reset_toasts: forms.BooleanField = forms.BooleanField(
+        label = "Reset Seen Notification Toasts",
+        help_text = "If this is checked, your user data about what notification toasts you have seen will be erased, and you will see all of them again.",
+        required = False
+    )
 
     class Meta():
         model: UserProfileInfo = UserProfileInfo
-        fields: tuple[str] = ('picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
+        fields: tuple[str] = ('reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
 
     def clean(self):
         """

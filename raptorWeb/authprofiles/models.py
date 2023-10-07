@@ -319,7 +319,11 @@ class UserProfileInfo(models.Model):
             self.save_profile_picture_from_url(
                 ('https://cdn.discordapp.com/avatars/'
                 f'{changed_user.discord_user_info.id}/'
-                f'{changed_user.discord_user_info.avatar_string}.png'))               
+                f'{changed_user.discord_user_info.avatar_string}.png'))
+        
+        if profile_edit_form.cleaned_data["reset_toasts"] == True:
+            changed_user.toasts_seen = dict()
+            changed_user.save()
 
         self.save()
         return self
