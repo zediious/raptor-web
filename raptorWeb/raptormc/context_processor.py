@@ -29,6 +29,23 @@ def context_process(request: HttpRequest) -> dict:
 
                 except KeyError:
                     request.session[slugged_toast] = 1
+                
+        elif request.user.is_authenticated:
+            user_toast_data = request.user.toasts_seen
+            for toast in notification_toasts:
+                slugged_toast = slugify(toast.name)
+            
+                try:
+                    if user_toast_data[slugged_toast] == False:
+                        user_toast_data[slugged_toast] = True
+                        
+                except KeyError:
+                    user_toast_data[slugged_toast] = False
+                
+            request.user.toasts_seen = user_toast_data
+            request.user.save()
+
+                
 
     return {
             "pub_domain": DOMAIN_NAME,
