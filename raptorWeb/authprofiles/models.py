@@ -406,6 +406,12 @@ class RaptorUser(AbstractUser):
         help_text="A User's Discord user information, stored in a separate model. This field will/should not be populated for users that did not register with Discord.",
         verbose_name="Discord User Information",
         on_delete=models.CASCADE)
+    
+    toasts_seen = models.JSONField(
+        default=dict,
+        help_text="JSON data representing which Notification Toasts this user has seen",
+        verbose_name="Seen Notifications",
+    )
 
     def get_profile_info(self):
         return self.user_profile_info
