@@ -20,6 +20,11 @@
     <meta property="og:description" content="{{ page.content }}" />
     <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{page.get_absolute_url}}" />
 {% endblock %}
+{% block custom_css %}
+    {% if page.page_css %}
+        <link rel="stylesheet" href="{{page.page_css.url}}">
+    {% endif %}
+{% endblock %}
 
 {% block header_box %}
     {% if page.show_gameservers %}
@@ -50,3 +55,9 @@
 
 {% endautoescape %}
 {% endblock%}
+
+{% block custom_js %}
+    {% if page.page_js %}
+        <script src="{{page.page_js.url}}"></script>
+    {% endif %}
+{% endblock %}
