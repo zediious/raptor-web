@@ -6,6 +6,15 @@ window.onload = function() {
     $("#serverBoxCollapse").toggleClass("show");
   }
 
+  else if (localStorage.getItem('serverbox_expanded') == "no") {
+    console.log("Server box remaining collapsed.")
+  }
+
+  else {
+    $("#serverBoxCollapse").toggleClass("show");
+    localStorage.setItem('serverbox_expanded','yes')
+  }
+
 }
 
 function setExpandedState() {
