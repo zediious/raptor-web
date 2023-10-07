@@ -56,6 +56,11 @@ class PageAdmin(admin.ModelAdmin):
                 'name',
                 'content')
         }),
+        ('CSS/JS', {
+            'fields': (
+                'page_css',
+                'page_js')
+        }),
         ('SEO', {
             'fields': (
                 'meta_description',
