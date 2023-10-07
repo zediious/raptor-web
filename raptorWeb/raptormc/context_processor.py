@@ -20,21 +20,15 @@ def context_process(request: HttpRequest) -> dict:
 
     if (request.headers.get('HX-Request') != "true" and
         request.headers.get('Sec-Fetch-Mode') == 'navigate'):
-    for toast in notification_toasts:
-        slugged_toast = slugify(toast.name)
-        try:
-            if request.session[slugged_toast] != 4:
-                if request.session[slugged_toast] == 1:
-                    request.session[slugged_toast] = 2
+        if not request.user.is_authenticated:
+            for toast in notification_toasts:
+                slugged_toast = slugify(toast.name)
+                try:
+                    if request.session[slugged_toast] != 2:
+                        request.session[slugged_toast] = 2
 
-                elif request.session[slugged_toast] == 2:
-                    request.session[slugged_toast] = 3
-
-                elif request.session[slugged_toast] == 3:
-                    request.session[slugged_toast] = 4
-
-        except KeyError:
-            request.session[slugged_toast] = 1
+                except KeyError:
+                    request.session[slugged_toast] = 1
 
     return {
             "pub_domain": DOMAIN_NAME,
