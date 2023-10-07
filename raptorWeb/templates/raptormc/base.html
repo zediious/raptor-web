@@ -59,16 +59,17 @@
       {% endblock %}
     </main>
 
+    {% comment %} JS Imports {% endcomment %}
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
+    <script src="{% static 'javascript/src/raptormc.js' %}"></script>
+
     {% comment %} Notification Toast elements and script {% endcomment %}
     {% include "raptormc/components/toasts.html" %}
 
     {% comment %} Static website footer {% endcomment %}
     {% include "raptormc/components/footer.html" %}
-    
-    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
-    <script src="{% static 'javascript/src/raptormc.js' %}"></script>
 
     {% comment %} If serverbox did not load, instantiate Bootstrap tooltip object. {% endcomment %}
     {% if total_server_count == 0 %}
