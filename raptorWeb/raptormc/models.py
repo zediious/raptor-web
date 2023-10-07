@@ -181,6 +181,15 @@ class NavWidget(models.Model):
                     "if a Widget Image is not used."),
         default="Default"
     )
+    
+    tooltip = models.CharField(
+        max_length=300,
+        verbose_name="Widget Tooltip",
+        help_text=("A tooltip with custom text that will be displayed when the widget is "
+                    "hovered over, or held down on a touchscreen."),
+        default="",
+        blank=True
+    )
 
     nav_image = models.ImageField(
         upload_to='navwidgetimage',

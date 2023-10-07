@@ -157,6 +157,7 @@ class NavWidgetAdmin(admin.ModelAdmin):
                 'linked_page',
                 'new_tab',
                 'name',
+                'tooltip',
                 'nav_image',
                 'url')
         }),
