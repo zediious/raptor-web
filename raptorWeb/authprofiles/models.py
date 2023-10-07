@@ -426,23 +426,19 @@ class RaptorUser(AbstractUser):
     def get_absolute_url(self):
         return f"/{BASE_USER_URL}/{self.user_slug}"
 
-    def delete(self, *args, **kwargs):
-        self.user_profile_info.delete()
-        self.discord_user_info.delete()
+    def delete(self, *args, **kwargs): 
+        """
+        Delete associated UserProfileInfo and DiscordUserInfo
+        models associated with a deleted RaptorUser.
+        """
+        if self.user_profile_info and self.discord_user_info:
+            self.user_profile_info.delete()
+            self.discord_user_info.delete()
+            
+        elif self.user_profile_info and not self.discord_user_info:
+            self.user_profile_info.delete()
+            
+        elif not self.user_profile_info and self.discord_user_info:
+            self.discord_user_info.delete()
+            
         return super(self.__class__, self).delete(*args, **kwargs)
-
-
-@receiver(post_delete, sender=RaptorUser)
-def post_delete_user(sender, instance, *args, **kwargs):
-    """
-    Receiver to delete the UserProfileInfo and DiscordUserInfo models
-    with a OneToOne relationship to a RaptorUser when the RaptorUser
-    is deleted from the Django Admin interface.
-    """
-    if instance.user_profile_info and instance.discord_user_info:
-        instance.user_profile_info.delete()
-        instance.discord_user_info.delete()
-    elif instance.user_profile_info and not instance.discord_user_info:
-        instance.user_profile_info.delete()
-    elif not instance.user_profile_info and instance.discord_user_info:
-        instance.discord_user_info.delete()
