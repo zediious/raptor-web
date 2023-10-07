@@ -2,7 +2,7 @@ console.log("raptormc.js loaded")
 
 window.onload = function() {
 
-  if (localStorage.getItem('serverbox_expanded') == "no") {
+  if (localStorage.getItem('serverbox_expanded') == "yes") {
     $("#serverBoxCollapse").toggleClass("show");
   }
 
