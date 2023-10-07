@@ -18,6 +18,8 @@ def context_process(request: HttpRequest) -> dict:
     nav_widget_bars: NavWidgetBar.objects = NavWidgetBar.objects.filter(enabled=True).order_by('priority')
     notification_toasts: NotificationToast.objects = NotificationToast.objects.filter(enabled=True).order_by('created')
 
+    if (request.headers.get('HX-Request') != "true" and
+        request.headers.get('Sec-Fetch-Mode') == 'navigate'):
     for toast in notification_toasts:
         slugged_toast = slugify(toast.name)
         try:
