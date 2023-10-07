@@ -1,4 +1,4 @@
-{% load sessionFetch %}
+{% load toastFetch %}
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
 {% for notification in notification_toasts reversed %}
@@ -16,12 +16,28 @@
 </div>
 
 {% comment %} Display notifications that have not been seen in session {% endcomment %}
-<script>
-{% for notification in notification_toasts reversed %}
-    {% if request.session|fetch_session_id:notification.name != 4 %}
-    const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}')
-    const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}})
-    toast_{{notification.pk}}.show()
-    {% endif %}
-{% endfor %}
-</script>
+{% if not request.user.is_authenticated %}
+
+    <script>
+        {% for notification in notification_toasts reversed %}
+            {% if request.session|fetch_session_id:notification.name != 2 %}
+                const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}')
+                const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}})
+                toast_{{notification.pk}}.show()
+            {% endif %}
+        {% endfor %}
+    </script>
+
+{% comment %} If user is authenticated, use profile details instead of session {% endcomment %}
+{% else %}
+    {% for notification in notification_toasts reversed %}
+        {% if request.user.toasts_seen|get_toast_data:notification.name != True %}
+            <script>
+                const notificationtoast_{{notification.pk}} = document.getElementById('notificationtoast_{{notification.pk}}');
+                const toast_{{notification.pk}} = new bootstrap.Toast(notificationtoast_{{notification.pk}});
+                toast_{{notification.pk}}.show();
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+

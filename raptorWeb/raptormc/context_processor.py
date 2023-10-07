@@ -18,21 +18,34 @@ def context_process(request: HttpRequest) -> dict:
     nav_widget_bars: NavWidgetBar.objects = NavWidgetBar.objects.filter(enabled=True).order_by('priority')
     notification_toasts: NotificationToast.objects = NotificationToast.objects.filter(enabled=True).order_by('created')
 
-    for toast in notification_toasts:
-        slugged_toast = slugify(toast.name)
-        try:
-            if request.session[slugged_toast] != 4:
-                if request.session[slugged_toast] == 1:
-                    request.session[slugged_toast] = 2
+    if (request.headers.get('HX-Request') != "true" and
+        request.headers.get('Sec-Fetch-Mode') == 'navigate'):
+        if not request.user.is_authenticated:
+            for toast in notification_toasts:
+                slugged_toast = slugify(toast.name)
+                try:
+                    if request.session[slugged_toast] != 2:
+                        request.session[slugged_toast] = 2
 
-                elif request.session[slugged_toast] == 2:
-                    request.session[slugged_toast] = 3
+                except KeyError:
+                    request.session[slugged_toast] = 1
+                
+        elif request.user.is_authenticated:
+            user_toast_data = request.user.toasts_seen
+            for toast in notification_toasts:
+                slugged_toast = slugify(toast.name)
+            
+                try:
+                    if user_toast_data[slugged_toast] == False:
+                        user_toast_data[slugged_toast] = True
+                        
+                except KeyError:
+                    user_toast_data[slugged_toast] = False
+                
+            request.user.toasts_seen = user_toast_data
+            request.user.save()
 
-                elif request.session[slugged_toast] == 3:
-                    request.session[slugged_toast] = 4
-
-        except KeyError:
-            request.session[slugged_toast] = 1
+                
 
     return {
             "pub_domain": DOMAIN_NAME,

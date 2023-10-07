@@ -319,7 +319,11 @@ class UserProfileInfo(models.Model):
             self.save_profile_picture_from_url(
                 ('https://cdn.discordapp.com/avatars/'
                 f'{changed_user.discord_user_info.id}/'
-                f'{changed_user.discord_user_info.avatar_string}.png'))               
+                f'{changed_user.discord_user_info.avatar_string}.png'))
+        
+        if profile_edit_form.cleaned_data["reset_toasts"] == True:
+            changed_user.toasts_seen = dict()
+            changed_user.save()
 
         self.save()
         return self
@@ -406,6 +410,12 @@ class RaptorUser(AbstractUser):
         help_text="A User's Discord user information, stored in a separate model. This field will/should not be populated for users that did not register with Discord.",
         verbose_name="Discord User Information",
         on_delete=models.CASCADE)
+    
+    toasts_seen = models.JSONField(
+        default=dict,
+        help_text="JSON data representing which Notification Toasts this user has seen",
+        verbose_name="Seen Notifications",
+    )
 
     def get_profile_info(self):
         return self.user_profile_info

@@ -11,3 +11,10 @@ def fetch_session_id(session: SessionStore, value: str) -> str:
     Fetch the value of a session key
     """
     return session.get(slugify(value))
+
+@register.filter
+def get_toast_data(value: str, toast: str) -> str:
+    """
+    Get specified user toast data values
+    """
+    return value[slugify(toast)]

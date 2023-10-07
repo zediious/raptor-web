@@ -24,7 +24,8 @@ class RaptorUserAdmin(UserAdmin):
                 'username',
                 'user_slug',
                 'date_joined',
-                'last_login')
+                'last_login',
+                'toasts_seen')
         }),
         ('Permissions', {
             'classes': ('collapse',),
