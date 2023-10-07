@@ -72,6 +72,21 @@ class Page(models.Model):
         help_text=("The comma-separated keywords for this page used in search engine results. "
                     "This will apply only to this page, overriding default."),
     )
+    
+    page_css = models.FileField(
+        upload_to='page_css',
+        verbose_name="Page CSS",
+        help_text=("Custom style sheet that will only apply on this page. "
+                    "This will apply only to this page, overriding any defaults."),
+        blank=True
+    )
+    
+    page_js = models.FileField(
+        upload_to='page_js',
+        verbose_name="Page JavaScript",
+        help_text=("Custom Javascript that will only apply on this page."),
+        blank=True
+    )
 
     def __str__(self):
         return str(self.name)

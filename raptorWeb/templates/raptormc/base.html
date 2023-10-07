@@ -23,6 +23,8 @@
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
+    {% block custom_css %}
+    {% endblock %}
   </head>
 
   <body id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
@@ -73,6 +75,9 @@
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
     {% endif %}
+
+    {% block custom_js %}
+    {% endblock %}
     
   </body>
 
