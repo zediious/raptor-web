@@ -17,7 +17,8 @@
             <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
                 <div class="navbar-header d-flex align-items-end justify-content-end h-100">
                     <div data-bs-toggle="tooltip" data-bs-title="Collapse Servers" data-bs-placement="bottom">
-                        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#serverBoxCollapse" aria-expanded="false" aria-controls="Server Box">
+                        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#serverBoxCollapse" aria-expanded="false" aria-controls="Server Box"
+                        onclick="setExpandedState()">
                             <img class="serverBoxCollapseImage" src="{% static 'image/collapse-up-down.svg' %}" alt="Collapse/Expand">
                         </button>
                     </div>
