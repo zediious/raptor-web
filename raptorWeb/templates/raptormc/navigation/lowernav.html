@@ -1,21 +1,30 @@
+{% load static %}
+
 <nav class="navbar navbar-dark bg-dark d-flex align-items-center justify-content-center">
     <div class="container d-flex align-items-center justify-content-center">
         <div class="row w-100">
-        <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
-            <div class="navbar-header d-flex h-100">
-            <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
-                <span class="navbar-toggler-icon" ></span>
-            </button>
-            <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
-                <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
-            </a>
+            <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
+                <div class="navbar-header d-flex h-100">
+                <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
+                    <span class="navbar-toggler-icon" ></span>
+                </button>
+                <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
+                    <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
+                </a>
+                </div>
             </div>
-        </div>
-        <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
-            <div class="navbar-header d-flex align-items-end justify-content-end h-100">
-            <div class="h-100" id="profile_dropdown" hx-get="{% url 'authprofiles:user_dropdown' %}" hx-trigger="load" hx-target="#profile_dropdown" hx-swap="innerHTML"></div>
+            
+            <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
+                <div class="navbar-header d-flex align-items-end justify-content-end h-100">
+                    <div data-bs-toggle="tooltip" data-bs-title="Collapse Servers" data-bs-placement="bottom">
+                        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#serverBoxCollapse" aria-expanded="false" aria-controls="Server Box"
+                        onclick="setExpandedState()">
+                            <img class="serverBoxCollapseImage" src="{% static 'image/collapse-up-down.svg' %}" alt="Collapse/Expand">
+                        </button>
+                    </div>
+                    <div class="h-100" id="profile_dropdown" hx-get="{% url 'authprofiles:user_dropdown' %}" hx-trigger="load" hx-target="#profile_dropdown" hx-swap="innerHTML"></div>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </nav>
