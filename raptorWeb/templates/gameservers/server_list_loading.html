@@ -1,6 +1,7 @@
 {% load static %}
 
-<div id="server_button" class="server_button row d-flex align-items-center justify-content-center" hx-get="/api/servers/html/server_button_poll/" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML">
+<div id="server_button_container_loading" 
+hx-get="/api/servers/html/server_button_poll/" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML" hx-indicator="#loadingSpinnerButtons">
 
  {% if page_obj.has_next %}
     <div class="pagination d-flex align-items-center justify-content-center">
@@ -11,16 +12,16 @@
     </div>
 {% endif %}
 
-<div class="{% if total_server_count > 1 %}row{% endif %} w-100 h-100">
-    {% for server in page_obj %}
+<div class="{% if total_server_count > 1 %}row{% endif %}">
+    {% for server in page_obj %} 
+                        
         {% if server_query_enabled %}
-        <span id="serverButton" class="col-lg-12 col-6 opacity-50">
+        <div class="col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex m-0 mt-2 w-100">
         {% else %}
-        <span id="serverButton" class="col-lg-6 col-6 opacity-50">
+        <div class="col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100">
         {% endif %}
-        <button class="btn btn-dark fs-4 w-100 d-flex align-items-center justify-content-center mb-0 mt-2 w-100">
-            <img id="loadingSpinnerButtons" src="{% static 'image/three-dots.svg' %}" alt="Loading..." class="align-middle opacity-75">
-        </button>
-        </span>
+        <img class="htmx-indicator w-100 align-middle opacity-50" id="loadingSpinnerButtons" src="{% static 'image/three-dots.svg' %}" alt="Loading...">
+        </button></div>
+
     {% endfor %}
 </div>
