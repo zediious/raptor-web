@@ -231,12 +231,10 @@ class Update_Headerbox_State(View):
             else:
                 request.session['headerbox_expanded'] = 'false'
                 
-            LOGGER.error(f'Session updated {request.session["headerbox_expanded"]}')
             return HttpResponse(" ")
             
         except KeyError:
             request.session['headerbox_expanded'] = 'false'
-            LOGGER.error(f'Session updated {request.session["headerbox_expanded"]}')
             return HttpResponse(" ")
 
 
