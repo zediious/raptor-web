@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+<link rel="stylesheet" hx-get="{% static 'css/raptormc.css' %}">
 
     {% for server in object_list %} 
     
@@ -32,41 +32,49 @@
             <div class="modal-footer justify-content-center">
 
               {% if default_pages.announcements %}{% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary disabled"
+                hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-replace-url="/announcements" onclick='closeModal()'>
                   Announcements
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:announcements' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary"
+                hx-get="{% url 'raptormc:announcements' %}"  hx-target='#home' hx-replace-url="/announcements" onclick='closeModal()'>
                   Announcements
                 </a>
               {% endif %}{% endif %}
               
               {% if default_pages.rules %}{% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary disabled"
+                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-replace-url="/rules" onclick='closeModal()'>
                   Rules
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:rules' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary"
+                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-replace-url="/rules" onclick='closeModal()'>
                   Rules
                 </a>
               {% endif %}{% endif %}
 
               {% if default_pages.banned_items %}{% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary disabled"
+                hx-get="{% url 'raptormc:banneditems' %}"  hx-target='#home' hx-replace-url="/banneditems" onclick='closeModal()'>
                   Banned Items
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:banned_items' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary"
+                hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-replace-url="/banneditems" onclick='closeModal()'>
                   Banned Items
                 </a>
               {% endif %}{% endif %}
 
               {% if default_pages.voting %}{% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary disabled"
+                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-replace-url="/voting" onclick='closeModal()'>
                   Vote
                 </a>
               {% else %}
-                <a role="button" class="btn btn-outline-secondary" href="{% url 'raptormc:voting' %}#{{ server.pk }}">
+                <a role="button" class="btn btn-outline-secondary"
+                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-replace-url="/voting" onclick='closeModal()'>
                   Vote
                 </a>
               {% endif %}{% endif %}

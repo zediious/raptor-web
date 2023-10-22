@@ -1,22 +1,9 @@
-{% extends 'raptormc/base.html' %}
-
-{% block page_title %}
-<title>
-  
-  {{ site_info_model.brand_name }} | Staff Applications
-  
-</title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-<meta property="og:title" content="{{ site_info_model.brand_name }} | Staff Applications" />
-<meta property="og:description" content="{{ Staff_App_Information.content|striptags }}" />
-<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/applications" />
-{% endblock %}
-
-{% block main_block %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Staff Applications</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Staff Applications" />
+  <meta property="og:description" content="{{ Staff_App_Information.content|striptags }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/applications" />
+</head>
 
 <section id="welcome" class="container mt-4">
 
@@ -34,6 +21,3 @@
 </section>
 
 <div id="staffapps" hx-get="{% url 'staffapps:all_apps' %}" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
-
-
-{% endblock %}

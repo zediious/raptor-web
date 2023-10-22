@@ -1,23 +1,11 @@
-{% extends 'raptormc/base.html' %}
 {% load markdownStrip %}
 
-{% block page_title %}
-    <title>
-      
-      {{ site_info_model.brand_name }} | Announcements
-      
-    </title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" />
-    <meta property="og:description" content="The last 30 announcements made by {{ site_info_model.brand_name }}" />
-    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" />
-{% endblock %}
-
-{% block main_block %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Announcements</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" />
+  <meta property="og:description" content="The last 30 announcements made by {{ site_info_model.brand_name }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" />
+</head>
 
 <section id="welcome" class="container mb-0 mt-4">
 
@@ -57,4 +45,3 @@
   {% endautoescape %}
 
 </section>
-{% endblock %}

@@ -1,19 +1,15 @@
-{% extends 'raptormc/base.html' %}
 {% load static %}
 {% load authTags %}
 
-{% block metadata %}
-<meta property="og:title" content="{{ site_info_model.brand_name }} | {{ request.path|get_user_from_url }}" />
-<meta property="og:description" content="User Profile for {{ request.path|get_user_from_url }}" />
-<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/user/{{ request.path|get_user_from_url }}" />
-{% endblock %}
+<head>
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | {{ request.path|get_user_from_url }}" />
+    <meta property="og:description" content="User Profile for {{ request.path|get_user_from_url }}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/user/{{ request.path|get_user_from_url }}" />
+</head>
 
-{% block main_block %}
 
 <div class="mt-4" id="user_box" hx-get="{% url 'authprofiles:user_profile' user_slug=request.path|get_user_from_url %}" hx-trigger="load delay:0.1s" hx-target="#user_box" hx-swap="innerHTML">
     <div class="container-flex text-center">
         <img class="" id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">
     </div>
 </div>
-
-{% endblock %}

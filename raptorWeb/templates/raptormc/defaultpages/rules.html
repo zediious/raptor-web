@@ -1,22 +1,10 @@
-{% extends 'raptormc/base.html' %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Rules</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Rules" />
+  <meta property="og:description" content="{{ Rules_Information.content|striptags }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/rules" />
+</head>
 
-{% block page_title %}
-    <title>
-      
-      {{ site_info_model.brand_name }} | Rules
-      
-    </title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }} | Rules" />
-    <meta property="og:description" content="{{ Rules_Information.content|striptags }}" />
-    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/rules" />
-{% endblock %}
-
-{% block main_block %}
 <section id="ruleIntro" class="container mt-4">
 
   {% if Rules_Information.enabled %}
@@ -53,4 +41,3 @@
   <div id="server_rules" hx-get="{% url 'gameservers:server_rules_poll' %}" hx-trigger="load" hx-target="#server_rules" hx-swap="outerHTML"></div>
 
 </section>
-{% endblock %}

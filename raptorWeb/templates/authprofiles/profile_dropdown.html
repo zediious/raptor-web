@@ -30,7 +30,9 @@
         <div class="dropdown-menu bg-dark">
             <div><span class="text-center text-white"><p class="text-white m-1">Welcome, {{user}}</p></span></div>
             <hr style="color: white">
-            <div><a class="dropdown-item text-white mt-0 pt-0" href="/{{user_path}}/{{user.get_username|slugify}}">Profile</a></div>
+            <div><a class="dropdown-item text-white mt-0 pt-0"
+                hx-get="raptormc/api/html/{{user_path}}/{{user.get_username|slugify}}"
+                hx-target='#home' hx-replace-url='/{{user_path}}/{{user.get_username|slugify}}' >Profile</a></div>
             {% if user.is_staff %}
             <div><a class="dropdown-item text-white" href="{% url 'admin:index' %}">Admin</a></div>
             {% endif %}

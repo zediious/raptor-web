@@ -1,18 +1,11 @@
 {% load static %}
 
-{% block page_title %}
-<title>
-  
-  {{ site_info_model.brand_name }} | {{object.username}}
-  
-</title>
-{% endblock %}
-
-{% block metadata %}
-<meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
-<meta property="og:description" content="User Profile for {{object.username}}" />
-<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
-{% endblock %}
+<head>
+    <title>{{ site_info_model.brand_name }} | {{object.username}}</title>
+    <meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
+    <meta property="og:description" content="User Profile for {{object.username}}" />
+    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
+</head>
 
 {% if object != False %}
 {% if object.is_superuser and request.user.is_superuser != True %}
@@ -21,7 +14,6 @@
 
 <div class="container">
     {% if user.is_authenticated and user.username == object.username %}
-    <div hx-get="{% url 'authprofiles:user_profile_edit' profile_name=object.user_slug %}" hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
     <div class="modal fade" id="edit_profile_modal" tabindex="-1" aria-labelledby="Edit Profile" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content bg-dark text-white">
@@ -31,7 +23,9 @@
             </div>
             <div class="modal-body" id="edit_profile_modal_body">
             
-                <div id="edit_profile_replace"></div>
+                <div id="edit_profile_replace"
+                hx-get="{% url 'authprofiles:user_profile_edit' profile_name=object.user_slug %}"
+                hx-trigger="load" hx-target="#edit_profile_replace" hx-swap="innerHTML"></div>
             
             </div>
         </div>

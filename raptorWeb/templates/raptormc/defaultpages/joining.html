@@ -1,22 +1,10 @@
-{% extends 'raptormc/base.html' %}
+<head>
+  <title>{{ site_info_model.brand_name }} | How to Join</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | How to Join" />
+  <meta property="og:description" content="{{ Joining_Information.content|striptags }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/howtojoin" />
+</head>
 
-{% block page_title %}
-    <title>
-      
-      {{ site_info_model.brand_name }} | How to Join
-      
-    </title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }} | How to Join" />
-    <meta property="og:description" content="{{ Joining_Information.content|striptags }}" />
-    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/howtojoin" />
-{% endblock %}
-
-{% block main_block %}
 <section id="joiningIntro" class="container mt-4">
 
   {% if Joining_Information.enabled %}
@@ -71,4 +59,3 @@
   {% endif %}
 
 </section>
-{% endblock %}

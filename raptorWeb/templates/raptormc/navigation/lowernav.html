@@ -8,7 +8,7 @@
                 <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
                     <span class="navbar-toggler-icon" ></span>
                 </button>
-                <a id="navBrand" class="navbar-brand m-0 ms-3" href="{% url 'raptormc:home' %}">
+                <a id="navBrand" class="navbar-brand m-0 ms-3" hx-get={% url 'raptormc:home'%} hx-target='#home' hx-replace-url="/">
                     <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
                 </a>
                 </div>
