@@ -1,9 +1,11 @@
 from os.path import join
 from logging import getLogger
 from typing import Any
+from django import http
 
 from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.conf import settings
 
 from raptorWeb.raptormc.util.informative_text_factory import (
@@ -17,11 +19,31 @@ TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 USE_GLOBAL_ANNOUNCEMENT = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
 
 
+class BaseView(TemplateView):
+    """
+    Base view for SPA
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        for pattern in current_urlpatterns[0]:
+            if (pattern.name == request.path.replace('/', '') 
+                or request.path == '/'):
+                return super().get(request, *args, **kwargs)
+            
+        return HttpResponseRedirect('/404')
+
 class HomeServers(TemplateView):
     """
     Homepage with general information
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/home.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            HttpResponseRedirect('/')
+            
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -42,6 +64,9 @@ if USE_GLOBAL_ANNOUNCEMENT:
             if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
                 return HttpResponseRedirect('/404')
             
+            if request.headers.get('HX-Request') != "true":
+                return HttpResponseRedirect('/404')
+            
             return super().get(request, *args, **kwargs)
 
         def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
@@ -58,10 +83,13 @@ class Rules(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/rules.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].rules:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].rules:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
                 return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+     
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -77,10 +105,13 @@ class BannedItems(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/banneditems.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].banned_items:
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if not DefaultPages.objects.get_or_create(pk=1)[0].banned_items:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -96,10 +127,13 @@ class Voting(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/voting.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].voting:
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if not DefaultPages.objects.get_or_create(pk=1)[0].voting:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -115,10 +149,13 @@ class HowToJoin(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/joining.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].joining:
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if not DefaultPages.objects.get_or_create(pk=1)[0].joining:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -138,10 +175,13 @@ class StaffApps(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('applications', 'staffapps.html'))
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -155,6 +195,12 @@ class PageView(DetailView):
     Generic view for user created pages
     """
     model: Page = Page
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_object(self):
         return Page.objects.get_slugged_page(self.kwargs['page_name'])
@@ -167,10 +213,13 @@ class SiteMembers(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('users', 'sitemembers.html'))
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].members:
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if not DefaultPages.objects.get_or_create(pk=1)[0].members:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
 
 class User_Page(TemplateView):
@@ -178,6 +227,12 @@ class User_Page(TemplateView):
     Info about a User
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
 
 class User_Pass_Reset(TemplateView):
@@ -185,6 +240,12 @@ class User_Pass_Reset(TemplateView):
     Page to reset user password
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('users', 'user_pass_reset.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -214,6 +275,12 @@ class View_404(TemplateView):
     Base Admin Panel view
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('404.html'))
+    
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+        
+        return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context={"is_404": 'true'})
 
 
 class Update_Headerbox_State(View):
