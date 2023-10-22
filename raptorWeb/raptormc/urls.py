@@ -27,7 +27,9 @@ urlpatterns: list[URLPattern] = [
     path('404', views.View_404.as_view(), name='404_view'),
     # API
     path('raptormc/api/action/session/headerbox/update', views.Update_Headerbox_State.as_view(), name='update_headerbox_state'),
-    path('api/session/headerbox/update', views.Update_Headerbox_State.as_view(), name='update_headerbox_state')
+    # Base View
+    path('rules', views.BaseView.as_view(), name="base"),
+    re_path(r'\S*', views.BaseView.as_view(), name="base")
 
 ]
 
