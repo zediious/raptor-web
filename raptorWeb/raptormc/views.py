@@ -2,7 +2,7 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
@@ -213,6 +213,31 @@ class View_404(TemplateView):
     Base Admin Panel view
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('404.html'))
+
+
+class Update_Headerbox_State(View):
+    """
+    Update session variable regarding Headerbox
+    expansion state.
+    """
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            HttpResponseRedirect('/')
+
+        try:
+            if request.session['headerbox_expanded'] == 'false':
+                request.session['headerbox_expanded'] = 'true'
+
+            else:
+                request.session['headerbox_expanded'] = 'false'
+                
+            LOGGER.error(f'Session updated {request.session["headerbox_expanded"]}')
+            return HttpResponse(" ")
+            
+        except KeyError:
+            request.session['headerbox_expanded'] = 'false'
+            LOGGER.error(f'Session updated {request.session["headerbox_expanded"]}')
+            return HttpResponse(" ")
 
 
 def handler404(request, *args, **argv):

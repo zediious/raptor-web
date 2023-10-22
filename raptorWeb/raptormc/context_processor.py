@@ -17,6 +17,11 @@ def context_process(request: HttpRequest) -> dict:
     nav_widgets: NavWidget.objects = NavWidget.objects.filter(enabled=True).order_by('priority')
     nav_widget_bars: NavWidgetBar.objects = NavWidgetBar.objects.filter(enabled=True).order_by('priority')
     notification_toasts: NotificationToast.objects = NotificationToast.objects.filter(enabled=True).order_by('created')
+    
+    try:
+        request.session['headerbox_expanded']
+    except KeyError:
+        request.session['headerbox_expanded'] = 'true'
 
     if (request.headers.get('HX-Request') != "true" and
         request.headers.get('Sec-Fetch-Mode') == 'navigate'):

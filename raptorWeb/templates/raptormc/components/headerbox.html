@@ -1,5 +1,8 @@
-<div class="collapse" id="serverBoxCollapse">
+{% load toastFetch %}
 
+<div class="collapse{% if request.session.headerbox_expanded == 'true' %} show{% else %}{% endif %}" id="serverBoxCollapse">
+
+    {{request.session.headerbox_expanded}}
     {% include "raptormc/components/serverbox.html" %}
 
 </div> 
