@@ -10,6 +10,7 @@ from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
 from raptorWeb.raptormc.models import Page, DefaultPages
+from raptorWeb.raptormc.exchange import current_urlpatterns
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')

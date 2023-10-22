@@ -1,6 +1,7 @@
 from django.urls import URLPattern, path
 
 from raptorWeb.raptormc import views
+from raptorWeb.raptormc.exchange import current_urlpatterns
 
 app_name: str = "raptormc"
 
@@ -34,3 +35,5 @@ urlpatterns: list[URLPattern] = [
     path('api/session/headerbox/update', views.Update_Headerbox_State.as_view(), name='update_headerbox_state')
 
 ]
+
+current_urlpatterns.append(urlpatterns)
