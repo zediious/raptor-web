@@ -6,7 +6,9 @@ from django.views.generic import TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
-from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
+from raptorWeb.raptormc.util.informative_text_factory import (
+    get_or_create_informative_text
+    )
 from raptorWeb.raptormc.models import Page, DefaultPages
 
 LOGGER = getLogger('raptormc.views')
@@ -23,8 +25,8 @@ class HomeServers(TemplateView):
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
-            context = context,
-            informative_text_names = ["Homepage Information"])
+            context=context,
+            informative_text_names=["Homepage Information"])
 
 
 if USE_GLOBAL_ANNOUNCEMENT:
