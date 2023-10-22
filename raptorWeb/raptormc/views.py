@@ -34,7 +34,8 @@ if USE_GLOBAL_ANNOUNCEMENT:
         """
         Page containing the last 30 announcements from Discord
         """
-        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
+        template_name: str = join(
+            TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
         
         def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
