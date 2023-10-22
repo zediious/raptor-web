@@ -2,11 +2,13 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
-from raptorWeb.raptormc.util.informative_text_factory import get_or_create_informative_text
+from raptorWeb.raptormc.util.informative_text_factory import (
+    get_or_create_informative_text
+    )
 from raptorWeb.raptormc.models import Page, DefaultPages
 
 LOGGER = getLogger('raptormc.views')
@@ -23,8 +25,8 @@ class HomeServers(TemplateView):
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
-            context = context,
-            informative_text_names = ["Homepage Information"])
+            context=context,
+            informative_text_names=["Homepage Information"])
 
 
 if USE_GLOBAL_ANNOUNCEMENT:
@@ -32,7 +34,8 @@ if USE_GLOBAL_ANNOUNCEMENT:
         """
         Page containing the last 30 announcements from Discord
         """
-        template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
+        template_name: str = join(
+            TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
         
         def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
             if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
@@ -210,6 +213,29 @@ class View_404(TemplateView):
     Base Admin Panel view
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('404.html'))
+
+
+class Update_Headerbox_State(View):
+    """
+    Update session variable regarding Headerbox
+    expansion state.
+    """
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            HttpResponseRedirect('/')
+
+        try:
+            if request.session['headerbox_expanded'] == 'false':
+                request.session['headerbox_expanded'] = 'true'
+
+            else:
+                request.session['headerbox_expanded'] = 'false'
+                
+            return HttpResponse(" ")
+            
+        except KeyError:
+            request.session['headerbox_expanded'] = 'false'
+            return HttpResponse(" ")
 
 
 def handler404(request, *args, **argv):

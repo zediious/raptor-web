@@ -1,34 +1,5 @@
 console.log("raptormc.js loaded")
 
-window.onload = function() {
-
-  if (localStorage.getItem('serverbox_expanded') == "yes") {
-    $("#serverBoxCollapse").toggleClass("show");
-  }
-
-  else if (localStorage.getItem('serverbox_expanded') == "no") {
-    console.log("Server box remaining collapsed.")
-  }
-
-  else {
-    $("#serverBoxCollapse").toggleClass("show");
-    localStorage.setItem('serverbox_expanded','yes')
-  }
-
-}
-
-function setExpandedState() {
-
-  if (localStorage.getItem('serverbox_expanded') == "yes") {
-    localStorage.setItem('serverbox_expanded','no')
-  }
-
-  else {
-    localStorage.setItem('serverbox_expanded','yes')
-  }
-
-}
-
 document.getElementById("body").onscroll = function myFunction() {  
     var scrolltotop = document.scrollingElement.scrollTop;
     var target = document.getElementById("backgroundWrapper");
