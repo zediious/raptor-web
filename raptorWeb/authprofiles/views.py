@@ -1,5 +1,6 @@
 from os.path import join
 from logging import Logger, getLogger
+from typing import Any
 
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
@@ -251,6 +252,15 @@ class All_User_Profile(ListView):
             return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('/')
+        
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "base_user_url": BASE_USER_URL
+            }
+        )
+        return context
 
 
 class User_Profile(DetailView):
