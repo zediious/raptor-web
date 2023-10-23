@@ -1,7 +1,6 @@
 from os.path import join
 from logging import getLogger
 from typing import Any
-from django import http
 
 from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
