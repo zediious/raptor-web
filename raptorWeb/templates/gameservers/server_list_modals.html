@@ -33,48 +33,48 @@
 
               {% if default_pages.announcements %}{% if request.path == '/announcements/' %}
                 <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-replace-url="/announcements" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-push-url="/announcements" onclick='closeModal()'>
                   Announcements
                 </a>
               {% else %}
                 <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:announcements' %}"  hx-target='#home' hx-replace-url="/announcements" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:announcements' %}"  hx-target='#home' hx-push-url="/announcements" onclick='closeModal()'>
                   Announcements
                 </a>
               {% endif %}{% endif %}
               
               {% if default_pages.rules %}{% if request.path == '/rules/' %}
                 <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-replace-url="/rules" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-push-url="/rules" onclick='closeModal()'>
                   Rules
                 </a>
               {% else %}
                 <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-replace-url="/rules" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-push-url="/rules" onclick='closeModal()'>
                   Rules
                 </a>
               {% endif %}{% endif %}
 
               {% if default_pages.banned_items %}{% if request.path == '/banneditems/' %}
                 <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:banneditems' %}"  hx-target='#home' hx-replace-url="/banneditems" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:banneditems' %}"  hx-target='#home' hx-push-url="/banneditems" onclick='closeModal()'>
                   Banned Items
                 </a>
               {% else %}
                 <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-replace-url="/banneditems" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-push-url="/banneditems" onclick='closeModal()'>
                   Banned Items
                 </a>
               {% endif %}{% endif %}
 
               {% if default_pages.voting %}{% if request.path == '/voting/' %}
                 <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-replace-url="/voting" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-push-url="/voting" onclick='closeModal()'>
                   Vote
                 </a>
               {% else %}
                 <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-replace-url="/voting" onclick='closeModal()'>
+                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-push-url="/voting" onclick='closeModal()'>
                   Vote
                 </a>
               {% endif %}{% endif %}

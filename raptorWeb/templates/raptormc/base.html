@@ -56,7 +56,7 @@
     </div>
 
     {% comment %} Main block for page content {% endcomment %}
-    <main id="home" class="container-flex m-5 mt-0">
+    <main id="home" class="container-flex m-5 mt-0" hx-history-elt>
 
       {% if is_404 == 'true' %}
         {% include "raptormc/404.html" %}
