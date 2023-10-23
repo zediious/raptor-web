@@ -1,7 +1,7 @@
 from django.urls import URLPattern, path, re_path
 
 from raptorWeb.raptormc import views
-from raptorWeb.raptormc.exchange import current_urlpatterns
+from raptorWeb.raptormc.routes import CURRENT_URLPATTERNS
 
 app_name: str = "raptormc"
 
@@ -33,4 +33,4 @@ urlpatterns: list[URLPattern] = [
 
 ]
 
-current_urlpatterns.append(urlpatterns)
+CURRENT_URLPATTERNS.append(urlpatterns)
