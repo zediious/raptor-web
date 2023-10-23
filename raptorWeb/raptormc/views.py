@@ -11,7 +11,7 @@ from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
 from raptorWeb.raptormc.models import Page, DefaultPages
-from raptorWeb.raptormc.exchange import current_urlpatterns
+from raptorWeb.raptormc.routes import check_route
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
@@ -25,11 +25,9 @@ class BaseView(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        for pattern in current_urlpatterns[0]:
-            if (pattern.name == request.path.replace('/', '') 
-                or request.path == '/'):
-                return super().get(request, *args, **kwargs)
-            
+        if check_route(request):
+            return super().get(request, *args, **kwargs)
+        
         return HttpResponseRedirect('/404')
 
 class HomeServers(TemplateView):
@@ -248,11 +246,9 @@ class User_Pass_Reset(TemplateView):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
-        print(self.request.path.split('/')[3])
-        print(self.request.path.split('/')[4])
         context.update({
-            "active_user_for_reset": self.request.path.split('/')[3],
-            "active_user_password_reset_token": self.request.path.split('/')[4]
+            "active_user_for_reset": self.request.path.split('/')[6],
+            "active_user_password_reset_token": self.request.path.split('/')[7]
         })
         return context
 
