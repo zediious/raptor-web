@@ -85,7 +85,8 @@ def check_route(request):
     for route in current_routes:
         first_slash = request.path.index('/')
         path = request.path[:first_slash]+request.path[first_slash+1:]
-        if (str(route.name) == str(path)):
+        if (str(route.name) == str(path)
+        or str(f'{route.name}/') == str(path)):
             return True
         
     return False
