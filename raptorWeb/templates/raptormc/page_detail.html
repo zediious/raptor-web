@@ -1,38 +1,17 @@
-{% extends 'raptormc/base.html' %}
-
-{% block page_title %}
-    <title>
-    
-        {{ site_info_model.brand_name }} | {{page.name}}
-    
-    </title>
-{% endblock %}
-{% block seo_data %}
+<head>
+    <title>{{ site_info_model.brand_name }} | {{page.name}}</title>
     {% if page.meta_description and page.meta_keywords != "" %}
     <meta name="description" content="{{ page.meta_description }}">
     <meta name="keywords" content="{{ page.meta_keywords }}">
-    {% else %}
-    {{ block.super }}
     {% endif %}
-{% endblock %}
-{% block metadata %}
     <meta property="og:title" content="{{ site_info_model.brand_name }} | {{ page.name }}" />
     <meta property="og:description" content="{{ page.meta_description }}" />
     <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{page.get_absolute_url}}" />
-{% endblock %}
-{% block custom_css %}
     {% if page.page_css %}
         <link rel="stylesheet" href="{{page.page_css.url}}">
     {% endif %}
-{% endblock %}
+</head>
 
-{% block header_box %}
-    {% if page.show_gameservers %}
-    {{ block.super }}
-    {% endif%}
-{% endblock %}
-
-{% block main_block %}
 {% autoescape off%}
 
     <section id="header" class="container mb-0 mt-4">
@@ -54,10 +33,7 @@
     </section>
 
 {% endautoescape %}
-{% endblock%}
 
-{% block custom_js %}
-    {% if page.page_js %}
-        <script src="{{page.page_js.url}}"></script>
-    {% endif %}
-{% endblock %}
+{% if page.page_js %}
+    <script src="{{page.page_js.url}}"></script>
+{% endif %}

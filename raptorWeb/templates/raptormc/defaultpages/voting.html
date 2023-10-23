@@ -1,22 +1,10 @@
-{% extends 'raptormc/base.html' %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Voting</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Voting" />
+  <meta property="og:description" content="{{ Voting_Information.content|striptags }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/voting" />
+</head>
 
-{% block page_title %}
-    <title>
-      
-      {{ site_info_model.brand_name }} | Voting
-      
-    </title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }} | Voting" />
-    <meta property="og:description" content="{{ Voting_Information.content|striptags }}" />
-    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/voting" />
-{% endblock %}
-
-{% block main_block %}
 <section id="votingIntro" class="container mt-4">
 
   {% if Voting_Information.enabled %}
@@ -38,4 +26,3 @@
   <div id="server_voting" hx-get="{% url 'gameservers:server_voting_poll' %}" hx-trigger="load" hx-target="#server_voting" hx-swap="outerHTML"></div>
 
 </section>
-{% endblock %}

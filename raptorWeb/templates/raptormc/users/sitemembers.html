@@ -1,25 +1,11 @@
-{% extends 'raptormc/base.html' %}
 {% load static %}
 {% load markdownStrip %}
 
-{% block page_title %}
-<title>
-  
-  {{ site_info_model.brand_name }} | Profiles
-  
-</title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-<meta property="og:title" content="{{ site_info_model.brand_name }} | Profiles" />
-<meta property="og:description" content="All User profiles on {{ site_info_model.brand_name }}" />
-<meta property="og:url" content="{{web_proto}}://{{pub_domain}}/user/" />
-{% endblock %}
-
-{% block main_block %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Profiles</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Profiles" />
+  <meta property="og:description" content="All User profiles on {{ site_info_model.brand_name }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/user/" />
+</head>
 
 <div class="container mt-4" id="all_profiles" hx-get="{% url 'authprofiles:all_user_profile' %}" hx-trigger="load" hx-target="#all_profiles" hx-swap="innerHTML"></div>
-
-{% endblock %}

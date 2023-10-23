@@ -1,22 +1,10 @@
-{% extends 'raptormc/base.html' %}
+<head>
+  <title>{{ site_info_model.brand_name }} | Banned Items</title>
+  <meta property="og:title" content="{{ site_info_model.brand_name }} | Banned Items" />
+  <meta property="og:description" content="{{ Banned_Items_Information.content|striptags }}" />
+  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/banneditems" />
+</head>
 
-{% block page_title %}
-    <title>
-      
-      {{ site_info_model.brand_name }} | Banned Items
-      
-    </title>
-{% endblock %}
-{% block seo_data %}
-    {{ block.super }}
-{% endblock %}
-{% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }} | Banned Items" />
-    <meta property="og:description" content="{{ Banned_Items_Information.content|striptags }}" />
-    <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/banneditems" />
-{% endblock %}
-
-{% block main_block %}
 <section id="bannedItemsIntro" class="container mt-4">
 
   {% if Banned_Items_Information.enabled %}
@@ -38,4 +26,3 @@
   <div id="server_banned_items" hx-get="{% url 'gameservers:server_banned_items_poll' %}" hx-trigger="load" hx-target="#server_banned_items" hx-swap="outerHTML"></div>
 
 </section>
-{% endblock %}

@@ -11,38 +11,46 @@
         <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
 
           {% if default_pages.announcements %}<li class="btn btn-secondary m-2 p-2"> 
-            <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:announcements' %}">Announcements</a> 
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-replace-url="/announcements" onclick='closeOffCanvas()'>Announcements</a> 
           </li>{% endif %}
           
           {% if default_pages.rules %}<li class="btn btn-secondary m-2 p-2"> 
-            <a class="nav-link active text-white text-nowrap fs-5" href="{% url 'raptormc:rules' %}">Rules</a> 
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:rules' %}" hx-target='#home' hx-replace-url="/rules" onclick='closeOffCanvas()'>Rules</a> 
           </li>{% endif %}
 
           {% if default_pages.banned_items %}<li class="btn btn-secondary m-2 p-2">
-            <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:banned_items' %}">Banned Items</a>
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-replace-url="/banneditems" onclick='closeOffCanvas()'>Banned Items</a>
           </li>{% endif %}
 
           {% if default_pages.voting %}<li class="btn btn-secondary m-2 p-2">
-            <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:voting' %}">Vote for Us</a>
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:voting' %}" hx-target='#home' hx-replace-url="/voting" onclick='closeOffCanvas()'>Vote for Us</a>
           </li>{% endif %}
 
           {% if default_pages.joining %}<li class="btn btn-secondary m-2 p-2">
-            <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:joining' %}">How to Join</a>
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:howtojoin' %}" hx-target='#home' hx-replace-url="/howtojoin" onclick='closeOffCanvas()'>How to Join</a>
           </li>{% endif %}
           
           {% if default_pages.staff_apps %}<li class="btn btn-secondary m-2 p-2">
-            <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:staff_apps' %}">Staff Applications</a>
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:applications' %}" hx-target='#home' hx-replace-url="/applications" onclick='closeOffCanvas()'>Staff Applications</a>
           </li>{% endif %}
 
           {% if default_pages.members %}<li class="btn btn-secondary m-2 p-2">
-            <a class="nav-link text-white text-nowrap fs-5" href="{% url 'raptormc:site_members' %}">Site Members</a>
+            <a class="nav-link text-white text-nowrap fs-5"
+            hx-get="{% url 'raptormc:user' %}" hx-target='#home' hx-replace-url="/user" onclick='closeOffCanvas()'>Site Members</a>
           </li>{% endif %}
 
           {% for link in nav_links %}
           {% if not link.parent_dropdown %}
           <li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5" 
-            href="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}" {% if link.new_tab %}target="_blank"{% endif %}>{{link.name}}
+            {% if link.linked_page %}hx-get="/raptormc/api/html{{ link.get_linked_page_url }}" onclick='closeOffCanvas()'{% else %}href="{{ link.url }}"{% if link.new_tab %}target="_blank"{% endif %}{% endif %}
+            hx-target='#home' hx-replace-url="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}">{{link.name}}
               {% if link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
             </a>
           </li>
@@ -55,8 +63,10 @@
             <ul class="dropdown-menu bg-dark text-center">
               {% for nested_link in dropdown.enabled_links_in_dropdown %}
               <li>
-                <a class="dropdown-item text-white" href="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}" {% if nested_link.new_tab %}target="_blank"{% endif %}>{{nested_link.name}}
-                  {% if nested_link.new_tab %}<img class="new_tab_icon" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
+                <a class="dropdown-item text-white"
+                {% if nested_link.linked_page %}hx-get="/raptormc/api/html{{ nested_link.get_linked_page_url }}" onclick='closeOffCanvas()'{% else %}href="{{ nested_link.url }}"{% if nested_link.new_tab %}target="_blank"{% endif %}{% endif %}
+                hx-target='#home' hx-replace-url="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}">{{nested_link.name}}
+                  {% if nested_link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
                 </a>
               </li>
               {% endfor %}

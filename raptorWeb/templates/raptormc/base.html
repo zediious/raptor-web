@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load django_bootstrap5 %}
+{% load urlStrip %}
 
 <html lang="en" dir="ltr">
 
@@ -23,13 +24,14 @@
     <meta property="og:locale" content="en_US" />
     <meta name="theme-color" content="{{ site_info_model.main_color }}">
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/head-support.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
     {% block custom_css %}
     {% endblock %}
   </head>
 
-  <body id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
+  <body hx-ext="head-support" id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
 
     <div id="backgroundWrapper" 
       style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
@@ -55,8 +57,17 @@
 
     {% comment %} Main block for page content {% endcomment %}
     <main id="home" class="container-flex m-5 mt-0">
-      {% block main_block %}
-      {% endblock %}
+
+      {% if is_404 == 'true' %}
+        {% include "raptormc/404.html" %}
+      {% else %}
+        {% if request.path == '/' %}
+          <div hx-get='{% url "raptormc:home" %}' hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+        {% else %}
+          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}" hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+        {% endif %}
+      {% endif %}
+      
     </main>
 
     {% comment %} JS Imports {% endcomment %}
