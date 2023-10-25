@@ -59,7 +59,11 @@
                         <img id="profilePicturePage" class="border border-2 border-secondary w-100" src="{{object.user_profile_info.profile_picture.url}}" alt="Profile Picture">
                     {% endif %}
                 {% else %}
-                    <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    {% if object.is_staff == True %}
+                        <img id="profilePicture" class="border border-danger border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    {% else %}
+                        <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-lg-5 col-6 align-middle">
