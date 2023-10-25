@@ -9,7 +9,7 @@
 
 {% if object != False %}
 {% if object.is_superuser and request.user.is_superuser != True %}
-{% include "authprofiles/no_user.html" %}
+{% include "raptormc/404.html" %}
 {% else %}
 
 <div class="container">
