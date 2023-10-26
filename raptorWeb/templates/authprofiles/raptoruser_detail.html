@@ -60,9 +60,9 @@
                     {% endif %}
                 {% else %}
                     {% if object.is_staff == True %}
-                        <img id="profilePicture" class="border border-danger border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                        <img id="profilePicture" class="border border-danger border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
                     {% else %}
-                        <img id="profilePicture" class="border border-secondary border-2 w-75" src="{% static 'image/no_user.webp' %}" alt="Profile">
+                        <img id="profilePicture" class="border border-secondary border-2 w-100" src="{% static 'image/no_user.webp' %}" alt="Profile">
                     {% endif %}
                 {% endif %}
             </div>
