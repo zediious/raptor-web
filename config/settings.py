@@ -189,7 +189,7 @@ LOGGING: dict = {
     'formatters': {
         'debug': {
             'format': '[{levelname}] [{asctime}] {module} {process:d} {thread:d} {message}',
-            'datefmt': '%H:%M:%S',
+            'datefmt': '%Y:%m:%d-%H:%M:%S',
             'style': '{',
         },
         'simple_time': {
