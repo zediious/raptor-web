@@ -87,7 +87,11 @@ class RaptorUserManager(BaseUserManager):
         )
 
         new_extra_info: UserProfileInfo = UserProfileInfo.objects.create()
-        self.save_image_from_url_to_profile_info(new_extra_info, avatar_url)
+        try:
+            new_extra_info.save_profile_picture_from_url(avatar_url)
+        except Exception as exception:
+            LOGGER.debug((f"When creating an account for Discord user {discord_tag}, the following exception occured. "
+                         f"This usually just means that the user does not have a profile picture. {exception}"))
 
         # Set username to discord tag instead of just username, if a user with username exists already
         if self.filter(
