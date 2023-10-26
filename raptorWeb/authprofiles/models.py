@@ -72,13 +72,13 @@ class RaptorUserManager(BaseUserManager):
         API, create and return RaptorUser who was registered using
         Discord OAuth2.
         """
-        discord_tag: str = f'{discord_info["username"]}#{discord_info["discriminator"]}'
+        discord_tag: str = f'{discord_info["username"]}#'
         avatar_url: str = ('https://cdn.discordapp.com/avatars/'
                             f'{discord_info["id"]}/{discord_info["avatar"]}.png')
 
         new_discord_info: DiscordUserInfo = DiscordUserInfo.objects.create(
             id=discord_info["id"],
-            tag=discord_tag,
+            tag=discord_tag.replace('#', ''),
             pub_flags=discord_info["public_flags"],
             flags=discord_info["flags"],
             locale=discord_info["locale"],
@@ -87,7 +87,11 @@ class RaptorUserManager(BaseUserManager):
         )
 
         new_extra_info: UserProfileInfo = UserProfileInfo.objects.create()
-        self.save_image_from_url_to_profile_info(new_extra_info, avatar_url)
+        try:
+            new_extra_info.save_profile_picture_from_url(avatar_url)
+        except Exception as exception:
+            LOGGER.debug((f"When creating an account for Discord user {discord_tag}, the following exception occured. "
+                         f"This usually just means that the user does not have a profile picture. {exception}"))
 
         # Set username to discord tag instead of just username, if a user with username exists already
         if self.filter(
@@ -183,7 +187,7 @@ class DiscordUserInfo(models.Model):
 
     tag = models.CharField(
         max_length=100,
-        help_text="Combination of Discord Username and Discriminator, separated by a # sign.",
+        help_text="The Discord username associated with this model.",
         verbose_name="Discord Tag") 
 
     pub_flags = models.IntegerField(
@@ -221,11 +225,11 @@ class DiscordUserInfo(models.Model):
         if the user has not manually changed theirs with new fetched information.
 
         Will check to make sure that a non-discord RaptorUser does not exist with the new
-        username. If a RaptorUser does exist, the new username will have the Discord
-        user's discriminator (#1234) appended to it.
+        username. If a RaptorUser does exist, the new username will have a pound sign (#)
+        appended to it.
         """
         base_user: RaptorUser = RaptorUser.objects.get(discord_user_info=self)
-        discord_tag: str = f'{new_info["username"]}#{new_info["discriminator"]}'
+        discord_tag: str = f'{new_info["username"]}#'
 
         if RaptorUser.objects.filter(
             user_slug=slugify(new_info["username"]),
@@ -234,7 +238,7 @@ class DiscordUserInfo(models.Model):
                 username = discord_tag
 
         else:
-            username = discord_tag.split('#')[0]
+            username = discord_tag.replace('#', '')
 
         if (self.avatar_string != new_info["avatar"]
         and base_user.user_profile_info.picture_changed_manually != True):
@@ -244,7 +248,7 @@ class DiscordUserInfo(models.Model):
                 f'{new_info["id"]}/{new_info["avatar"]}.png')
             )
 
-        self.tag = discord_tag
+        self.tag = discord_tag.replace('#', '')
         base_user.username = username
         self.save()
         base_user.user_profile_info.save()
