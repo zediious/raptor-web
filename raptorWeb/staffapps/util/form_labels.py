@@ -12,7 +12,7 @@ time_commitment: str = "What Timezone do you live in? How often and at what time
 
 mc_name: str = "What is your Minecraft In-Game name?"
 
-discord_help: str = "Format it as such = Zediious#1234"
+discord_help: str = "This should NOT include a hash/pound sign"
 
 mc_name_verify: str = "Confirm your Minecraft In-Game name."
 

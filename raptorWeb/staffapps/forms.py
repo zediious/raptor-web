@@ -11,14 +11,6 @@ from raptorWeb.staffapps.util import form_labels
 
 LOGGER = logging.Logger("form_validator_logger")
 
-def check_for_hash(value: str) -> None:
-    """
-    Ensure Discord name value contains a '#' symbol
-    """
-    if value.find("#") < 0:
-
-        raise forms.ValidationError("Format your Discord Username as indicated in the help text.")
-
 def validate_age(value: int) -> None:
     """
     Ensure age value is at least 10
@@ -73,11 +65,11 @@ class StaffAppForm(forms.ModelForm):
 
     discord_name = forms.CharField(
         label=form_labels.discord_name, 
-        help_text=form_labels.discord_help, max_length=50, validators=[check_for_hash])
+        help_text=form_labels.discord_help, max_length=50)
 
     verify_discord = forms.CharField(
         label=form_labels.discord_name_verify, 
-        max_length=50, validators=[check_for_hash])
+        max_length=50)
 
     voice_chat = forms.BooleanField(
         label=form_labels.voice_chat, 
