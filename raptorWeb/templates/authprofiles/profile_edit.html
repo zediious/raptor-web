@@ -5,7 +5,7 @@
 hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}" hx-swap="outerHTML" hx-target="#profile_edit_form_alone">
 
     {% if messages %}
-    <ul class="messages alert alert-warning">
+    <ul class="messages alert alert-success">
     {% for message in messages %}
         {{message}}
     {% endfor %}

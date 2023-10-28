@@ -3,7 +3,7 @@
 <form class="form p-3" hx-post="{% url 'staffapps:mod_app' %}">
 
     {% if messages %}
-    <ul class="messages alert alert-warning">
+    <ul class="messages alert alert-success">
       {% for message in messages %}
         {{message}}
       {% endfor %}

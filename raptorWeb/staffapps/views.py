@@ -77,7 +77,7 @@ class AppView(TemplateView):
             LOGGER.info(f"{self.app_string} submitted!")
             LOGGER.info(f"Discord ID of applicant: {staff_app.cleaned_data['discord_name']}")
             staff_app.save()
-            messages.error(request, "Application submitted successfully! Await a response at provided Discord handle.")
+            messages.success(request, "Application submitted successfully! Await a response at provided Discord handle.")
             return render(request, self.template_name, context=dictionary)
 
         else:

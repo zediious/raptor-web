@@ -337,7 +337,7 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 request.FILES
             )
             LOGGER.info(f"{self.request.user.username} modified their profile details")
-            messages.error(request, "Profile details successfully changed!")
+            messages.success(request, "Profile details successfully changed!")
             return render(request, self.template_name, context=instance_dict)
 
         else:
