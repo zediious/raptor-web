@@ -3,6 +3,7 @@
 <head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | Announcements</title>
   <meta name="description" content="All announcements made by {{ site_info_model.brand_name }}" hx-preserve="true" hx-head="re-eval">
+  <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
   <meta property="og:title" content="{{ site_info_model.brand_name }} | Announcements" hx-head="re-eval"/>
   <meta property="og:description" content="All announcements made by {{ site_info_model.brand_name }}" hx-head="re-eval"/>
   <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/announcements" hx-head="re-eval"/>

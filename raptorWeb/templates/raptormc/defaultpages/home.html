@@ -5,6 +5,7 @@
   <meta name="keywords" content="{{ site_info_model.meta_keywords }}" hx-preserve="true" hx-head="re-eval">
   <meta name="description" content="{{ site_info_model.meta_description }}" hx-preserve="true" hx-head="re-eval">
   <title>{{ site_info_model.brand_name }} | Home</title>
+  <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
   <meta property="og:title" content="{{ site_info_model.brand_name }} | Home" />
   <meta property="og:description" content="{{ site_info_model.meta_description }}" />
   <meta property="og:url" content="{{web_proto}}://{{pub_domain}}.net" />
