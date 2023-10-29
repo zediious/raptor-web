@@ -34,11 +34,7 @@
       </div>
 
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
-      {% block header_box %}
-
       {% include "raptormc/components/headerbox.html" %}
-
-      {% endblock %}
       
     </div>
 
@@ -76,9 +72,6 @@
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
     {% endif %}
-
-    {% block custom_js %}
-    {% endblock %}
     
   </body>
 
