@@ -1,12 +1,15 @@
 from logging import getLogger
 
 from django.utils.text import slugify
+from django.conf import settings
 
-from raptorWeb.raptormc.models import Page
+from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText
 from raptorWeb.authprofiles.models import RaptorUser
 
 LOGGER = getLogger('raptormc.routes')
-
+DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
+WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
+BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 CURRENT_URLPATTERNS = []
 
 class Route:
@@ -26,8 +29,6 @@ def check_route(request):
     variations for created objects. Return True
     if the route exists, False if it does not.
     """
-    current_routes: list = []
-    
     def _get_user_routes():
         """
         Iterate all users and create a Route for
@@ -68,8 +69,18 @@ def check_route(request):
                 )
             )
             
+    site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            
+    current_routes: list = []
+            
     if request.path == '/':
-        return True
+        return {
+            "og_color": site_info.main_color,
+            "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}",
+            "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+            "og_title": f"{site_info.brand_name} | Home",
+            "og_desc": site_info.meta_description
+        }
     
     for pattern in CURRENT_URLPATTERNS[0]:
         current_routes.append(
@@ -87,6 +98,34 @@ def check_route(request):
         path = request.path[:first_slash]+request.path[first_slash+1:]
         if (str(route.name) == str(path)
         or str(f'{route.name}/') == str(path)):
-            return True
+            if route.user != None:
+                return {
+                    "og_user": route.user,
+                    "og_color": site_info.main_color,
+                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/{route.user.user_slug}",
+                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{route.user.user_profile_info.profile_picture.url}",
+                    "og_title": f"{site_info.brand_name} | {route.user.username}",
+                    "og_desc": f"User Profile for {route.user.username}"
+                }
+                
+            if route.page != None:
+                return {
+                    "og_page": route.page,
+                    "og_color": site_info.main_color,
+                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{route.page.get_absolute_url()}",
+                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+                    "og_title": f"{site_info.brand_name} | {route.page.name}",
+                    "og_desc": route.page.meta_description
+                }
+                
+            return {
+                "og_color": site_info.main_color,
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
+                "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+                "og_title": f"{site_info.brand_name} | {path.title()}",
+                "og_desc": InformativeText.objects.get(
+                    name=f"{path.title()} Information"
+                )
+            }
         
     return False
