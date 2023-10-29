@@ -8,6 +8,8 @@
     <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{user_path}}/{{object.username}}" />
     {% if object.user_profile_info.profile_picture %}
         <meta property="og:image" content="{{web_proto}}://{{pub_domain}}{{object.user_profile_info.profile_picture.url}}" hx-preserve="true" hx-head="re-eval"/>
+    {% else %}
+        <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
     {% endif %}
 </head>
 
