@@ -1,7 +1,7 @@
 {% load static %}
 {% load markdownStrip %}
 
-<head>
+<head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | Profiles</title>
   <meta property="og:title" content="{{ site_info_model.brand_name }} | Profiles" />
   <meta property="og:description" content="All User profiles on {{ site_info_model.brand_name }}" />

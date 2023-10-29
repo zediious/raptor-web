@@ -1,6 +1,6 @@
 {% load static %}
 
-<head>
+<head hx-head="merge">
     <title>{{ site_info_model.brand_name }} | {{object.username}}</title>
     <meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
     <meta property="og:description" content="User Profile for {{object.username}}" />

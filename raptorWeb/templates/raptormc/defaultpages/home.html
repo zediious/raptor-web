@@ -1,6 +1,6 @@
 {% load markdownStrip %}
 
-<head>
+<head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | Home</title>
   <meta property="og:title" content="{{ site_info_model.brand_name }} | Home" />
   <meta property="og:description" content="{{ Homepage_Information.content|striptags }}" />
