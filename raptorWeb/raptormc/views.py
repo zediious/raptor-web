@@ -25,10 +25,11 @@ class BaseView(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if check_route(request):
-            return super().get(request, *args, **kwargs)
+        route_result = check_route(request)
+        if route_result != False:
+            return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context=route_result)
         
-        return HttpResponseRedirect('/404')
+        return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context={"is_404": 'true'})
 
 class HomeServers(TemplateView):
     """
@@ -114,7 +115,7 @@ class BannedItems(TemplateView):
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
             context = context,
-            informative_text_names = ["Banned Items Information"])
+            informative_text_names = ["Banneditems Information"])
 
 
 class Voting(TemplateView):
@@ -184,7 +185,7 @@ class StaffApps(TemplateView):
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
             context = context,
-            informative_text_names = ["Staff App Information"])
+            informative_text_names = ["Applications Information"])
 
 
 class PageView(DetailView):

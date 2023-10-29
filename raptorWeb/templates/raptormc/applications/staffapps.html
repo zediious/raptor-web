@@ -1,20 +1,16 @@
 <head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | Staff Applications</title>
-  <meta name="description" content="{{ Staff_App_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
-  <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
-  <meta property="og:title" content="{{ site_info_model.brand_name }} | Staff Applications" />
-  <meta property="og:description" content="{{ Staff_App_Information.content|striptags }}" />
-  <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/applications" />
+  <meta name="description" content="{{ Applications_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
 </head>
 
 <section id="welcome" class="container mt-4">
 
-  {% if Staff_App_Information.enabled %}
+  {% if Applications_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Staff Applications</h3>
     <hr>
     <div class="pageContent">
-      {{ Staff_App_Information.content|safe }}
+      {{ Applications_Information.content|safe }}
     </div>
   </header>
   {% else %}
