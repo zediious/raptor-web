@@ -218,6 +218,12 @@ class SiteMembers(TemplateView):
             return HttpResponseRedirect('/404')
         
         return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context=context,
+            informative_text_names=["User Information"])
 
 
 class User_Page(TemplateView):
