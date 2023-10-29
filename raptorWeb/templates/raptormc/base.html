@@ -7,28 +7,15 @@
 <html lang="en" dir="ltr">
 
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block page_title %}
-    {% endblock %}
-    {% block seo_data %}
-    <meta name="description" content="{{ site_info_model.meta_description }}">
-    <meta name="keywords" content="{{ site_info_model.meta_keywords }}">
-    {% endblock %}
-    {% block metadata %}
-    <meta property="og:title" content="{{ site_info_model.brand_name }}" />
-    <meta property="og:description" content="{{ site_info_model.meta_description }}" />
-    {% endblock %}
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" />
-    <meta property="og:locale" content="en_US" />
-    <meta name="theme-color" content="{{ site_info_model.main_color }}">
-    <script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/head-support.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
-    {% block custom_css %}
-    {% endblock %}
+    <meta charset="utf-8" hx-preserve="true">
+    <meta name="viewport" content="width=device-width, initial-scale=1" hx-preserve="true">
+    <meta property="og:type" content="website"/ hx-preserve="true">
+    <meta property="og:locale" content="en_US" hx-preserve="true"/>
+    <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
+    <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
+    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}" hx-preserve="true">
+    <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}" hx-preserve="true">
   </head>
 
   <body hx-ext="head-support" id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
@@ -49,7 +36,7 @@
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% block header_box %}
 
-        {% include "raptormc/components/headerbox.html" %}
+      {% include "raptormc/components/headerbox.html" %}
 
       {% endblock %}
       
