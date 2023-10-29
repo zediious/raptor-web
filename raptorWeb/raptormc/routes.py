@@ -1,6 +1,7 @@
 from logging import getLogger
 
 from django.utils.text import slugify
+from django.utils.html import strip_tags
 from django.conf import settings
 
 from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText
@@ -123,9 +124,9 @@ def check_route(request):
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
                 "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
                 "og_title": f"{site_info.brand_name} | {path.title()}",
-                "og_desc": InformativeText.objects.get(
+                "og_desc": strip_tags(InformativeText.objects.get(
                     name=f"{path.title()} Information"
-                )
+                ).content)
             }
         
     return False
