@@ -25,8 +25,9 @@ class BaseView(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if check_route(request):
-            return super().get(request, *args, **kwargs)
+        route_result = check_route(request)
+        if route_result != False:
+            return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context=route_result)
         
         return HttpResponseRedirect('/404')
 
