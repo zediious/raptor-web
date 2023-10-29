@@ -2,6 +2,7 @@
 
 <head hx-head="merge">
     <title>{{ site_info_model.brand_name }} | {{object.username}}</title>
+    <meta name="description" content="User Profile for {{object.username}}" hx-preserve="true" hx-head="re-eval">
     <meta property="og:title" content="{{ site_info_model.brand_name }} | {{object.username}}" />
     <meta property="og:description" content="User Profile for {{object.username}}" />
     <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/{{base_user_url}}/{{object.username}}" />
