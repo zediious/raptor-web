@@ -115,7 +115,7 @@ class BannedItems(TemplateView):
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
             context = context,
-            informative_text_names = ["Banned Items Information"])
+            informative_text_names = ["Banneditems Information"])
 
 
 class Voting(TemplateView):
@@ -185,7 +185,7 @@ class StaffApps(TemplateView):
         context: dict[str, Any] = super().get_context_data(**kwargs)
         return get_or_create_informative_text(
             context = context,
-            informative_text_names = ["Staff App Information"])
+            informative_text_names = ["Applications Information"])
 
 
 class PageView(DetailView):

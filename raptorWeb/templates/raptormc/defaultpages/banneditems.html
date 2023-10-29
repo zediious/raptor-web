@@ -5,12 +5,12 @@
 
 <section id="bannedItemsIntro" class="container mt-4">
 
-  {% if Banned_Items_Information.enabled %}
+  {% if Banneditems_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Banned Items</h3>
     <hr>
     <div class="pageContent">
-      {{ Banned_Items_Information.content|safe }}
+      {{ Banneditems_Information.content|safe }}
     </div>
   </header>
   {% else %}

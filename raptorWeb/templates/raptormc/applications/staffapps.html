@@ -5,12 +5,12 @@
 
 <section id="welcome" class="container mt-4">
 
-  {% if Staff_App_Information.enabled %}
+  {% if Applications_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Staff Applications</h3>
     <hr>
     <div class="pageContent">
-      {{ Staff_App_Information.content|safe }}
+      {{ Applications_Information.content|safe }}
     </div>
   </header>
   {% else %}
