@@ -29,7 +29,7 @@ class BaseView(TemplateView):
         if route_result != False:
             return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context=route_result)
         
-        return HttpResponseRedirect('/404')
+        return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context={"is_404": 'true'})
 
 class HomeServers(TemplateView):
     """
