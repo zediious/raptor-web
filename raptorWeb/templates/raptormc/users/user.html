@@ -1,7 +1,7 @@
 {% load static %}
 {% load authTags %}
 
-<head>
+<head hx-head="merge">
     <meta property="og:title" content="{{ site_info_model.brand_name }} | {{ request.path|get_user_from_url }}" />
     <meta property="og:description" content="User Profile for {{ request.path|get_user_from_url }}" />
     <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/user/{{ request.path|get_user_from_url }}" />

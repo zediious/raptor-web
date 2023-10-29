@@ -1,5 +1,7 @@
-<head>
+<head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | Voting</title>
+  <meta name="description" content="{{ Voting_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
+  <meta property="og:image" content="{% if site_info_model.avatar_image %}{{web_proto}}://{{pub_domain}}{{site_info_model.avatar_image.url}}{% endif %}" hx-preserve="true" hx-head="re-eval"/>
   <meta property="og:title" content="{{ site_info_model.brand_name }} | Voting" />
   <meta property="og:description" content="{{ Voting_Information.content|striptags }}" />
   <meta property="og:url" content="{{web_proto}}://{{pub_domain}}/voting" />
