@@ -119,14 +119,22 @@ def check_route(request):
                     "og_desc": route.page.meta_description
                 }
                 
+            try:
+                text_content = strip_tags(
+                    InformativeText.objects.get(
+                        name=f"{path.title()} Information"
+                    ).content
+                )
+            except InformativeText.DoesNotExist:
+                LOGGER.error(f"Informative Text not found for following path: {path}")
+                text_content = "Placeholder"
+                
             return {
                 "og_color": site_info.main_color,
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
                 "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
                 "og_title": f"{site_info.brand_name} | {path.title()}",
-                "og_desc": strip_tags(InformativeText.objects.get(
-                    name=f"{path.title()} Information"
-                ).content)
+                "og_desc": text_content
             }
         
     return False
