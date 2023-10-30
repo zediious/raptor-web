@@ -160,7 +160,7 @@ class HowToJoin(TemplateView):
         return get_or_create_informative_text(
             context = context,
             informative_text_names = [
-                "Joining Information",
+                "Howtojoin Information",
                 "Using the CurseForge Launcher",
                 "Using the FTB Launcher",
                 "Using the Technic Launcher"])

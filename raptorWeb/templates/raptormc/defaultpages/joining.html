@@ -1,16 +1,16 @@
 <head hx-head="merge">
   <title>{{ site_info_model.brand_name }} | How to Join</title>
-  <meta name="description" content="{{ Joining_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
+  <meta name="description" content="{{ Howtojoin_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
 </head>
 
 <section id="joiningIntro" class="container mt-4">
 
-  {% if Joining_Information.enabled %}
+  {% if Howtojoin_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">Joining {{ site_info_model.brand_name }} Servers</h3>
     <hr>
     <div class="pageContent">
-      {{ Joining_Information.content|safe }}
+      {{ Howtojoin_Information.content|safe }}
     </div>
   </header>
   {% else %}
