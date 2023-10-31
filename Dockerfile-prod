@@ -1,0 +1,15 @@
+# Dockerfile for raptorapp
+FROM continuumio/miniconda3:latest
+
+# Install host dependencies
+RUN apt update
+RUN apt install libmariadb-dev -y
+RUN apt install gcc -y
+
+# Copy project files and install environment
+COPY . /raptorWebApp
+RUN conda env create -f /raptorWebApp/environment.yml
+
+# Define entrypoint
+RUN chmod +x+r -R /raptorWebApp/docker/init
+ENTRYPOINT ["/raptorWebApp/docker/init/run-raptorapp.sh"]
