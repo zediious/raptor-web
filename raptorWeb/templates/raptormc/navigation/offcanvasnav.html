@@ -12,46 +12,99 @@
 
           {% if default_pages.announcements %}<li class="btn btn-secondary m-2 p-2"> 
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-push-url="/announcements" onclick='closeOffCanvas()'>Announcements</a> 
+            hx-get="{% url 'raptormc:announcements' %}"
+            hx-target='#home'
+            hx-push-url="/announcements"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Announcements
+            </a> 
           </li>{% endif %}
           
           {% if default_pages.rules %}<li class="btn btn-secondary m-2 p-2"> 
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:rules' %}" hx-target='#home' hx-push-url="/rules" onclick='closeOffCanvas()'>Rules</a> 
+            hx-get="{% url 'raptormc:rules' %}"
+            hx-target='#home'
+            hx-push-url="/rules"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Rules
+          </a> 
           </li>{% endif %}
 
           {% if default_pages.banned_items %}<li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-push-url="/banneditems" onclick='closeOffCanvas()'>Banned Items</a>
+            hx-get="{% url 'raptormc:banneditems' %}"
+            hx-target='#home'
+            hx-push-url="/banneditems"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Banned Items
+            </a>
           </li>{% endif %}
 
           {% if default_pages.voting %}<li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:voting' %}" hx-target='#home' hx-push-url="/voting" onclick='closeOffCanvas()'>Vote for Us</a>
+            hx-get="{% url 'raptormc:voting' %}"
+            hx-target='#home'
+            hx-push-url="/voting"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Vote for Us
+            </a>
           </li>{% endif %}
 
           {% if default_pages.joining %}<li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:howtojoin' %}" hx-target='#home' hx-push-url="/howtojoin" onclick='closeOffCanvas()'>How to Join</a>
+            hx-get="{% url 'raptormc:howtojoin' %}"
+            hx-target='#home'
+            hx-push-url="/howtojoin"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              How to Join
+            </a>
           </li>{% endif %}
           
           {% if default_pages.staff_apps %}<li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:applications' %}" hx-target='#home' hx-push-url="/applications" onclick='closeOffCanvas()'>Staff Applications</a>
+            hx-get="{% url 'raptormc:applications' %}"
+            hx-target='#home'
+            hx-push-url="/applications"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Staff Applications
+            </a>
           </li>{% endif %}
 
           {% if default_pages.members %}<li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5"
-            hx-get="{% url 'raptormc:user' %}" hx-target='#home' hx-push-url="/user" onclick='closeOffCanvas()'>Site Members</a>
+            hx-get="{% url 'raptormc:user' %}"
+            hx-target='#home'
+            hx-push-url="/user"
+            hx-indicator="#mainLoadingspinner"
+            onclick='closeOffCanvas()'>
+              Site Members
+            </a>
           </li>{% endif %}
 
           {% for link in nav_links %}
           {% if not link.parent_dropdown %}
           <li class="btn btn-secondary m-2 p-2">
             <a class="nav-link text-white text-nowrap fs-5" 
-            {% if link.linked_page %}hx-get="/raptormc/api/html{{ link.get_linked_page_url }}" onclick='closeOffCanvas()'{% else %}href="{{ link.url }}"{% if link.new_tab %}target="_blank"{% endif %}{% endif %}
-            hx-target='#home' hx-push-url="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}">{{link.name}}
-              {% if link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
+            {% if link.linked_page %}
+            hx-get="/raptormc/api/html{{ link.get_linked_page_url }}"
+            onclick='closeOffCanvas()'
+            {% else %}
+            href="{{ link.url }}"
+            {% if link.new_tab %}
+            target="_blank"{% endif %}{% endif %}
+            hx-target='#home'
+            hx-push-url="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}"
+            hx-indicator="#mainLoadingspinner">
+              {{link.name}}
+              {% if link.new_tab %}
+              <img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">
+              {% endif %}
             </a>
           </li>
           {% endif %}
@@ -64,9 +117,20 @@
               {% for nested_link in dropdown.enabled_links_in_dropdown %}
               <li>
                 <a class="dropdown-item text-white"
-                {% if nested_link.linked_page %}hx-get="/raptormc/api/html{{ nested_link.get_linked_page_url }}" onclick='closeOffCanvas()'{% else %}href="{{ nested_link.url }}"{% if nested_link.new_tab %}target="_blank"{% endif %}{% endif %}
-                hx-target='#home' hx-push-url="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}">{{nested_link.name}}
-                  {% if nested_link.new_tab %}<img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">{% endif %}
+                {% if nested_link.linked_page %}
+                hx-get="/raptormc/api/html{{ nested_link.get_linked_page_url }}"
+                onclick='closeOffCanvas()'
+                {% else %}
+                href="{{ nested_link.url }}"
+                {% if nested_link.new_tab %}
+                target="_blank"{% endif %}{% endif %}
+                hx-target='#home'
+                hx-push-url="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}"
+                hx-indicator="#mainLoadingspinner">
+                  {{nested_link.name}}
+                  {% if nested_link.new_tab %}
+                  <img class="new_tab_icon filter-white" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">
+                  {% endif %}
                 </a>
               </li>
               {% endfor %}
