@@ -73,12 +73,17 @@ def check_route(request):
     site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
             
     current_routes: list = []
+    
+    try:
+        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}"
+    except ValueError:
+        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/static/image/no_user.webp"
             
     if request.path == '/':
         return {
             "og_color": site_info.main_color,
             "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}",
-            "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+            "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
             "og_title": f"{site_info.brand_name} | Home",
             "og_desc": site_info.meta_description
         }
@@ -104,7 +109,7 @@ def check_route(request):
                 try:
                     user_avatar = route.user.user_profile_info.profile_picture.url
                 except ValueError:
-                    user_avatar = site_info.avatar_image.url
+                    user_avatar = site_avatar_url
                     
                 return {
                     "og_user": route.user,
@@ -120,7 +125,7 @@ def check_route(request):
                     "og_page": route.page,
                     "og_color": site_info.main_color,
                     "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{route.page.get_absolute_url()}",
-                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
                     "og_title": f"{site_info.brand_name} | {route.page.name}",
                     "og_desc": route.page.meta_description
                 }
@@ -138,7 +143,7 @@ def check_route(request):
             return {
                 "og_color": site_info.main_color,
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
-                "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}",
+                "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
                 "og_title": f"{site_info.brand_name} | {path.title()}",
                 "og_desc": text_content
             }
