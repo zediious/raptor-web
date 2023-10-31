@@ -19,7 +19,7 @@ services:
     env_file:
     - stack.env
     volumes:
-      - ./media:/raptorWebApp/media/
+      - raptor-media:/raptorWebApp/raptorWeb/media
       - raptor-conf:/raptorWebApp/docker/nginx/conf.d/
       - ./stack.env:/raptorWebApp/stack.env
     depends_on:
@@ -31,7 +31,7 @@ services:
     ports:
       - 443:443
     volumes:
-      - ./media:/raptorWeb/media
+      - raptor-media:/raptor_app/media
       - raptor-conf:/etc/nginx/conf.d/
     depends_on:
       - raptorapp
@@ -39,3 +39,4 @@ services:
 volumes:
   raptor-db:
   raptor-conf:
+  raptor-media:
