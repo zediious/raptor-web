@@ -52,9 +52,9 @@
         {% include "raptormc/404.html" %}
       {% else %}
         {% if request.path == '/' %}
-          <div hx-get='{% url "raptormc:home" %}' hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+          <div hx-get='{% url "raptormc:home" %}' hx-trigger='load' hx-target='#home' hx-swap="innerHTML" hx-indicator="#mainLoadingspinner"></div>
         {% else %}
-          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}" hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}" hx-trigger='load' hx-target='#home' hx-swap="innerHTML" hx-indicator="#mainLoadingspinner"></div>
         {% endif %}
       {% endif %}
       
