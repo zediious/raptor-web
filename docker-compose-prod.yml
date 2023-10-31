@@ -16,6 +16,8 @@ services:
     container_name: raptorapp
     expose:
       - 80
+    env_file:
+    - stack.env
     volumes:
       - ./media:/raptorWebApp/media/
       - raptor-conf:/raptorWebApp/docker/nginx/conf.d/
