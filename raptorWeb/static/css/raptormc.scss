@@ -134,6 +134,18 @@ body {
     height: 25px
 }
 
+.htmx-indicator{
+    display: none;
+}
+
+.htmx-request .htmx-indicator{
+    display: inline;
+}
+
+.htmx-request.htmx-indicator{
+    display: inline;
+}
+
 .fade-in-button {
     opacity: 1;
     animation-name: fadeInOpacityButton;
