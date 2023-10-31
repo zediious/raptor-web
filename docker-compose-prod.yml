@@ -1,7 +1,3 @@
-# Compose file for raptor-web development
-# This re-builds the application image on load.
-# Use docker-compose-prod.yml for production.
-
 version: '3'
 services:
 
@@ -16,14 +12,13 @@ services:
       - raptor-db:/var/lib/mysql/
 
   raptorapp:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: zediious/raptor-web:latest
     container_name: raptorapp
     expose:
       - 80
     volumes:
-      - ./:/raptorWebApp
+      - raptor-media:/raptorWebApp/media/
+      - raptor-conf:/raptorWebApp//docker/nginx/conf.d/
       - ./stack.env:/raptorWebApp/stack.env
     depends_on:
       - mariadb
@@ -34,10 +29,12 @@ services:
     ports:
       - 443:443
     volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
-      - ./raptorWeb/media:/raptor_app/media/
+      - raptor-media:/raptorWeb/media:/raptor_app/media/
+      - raptor-conf:/etc/nginx/conf.d/
     depends_on:
       - raptorapp
 
 volumes:
   raptor-db:
+  raptor-media:
+  raptor-conf:

@@ -1,4 +1,8 @@
-# Dockerfile for raptorapp
+# Dockerfile for raptor-web development
+# This image does NOT build the app's code into the image.
+# It instead relies on paths to local files in docker-compose.yml
+# Use docker-compose-prod.yml for production.
+
 FROM continuumio/miniconda3:latest
 
 # Install host dependencies
@@ -7,7 +11,7 @@ RUN apt install libmariadb-dev -y
 RUN apt install gcc -y
 
 # Copy Conda environment and install environment
-COPY ../environment.yml environment.yml
+COPY environment.yml environment.yml
 RUN conda env create
 
 # Add initialization script and define entrypoint
