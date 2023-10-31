@@ -3,11 +3,16 @@
 {% if registered %}
 <div class="container">
     <header class="card bg-dark opacity-75 text-white p-4 mt-4">
-        <h3 class="pageHeader fw-bold text-center">Thank you for creating an account! You can now log in using the user dropdown menu.</h3>
+        <h3 class="pageHeader fw-bold text-center">
+          Thank you for creating an account! You can now log in using the user dropdown menu.
+        </h3>
     </header>
 </div>
 {% else %}
-<form id="register_form_alone" class="form p-3 text-white" hx-post="{% url 'authprofiles:register' %}" hx-swap="outerHTML" hx-target="#register_form_alone">
+<form id="register_form_alone" class="form p-3 text-white"
+      hx-post="{% url 'authprofiles:register' %}"
+      hx-swap="outerHTML"
+      hx-target="#register_form_alone">
           
   {% csrf_token %}
   {{ form.captcha }} 

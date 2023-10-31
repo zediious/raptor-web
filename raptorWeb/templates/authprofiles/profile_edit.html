@@ -1,8 +1,11 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-<form id="profile_edit_form_alone" class="form p-3 text-white" enctype="multipart/form-data" 
-hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}" hx-swap="outerHTML" hx-target="#profile_edit_form_alone">
+<form id="profile_edit_form_alone" class="form p-3 text-white"
+      enctype="multipart/form-data" 
+      hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}"
+      hx-swap="outerHTML"
+      hx-target="#profile_edit_form_alone">
 
     {% if messages %}
     <ul class="messages alert alert-success">
