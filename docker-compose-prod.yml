@@ -19,7 +19,6 @@ services:
     volumes:
       - raptor-media:/raptorWebApp/media/
       - raptor-conf:/raptorWebApp//docker/nginx/conf.d/
-      - ./stack.env:/raptorWebApp/stack.env
     depends_on:
       - mariadb
 
