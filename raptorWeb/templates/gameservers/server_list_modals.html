@@ -45,7 +45,7 @@
       <div class="modal-footer justify-content-center">
 
         {% if default_pages.announcements %}
-        <a role="button" class="btn btn-outline-secondary disabled"
+        <a role="button" class="btn btn-outline-secondary"
            hx-get="{% url 'raptormc:announcements' %}"
            hx-target='#home'
            hx-push-url="/announcements"
@@ -57,7 +57,7 @@
         {% endif %}
         
         {% if default_pages.rules %}
-          <a role="button" class="btn btn-outline-secondary disabled"
+          <a role="button" class="btn btn-outline-secondary"
              hx-get="{% url 'raptormc:rules' %}"
              hx-target='#home'
              hx-push-url="/rules"
@@ -69,7 +69,7 @@
         {% endif %}
 
         {% if default_pages.banned_items %}
-          <a role="button" class="btn btn-outline-secondary disabled"
+          <a role="button" class="btn btn-outline-secondary"
              hx-get="{% url 'raptormc:banneditems' %}"
              hx-target='#home'
              hx-push-url="/banneditems"
@@ -81,7 +81,7 @@
         {% endif %}
 
         {% if default_pages.voting %}
-          <a role="button" class="btn btn-outline-secondary disabled"
+          <a role="button" class="btn btn-outline-secondary"
              hx-get="{% url 'raptormc:voting' %}"
              hx-target='#home'
              hx-push-url="/voting"
