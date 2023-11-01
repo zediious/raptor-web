@@ -2,90 +2,104 @@
 
 <link rel="stylesheet" hx-get="{% static 'css/raptormc.css' %}">
 
-    {% for server in object_list %} 
-    
-      <div class="modal fade" id="modal_{{ server.pk }}_Info" tabindex="-1" aria-labelledby="{{ server.modpack_name }} Information" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content bg-dark text-white">
-            <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-header">
-              <div class="row">
-                <h3 class="col-12 modal-title" id="inner_{{ server.pk }}InfoModal"><a href="{{ server.modpack_url }}" target="_blank">
-                  <img class="w-100" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}"></a>
-                </h3>
-                <div class="text-center">
-                  <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.pk }}Address" data-clipboard-text={{ server.server_address }}
-                  data-bs-toggle="tooltip" data-bs-title="Click to copy address!">
-                    <p class="fs-4"> Join at: <span id="{{ server.pk }}Address" class="serverAddressCopy fw-semibold">{{ server.server_address }}</span></p>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="modal-body" id="{{ server.pk }}Desc">
-              {{ server.modpack_description|safe }}
-              <hr>
-              {{ server.server_description|safe }}
-              <p class="text-center">
-                <span class="pageContent">The server is running: <strong>v{{ server.modpack_version}}</strong></span>
+{% for server in object_list %} 
+<div class="modal fade" id="modal_{{ server.pk }}_Info"
+      tabindex="-1"
+      aria-labelledby="{{ server.modpack_name }} Information"
+      aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-white">
+      <buttonclass="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header">
+        <div class="row">
+          <h3 class="col-12 modal-title" id="inner_{{ server.pk }}InfoModal">
+            <a href="{{ server.modpack_url }}" target="_blank">
+              <img class="w-100" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
+            </a>
+          </h3>
+          <div class="text-center">
+            <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.pk }}Address"
+                    data-clipboard-text={{ server.server_address }}
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Click to copy address!">
+              <p class="fs-4">
+                Join at:
+                <span id="{{ server.pk }}Address" 
+                      class="serverAddressCopy fw-semibold">{{ server.server_address }}</span>
               </p>
-            </div>
-            <div class="modal-footer justify-content-center">
-
-              {% if default_pages.announcements %}{% if request.path == '/announcements/' %}
-                <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:announcements' %}" hx-target='#home' hx-push-url="/announcements" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Announcements
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:announcements' %}"  hx-target='#home' hx-push-url="/announcements" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Announcements
-                </a>
-              {% endif %}{% endif %}
-              
-              {% if default_pages.rules %}{% if request.path == '/rules/' %}
-                <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-push-url="/rules" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Rules
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:rules' %}"  hx-target='#home' hx-push-url="/rules" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Rules
-                </a>
-              {% endif %}{% endif %}
-
-              {% if default_pages.banned_items %}{% if request.path == '/banneditems/' %}
-                <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:banneditems' %}"  hx-target='#home' hx-push-url="/banneditems" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Banned Items
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:banneditems' %}" hx-target='#home' hx-push-url="/banneditems" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Banned Items
-                </a>
-              {% endif %}{% endif %}
-
-              {% if default_pages.voting %}{% if request.path == '/voting/' %}
-                <a role="button" class="btn btn-outline-secondary disabled"
-                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-push-url="/voting" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Vote
-                </a>
-              {% else %}
-                <a role="button" class="btn btn-outline-secondary"
-                hx-get="{% url 'raptormc:voting' %}"  hx-target='#home' hx-push-url="/voting" hx-indicator="#mainLoadingspinner" onclick='closeModal()'>
-                  Vote
-                </a>
-              {% endif %}{% endif %}
-
-            </div>
+            </button>
           </div>
         </div>
       </div>
+      <div class="modal-body" id="{{ server.pk }}Desc">
+        {{ server.modpack_description|safe }}
+        <hr>
+        {{ server.server_description|safe }}
+        <p class="text-center">
+          <span class="pageContent">
+            The server is running: <strong>v{{ server.modpack_version}}</strong>
+          </span>
+        </p>
+      </div>
+      <div class="modal-footer justify-content-center">
 
-    {% endfor %}
+        {% if default_pages.announcements %}
+        <a role="button" class="btn btn-outline-secondary disabled"
+           hx-get="{% url 'raptormc:announcements' %}"
+           hx-target='#home'
+           hx-push-url="/announcements"
+           hx-indicator="#mainLoadingspinner"
+           onclick='closeModal()'
+        >
+          Announcements
+        </a>
+        {% endif %}
+        
+        {% if default_pages.rules %}
+          <a role="button" class="btn btn-outline-secondary disabled"
+             hx-get="{% url 'raptormc:rules' %}"
+             hx-target='#home'
+             hx-push-url="/rules"
+             hx-indicator="#mainLoadingspinner"
+             onclick='closeModal()'
+          >
+            Rules
+          </a>
+        {% endif %}
 
+        {% if default_pages.banned_items %}
+          <a role="button" class="btn btn-outline-secondary disabled"
+             hx-get="{% url 'raptormc:banneditems' %}"
+             hx-target='#home'
+             hx-push-url="/banneditems"
+             hx-indicator="#mainLoadingspinner"
+             onclick='closeModal()'
+          >
+            Banned Items
+          </a>
+        {% endif %}
+
+        {% if default_pages.voting %}
+          <a role="button" class="btn btn-outline-secondary disabled"
+             hx-get="{% url 'raptormc:voting' %}"
+             hx-target='#home'
+             hx-push-url="/voting"
+             hx-indicator="#mainLoadingspinner"
+             onclick='closeModal()'
+          >
+            Vote
+          </a>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% comment %} Create ClipboardJS objects for each server, and
+associate it with the element containing the server address. {% endcomment %}
 <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -93,9 +107,9 @@
     $( document ).ready(function() {
     {% for server in object_list %}
 
-            new ClipboardJS('.copy{{ server.pk}}Address', {
-                container: document.getElementById('{{ server.pk}}Desc')
-            });
+    new ClipboardJS('.copy{{ server.pk}}Address', {
+        container: document.getElementById('{{ server.pk}}Desc')
+    });
 
     {% endfor %}
     });
