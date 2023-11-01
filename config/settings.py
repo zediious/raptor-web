@@ -233,12 +233,12 @@ LOGGING: dict = {
     'loggers': {
         'django': {
             'handlers': ['console', 'django_log_file'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
             'propagate': False,
         },
         'django.request': {
             'handlers': ['console', 'django_log_file'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
         'raptormc.views': {
