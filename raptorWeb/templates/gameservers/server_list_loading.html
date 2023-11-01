@@ -1,13 +1,21 @@
 {% load static %}
 
 <div id="server_button_container_loading" 
-hx-get="/api/servers/html/server_button_poll/" hx-trigger="load delay:0.3s" hx-target="#server_buttons" hx-swap="innerHTML" hx-indicator="#loadingSpinnerButtons">
+     hx-get="/api/servers/html/server_button_poll/"
+     hx-trigger="load delay:0.3s"
+     hx-target="#server_buttons"
+     hx-swap="innerHTML"
+     hx-indicator="#loadingSpinnerButtons">
 
  {% if page_obj.has_next %}
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links d-flex align-items-center justify-content-center gap-2">
-            <a role="button" class="btn btn-dark opacity-75 w-25"><img class="w-100" src="{% static 'image/three-dots.svg' %}" alt="..."></a>
-            <a role="button" class="btn btn-dark opacity-75 w-25"><img class="w-100" src="{% static 'image/three-dots.svg' %}" alt="..."></a>
+            <a role="button" class="btn btn-dark opacity-75 w-25">
+                <img class="w-100" src="{% static 'image/three-dots.svg' %}" alt="...">
+            </a>
+            <a role="button" class="btn btn-dark opacity-75 w-25">
+                <img class="w-100" src="{% static 'image/three-dots.svg' %}" alt="...">
+            </a>
         </span>
     </div>
 {% endif %}
@@ -16,12 +24,17 @@ hx-get="/api/servers/html/server_button_poll/" hx-trigger="load delay:0.3s" hx-t
     {% for server in page_obj %} 
                         
         {% if server_query_enabled %}
-        <div class="col-lg-12 col-6 mt-1 opacity-50"><button class="btn btn-dark fs-4 d-flex m-0 mt-2 w-100 opacity-50">
+        <div class="col-lg-12 col-6 mt-1 opacity-50">
+            <button class="btn btn-dark fs-4 d-flex m-0 mt-2 w-100 opacity-50">
         {% else %}
-        <div class="col-lg-6 col-6 mt-1 w-50 opacity-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100 opacity-50">
+        <div class="col-lg-6 col-6 mt-1 w-50 opacity-50">
+            <button class="btn btn-dark fs-4 d-flex mt-2 w-100 opacity-50">
         {% endif %}
-        <img class="htmx-indicator w-100 align-middle opacity-50" id="loadingSpinnerButtons" src="{% static 'image/three-dots.svg' %}" alt="Loading...">
-        </button></div>
+            <img class="htmx-indicator w-100 align-middle opacity-50" id="loadingSpinnerButtons"
+                 src="{% static 'image/three-dots.svg' %}"
+                 alt="Loading...">
+            </button>
+        </div>
 
     {% endfor %}
 </div>
