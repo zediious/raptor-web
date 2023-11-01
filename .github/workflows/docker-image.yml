@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "multistagebuild" ]
+    branches: [ "main" ]
 
 jobs:
   docker:
