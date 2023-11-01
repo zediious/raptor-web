@@ -4,8 +4,7 @@
      hx-get="/api/servers/html/server_button_poll/"
      hx-trigger="load delay:0.3s"
      hx-target="#server_buttons"
-     hx-swap="innerHTML"
-     hx-indicator="#loadingSpinnerButtons">
+     hx-swap="innerHTML">
 
  {% if page_obj.has_next %}
     <div class="pagination d-flex align-items-center justify-content-center">
@@ -30,7 +29,7 @@
         <div class="col-lg-6 col-6 mt-1 w-50 opacity-50">
             <button class="btn btn-dark fs-4 d-flex mt-2 w-100 opacity-50">
         {% endif %}
-            <img class="htmx-indicator w-100 align-middle opacity-50" id="loadingSpinnerButtons"
+            <img class="w-100 align-middle opacity-50" id="loadingSpinnerButtons"
                  src="{% static 'image/three-dots.svg' %}"
                  alt="Loading...">
             </button>
