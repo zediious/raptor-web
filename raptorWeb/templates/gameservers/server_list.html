@@ -1,48 +1,89 @@
 {% load static %}
 
 <div id="server_button_container">
+    {% comment %} Server button Pagination {% endcomment %}
     {% if page_obj.has_next or page_obj.has_previous%}
         <div class="pagination d-flex align-items-center justify-content-center">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    <a role="button" class="btn btn-dark opacity-75" hx-get="{% url 'gameservers:server_buttons_poll' %}?page=1" hx-target="#server_button_container">&laquo; first</a>
-                    <a role="button" class="btn btn-dark opacity-75" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.previous_page_number }}" hx-target="#server_button_container">previous</a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                       hx-get="{% url 'gameservers:server_buttons_poll' %}?page=1"
+                       hx-target="#server_button_container"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                       hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.previous_page_number }}"
+                       hx-target="#server_button_container"
+                    >
+                        Previous
+                    </a>
                 {% endif %}
 
                 {% if page_obj.has_next %}
-                    <a role="button" class="btn btn-dark opacity-75" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.next_page_number }}" hx-target="#server_button_container">next</a>
-                    <a role="button" class="btn btn-dark opacity-75" hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#server_button_container">last &raquo;</a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                       hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.next_page_number }}"
+                       hx-target="#server_button_container"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                       hx-get="{% url 'gameservers:server_buttons_poll' %}?page={{ page_obj.paginator.num_pages }}"
+                       hx-target="#server_button_container"
+                    >
+                        Last &raquo;
+                    </a>
                 {% endif %}
             </span>
         </div>
     {% endif %}
-
+    
+    {% comment %} Server buttons {% endcomment %}
     <div class="{% if total_server_count > 1 %}row{% endif %}">
         {% for server in page_obj %} 
                             
             {% if server_query_enabled %}
-            <div class="fade-in-button col-lg-12 col-6 mt-1"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
+            <div class="fade-in-button col-lg-12 col-6 mt-1">
+                <button class="btn btn-dark fs-4 d-flex mt-2 w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal_{{ server.pk }}_Info"
+                >
             {% else %}
-            <div class="fade-in-button col-lg-6 col-6 mt-1 w-50"><button class="btn btn-dark fs-4 d-flex mt-2 w-100" data-bs-toggle="modal" data-bs-target="#modal_{{ server.pk }}_Info">
+            <div class="fade-in-button col-lg-6 col-6 mt-1 w-50">
+                <button class="btn btn-dark fs-4 d-flex mt-2 w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal_{{ server.pk }}_Info"
+                >
             {% endif %}
-                {% if server.modpack_picture %}
-                <img class="w-75 fade-in" src="/media/{{server.modpack_picture}}" alt="{{ server.modpack_name }}">
-                {% else %}
-                <div class="w-75 fade-in">{{ server.modpack_name }}</div>
-                {% endif %}
-                {% if server_query_enabled %}
-                {% if server.in_maintenance %}
-                <img class="indicatorImage p-2 fade-in" src="{% static 'image/maintenance_indicator.svg' %}" alt="Maintenance">
-                {% else %}
-                {% if server.server_state %}
-                <img class="w-25 indicatorImage p-2 fade-in" src="{% static 'image/online_indicator.svg' %}" alt="Online">
-                {% else %}
-                <img class="w-25 indicatorImage p-2 fade-in" src="{% static 'image/offline_indicator.svg' %}" alt="Offline">
-                {% endif %}
-                {% endif %}
-                {% else %}
-                {% endif %}
-            </button></div>
+                    {% if server.modpack_picture %}
+                    <img class="{% if server_query_enabled %}w-75 {% else %}w-100 {% endif %}fade-in"
+                        src="/media/{{server.modpack_picture}}"
+                        alt="{{ server.modpack_name }}">
+                    {% else %}
+                    <div class="{% if server_query_enabled %}w-75 {% else %}w-100 {% endif %}fade-in">
+                        {{ server.modpack_name }}
+                    </div>
+                    {% endif %}
+                    {% if server_query_enabled %}
+                    {% if server.in_maintenance %}
+                    <img class="indicatorImage p-2 fade-in"
+                        src="{% static 'image/maintenance_indicator.svg' %}"
+                        alt="Maintenance">
+                    {% else %}
+                    {% if server.server_state %}
+                    <img class="w-25 indicatorImage p-2 fade-in"
+                        src="{% static 'image/online_indicator.svg' %}"
+                        alt="Online">
+                    {% else %}
+                    <img class="w-25 indicatorImage p-2 fade-in"
+                        src="{% static 'image/offline_indicator.svg' %}"
+                        alt="Offline">
+                    {% endif %}
+                    {% endif %}
+                    {% else %}
+                    {% endif %}
+                </button>
+            </div>
 
         {% endfor %}
     </div>

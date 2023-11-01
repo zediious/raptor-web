@@ -1,0 +1,56 @@
+{% load static %}
+
+<div class="float-end h-100 d-flex">
+    <div class="dropstart m-auto">
+    <button class="btn dropdown-toggle d-flex" data-bs-toggle="dropdown" aria-expanded="false">
+        <div id="profile_picture_box">
+        {% if loaded_user.user_profile_info.profile_picture %}
+            {% if loaded_user.is_staff %}
+            <img id="profilePicture" class="border border-danger border-2 w-100"
+                 src="{{ loaded_user.user_profile_info.profile_picture.url }}"
+                 alt="Profile"
+                 onerror=this.src="{% static 'image/no_user.webp' %}">
+            {% else %}
+            <img id="profilePicture" class="border border-secondary border-2 w-100"
+                 src="{{ loaded_user.user_profile_info.profile_picture.url }}"
+                 alt="Profile"
+                 onerror=this.src="{% static 'image/no_user.webp' %}">
+            {% endif %}
+        {% else %}
+            {% if loaded_user.is_staff %}
+            <img id="noProfilePicture" class="border border-danger border-2 w-100"
+                 src="{% static 'image/no_user.webp' %}"
+                 alt="Profile">
+            {% else %}
+            <img id="noProfilePicture" class="border border-secondary border-2 w-100"
+                 src="{% static 'image/no_user.webp' %}"
+                 alt="Profile">
+            {% endif %}
+        {% endif %}
+        </div>
+    </button>
+    <div class="dropdown-menu bg-dark">
+        <div><span class="text-center text-white">
+            <p class="text-white m-1">Welcome, {{user}}</p>
+        </span></div>
+        <hr style="color: white">
+        <div>
+            <a class="dropdown-item text-white mt-0 pt-0 htmxLink"
+               hx-get="/raptormc/api/html/{{user_path}}/{{user.get_username|slugify}}"
+               hx-target='#home'
+               hx-push-url='/{{user_path}}/{{user.get_username|slugify}}'
+            >
+               Profile
+            </a>
+        </div>
+        {% if user.is_staff %}
+        <div><a class="dropdown-item text-white" href="{% url 'admin:index' %}">
+            Admin
+        </a></div>
+        {% endif %}
+        <div><a class="dropdown-item text-white" href="{% url 'authprofiles:logout' %}">
+            Logout
+        </a></div>
+    </div>
+    </div>
+</div>

@@ -11,7 +11,9 @@
 
   {% if Homepage_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">Welcome to {{ site_info_model.brand_name }}</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      Welcome to {{ site_info_model.brand_name }}
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Homepage_Information.content|safe }}
@@ -24,15 +26,18 @@
 
 {% if default_pages.announcements %}
 <section id="discordAnnouncements" class="container mt-0">
-
   <header class="p-0 mt-4">
+
     {% autoescape off %}
-        <div hx-get="{% url 'raptorbot:global_announcements_list' amount=5 %}" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
-        <div id="global_announcements"></div>
-    {% endautoescape %}
+      <div id="global_announcements"
+            hx-get="{% url 'raptorbot:global_announcements_list' amount=5 %}"
+            hx-trigger="load"
+            hx-target="#global_announcements"
+            hx-swap="outerHTML">
+      </div>
+  {% endautoescape %}
 
   </header>
-
 </section>
 
 {% endif %}

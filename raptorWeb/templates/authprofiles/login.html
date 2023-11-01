@@ -8,10 +8,17 @@
 
     {% csrf_token %}
     {% bootstrap_form login_form %}
+
     <div class="loginSubmit opacity-100">
       {% bootstrap_button button_type="submit" content="Login" %}
     </div>
-    <a role="button" type="button" class="btn btn-discord mt-2 opacity-100" href="{% url 'authprofiles:login_oauth' %}">Login with Discord</a>
+    
+    <a role="button" type="button"
+       class="btn btn-discord mt-2 opacity-100"
+       href="{% url 'authprofiles:login_oauth' %}"
+    >
+      Login with Discord
+    </a>
 
   </form>
 </div>

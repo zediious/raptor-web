@@ -24,18 +24,32 @@
   {% if Network_Rules.enabled %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="networkRules">
-        <button class="accordion-button pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork" aria-expanded="true" aria-controls="collapseNetwork">
+        <button class="accordion-button pageHeader text-center"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseNetwork"
+                aria-expanded="true"
+                aria-controls="collapseNetwork"
+        >
           Network-Wide Rules
         </button>
       </h2>
-      <div id="collapseNetwork" class="accordion-collapse collapse show" aria-labelledby="collapseNetwork">
+      <div id="collapseNetwork" class="accordion-collapse collapse show"
+           aria-labelledby="collapseNetwork"
+      >
         <div class="accordion-body pageContent p-4">
           {{ Network_Rules.content|safe }}
         </div>
       </div>
     </div>
+  
   {% endif %}
   
-  <div id="server_rules" hx-get="{% url 'gameservers:server_rules_poll' %}" hx-trigger="load" hx-target="#server_rules" hx-swap="outerHTML"></div>
+    <div id="server_rules"
+        hx-get="{% url 'gameservers:server_rules_poll' %}"
+        hx-trigger="load"
+        hx-target="#server_rules"
+        hx-swap="outerHTML">
+    </div>
+</div>
 
 </section>

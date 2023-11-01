@@ -7,7 +7,9 @@
 
   {% if Voting_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Vote Links</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      {{ site_info_model.brand_name }} Vote Links
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Voting_Information.content|safe }}
@@ -21,6 +23,12 @@
 <section id="voteBoxes" class="m-0 mb-3 mt-4">
 
   <div class="accordion opacity-75 mt-2 container" id="votingAccordion">
-  <div id="server_voting" hx-get="{% url 'gameservers:server_voting_poll' %}" hx-trigger="load" hx-target="#server_voting" hx-swap="outerHTML"></div>
+    <div id="server_voting"
+        hx-get="{% url 'gameservers:server_voting_poll' %}"
+        hx-trigger="load"
+        hx-target="#server_voting"
+        hx-swap="outerHTML">
+    </div>
+  </div>
 
 </section>

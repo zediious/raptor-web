@@ -18,14 +18,22 @@
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
     <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}" hx-preserve="true">
-    <link rel="shortcut icon" type="image/x-icon" href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}" hx-preserve="true">
+    <link rel="shortcut icon" type="image/x-icon"
+          href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}"
+          hx-preserve="true">
   </head>
 
-  <body hx-ext="head-support" id="body" {% if site_info_model.use_main_color %}style="background-color: {{ site_info_model.main_color }}";{% endif %}>
+  <body hx-ext="head-support"
+        id="body"
+        {% if site_info_model.use_main_color %}
+        style="background-color: {{ site_info_model.main_color }}";
+        {% endif %}>
 
     <div id="backgroundWrapper" 
-      style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
-      {% if site_info_model.use_secondary_color %}background-color: {{ site_info_model.secondary_color }};{% endif %}">
+         style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
+         {% if site_info_model.use_secondary_color %}
+         background-color: {{ site_info_model.secondary_color }};
+         {% endif %}">
 
       {% comment %} topBox containing Navigation elements {% endcomment %}
       <div id="topBox" style="position: relative; z-index: 1">
@@ -41,16 +49,33 @@
       
     </div>
 
+    {% comment %} Loading indicator for requests that replace #home {% endcomment %}
+    <div class="d-flex justify-content-center">
+      <img id="mainLoadingspinner"
+           class="htmx-indicator w-50 mt-5 pt-5"
+           src="{% static 'image/tail-spin.svg' %}"
+           alt="Loading...">
+    </div>
+
     {% comment %} Main block for page content {% endcomment %}
-    <main id="home" class="container-flex m-5 mt-0" hx-history-elt>
+    <main id="home" class="container-flex m-xl-5 m-sm-1 mt-0" hx-history-elt>
 
       {% if is_404 == 'true' %}
         {% include "raptormc/404.html" %}
       {% else %}
         {% if request.path == '/' %}
-          <div hx-get='{% url "raptormc:home" %}' hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+          <div hx-get='{% url "raptormc:home" %}'
+               hx-trigger='load'
+               hx-target='#home'
+               hx-swap="innerHTML"
+               hx-indicator="#mainLoadingspinner"></div>
         {% else %}
-          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}" hx-trigger='load' hx-target='#home' hx-swap="innerHTML"></div>
+          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}"
+               hx-trigger='load'
+               hx-target='#home'
+               hx-swap="innerHTML"
+               hx-indicator="#mainLoadingspinner">
+          </div>
         {% endif %}
       {% endif %}
       

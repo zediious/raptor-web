@@ -1,11 +1,22 @@
 {% load static %}
 
 <div id="user_list_container" class="container-flex">
+    {% comment %} User list Pagination {% endcomment %}
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page=1" hx-target="#user_list_container">&laquo; first</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}" hx-target="#user_list_container">previous</a>
+                <a role="button" class="btn btn-secondary"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page=1"
+                   hx-target="#user_list_container"
+                >
+                   &laquo; First
+                </a>
+                <a role="button" class="btn btn-secondary"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}"
+                   hx-target="#user_list_container"
+                >
+                    Previous
+                </a>
             {% endif %}
 
             <span class="current text-white">
@@ -13,40 +24,62 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}" hx-target="#user_list_container">next</a>
-                <a role="button" class="btn btn-secondary" hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#user_list_container">last &raquo;</a>
+                <a role="button" class="btn btn-secondary"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}"
+                   hx-target="#user_list_container"
+                >
+                    Next
+                </a>
+                <a role="button" class="btn btn-secondary"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}"
+                   hx-target="#user_list_container"
+                >
+                    Last &raquo;
+                </a>
             {% endif %}
         </span>
     </div>
     
+    {% comment %} User List {% endcomment %}
     <div class="row">
         {% for raptoruser in page_obj %}
-            <div class="col-md-4 col-12">
-                <a class="htmxLink"
+        <div class="col-md-4 col-12">
+            <a class="htmxLink"
                 hx-get="raptormc/api/html/{{base_user_url}}/{{raptoruser.username|slugify}}"
-                hx-target='#home' hx-swap='innerHTML' hx-push-url="{{base_user_url}}/{{raptoruser.username|slugify}}">
-                    <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
-                        <div id="profile_picture_box" class="mx-auto d-block">
-                            {% if raptoruser.user_profile_info.profile_picture %}
-                                {% if raptoruser.is_staff == True %}
-                                <img class="border border-2 border-danger w-100" src="{{raptoruser.user_profile_info.profile_picture.url}}" alt="">
-                                {% else %}
-                                <img class="border border-2 border-secondary w-100" src="{{raptoruser.user_profile_info.profile_picture.url}}" alt="">
-                                {% endif %}
-                            {% else %}
-                                {% if raptoruser.is_staff == True %}
-                                <img id="noProfilePicture" class="border border-2 border-danger w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
-                                {% else %}
-                                <img id="noProfilePicture" class="border border-2 border-secondary w-100" src="{% static 'image/no_user.webp' %}" alt="Profile Picture">
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                        <div class="col-10 w-100 text-center">
-                            <strong>{{raptoruser.username}}</strong>
-                        </div>
+                hx-target='#home'
+                hx-swap='innerHTML'
+                hx-push-url="{{base_user_url}}/{{raptoruser.username|slugify}}"
+            >
+                <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
+                    <div id="profile_picture_box" class="mx-auto d-block">
+                    {% if raptoruser.user_profile_info.profile_picture %}
+                        {% if raptoruser.is_staff == True %}
+                        <img class="border border-2 border-danger w-100"
+                                src="{{raptoruser.user_profile_info.profile_picture.url}}"
+                                alt="Profile Picture">
+                        {% else %}
+                        <img class="border border-2 border-secondary w-100"
+                                src="{{raptoruser.user_profile_info.profile_picture.url}}"
+                                alt="Profile Picture">
+                        {% endif %}   
+                    {% else %}
+                        {% if raptoruser.is_staff == True %}
+                        <img id="noProfilePicture" class="border border-2 border-danger w-100"
+                                src="{% static 'image/no_user.webp' %}"
+                                alt="Profile Picture">
+                        {% else %}
+                        <img id="noProfilePicture" class="border border-2 border-secondary w-100"
+                                src="{% static 'image/no_user.webp' %}"
+                                alt="Profile Picture">
+                        {% endif %}
+                    {% endif %}
                     </div>
-                </a>
-            </div>
+                    <div class="col-10 w-100 text-center">
+                        <strong>{{raptoruser.username}}</strong>
+                    </div>
+                </div>
+            </a>
+        </div>
         {% endfor %}
     </div>
 </div>

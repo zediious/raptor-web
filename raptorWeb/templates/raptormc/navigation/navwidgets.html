@@ -5,16 +5,34 @@
       <div class="navbar-header d-flex">
         <div class="row p-2 pt-1 pb-1 gap-2">
           {% if discord_guild %}
-          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" 
-          data-bs-title="{{ discord_guild.online_members }}/{{ discord_guild.total_members }} Members Online" href="{{ discord_guild.invite_link }}" target="_blank">
+          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
+             data-bs-toggle="tooltip" 
+             data-bs-title="{{ discord_guild.online_members }}/{{ discord_guild.total_members }} Members Online"
+             href="{{ discord_guild.invite_link }}"
+             target="_blank"
+          >
             <img id="discordBanner" src="{% static 'image/discord_banner.webp' %}" alt="Discord">
           </a>
           {% endif %}
           {% for widget in nav_widgets %}
           {% if not widget.parent_bar %}
-          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" data-bs-title="{{widget.tooltip|safe}}"
-            href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
-            {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
+          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
+             data-bs-toggle="tooltip"
+             data-bs-title="{{widget.tooltip|safe}}"
+             href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}" 
+             {% if widget.new_tab%}
+             target="_blank"
+          >  {% else %}
+          >  {% endif %}
+          {% comment %} The above ending tags appear as an error in most editors. It is an intentional
+          statement, where the ending tag alone without the target attribute is applied if new_tab is false. {% endcomment %}
+            {% if widget.nav_image %}
+            <img class="w-100" id="widget_{{widget.pk}}_banner"
+                  src="/media/{{ widget.nav_image }}"
+                  alt="{{widget.name}}">
+            {% else %}
+            <span>{{widget.name}}</span>
+            {% endif %}
           </a>
           {% endif %}
           {% endfor %}
@@ -30,9 +48,23 @@
         <div class="row p-2 pt-1 pb-1 gap-2">
           {% for widget in nav_widgets %}
           {% if widget.parent_bar %}
-          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button" data-bs-toggle="tooltip" data-bs-title="{{widget.tooltip|safe}}"
-            href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}"{% if widget.new_tab%} target="_blank">{%else%}>{% endif %}
-            {% if widget.nav_image %}<img class="w-100" id="widget_{{widget.pk}}_banner" src="/media/{{ widget.nav_image }}" alt="{{widget.name}}">{% else %}<span>{{widget.name}}</span>{% endif %}
+          <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
+             data-bs-toggle="tooltip"
+             data-bs-title="{{widget.tooltip|safe}}"
+             href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}" 
+             {% if widget.new_tab%}
+             target="_blank"
+          > {%else%}
+          > {% endif %}
+          {% comment %} The above ending tags appear as an error in most editors. It is an intentional
+          statement, where the ending tag alone without the target attribute is applied if new_tab is false. {% endcomment %}
+            {% if widget.nav_image %}
+            <img class="w-100" id="widget_{{widget.pk}}_banner"
+                 src="/media/{{ widget.nav_image }}"
+                 alt="{{widget.name}}">
+            {% else %}
+            <span>{{widget.name}}</span>
+            {% endif %}
           </a>
           {% endif %}
           {% endfor %}
