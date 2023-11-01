@@ -1,5 +1,5 @@
-from os.path import join
-from os import getenv
+from os.path import join, exists
+from os import getenv, makedirs
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ RAPTORWEB_DIR: str = join(BASE_DIR, 'raptorWeb')
 TEMPLATE_DIR: str = join(RAPTORWEB_DIR, "templates")
 STATIC_DIR: str = join(RAPTORWEB_DIR, "static")
 MEDIA_DIR: str = join(RAPTORWEB_DIR, "media")
+LOG_DIR: str = join(BASE_DIR, "logs")
 
 RAPTORMC_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "raptormc")
 GAMESERVERS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'gameservers')
@@ -183,6 +184,11 @@ AUTHENTICATION_BACKENDS: list[str] = [
 ]
 
 # Logging configuration
+
+# Create log directory if it does not exist
+if not exists(LOG_DIR):
+    makedirs(LOG_DIR)
+
 LOGGING: dict = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -205,31 +211,34 @@ LOGGING: dict = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple_time'
+            'formatter': 'debug'
+        },
+        'django_log_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(LOG_DIR, 'django.log'),
         },
         'log_file': {
-            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'debug',
-            'filename': join(BASE_DIR, 'raptorWeb.log'),
+            'filename': join(LOG_DIR, 'raptorWeb.log'),
         },
         'bot_log_file': {
-            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'debug',
-            'filename': join(BASE_DIR, 'raptorBot.log'),
+            'filename': join(LOG_DIR, 'raptorBot.log'),
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'log_file'],
-            'propagate': True,
+            'handlers': ['console', 'django_log_file'],
+            'level': 'INFO',
+            'propagate': False,
         },
         'django.request': {
-            'handlers': ['console', 'log_file'],
-            'level': 'ERROR',
+            'handlers': ['console', 'django_log_file'],
+            'level': 'DEBUG',
             'propagate': False,
         },
         'raptormc.views': {
