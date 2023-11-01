@@ -5,7 +5,7 @@ README.md
 docker-compose.yml
 docker-compose-prod.yml
 db.sqlite3
-CONTRIBUTING.md
+CONTRIBUTING.MD
 .gitignore
 .github
 media
