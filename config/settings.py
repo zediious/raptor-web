@@ -209,6 +209,18 @@ LOGGING: dict = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple_time'
         },
+        'django_log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(BASE_DIR, 'django.log'),
+        },
+        'request_log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(BASE_DIR, 'requests.log'),
+        },
         'log_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
@@ -224,11 +236,11 @@ LOGGING: dict = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'log_file'],
+            'handlers': ['console', 'django_log_file'],
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['console', 'log_file'],
+            'handlers': ['console', 'request_log_file'],
             'level': 'ERROR',
             'propagate': False,
         },
