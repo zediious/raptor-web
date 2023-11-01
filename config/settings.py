@@ -211,30 +211,20 @@ LOGGING: dict = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple_time'
+            'formatter': 'debug'
         },
         'django_log_file': {
-            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'debug',
             'filename': join(LOG_DIR, 'django.log'),
         },
-        'request_log_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'formatter': 'debug',
-            'filename': join(LOG_DIR, 'requests.log'),
-        },
         'log_file': {
-            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'debug',
             'filename': join(LOG_DIR, 'raptorWeb.log'),
         },
         'bot_log_file': {
-            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'debug',
             'filename': join(LOG_DIR, 'raptorBot.log'),
@@ -243,12 +233,12 @@ LOGGING: dict = {
     'loggers': {
         'django': {
             'handlers': ['console', 'django_log_file'],
-            'level': 'INFO',
-            'propagate': True,
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
         },
         'django.request': {
-            'handlers': ['console', 'request_log_file'],
-            'level': 'INFO',
+            'handlers': ['console', 'django_log_file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'raptormc.views': {
