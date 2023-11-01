@@ -7,7 +7,9 @@
 
   {% if Applications_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Staff Applications</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      {{ site_info_model.brand_name }} Staff Applications
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Applications_Information.content|safe }}
@@ -18,4 +20,9 @@
 
 </section>
 
-<div id="staffapps" hx-get="{% url 'staffapps:all_apps' %}" hx-trigger="load" hx-target="#staffapps" hx-swap="innerHTML"></div>
+<div id="staffapps"
+     hx-get="{% url 'staffapps:all_apps' %}"
+     hx-trigger="load"
+     hx-target="#staffapps"
+     hx-swap="innerHTML">
+</div>

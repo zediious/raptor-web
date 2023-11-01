@@ -7,7 +7,9 @@
 
   {% if Banneditems_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Banned Items</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      {{ site_info_model.brand_name }} Banned Items
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Banneditems_Information.content|safe }}
@@ -21,6 +23,12 @@
 <section id="bannedItemBoxes" class="m-0 mb-3 mt-4">
 
   <div class="accordion opacity-75 mt-2 container" id="bannedItemAccordion">
-  <div id="server_banned_items" hx-get="{% url 'gameservers:server_banned_items_poll' %}" hx-trigger="load" hx-target="#server_banned_items" hx-swap="outerHTML"></div>
+    <div id="server_banned_items"
+        hx-get="{% url 'gameservers:server_banned_items_poll' %}"
+        hx-trigger="load"
+        hx-target="#server_banned_items"
+        hx-swap="outerHTML">
+    </div>
+  </div>
 
 </section>

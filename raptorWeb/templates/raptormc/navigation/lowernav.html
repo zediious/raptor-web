@@ -5,24 +5,51 @@
         <div class="row w-100">
             <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
                 <div class="navbar-header d-flex h-100">
-                <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav">
-                    <span class="navbar-toggler-icon" ></span>
-                </button>
-                <a id="navBrand" class="navbar-brand m-0 ms-3 htmxLink" hx-get={% url 'raptormc:home'%} hx-target='#home' hx-push-url="/" hx-indicator="#mainLoadingspinner">
-                    <img id="navImage" src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}" alt="{{ site_info_model.brand_name}}">
-                </a>
+                    <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNav"
+                            aria-controls="offcanvasNav"
+                    >
+                        <span class="navbar-toggler-icon" ></span>
+                    </button>
+                    <a id="navBrand" class="navbar-brand m-0 ms-3 htmxLink"
+                       hx-get={% url 'raptormc:home'%}
+                       hx-target='#home'
+                       hx-push-url="/"
+                       hx-indicator="#mainLoadingspinner"
+                    >
+                        <img id="navImage"
+                             src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}"
+                             alt="{{ site_info_model.brand_name}}">
+                    </a>
                 </div>
             </div>
             
             <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
                 <div class="navbar-header d-flex align-items-end justify-content-end h-100">
-                    <form data-bs-toggle="tooltip" data-bs-title="Collapse Servers" data-bs-placement="bottom" hx-post="{% url 'raptormc:update_headerbox_state' %}" hx-swap='none'>
+                    <form data-bs-toggle="tooltip"data-bs-title="Collapse Servers"
+                          data-bs-placement="bottom"
+                          hx-post="{% url 'raptormc:update_headerbox_state' %}"
+                          hx-swap='none'
+                    >
                         {% csrf_token %}
-                        <button class="btn btn-secondary" type="submit" data-bs-toggle="collapse" data-bs-target="#serverBoxCollapse" aria-expanded="false" aria-controls="Server Box">
-                            <img class="serverBoxCollapseImage" src="{% static 'image/collapse-up-down.svg' %}" alt="Collapse/Expand">
+                        <button class="btn btn-secondary" type="submit"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#serverBoxCollapse"
+                                aria-expanded="false"
+                                aria-controls="Server Box"
+                        >
+                            <img class="serverBoxCollapseImage"
+                                 src="{% static 'image/collapse-up-down.svg' %}"
+                                 alt="Collapse/Expand">
                         </button>
                     </form>
-                    <div class="h-100" id="profile_dropdown" hx-get="{% url 'authprofiles:user_dropdown' %}" hx-trigger="load" hx-target="#profile_dropdown" hx-swap="innerHTML"></div>
+                    <div class="h-100" id="profile_dropdown"
+                         hx-get="{% url 'authprofiles:user_dropdown' %}"
+                         hx-trigger="load"
+                         hx-target="#profile_dropdown"
+                         hx-swap="innerHTML">
+                    </div>
                 </div>
             </div>
         </div>

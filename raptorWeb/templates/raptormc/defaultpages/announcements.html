@@ -9,7 +9,9 @@
 
   {% if Announcements_Information.enabled %}
     <header class="card bg-dark opacity-75 text-white p-4">
-      <h3 class="pageHeader fw-bold text-center mb-2">Announcements</h3>
+      <h3 class="pageHeader fw-bold text-center mb-2">
+        Announcements
+      </h3>
       <hr>
       <div class="pageContent">
         {{ Announcements_Information.content|safe }}
@@ -23,22 +25,35 @@
 
   {% autoescape off %}
   <header class="p-0 mt-4">
-    <div class="accordion opacity-75 mt-2 container" id="ruleAccordion">
+    <div class="accordion opacity-75 mt-2 container" id="announcementAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header" id="globalAnnouncements">
-          <button class="accordion-button collapsed pageHeader text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGlobal" aria-expanded="true" aria-controls="collapseGlobal">
+          <button class="accordion-button collapsed pageHeader text-center"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseGlobal"
+                  aria-expanded="true"
+                  aria-controls="collapseGlobal"
+          >
             Network Announcements
           </button>
         </h2>
         <div id="collapseGlobal" class="accordion-collapse collapse" aria-labelledby="collapseGlobal">
           <div class="accordion-body pageContent p-4">
-            <div hx-get="{% url 'raptorbot:global_announcements_list_dark' %}" hx-trigger="load" hx-target="#global_announcements" hx-swap="innerHTML"></div>
-            <div id="global_announcements"></div>
+            <div id="global_announcements"
+                 hx-get="{% url 'raptorbot:global_announcements_list_dark' %}"
+                 hx-trigger="load" hx-target="#global_announcements"
+                 hx-swap="outerHTML">
+            </div>
           </div>
         </div>
       </div>
       
-      <div id="server_announcements" hx-get="{% url 'gameservers:server_announcements_poll' %}" hx-trigger="load" hx-target="#server_announcements" hx-swap="outerHTML"></div>
+      <div id="server_announcements"
+           hx-get="{% url 'gameservers:server_announcements_poll' %}"
+           hx-trigger="load"
+           hx-target="#server_announcements"
+           hx-swap="outerHTML"></div>
+    </div>
   </header>
   {% endautoescape %}
 

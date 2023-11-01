@@ -2,50 +2,76 @@
 
 {% if total_server_count > 0 %}
 <div id="headerBox" class="d-flex align-items-center justify-content-center mb-0" style="position: relative;">
-
     <div class="container d-flex align-items-center justify-content-center">
-
         <div id="server_modals"
-            hx-get="/api/servers/html/server_modal_poll/" hx-trigger="load delay:0.3s" hx-target="#server_modals" hx-swap="innerHTML"> 
+             hx-get="/api/servers/html/server_modal_poll/"
+             hx-trigger="load delay:0.3s"
+             hx-target="#server_modals"
+             hx-swap="innerHTML"> 
         </div>
 
         {% if server_query_enabled %}
         <header class="row m-2 mt-0 w-100">
+            <section id="playerCountBox"
+                    class="col-lg col-12 fs-2 mt-lg-2 mt-4 d-flex align-items-center flex-column"
+                    hx-get="/api/servers/html/total_count_poll/"
+                    hx-trigger="load delay:0.3s, every 120s"
+                    hx-target="#playerCountBox"
+                    hx-swap="innerHTML"
+            >
+                <button class="mt-auto btn btn-lg btn-dark mb-auto"
+                        data-bs-toggle="modal"
+                        data-bs-target="#playerNames"
+                        id="totalPlayers"
+                >
+                    <div class="fs-4 text-white opacity-75 p-3 pt-0 pb-0">
+                        Currently Playing:
+                        <span id="total_count" class="fs-1">
+                            <img id="loadingSpinnerCount"
+                                src="{% static 'image/tail-spin.svg' %}"
+                                alt="Loading...">
+                        </span>
+                    </div>
+                    <div class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">
+                        Click to view players!
+                    </div>
+                </button>
+            </section>
 
-        <section id="playerCountBox" class="col-lg col-12 fs-2 mt-lg-2 mt-4 d-flex align-items-center flex-column"
-            hx-get="/api/servers/html/total_count_poll/" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML">
+            <section class="col-lg col-12 fs-4 mt-3 mb-3">
 
-            <button class="mt-auto btn btn-lg btn-dark mb-auto" data-bs-toggle="modal" data-bs-target="#playerNames" id="totalPlayers">
-            <aside class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >Currently Playing: <span id="total_count" class="fs-1">
-            <img id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading..."></span></aside>
-            <aside class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">Click to view players!</aside>
-            </button>
+                <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
 
-        </section>
-
-        <section class="col-lg col-12 fs-4 mt-3 mb-3">
-
-            <div id="copyAddress" class="row d-flex align-items-center justify-content-center">
-
-            <div id="server_buttons" class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
-                hx-get="/api/servers/html/server_button_poll_loading/" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+                    <div id="server_buttons"
+                        class="col-lg-8 col-12 row mb-0 p-0 d-flex align-items-center justify-content-center"
+                        hx-get="/api/servers/html/server_button_poll_loading/"
+                        hx-trigger="load"
+                        hx-target="#server_buttons"
+                        hx-swap="innerHTML"
+                    >
         {% else %}
         <header id="serverBoxNoQuery" class="m-2 mt-0">
-
-        <section id="playerCountBox" hx-get="/api/servers/html/total_count_poll/" hx-trigger="load delay:0.3s, every 120s" hx-target="#playerCountBox" hx-swap="innerHTML"></section>
+            <section id="playerCountBox"
+                     hx-get="/api/servers/html/total_count_poll/"
+                     hx-trigger="load delay:0.3s, every 120s"
+                     hx-target="#playerCountBox"
+                     hx-swap="innerHTML">
+            </section>
             <div class="d-flex align-items-center justify-content-center" id="copyAddress">
-            <div id="server_buttons" class="col-lg-12 col-12 row mb-0 pt-5 pb-5 p-0 d-flex align-items-center justify-content-center"
-                hx-get="/api/servers/html/server_button_poll_loading/" hx-trigger="load" hx-target="#server_buttons" hx-swap="innerHTML">
+                <div id="server_buttons"
+                    class="col-lg-12 col-12 row mb-0 pt-5 pb-5 p-0 d-flex align-items-center justify-content-center"
+                    hx-get="/api/servers/html/server_button_poll_loading/"
+                    hx-trigger="load"
+                    hx-target="#server_buttons"
+                    hx-swap="innerHTML"
+                >
         {% endif %}
-            </div>
+                </div>
 
-            </div>
+                    </div>
 
-        </section>
-
+            </section>
         </header>
-
     </div>
-
 </div>
 {% endif %}
