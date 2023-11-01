@@ -3,6 +3,7 @@ FROM continuumio/miniconda3:latest as build_image
 
 # Install host dependencies
 RUN apt update
+RUN apt install libmariadb-dev -y
 RUN apt install gcc -y
 
 # Copy and install environment
