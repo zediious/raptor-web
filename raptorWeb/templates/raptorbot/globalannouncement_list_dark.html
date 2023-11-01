@@ -23,7 +23,7 @@
     {% for object in page_obj %}
     <div>
     <div class="pageContent card bg-dark text-white opacity-100 mt-4 mb-4">
-        <p class="pageContent p-4">{{ object.message|strip_markdown|strip_discord|https_to_discord|linebreaksbr }}</p>
+        <p class="pageContent p-4">{{ object.message|strip_markdown|strip_tags|https_to_discord|linebreaksbr }}</p>
         <p class="pageHeader card-footer opacity-75 mb-0 fw-bold">By: {{ object.author }} on {{ object.date }}</p>
     </div>
     </div>

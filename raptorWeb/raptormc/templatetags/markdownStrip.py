@@ -23,15 +23,17 @@ def strip_markdown(value: str) -> str:
         ).replace('__', ''))
 
 @register.filter
-def strip_discord(value):
+def strip_tags(value):
     """
     Removes all instances of unformatted Discord
     usernames and channels from a given string, as
-    well as convert .gg urls to .com
+    well as convert .gg urls to .com.
+    
+    This will also remove any HTML tags present.
     """
-    updatedValue = sub(r'<[@, &, #]+\S+>', '', value)
+    cleaned_value = sub(r'<.*?>', '', value)
 
-    return (updatedValue
+    return (cleaned_value
         .replace('@everyone', ''
         ).replace('▬', ''
         ).replace('.gg', '.com'))
