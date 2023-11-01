@@ -1,0 +1,14 @@
+stack.env
+raptorWeb.log
+raptorBot.log
+README.md
+docker-compose.yml
+docker-compose-prod.yml
+db.sqlite3
+CONTRIBUTING.md
+.gitignore
+.github
+media
+/docker/static
+/raptorWeb/media
+__pycache__
