@@ -18,7 +18,7 @@ Raptor-web can only be deployed using Docker. [The system must have Docker Engin
 
 2) Follow the instructions [in the config README](https://github.com/zediious/raptor-web/blob/main/config/README.md) to set up and configure the environment variables for the project.
 
-3) Run `docker compose -f docker-compose-prod.yml up -d` to deploy the web server, raptor-web application, and web server stack.
+3) Run `docker compose -f docker-compose-prod.yml up -d` to deploy the web server, raptor-web application, and database stack.
 
 4) Read the [docker/nginx README](https://github.com/zediious/raptor-web/blob/main/docker/nginx/conf.d/README.md) and ensure you have generated a new certificate for your domain name and made that available to the application before deploying.
 
