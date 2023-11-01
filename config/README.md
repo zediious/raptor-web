@@ -1,10 +1,14 @@
 # Configuring raptor-web
 
-### Before you can start the application successfully, you need to create a file with the filename `stack.env` in the same location of the `manage.py` file, one directory above the directory this README file is in. Into the `stack.env` file, you need to copy the text within the code block below.<br></br>
-### After doing so, you will need to put information into each element that does not have a value. If a key has a value, except `''`, **it MUST stay as it is**. If an element has a pair of quotes `''`, **you must enter your value inside of those quotes**. The exception to this is `LANGUAGE_CODE` and `TIME_ZONE`. Preferred defaults are set, but you may change them.<br></br>
-### Below the code block you will find an explanation for each field, and what you should put in them.
+Before you can start the application successfully, you need to create a file with the filename `stack.env` in the same location of the `docker-compose-prod.yml` file, one directory above the directory this README file is in. Into the `stack.env` file, you need to copy the text within the code block below.
 
-```
+If you are deploying the application with [Portainer](https://www.portainer.io/), you can utilize the environment variable configuration Portainer offers to set these.
+
+After doing so, you will need to put information into each element that does not have a value. If a key has a value, except `''`, **it MUST stay as it is**. If an element has a pair of quotes `''`, **you must enter your value inside of those quotes**. If the value is completely empty, enter your value without quotes. The exception to this is `LANGUAGE_CODE` and `TIME_ZONE`. Preferred defaults are set, but you may change them.
+
+Below the code block you will find an explanation for each field, and what you should put in them.
+
+```env
 DJANGO_SECRET_KEY=''
 DEBUG=
 RUNNING_IN_DOCKER=
@@ -45,6 +49,7 @@ EMAIL_PORT=
 EMAIL_HOST_USER=''
 EMAIL_HOST_PASSWORD=''
 ```
+
 # *General*
 
 ### **DJANGO_SECRET_KEY**
