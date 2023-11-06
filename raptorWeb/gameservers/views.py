@@ -1,8 +1,14 @@
+from os.path import join
+
 from django.views.generic import ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
+from django.shortcuts import render
 from django.conf import settings
 
-from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player
+from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
+from raptorWeb.gameservers.forms import StatisticFilterForm
+
+import plotly.express as plot_express
 
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
@@ -60,6 +66,64 @@ class Player_List(ListView):
 
         else:
             return HttpResponseRedirect('/')
+        
+        
+class Statistic_Filter_Form(TemplateView):
+    """
+    Return a form to submit server and date filter data
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_form.html'), context={
+            'stat_filter_form': StatisticFilterForm()})
+        
+        
+class Player_Count_Statistics(TemplateView):
+    """
+    Return a plotly chart containing PlayerCountHistoric data
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        modpack_name = request.GET.get('server')
+        try:
+            found_server = Server.objects.get(modpack_name=modpack_name)
+        except Server.DoesNotExist:
+            return HttpResponse("<div class='alert bg-danger'>Queried server not found</div>")
+        count_data = PlayerCountHistoric.objects.all()
+        
+        count_data = count_data.filter(
+                server=found_server
+            )
+        
+        if start:
+            count_data = count_data.filter(
+                checked_time__gte=start
+            )
+            
+        if end:
+            count_data = count_data.filter(
+                checked_time__lte=end
+            )
+        
+        figure = plot_express.line(
+            x=[count.checked_time for count in count_data],
+            y=[count.player_count for count in count_data],
+            title="Player Counts over Time",
+            labels={'x': "Time of Query", 'y': 'Player Count'}
+        )
+        
+        figure.update_layout(title={
+            'font_size': 22,
+            'xanchor': 'center',
+            'x': 0.5
+        })
+        
+        chart = figure.to_html()
+        
+        
+        return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_chart.html'), context={
+            "chart": chart,
+            'stat_filter_form': StatisticFilterForm()})
 
 
 class Import_Servers(TemplateView):
