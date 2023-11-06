@@ -415,9 +415,6 @@ class PlayerCountHistoric(models.Model):
     checked_time = models.DateTimeField(
         verbose_name="Time of Query",
         auto_now_add=True)
-
-    def __str__(self):
-        return self.name
     
     def get_player_count(self):
         return self.player_count
