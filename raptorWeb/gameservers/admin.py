@@ -70,20 +70,24 @@ class PlayerAdmin(admin.ModelAdmin):
         ('Player Information', {
             'fields': (
                 'server',
-                'name')
+                'name',
+                'online',
+                'last_online')
         }),
     )
 
     readonly_fields: tuple[str] = (
         'server',
-        'name'
+        'name',
+        'online',
+        'last_online'
     )
 
     search_fields: list[str] = [
         'name',
     ]
 
-    list_display: list[str] = ['name', 'server']
+    list_display: list[str] = ['name', 'server', 'online', 'last_online']
 
     def has_add_permission(self, request, obj=None):
         return False
