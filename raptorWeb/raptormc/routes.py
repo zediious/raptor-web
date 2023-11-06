@@ -15,9 +15,10 @@ CURRENT_URLPATTERNS = []
 
 class Route:
     
-    def __init__(self, name, route_type, user=None, page=None) -> None:
+    def __init__(self, name, route_type, informative_text=None, user=None, page=None) -> None:
         self.name: str = name
         self.route_type: str = route_type
+        self.informative_text = informative_text
         self.user: RaptorUser = user
         self.page: Page = page
           
@@ -27,7 +28,8 @@ class Route:
 def check_route(request):
     """
     Check all baked-in URLPatterns as well as
-    variations for created objects. Return True
+    variations for created objects. Return context
+    with OpenGraph information about the route
     if the route exists, False if it does not.
     """
     def _get_user_routes():
@@ -70,15 +72,41 @@ def check_route(request):
                 )
             )
             
+    def _get_main_routes():
+        """
+        Iterate current URLPatterns and create
+        Routes for each. If the URLPattern name
+        matches an Informative Text, attach that
+        Informative Text to the route.
+        """          
+        informative_texts = InformativeText.objects.all()
+        
+        for pattern in CURRENT_URLPATTERNS[0]:
+            gathered_text = informative_texts.filter(name=f'{str(pattern.name).title()} Information')
+            if gathered_text is not None:
+                current_routes.append(
+                    Route(
+                        name=pattern.name,
+                        route_type="main_with_text",
+                        informative_text=gathered_text.first()
+                    )
+                )
+            else: 
+                current_routes.append(
+                    Route(
+                        name=pattern.name,
+                        route_type="main"
+                    )
+                )
+                
     site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
-            
-    current_routes: list = []
     
     try:
         site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}{site_info.avatar_image.url}"
     except ValueError:
         site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/static/image/no_user.webp"
-            
+    
+    # If request is to root path, we do not need to check routes 
     if request.path == '/':
         return {
             "og_color": site_info.main_color,
@@ -87,15 +115,10 @@ def check_route(request):
             "og_title": f"{site_info.brand_name} | Home",
             "og_desc": site_info.meta_description
         }
+                
+    current_routes: list = []
     
-    for pattern in CURRENT_URLPATTERNS[0]:
-        current_routes.append(
-            Route(
-                name=pattern.name,
-                route_type="main"
-            )
-        )
-        
+    _get_main_routes()
     _get_user_routes()
     _get_page_routes()
     
@@ -130,22 +153,22 @@ def check_route(request):
                     "og_desc": route.page.meta_description
                 }
                 
-            try:
-                text_content = strip_tags(
-                    InformativeText.objects.get(
-                        name=f"{path.title()} Information"
-                    ).content
-                )
-            except InformativeText.DoesNotExist:
-                LOGGER.error(f"Informative Text not found for following path: {path}")
-                text_content = "Placeholder"
+            if route.informative_text != None:              
+                return {
+                    "og_color": site_info.main_color,
+                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
+                    "og_image": f"{site_avatar_url}",
+                    "og_title": f"{site_info.brand_name} | {path.title()}",
+                    "og_desc": strip_tags(route.informative_text.content)
+                }
                 
             return {
                 "og_color": site_info.main_color,
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
                 "og_image": f"{site_avatar_url}",
                 "og_title": f"{site_info.brand_name} | {path.title()}",
-                "og_desc": text_content
+                "og_desc": site_info.meta_description
             }
+        
         
     return False
