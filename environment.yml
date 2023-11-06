@@ -29,3 +29,4 @@ dependencies:
     - django-simple-captcha==0.5.20
     - six==1.16.0
     - django-resized==1.0.2
+    - plotly==5.18.0
