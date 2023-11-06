@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.gameservers.models import Server, Player, ServerStatistic
+from raptorWeb.gameservers.models import Server, Player, ServerStatistic, PlayerCountHistoric
 
 class ServerAdminForm(ModelForm):
     class Meta:
@@ -70,20 +70,52 @@ class PlayerAdmin(admin.ModelAdmin):
         ('Player Information', {
             'fields': (
                 'server',
-                'name')
+                'name',
+                'online',
+                'last_online')
         }),
     )
 
     readonly_fields: tuple[str] = (
         'server',
-        'name'
+        'name',
+        'online',
+        'last_online'
     )
 
     search_fields: list[str] = [
         'name',
     ]
 
-    list_display: list[str] = ['name', 'server']
+    list_display: list[str] = ['name', 'server', 'online', 'last_online']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    
+class PlayerCountHistoricAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    PlayerCountHistoric in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Player Information', {
+            'fields': (
+                'server',
+                'player_count',
+                'checked_time')
+        }),
+    )
+
+    readonly_fields: tuple[str] = (
+        'server',
+        'player_count',
+        'checked_time'
+    )
+
+    list_display: list[str] = ['server', 'player_count', 'checked_time']
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -117,4 +149,5 @@ class ServerStatisticAdmin(admin.ModelAdmin):
 
 admin.site.register(Server, ServerAdmin)
 admin.site.register(Player, PlayerAdmin)
+admin.site.register(PlayerCountHistoric, PlayerCountHistoricAdmin)
 admin.site.register(ServerStatistic, ServerStatisticAdmin)

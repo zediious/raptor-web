@@ -43,6 +43,9 @@ class Player_List(ListView):
     the Server Manager.
     """
     model: Player = Player
+    
+    def get_queryset(self) -> Player.objects:
+        return Player.objects.filter(online=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
