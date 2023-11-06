@@ -106,6 +106,10 @@ class ServerManager(models.Manager):
                     else:
                         online_players =  self._query_and_update_server(server)
                         all_online_players.extend(online_players)
+                        PlayerCountHistoric.objects.create(
+                            server=server,
+                            player_count=server.player_count
+                        )
                         statistic_model.total_player_count += server.player_count
                         
                 # Mark players who were not queried as online, but are marked as online in the database, as offline.         
