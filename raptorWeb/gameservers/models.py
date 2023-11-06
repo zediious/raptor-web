@@ -370,8 +370,8 @@ class Player(models.Model):
     """
     server = models.ForeignKey(
         Server, 
-        default=0, 
-        on_delete=models.CASCADE)
+        default=0,
+        on_delete=models.PROTECT)
 
     name = models.CharField(
         max_length=50, 
