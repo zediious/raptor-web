@@ -18,39 +18,33 @@
 
 </section>
 
-<section id="joinBoxes" class="row mt-3">
+<section id="joinBoxes" class="container row mt-3">
 
   {% if Using_the_CurseForge_Launcher.enabled %}
-  <div class="col-12">
-    <div class="card bg-light mt-4 opacity-75 container">
-      <h3 class="pageHeader card-header fw-bold text-center text-break">CurseForge Launcher</h3>
-      <div class="pageContent p-4">
-        {{ Using_the_CurseForge_Launcher.content|safe }}
-      </div>
+  <div class="card bg-light mt-4 opacity-75">
+    <h3 class="pageHeader card-header fw-bold text-center text-break">CurseForge Launcher</h3>
+    <div class="pageContent p-4">
+      {{ Using_the_CurseForge_Launcher.content|safe }}
     </div>
   </div>
   {% else %}
   {% endif %}
 
   {% if Using_the_FTB_Launcher.enabled %}
-  <div class="col-12">
-    <div class="card bg-light mt-4 opacity-75 container">
-      <h3 class="pageHeader card-header fw-bold text-center text-break">Feed the Beast App</h3>
-      <div class="pageContent p-4">
-        {{ Using_the_FTB_Launcher.content|safe }}
-      </div>
+  <div class="card bg-light mt-4 opacity-75">
+    <h3 class="pageHeader card-header fw-bold text-center text-break">Feed the Beast App</h3>
+    <div class="pageContent p-4">
+      {{ Using_the_FTB_Launcher.content|safe }}
     </div>
   </div>
   {% else %}
   {% endif %}
 
   {% if Using_the_Technic_Launcher.enabled %}
-  <div class="col-12">
-    <div class="card bg-light mt-4 opacity-75 container">
-      <h3 class="pageHeader card-header fw-bold text-center text-break">Technic Launcher</h3>
-      <div class="pageContent p-4">
-        {{ Using_the_Technic_Launcher.content|safe }}
-      </div>
+  <div class="card bg-light mt-4 opacity-75">
+    <h3 class="pageHeader card-header fw-bold text-center text-break">Technic Launcher</h3>
+    <div class="pageContent p-4">
+      {{ Using_the_Technic_Launcher.content|safe }}
     </div>
   </div>
   {% else %}
