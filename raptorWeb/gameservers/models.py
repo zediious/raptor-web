@@ -396,3 +396,35 @@ class Player(models.Model):
     class Meta:
         verbose_name = "Player"
         verbose_name_plural = "Players"
+        
+        
+class PlayerCountHistoric(models.Model):
+    """
+    The total count of players on a server at a
+    specific point in time. These are created each
+    time servers are queried, for each server.
+    """
+    server = models.ForeignKey(
+        Server, 
+        default=0, 
+        on_delete=models.CASCADE)
+
+    player_count = models.IntegerField(
+        verbose_name="Players Online")
+     
+    checked_time = models.DateTimeField(
+        verbose_name="Time of Query",
+        auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_player_count(self):
+        return self.player_count
+
+    def get_server(self):
+        return self.server
+
+    class Meta:
+        verbose_name = "Historic Player Count"
+        verbose_name_plural = "Historic Player Counts"
