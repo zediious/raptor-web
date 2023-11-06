@@ -15,6 +15,10 @@ urlpatterns: list[URLPattern] = [
     path('html/server_banned_items_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_banneditems.html'), name="server_banned_items_poll"),
     path('html/server_voting_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_voting.html'), name="server_voting_poll"),
     path('html/server_announcements_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_announcements.html'), name="server_announcements_poll"),
+    # Forms
+    path('html/forms/statistic_filter', views.Statistic_Filter_Form.as_view(), name="statistic_filter"),
+    # Statistics
+    path('html/statistics/player_counts', views.Player_Count_Statistics.as_view(), name="player_statistics_chart"),
     # Command API
     path('action/import_server_data/', views.Import_Servers.as_view(), name="action_import_server_data"),
     path('action/export_server_data/', views.Export_Servers.as_view(), name="action_export_server_data")
