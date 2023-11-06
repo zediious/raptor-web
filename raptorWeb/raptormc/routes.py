@@ -107,7 +107,7 @@ def check_route(request):
             
             if route.user != None:
                 try:
-                    user_avatar = route.user.user_profile_info.profile_picture.url
+                    user_avatar =  f"{WEB_PROTO}://{DOMAIN_NAME}{route.user.user_profile_info.profile_picture.url}"
                 except ValueError:
                     user_avatar = site_avatar_url
                     
@@ -115,7 +115,7 @@ def check_route(request):
                     "og_user": route.user,
                     "og_color": site_info.main_color,
                     "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/{route.user.user_slug}",
-                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{user_avatar}",
+                    "og_image": f"{user_avatar}",
                     "og_title": f"{site_info.brand_name} | {route.user.username}",
                     "og_desc": f"User Profile for {route.user.username}"
                 }
