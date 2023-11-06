@@ -338,7 +338,7 @@ class Server(models.Model):
 
 class Player(models.Model):
     """
-    Playesr that are currently logged in to a Server
+    Players that have joined a server at some point.
     """
     server = models.ForeignKey(
         Server, 
@@ -348,6 +348,13 @@ class Player(models.Model):
     name = models.CharField(
         max_length=50, 
         unique=True)
+    
+    online = models.BooleanField(
+        default=False)
+     
+    last_online = models.DateTimeField(
+        verbose_name="Last Online",
+        auto_now_add=True)
 
     def __str__(self):
         return self.name
