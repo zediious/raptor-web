@@ -4,7 +4,7 @@ from logging import Logger, getLogger
 from typing import Optional
 
 from django.db import models
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, now
 from django.conf import settings
 
 from mcstatus import JavaServer
@@ -42,6 +42,9 @@ class ServerManager(models.Manager):
                                                     server=server
                                                 ).count()
 
+            all_players = Player.objects.all()
+            online_players = []
+            
             if do_query == True:
                 try:
                     serverJSON: QueryResponse = JavaServer(
@@ -53,15 +56,33 @@ class ServerManager(models.Manager):
                     server.server_state = True
                     _update_announcement_count(server)
                     server.save()
-                    [Player.objects.create(
-                        name=player,
-                        server=server).save() for player in serverJSON.players.names]
+                    
+                    for player in serverJSON.players.names:
+                        checked_player = all_players.filter(name=player).first()
+                        # If a Player exists, update their information
+                        if checked_player is not None:
+                            online_players.append(checked_player.name)
+                            checked_player.server = server
+                            checked_player.online = True
+                            checked_player.last_online = now()
+                            checked_player.save()
+                        # If not, create a new Player
+                        else:
+                            online_players.append(player)
+                            new_player = Player.objects.create(
+                                name=player,
+                                server=server,
+                                online=True
+                            )
+                            new_player.save()
 
                 except TimeoutError:
                     _set_offline_server(server)
 
             else:
                 _set_offline_server(server)
+                
+            return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
             if statistic_model.time_last_polled == None:
@@ -72,8 +93,8 @@ class ServerManager(models.Manager):
 
             if minutes_since_poll > 1 or self._has_run == False:
                 statistic_model.total_player_count = 0
-                Player.objects.all().delete()
-
+                
+                all_online_players = []
                 for server in servers:
                     if (server.server_address == "Default"
                     or server.in_maintenance == True
@@ -83,8 +104,15 @@ class ServerManager(models.Manager):
                             do_query = False)
 
                     else:
-                        self._query_and_update_server(server)
+                        online_players =  self._query_and_update_server(server)
+                        all_online_players.extend(online_players)
                         statistic_model.total_player_count += server.player_count
+                        
+                # Mark players who were not queried as online, but are marked as online in the database, as offline.         
+                newly_offline_players = Player.objects.filter(online=True).exclude(name__in=all_online_players)
+                for player in newly_offline_players:
+                    player.online = False
+                    player.save()
 
                 self._has_run = True
                 statistic_model.time_last_polled = localtime()
