@@ -83,7 +83,7 @@ def check_route(request):
         return {
             "og_color": site_info.main_color,
             "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}",
-            "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
+            "og_image": f"{site_avatar_url}",
             "og_title": f"{site_info.brand_name} | Home",
             "og_desc": site_info.meta_description
         }
@@ -125,7 +125,7 @@ def check_route(request):
                     "og_page": route.page,
                     "og_color": site_info.main_color,
                     "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{route.page.get_absolute_url()}",
-                    "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
+                    "og_image": f"{site_avatar_url}",
                     "og_title": f"{site_info.brand_name} | {route.page.name}",
                     "og_desc": route.page.meta_description
                 }
@@ -143,7 +143,7 @@ def check_route(request):
             return {
                 "og_color": site_info.main_color,
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
-                "og_image": f"{WEB_PROTO}://{DOMAIN_NAME}/{site_avatar_url}",
+                "og_image": f"{site_avatar_url}",
                 "og_title": f"{site_info.brand_name} | {path.title()}",
                 "og_desc": text_content
             }
