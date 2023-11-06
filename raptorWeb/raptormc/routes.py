@@ -75,7 +75,7 @@ def check_route(request):
     current_routes: list = []
     
     try:
-        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/{site_info.avatar_image.url}"
+        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}{site_info.avatar_image.url}"
     except ValueError:
         site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/static/image/no_user.webp"
             
