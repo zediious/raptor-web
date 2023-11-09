@@ -125,6 +125,7 @@ class Player_Count_Statistics(TemplateView):
             x=x_data,
             y=y_data,
             title="Player Counts over Time",
+            template='plotly_dark',
             labels={'x': "Time of Query", 'y': 'Player Count'}
         )
         
