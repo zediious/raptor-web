@@ -111,9 +111,15 @@ class Player_Count_Statistics(TemplateView):
                 checked_time__lte=end
             )
         
+        x_data = [count.checked_time for count in count_data]
+        y_data = [count.player_count for count in count_data]
+            
+        if x_data == [] and y_data == []:
+            return HttpResponse("<div class='alert bg-danger'>No data found for selected time.</div>")
+        
         figure = plot_express.line(
-            x=[count.checked_time for count in count_data],
-            y=[count.player_count for count in count_data],
+            x=x_data,
+            y=y_data,
             title="Player Counts over Time",
             labels={'x': "Time of Query", 'y': 'Player Count'}
         )
