@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
-from raptorWeb.gameservers.forms import StatisticFilterForm
+from raptorWeb.gameservers.forms import StatisticFilterForm, StatisticFilterFormFireFox
 
 import plotly.express as plot_express
 
@@ -91,16 +91,18 @@ class Player_Count_Statistics(TemplateView):
         start = request.GET.get('start')
         end = request.GET.get('end')
         modpack_name = request.GET.get('server')
+        
         try:
             found_server = Server.objects.get(modpack_name=modpack_name)
         except Server.DoesNotExist:
-            return HttpResponse("<div class='alert bg-danger'>Queried server not found</div>")
+            return HttpResponse("<div class='alert bg-danger'>Queried server not found.</div>")
+        
         count_data = PlayerCountHistoric.objects.filter(server=found_server)
         
-        count_data = count_data.filter(
-                server=found_server
-            )
-        
+        if start == end and 'T' not in start:
+            start += 'T00:00'
+            end += 'T23:59'
+
         if start:
             count_data = count_data.filter(
                 checked_time__gte=start
