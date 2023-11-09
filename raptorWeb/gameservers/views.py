@@ -91,7 +91,7 @@ class Player_Count_Statistics(TemplateView):
             found_server = Server.objects.get(modpack_name=modpack_name)
         except Server.DoesNotExist:
             return HttpResponse("<div class='alert bg-danger'>Queried server not found</div>")
-        count_data = PlayerCountHistoric.objects.all()
+        count_data = PlayerCountHistoric.objects.filter(server=found_server)
         
         count_data = count_data.filter(
                 server=found_server
