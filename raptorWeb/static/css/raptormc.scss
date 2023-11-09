@@ -201,6 +201,10 @@ body {
         font-size: xx-large;
     }
 
+    #gameservers_chart_rendered {
+        width: 50%
+    }
+
     #profile_picture_box {
         width: 60px
     }
@@ -239,6 +243,10 @@ body {
 
     .pageHeader {
         font-size: medium;
+    }
+
+    #gameservers_chart_rendered {
+        width: 85%
     }
 
     .pageContent > * {

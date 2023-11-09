@@ -11,6 +11,10 @@
 
 {% block page_actions %}{% endblock %}
 
+{% block sidebar%}
+    {% include "raptormc/panel/sidebar.html" %}
+{% endblock %}
+
 {% block page_content %}
 
 <div class="m-5 mt-4 p-5">
@@ -30,6 +34,10 @@
         {% include "raptormc/panel/serveractions.html" %}
 
     </div>
+</div>
+
+<div class="m-5 mt-2 p-5 container-flex">
+    {% include "raptormc/panel/gameservers_statistics.html" %}
 </div>
 {% endblock %}
 
