@@ -75,8 +75,12 @@ class Statistic_Filter_Form(TemplateView):
     Return a form to submit server and date filter data
     """
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if 'Firefox' not in str(request.META['HTTP_USER_AGENT']):
+            return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_form.html'), context={
+                'stat_filter_form': StatisticFilterForm()})
+            
         return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_form.html'), context={
-            'stat_filter_form': StatisticFilterForm()})
+            'stat_filter_form': StatisticFilterFormFireFox()})
         
         
 class Player_Count_Statistics(TemplateView):
