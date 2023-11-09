@@ -99,9 +99,11 @@ class Player_Count_Statistics(TemplateView):
         
         count_data = PlayerCountHistoric.objects.filter(server=found_server)
         
-        if start == end and 'T' not in start:
-            start += 'T00:00'
-            end += 'T23:59'
+        if (start != '' and end != ''
+        or start != '' or end != ''):
+            if start == end and 'T' not in start:
+                start += 'T00:00'
+                end += 'T23:59'
 
         if start:
             count_data = count_data.filter(
