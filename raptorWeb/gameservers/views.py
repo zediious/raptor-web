@@ -1,4 +1,5 @@
 from os.path import join
+from logging import getLogger
 
 from django.views.generic import ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -10,6 +11,7 @@ from raptorWeb.gameservers.forms import StatisticFilterForm
 
 import plotly.express as plot_express
 
+LOGGER = getLogger('gameservers.views')
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 SERVER_PAGINATION_COUNT: int = getattr(settings, 'SERVER_PAGINATION_COUNT')
