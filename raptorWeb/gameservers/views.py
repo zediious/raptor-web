@@ -124,8 +124,7 @@ class Player_Count_Statistics(TemplateView):
         
         
         return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_chart.html'), context={
-            "chart": chart,
-            'stat_filter_form': StatisticFilterForm()})
+            "chart": chart})
 
 
 class Import_Servers(TemplateView):
