@@ -468,6 +468,13 @@ class SiteInformation(models.Model):
                    "addressed to the defined contact email."),
         default=True
     )
+    
+    require_login_for_user_list = models.BooleanField(
+        verbose_name="Require login for Site Members",
+        help_text=("If this is checked, users will need to create an account and, "
+                   "log in before they can access the Site Members list."),
+        default=True
+    )
 
     def __str__(self):
         return str(self.brand_name)
