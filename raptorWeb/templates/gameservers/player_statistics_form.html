@@ -1,17 +1,19 @@
 {% load django_bootstrap5 %}
 
-<form class="form p-3"
-        hx-get="{% url 'gameservers:player_statistics_chart'%}"
-        hx-target='#fetched_chart'
-        hx-swap='innerHTML'
->
-    
-    {% csrf_token %} 
-    {{ form.captcha }} 
-    {% bootstrap_form stat_filter_form %}
-    {% bootstrap_button button_type="submit" content="Filter" %}
+<div class="col-12 w-50">
+    <form class="form"
+            hx-get="{% url 'gameservers:player_statistics_chart'%}"
+            hx-target='#fetched_chart'
+            hx-swap='innerHTML'
+    >
+        
+        {% csrf_token %} 
+        {{ form.captcha }} 
+        {% bootstrap_form stat_filter_form %}
+        {% bootstrap_button button_type="submit" content="Filter" %}
 
-</form>
+    </form>
+</div>
 
-<div id="fetched_chart">
+<div id="fetched_chart" class="col-12 w-100 mt-3">
 </div>

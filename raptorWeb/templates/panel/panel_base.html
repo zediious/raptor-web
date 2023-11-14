@@ -1,0 +1,61 @@
+{% extends "admin/index.html" %}
+
+{% load static %}
+{% load urlStrip %}
+
+{% block title %}Control Panel | {{ jazzmin_settings.site_title }}{% endblock %}
+
+{% block extrahead %}
+<script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+{% endblock %}
+
+{% block page_actions %}{% endblock %}
+
+{% block sidebar%}
+    {% include "panel/panel_sidebar.html" %}
+{% endblock %}
+
+{% block page_content %}
+
+{% include "panel/panel_toasts.html" %}
+  
+
+<div class="d-flex justify-content-center">
+    <img id="panelLoadingspinner"
+         class="htmx-indicator w-50 pt-5"
+         src="{% static 'image/tail-spin.svg' %}"
+         alt="Loading...">
+</div>
+
+<div class="m-5 mt-4 p-3">
+    <div id='panel_main'>
+
+    {% if is_404 == 'true' %}
+        {% include "raptormc/404.html" %}
+    {% else %}
+        {% if request.path == '/panel/' %}
+            <div hx-get='{% url "panel:home" %}'
+                hx-trigger='load'
+                hx-target='#panel_main'
+                hx-swap="innerHTML"
+                hx-push-url="home/"
+                hx-indicator="#panelLoadingspinner"></div>
+        {% else %}
+            <div hx-get="/panel/api/html/{{request.path|strip_slash}}"
+                hx-trigger='load'
+                hx-target='#panel_main'
+                hx-swap="innerHTML"
+                hx-indicator="#panelLoadingspinner">
+            </div>
+        {% endif %}
+    {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}

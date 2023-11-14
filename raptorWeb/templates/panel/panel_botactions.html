@@ -1,0 +1,153 @@
+<div class="container">
+    <div class="m-2 mt-3 p-3">
+        <div class="text-white">
+            <header class="fs-3">Discord Bot</header>
+            <p class="fs-5">
+                Here you can execute certain actions pertaining to the Discord Bot.
+            </p>
+        </div>
+    </div>
+    <div>
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="row text-white">
+                        <div class="col-6 col-md-10">
+                            <header class="fs-5">Bot Status</header>
+                            <p class="fs-7 mt-2">
+                                Turn the Discord bot on or off.
+                            </p>
+                        </div>
+                        <div id="botStatusIndicator" class="col-6 col-md-2"
+                             hx-get="{% url 'raptorbot:botstatus_get' %}"
+                             hx-target='#botStatusIndicator'
+                             hx-swap='innerHTML'
+                             hx-trigger='load, every 15s'
+                             data-bs-toggle="tooltip"
+                             data-bs-title="Discord Bot Status.">
+                        </div>
+                    </div>
+                </div>
+                <div class="m-3 mb-2">
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-success p-1 w-100"
+                        hx-post="{% url 'raptorbot:botstatus_start_bot' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This will start the Discord Bot, if it is currently stopped."
+                        >
+                            Start Bot
+                        </a>
+                    </form>
+                </div>
+                <div class="m-3 mb-2">
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-danger p-1 w-100"
+                        hx-post="{% url 'raptorbot:botstatus_stop_bot' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="This will stop the Discord Bot, if it is currently running."
+                        >
+                            Stop Bot
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="text-white">
+                        <header class="fs-5">Commands</header>
+                        <p class="fs-7 mt-2">
+                            Send commands to the bot. These can also be sent as commands from Discord.
+                        </p>
+                    </div>
+                </div>
+                <div class="m-3">
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-warning p-1 w-100"
+                        hx-post="{% url 'raptorbot:command_update_global_announcements' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Send the 'update_global_announcements' command to the bot."
+                        >
+                            Update Global Announcements
+                        </a>
+                    </form>
+                </div>
+                <div class="m-3">
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-warning p-1 w-100"
+                        hx-post="{% url 'raptorbot:command_update_all_server_announcements' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Send the `update_all_server_announcements` command to the bot."
+                        >
+                            Update Server Announcements
+                        </a>
+                    </form>
+                </div>
+                <div class="m-3">
+                    <form>
+                        {% csrf_token %}
+                        <a role="button" class="btn btn-warning p-1 w-100"
+                        hx-post="{% url 'raptorbot:command_update_members' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Tell the Discord Bot to update the Member counts in your Discord Guild model. 
+                                        This is done quite often, so there is little reason to do this normally."
+                        >
+                            Update Member Counts
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="text-white">
+                        <header class="fs-5">Discord Guild</header>
+                        <p class="fs-7 mt-2">
+                            Information about the Discord Guild that the Discord Bot is linked to.
+                            Change this within the project environment file.
+                        </p>
+                    </div>
+                </div>
+                <div class="m-3">
+                    <p>
+                        <strong>Guild Name: </strong>{{ discord_guild.guild_name }}
+                    </p>
+                    <p>
+                        <strong>Guild Name: </strong>{{ discord_guild.guild_id }}
+                    </p>
+                    <p>
+                        <strong>Invite Link: </strong><a href="{{ discord_guild.invite_link }}"></a>
+                    </p>
+                    <p>
+                        <strong>Online Members: </strong>{{ discord_guild.online_members }}
+                    </p>
+                    <p>
+                        <strong>Total Members: </strong>{{ discord_guild.total_members }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>

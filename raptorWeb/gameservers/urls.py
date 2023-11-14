@@ -8,6 +8,7 @@ urlpatterns: list[URLPattern] = [
 
     # Server/Player ListViews
     path('html/total_count_poll/', views.Player_List.as_view(), name="totol_counts_poll"),
+    path('html/total_count_poll_simple/', views.Player_List.as_view(template_name='gameservers/player_list_simple.html'), name="total_counts_poll_simple"),
     path('html/server_button_poll/', views.Server_Buttons.as_view(template_name='gameservers/server_list.html'), name="server_buttons_poll"),
     path('html/server_button_poll_loading/', views.Server_Buttons.as_view(template_name='gameservers/server_list_loading.html'), name="server_buttons_poll_loading"),
     path('html/server_modal_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_modals.html'), name="server_modals_poll"),
