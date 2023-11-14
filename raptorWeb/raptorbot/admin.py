@@ -15,40 +15,6 @@ class AnnouncementForm(ModelForm):
         fields = '__all__'
 
 
-class DiscordGuildAdmin(admin.ModelAdmin):
-    """
-    Object defining behavior and display of 
-    DiscordGuilds in the Django admin interface.
-    """
-    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('General', {
-            'fields': (
-                'guild_name',
-                'guild_id',
-                'invite_link')
-        }),
-        ('Members', {
-            'classes': ('collapse',),
-            'fields': ('total_members','online_members')
-        })
-    )
-
-    readonly_fields: tuple[str] = (
-        'guild_name',
-        'guild_id',
-        'invite_link',
-        'total_members',
-        'online_members'
-    )
-
-    list_display: list[str] = ['guild_name', 'guild_id', 'total_members', 'online_members']
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
 class GlobalAnnouncementAdmin(admin.ModelAdmin):
     """
     Object defining behavior and display of 
@@ -106,6 +72,5 @@ class ServerAnnouncementAdmin(admin.ModelAdmin):
     list_display: list[str] = ['author', 'date', 'server']
 
 
-admin.site.register(DiscordGuild, DiscordGuildAdmin)
 admin.site.register(GlobalAnnouncement, GlobalAnnouncementAdmin)
 admin.site.register(ServerAnnouncement, ServerAnnouncementAdmin)

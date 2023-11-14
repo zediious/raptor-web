@@ -1,0 +1,35 @@
+{% load static %}
+
+{% if server_query_enabled %}
+
+<div class="border border-3 border-success">
+    <div class="p-3">
+        {% for server in server_list reversed %}
+        <div>
+            {% if forloop.counter0 != 0 %}
+            <hr>
+            {% endif %}
+            <h5 class="fs-4 text-center text-decoration-underline mb-3">
+                {{ server.modpack_name}} - {{ server.player_count }} Online
+            </h5>
+            <span class="fs-6 d-block text-center">
+            {% for player in object_list %}
+            {% if player.server == server %}
+            {{ player.name }}, 
+            {% endif %}
+            {% endfor %}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="totalPlayers" class="d-flex justify-content-center">
+    <div class="fs-4 text-white p-3">
+        Currently Playing: 
+    </div>
+    <div id="total_count" class="fs-1">
+        {{ stat_object.total_player_count }}
+    </div>
+</div>
+{% endif %}

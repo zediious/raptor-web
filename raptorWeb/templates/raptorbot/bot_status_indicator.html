@@ -1,0 +1,7 @@
+{% load static %}
+
+{% if bot_status == "on" %}
+<img src="{% static 'image/online_indicator.svg' %}" alt="Online">
+{% else %}
+<img src="{% static 'image/offline_indicator.svg' %}" alt="Offline">
+{% endif %}

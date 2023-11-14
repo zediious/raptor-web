@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="m-2 mt-3 p-3">
+        <div class="text-white">
+            <header class="fs-3">Server Actions</header>
+            <p class="fs-5">
+                Here you can execute certain actions pertaining to the Servers you have in the application.
+            </p>
+        </div>
+    </div>
+    <div class="card bg-dark p-2">
+        <div class="card-body">
+            <div class="m-3 mt-1 p-1">
+                <div class="text-white">
+                    <header class="fs-5">Import/Export Servers</header>
+                    <p class="fs-7">
+                        Export or import servers from or to the database.
+                    </p>
+                </div>
+            </div>
+            <div class="m-3">
+                <form>
+                    {% csrf_token %}
+                    <a role="button" class="btn btn-success p-1 w-100"
+                        hx-post="{% url 'gameservers:action_export_server_data' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Export Servers to a server_data_full.json located in the app's root directory."
+                    >
+                        Export Servers
+                    </a>
+                </form>
+            </div>
+            <div class="m-3">
+                <form>
+                    {% csrf_token %}
+                    <a role="button" class="btn btn-danger p-1 w-100"
+                        hx-post="{% url 'gameservers:action_import_server_data' %}"
+                        hx-swap="none"
+                        data-bs-toggle="tooltip"
+                        data-bs-html="true"
+                        data-bs-title="WARNING: Ensure that servers you're importing are NOT in the database
+                                        already. This can be a destructive action if so! Do NOT export and then
+                                        immediately import that exported data!
+                                        <br><br>
+                                        Import Servers from a server_data_full.json located in the app's root directory."
+                    >
+                        Import Servers
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>

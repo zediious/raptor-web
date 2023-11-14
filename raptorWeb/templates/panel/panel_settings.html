@@ -1,0 +1,122 @@
+{% load django_bootstrap5 %}
+
+<div class="container">
+    <div class="m-2 mt-3 p-3">
+        <div class="text-white">
+            <header class="fs-3">Settings</header>
+            <p class="fs-5">
+                Here you can modify a variety of settings pertaining to the application.
+            </p>
+        </div>
+    </div>
+    <div class="m-3">
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="text-white">
+                        <header class="fs-5">General Settings</header>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="w-50">
+                        <form class="form"
+                            hx-post="{% url 'panel:settings'%}"
+                            hx-swap='none'
+                        > 
+                            {% csrf_token %} 
+                            {{ form.captcha }} 
+                            {% bootstrap_form SettingsInformation %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-3">
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="text-white">
+                        <header class="fs-5">Images</header>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="w-50">
+                        <form class="form"
+                            hx-post="{% url 'panel:settings_files_update'%}"
+                            hx-swap='none'
+                        > 
+                            {% csrf_token %} 
+                            {{ form.captcha }} 
+                            {% bootstrap_form SettingsInformationFiles %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+
+                        </form>
+                        <hr>
+                        <p class="fs-5 text-center">
+                            Current Files
+                        </p>
+                        <div class="d-flex justify-content-center">
+                            <img class="m-3 w-25"
+                                 src="{{ site_information.branding_image.url }}"
+                                 alt="Brand Image"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-html="true"
+                                 data-bs-title="Brand Image">
+
+                            <img class="m-3 w-25"
+                                 src="{{ site_information.background_image.url }}"
+                                 alt="Background Image"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-html="true"
+                                 data-bs-title="Background Image">
+
+                            <img class="m-3 w-25"
+                                 src="{{ site_information.avatar_image.url }}"
+                                 alt="Avatar Image"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-html="true"
+                                 data-bs-title="Avatar Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="m-3">
+        <div class="card bg-dark p-2">
+            <div class="card-body">
+                <div class="m-3 mt-1 p-1">
+                    <div class="text-white">
+                        <header class="fs-5">Default Pages</header>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="w-50">
+                        <form class="form"
+                            hx-post="{% url 'panel:settings_default_pages'%}"
+                            hx-swap='none'
+                        > 
+                            {% csrf_token %} 
+                            {{ form.captcha }} 
+                            {% bootstrap_form SettingsDefaultPages %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>

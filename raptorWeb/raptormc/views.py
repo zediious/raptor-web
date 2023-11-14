@@ -39,7 +39,7 @@ class HomeServers(TemplateView):
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.headers.get('HX-Request') != "true":
-            HttpResponseRedirect('/')
+            return HttpResponseRedirect('/')
             
         return super().get(request, *args, **kwargs)
 
@@ -258,18 +258,6 @@ class User_Pass_Reset(TemplateView):
             "active_user_password_reset_token": self.request.path.split('/')[7]
         })
         return context
-
-
-class Admin_Panel(TemplateView):
-    """
-    Base Admin Panel view
-    """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('panel', 'panel.html'))
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        return super().get(request, *args, **kwargs)
 
 
 class View_404(TemplateView):
