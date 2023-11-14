@@ -10,7 +10,7 @@ from django.conf import settings
 from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
-from raptorWeb.raptormc.models import Page, DefaultPages
+from raptorWeb.raptormc.models import Page, DefaultPages, SiteInformation
 from raptorWeb.raptormc.routes import check_route
 
 LOGGER = getLogger('raptormc.views')
@@ -217,6 +217,12 @@ class SiteMembers(TemplateView):
         if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/404')
         
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+        
+        if site_info.require_login_for_user_list:
+            if request.user.is_anonymous:
+                return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'login_access.html'))
+        
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
@@ -235,6 +241,12 @@ class User_Page(TemplateView):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/404')
+        
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+        
+        if site_info.require_login_for_user_list:
+            if request.user.is_anonymous:
+                return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'login_access.html'))
         
         return super().get(request, *args, **kwargs)
 
