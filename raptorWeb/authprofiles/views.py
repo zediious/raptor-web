@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.utils.text import slugify
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter
 from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
 
@@ -248,16 +248,42 @@ class All_User_Profile(ListView):
         except ModuleNotFoundError:
             pass
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-        else:
+        if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/')
         
-    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        else:
+            if request.GET.get('is_staff') == 'on':
+                self.queryset = self.queryset.filter(is_staff=True)
+                
+            if request.GET.get('username'):
+                self.queryset = self.queryset.filter(username__contains=request.GET.get('username'))
+                
+            return super().get(request, *args, **kwargs)
+        
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        user_filter_form = UserListFilter()
+        form_data = {}
+        edited_fields: int = 0
+        
+        if self.request.GET.get('is_staff'):
+            form_data.update({
+                'is_staff': self.request.GET.get('is_staff')
+            })
+            edited_fields += 1
+            
+        if self.request.GET.get('username'):
+            form_data.update({
+                'username': self.request.GET.get('username')
+            })
+            edited_fields += 1
+            
+        if edited_fields > 0:
+            user_filter_form = UserListFilter(form_data)
         context.update(
             {
-                "base_user_url": BASE_USER_URL
+                "base_user_url": BASE_USER_URL,
+                "user_filter_form": user_filter_form
             }
         )
         return context
