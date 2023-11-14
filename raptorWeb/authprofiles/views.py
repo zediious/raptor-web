@@ -15,6 +15,7 @@ from django.conf import settings
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter
 from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
+from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 
 try:
     from raptorWeb.raptormc.models import DefaultPages
@@ -23,6 +24,7 @@ except ModuleNotFoundError:
 
 LOGGER: Logger = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
+TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 DISCORD_AUTH_URL: str = getattr(settings, 'DISCORD_AUTH_URL')
 LOGIN_URL: str = getattr(settings, 'LOGIN_URL')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
@@ -244,6 +246,12 @@ class All_User_Profile(ListView):
         try:
             if not DefaultPages.objects.get_or_create(pk=1)[0].members:
                 return HttpResponseRedirect('/404')
+            
+            site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+        
+            if site_info.require_login_for_user_list:
+                if request.user.is_anonymous:
+                    return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'login_access.html'))
             
         except ModuleNotFoundError:
             pass
