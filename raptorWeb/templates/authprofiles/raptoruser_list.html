@@ -1,6 +1,22 @@
 {% load static %}
+{% load django_bootstrap5 %}
 
 <div id="user_list_container" class="container-flex">
+    {% comment %} User list filter form {% endcomment %}
+    <div class="d-flex justify-content-center">
+        <form id="user_list_filter_form" class="form p-3 text-white htmxLink"
+            enctype="multipart/form-data" 
+            hx-get="{% url 'authprofiles:all_user_profile' %}"
+            hx-swap="innerHTML"
+            hx-target="#all_profiles"
+            hx-trigger='click,keyup delay:1s'
+        >     
+            {% csrf_token %} 
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+            {% bootstrap_form user_filter_form %}
+
+        </form>
+    </div>
     {% comment %} User list Pagination {% endcomment %}
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links">
@@ -45,6 +61,7 @@
         {% for raptoruser in page_obj %}
         <div class="col-md-4 col-12">
             <a class="htmxLink"
+                href="/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-get="raptormc/api/html/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-target='#home'
                 hx-swap='innerHTML'

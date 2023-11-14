@@ -114,7 +114,11 @@ body {
 
 .htmxLink:hover {
     cursor:pointer;
-   }
+}
+
+.htmxLink *:hover {
+    cursor:pointer;
+}
 
 #profile_box {
     height: 140px
@@ -144,6 +148,14 @@ body {
 
 .htmx-request.htmx-indicator{
     display: inline;
+}
+
+.htmx-request .loaded-content {
+    display: none;
+}
+
+.htmx-request.loaded-content {
+    display: none;
 }
 
 .fade-in-button {

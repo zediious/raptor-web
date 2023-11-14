@@ -126,10 +126,11 @@
                         <strong>Guild Name: </strong>{{ discord_guild.guild_name }}
                     </p>
                     <p>
-                        <strong>Guild Name: </strong>{{ discord_guild.guild_id }}
+                        <strong>Guild ID: </strong>{{ discord_guild.guild_id }}
                     </p>
                     <p>
-                        <strong>Invite Link: </strong><a href="{{ discord_guild.invite_link }}"></a>
+                        <strong>Invite Link: </strong>
+                        <a target='_blank' href="{{ discord_guild.invite_link }}">{{ discord_guild.invite_link }}</a>
                     </p>
                     <p>
                         <strong>Online Members: </strong>{{ discord_guild.online_members }}

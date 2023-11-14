@@ -148,4 +148,19 @@ class UserPasswordResetForm(forms.Form):
 
         if not(clean_data.get("password") == clean_data.get("password_v")):
             raise forms.ValidationError("Password fields must match")
-            
+        
+        
+class UserListFilter(forms.Form):
+    """
+    Form returned to filter the user list
+    """
+    is_staff: forms.BooleanField = forms.BooleanField(
+        label="Is Staff",
+        required=False)
+    
+    username: forms.CharField = forms.CharField(
+        label="Username",
+        required=False
+    )
+
+         

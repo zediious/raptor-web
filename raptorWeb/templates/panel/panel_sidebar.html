@@ -21,10 +21,11 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
+                       href="/panel/"
                        hx-get="{% url 'panel:home' %}"
                        hx-target='#panel_main'
                        hx-push-url="/panel/home/"
-                       hx-indicator="#panelLoadingspinner"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
                     >
                         <i class="nav-icon fas fa-map-marker"></i> <p>Home</p>
                     </a>
@@ -32,10 +33,11 @@
                 {% if perms.raptormc.discord_bot %}
                 <li class="nav-item">
                     <a class="nav-link"
+                       href="/panel/discordbot"
                        hx-get="{% url 'panel:discordbot' %}"
                        hx-target='#panel_main'
                        hx-push-url="/panel/discordbot/"
-                       hx-indicator="#panelLoadingspinner"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
                     >
                         <i class="nav-icon fas fa-robot"></i> <p>Discord Bot</p>
                     </a>
@@ -44,10 +46,11 @@
                 {% if perms.raptormc.server_actions %}
                 <li class="nav-item">
                     <a class="nav-link"
+                       href="/panel/serveractions"
                        hx-get="{% url 'panel:serveractions' %}"
                        hx-target='#panel_main'
                        hx-push-url="/panel/serveractions/"
-                       hx-indicator="#panelLoadingspinner"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
                     >
                         <i class="nav-icon fas fa-gamepad"></i> <p>Server Actions</p>
                     </a>
@@ -56,10 +59,11 @@
                 {% if perms.raptormc.reporting %}
                 <li class="nav-item">
                     <a class="nav-link"
+                       href="/panel/reporting"
                        hx-get="{% url 'panel:reporting' %}"
                        hx-target='#panel_main'
                        hx-push-url="/panel/reporting/"
-                       hx-indicator="#panelLoadingspinner"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
                     >
                         <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
                     </a>
@@ -68,12 +72,13 @@
                 {% if perms.raptormc.settings %}
                 <li class="nav-item">
                     <a class="nav-link"
+                       href="/panel/settings"
                        hx-get="{% url 'panel:settings' %}"
                        hx-target='#panel_main'
                        hx-push-url="/panel/settings/"
-                       hx-indicator="#panelLoadingspinner"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
                     >
-                        <i class="nav-icon fas fa-clipboard-list"></i> <p>Settings</p>
+                        <i class="nav-icon fas fa-cog"></i> <p>Settings</p>
                     </a>
                 </li>
                 {% endif%}

@@ -1,9 +1,11 @@
+{% load static %}
 {% load django_bootstrap5 %}
 
 <div class="col-12 w-50">
     <form class="form"
             hx-get="{% url 'gameservers:player_statistics_chart'%}"
             hx-target='#fetched_chart'
+            hx-indicator='#gameserverChartLoadingSpinner,.loaded-content'
             hx-swap='innerHTML'
     >
         
@@ -15,5 +17,12 @@
     </form>
 </div>
 
-<div id="fetched_chart" class="col-12 w-100 mt-3">
+<div class="d-flex justify-content-center">
+    <img id="gameserverChartLoadingSpinner"
+         class="htmx-indicator w-75 p-5"
+         src="{% static 'image/three-dots.svg' %}"
+         alt="Loading...">
+</div>
+
+<div id="fetched_chart" class="col-12 w-100 mt-3 loaded-content">
 </div>

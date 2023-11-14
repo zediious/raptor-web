@@ -46,10 +46,11 @@
 
         {% if default_pages.announcements %}
         <a role="button" class="btn btn-outline-secondary"
+           href="/announcements"
            hx-get="{% url 'raptormc:announcements' %}"
            hx-target='#home'
            hx-push-url="/announcements"
-           hx-indicator="#mainLoadingspinner"
+           hx-indicator="#mainLoadingspinner,.loaded-content"
            onclick='closeModal()'
         >
           Announcements
@@ -58,10 +59,11 @@
         
         {% if default_pages.rules %}
           <a role="button" class="btn btn-outline-secondary"
+             href="/rules"
              hx-get="{% url 'raptormc:rules' %}"
              hx-target='#home'
              hx-push-url="/rules"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Rules
@@ -70,10 +72,11 @@
 
         {% if default_pages.banned_items %}
           <a role="button" class="btn btn-outline-secondary"
+             href="/banneditems"
              hx-get="{% url 'raptormc:banneditems' %}"
              hx-target='#home'
              hx-push-url="/banneditems"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Banned Items
@@ -82,10 +85,11 @@
 
         {% if default_pages.voting %}
           <a role="button" class="btn btn-outline-secondary"
+             href='/voting'
              hx-get="{% url 'raptormc:voting' %}"
              hx-target='#home'
              hx-push-url="/voting"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Vote

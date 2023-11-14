@@ -13,10 +13,11 @@
                         <span class="navbar-toggler-icon" ></span>
                     </button>
                     <a id="navBrand" class="navbar-brand m-0 ms-3 htmxLink"
+                       href="/"
                        hx-get={% url 'raptormc:home'%}
                        hx-target='#home'
                        hx-push-url="/"
-                       hx-indicator="#mainLoadingspinner"
+                       hx-indicator="#mainLoadingspinner,.loaded-content"
                     >
                         <img id="navImage"
                              src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}"
