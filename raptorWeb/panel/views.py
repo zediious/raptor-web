@@ -128,7 +128,8 @@ class SettingsPanel(PanelApiBaseView):
             'meta_keywords': site_info.meta_keywords,
             'enable_footer': site_info.enable_footer,
             'enable_footer_credit': site_info.enable_footer_credit,
-            'enable_footer_contact': site_info.enable_footer_contact
+            'enable_footer_contact': site_info.enable_footer_contact,
+            'require_login_for_user_list': site_info.require_login_for_user_list
         }
         
         default_pages = DefaultPages.objects.get_or_create(pk=1)[0]
@@ -211,6 +212,10 @@ class SettingsPanel(PanelApiBaseView):
             if site_info.enable_footer_contact != settings_form.cleaned_data['enable_footer_contact']:
                 site_info.enable_footer_contact = settings_form.cleaned_data['enable_footer_contact']
                 changed.append('Enable Footer Contact')
+                
+            if site_info.require_login_for_user_list != settings_form.cleaned_data['require_login_for_user_list']:
+                site_info.require_login_for_user_list = settings_form.cleaned_data['require_login_for_user_list']
+                changed.append('Require Login for Member List')
 
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')

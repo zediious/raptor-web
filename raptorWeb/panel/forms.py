@@ -58,6 +58,11 @@ class PanelSettingsInformation(forms.ModelForm):
     enable_footer_contact: forms.BooleanField = forms.BooleanField(
         help_text=("If this is checked, the footer will be enabled"),
         required=False)
+    
+    require_login_for_user_list: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, users will need to create an account and, "
+                   "log in before they can access the Site Members list."),
+        required=False)
 
     class Meta():
         model: SiteInformation = SiteInformation
@@ -72,7 +77,8 @@ class PanelSettingsInformation(forms.ModelForm):
             'meta_keywords',
             'enable_footer',
             'enable_footer_credit',
-            'enable_footer_contact'
+            'enable_footer_contact',
+            'require_login_for_user_list'
             )
         
         
