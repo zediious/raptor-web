@@ -114,7 +114,11 @@ body {
 
 .htmxLink:hover {
     cursor:pointer;
-   }
+}
+
+.htmxLink *:hover {
+    cursor:pointer;
+}
 
 #profile_box {
     height: 140px
