@@ -108,7 +108,8 @@ class Player_Count_Statistics(TemplateView):
         try:
             found_server = Server.objects.get(modpack_name=modpack_name)
         except Server.DoesNotExist:
-            return HttpResponse("<div class='alert bg-danger'>Queried server not found.</div>")
+            messages.error(request, "Queried server not found")
+            return HttpResponse(status=204)
         
         count_data = PlayerCountHistoric.objects.filter(server=found_server)
         
@@ -132,13 +133,15 @@ class Player_Count_Statistics(TemplateView):
         y_data = [count.player_count for count in count_data]
             
         if x_data == [] and y_data == []:
-            return HttpResponse("<div class='alert bg-danger'>No data found for selected time.</div>")
+            messages.error(request, "No data found for selected range.")
+            return HttpResponse(status=204)
         
         figure = plot_express.line(
             x=x_data,
             y=y_data,
             title="Player Counts over Time",
             template='plotly_dark',
+            markers=True,
             labels={'x': "Time of Query", 'y': 'Player Count'}
         )
         

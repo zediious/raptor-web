@@ -146,6 +146,14 @@ body {
     display: inline;
 }
 
+.htmx-request .loaded-content {
+    display: none;
+}
+
+.htmx-request.loaded-content {
+    display: none;
+}
+
 .fade-in-button {
     opacity: 1;
     animation-name: fadeInOpacityButton;
