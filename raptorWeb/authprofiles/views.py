@@ -248,12 +248,19 @@ class All_User_Profile(ListView):
         except ModuleNotFoundError:
             pass
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-        else:
+        if request.headers.get('HX-Request') != "true":
             return HttpResponseRedirect('/')
         
-    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        else:
+            if request.GET.get('is_staff') == 'on':
+                self.queryset = self.queryset.filter(is_staff=True)
+                
+            if request.GET.get('username'):
+                self.queryset = self.queryset.filter(username__contains=request.GET.get('username'))
+                
+            return super().get(request, *args, **kwargs)
+        
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
         context.update(
             {
