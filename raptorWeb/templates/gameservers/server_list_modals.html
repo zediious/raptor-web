@@ -49,7 +49,7 @@
            hx-get="{% url 'raptormc:announcements' %}"
            hx-target='#home'
            hx-push-url="/announcements"
-           hx-indicator="#mainLoadingspinner"
+           hx-indicator="#mainLoadingspinner,.loaded-content"
            onclick='closeModal()'
         >
           Announcements
@@ -61,7 +61,7 @@
              hx-get="{% url 'raptormc:rules' %}"
              hx-target='#home'
              hx-push-url="/rules"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Rules
@@ -73,7 +73,7 @@
              hx-get="{% url 'raptormc:banneditems' %}"
              hx-target='#home'
              hx-push-url="/banneditems"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Banned Items
@@ -85,7 +85,7 @@
              hx-get="{% url 'raptormc:voting' %}"
              hx-target='#home'
              hx-push-url="/voting"
-             hx-indicator="#mainLoadingspinner"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
           >
             Vote

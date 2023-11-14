@@ -15,7 +15,7 @@
                hx-get="{% url 'raptormc:announcements' %}"
                hx-target='#home'
                hx-push-url="/announcements"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
                 Announcements
@@ -27,7 +27,7 @@
                hx-get="{% url 'raptormc:rules' %}"
                hx-target='#home'
                hx-push-url="/rules"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
           >
               Rules
@@ -39,7 +39,7 @@
                hx-get="{% url 'raptormc:banneditems' %}"
                hx-target='#home'
                hx-push-url="/banneditems"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
               Banned Items
@@ -51,7 +51,7 @@
                hx-get="{% url 'raptormc:voting' %}"
                hx-target='#home'
                hx-push-url="/voting"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
               Vote for Us
@@ -63,7 +63,7 @@
                hx-get="{% url 'raptormc:howtojoin' %}"
                hx-target='#home'
                hx-push-url="/howtojoin"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
               How to Join
@@ -75,7 +75,7 @@
                hx-get="{% url 'raptormc:applications' %}"
                hx-target='#home'
                hx-push-url="/applications"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
               Staff Applications
@@ -87,7 +87,7 @@
                hx-get="{% url 'raptormc:user' %}"
                hx-target='#home'
                hx-push-url="/user"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
                onclick='closeOffCanvas()'
             >
               Site Members
@@ -107,7 +107,7 @@
                target="_blank"{% endif %}{% endif %}
                hx-target='#home'
                hx-push-url="{% if link.linked_page %}{{ link.get_linked_page_url }}{% else %}{{ link.url }}{% endif %}"
-               hx-indicator="#mainLoadingspinner"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
             >
               {{link.name}}
               {% if link.new_tab %}
@@ -138,7 +138,7 @@
                    target="_blank"{% endif %}{% endif %}
                    hx-target='#home'
                    hx-push-url="{% if nested_link.linked_page %}{{ nested_link.get_linked_page_url }}{% else %}{{ nested_link.url }}{% endif %}"
-                   hx-indicator="#mainLoadingspinner"
+                   hx-indicator="#mainLoadingspinner,.loaded-content"
                 >
                   {{nested_link.name}}
                   {% if nested_link.new_tab %}
