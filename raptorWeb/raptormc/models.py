@@ -3,7 +3,7 @@ from logging import Logger, getLogger
 from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
-from django.utils.timezone import localtime, now
+from django.utils.html import escape
 from django.db.models.signals import post_save
 
 from django_resized import ResizedImageField
@@ -475,6 +475,13 @@ class SiteInformation(models.Model):
     class Meta:
         verbose_name = "Site Settings",
         verbose_name_plural = "Site Settings"
+        permissions = [
+            ("panel", "Can access the Control Panel Homepage"),
+            ("discord_bot", "Can access the Discord Bot control panel"),
+            ("server_actions", "Can access the Server Actions menu"),
+            ("reporting", "Can access Reporting"),
+            ("settings", "Can access settings (DANGEROUS!)"),
+        ]
         
         
 class SmallSiteInformation(models.Model):

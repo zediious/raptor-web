@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.gameservers.models import Server, Player, ServerStatistic, PlayerCountHistoric
+from raptorWeb.gameservers.models import Server, Player
 
 class ServerAdminForm(ModelForm):
     class Meta:
@@ -94,60 +94,6 @@ class PlayerAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
-    
-class PlayerCountHistoricAdmin(admin.ModelAdmin):
-    """
-    Object defining behavior and display of 
-    PlayerCountHistoric in the Django admin interface.
-    """
-    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Player Information', {
-            'fields': (
-                'server',
-                'player_count',
-                'checked_time')
-        }),
-    )
-
-    readonly_fields: tuple[str] = (
-        'server',
-        'player_count',
-        'checked_time'
-    )
-
-    list_display: list[str] = ['server', 'player_count', 'checked_time']
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-class ServerStatisticAdmin(admin.ModelAdmin):
-    """
-    Object defining behavior and display of 
-    ServerStatistics in the Django admin interface.
-    """
-    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Global Server Statistics', {
-            'fields': (
-                'total_player_count',)
-        }),
-    )
-
-    readonly_fields: tuple[str] = (
-        'total_player_count',
-    )
-
-    list_display: list[str] = ['total_player_count']
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
 
 admin.site.register(Server, ServerAdmin)
 admin.site.register(Player, PlayerAdmin)
-admin.site.register(PlayerCountHistoric, PlayerCountHistoricAdmin)
-admin.site.register(ServerStatistic, ServerStatisticAdmin)

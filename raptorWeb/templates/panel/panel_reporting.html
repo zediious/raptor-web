@@ -1,0 +1,57 @@
+{% load static %}
+
+<div class="container">
+    <div class="m-2 mt-3 p-3">
+        <div class="text-white">
+            <header class="fs-3">Reporting</header>
+            <p class="fs-5">
+                View reports on statistics gathered from various aspects of the application.
+            </p>
+        </div>
+    </div>
+    <div class="card bg-dark p-2">
+        <div class="card-body">
+            <div class="m-3 mt-1 p-1">
+                <div class="text-white">
+                    <header class="fs-5">Current Player Counts</header>
+                    <p class="fs-7 mt-2">
+                        View a simplified version of the current player counts viewed on the user-facing site.
+                    </p>
+                </div>
+            </div>
+            <div class="m-3">
+                <div id="player_counts_current" class="m-5" style="position: relative; z-index: 1"
+                    hx-get="{% url 'gameservers:total_counts_poll_simple' %}"
+                    hx-target="#player_counts_current"
+                    hx-swap="innerHTML"
+                    hx-indicator="#serverPollLoadingspinner"
+                    hx-trigger="load, every 60s">
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img id="serverPollLoadingspinner"
+                        class="htmx-indicator w-75 p-5"
+                        src="{% static 'image/three-dots.svg' %}"
+                        alt="Loading...">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card bg-dark p-2">
+        <div class="card-body">
+            <div class="m-3 mt-1 p-1">
+                <div class="text-white">
+                    <header class="fs-5">Historic Player Counts</header>
+                    <p class="fs-7 mt-2">
+                        View player counts over time for a selected server.
+                    </p>
+                </div>
+            </div>
+           
+            <div class="m-3">
+                {% include "panel/reporting/gameservers_statistics.html" %}
+            </div>
+
+        </div>
+    </div>
+</div>

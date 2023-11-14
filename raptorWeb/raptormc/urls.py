@@ -30,9 +30,6 @@ urlpatterns: list[URLPattern] = [
     path('raptormc/api/html/user/<str:profile_name>', views.User_Page.as_view(), name="user_page"),
     path('raptormc/api/html/user/<str:profile_name>/', views.User_Page.as_view(), name="user_page"),
     path('raptormc/api/html/user/reset/<str:profile_name>/<str:user_reset_token>', views.User_Pass_Reset.as_view(), name="user_reset_pass"),
-    # Admin Panel
-    path('panel', views.Admin_Panel.as_view(), name='admin_panel_base'),
-    path('panel/', views.Admin_Panel.as_view(), name='admin_panel_base'),
     # 404
     path('404', views.View_404.as_view(), name='404_view'),
     # API

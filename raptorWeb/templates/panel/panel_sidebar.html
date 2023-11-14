@@ -1,0 +1,84 @@
+{% load static %}
+
+<aside class="main-sidebar elevation-4 {{ jazzmin_ui.sidebar_classes }}" id="jazzy-sidebar">
+    <a href="{% url 'admin:index' %}" class="brand-link {{ jazzmin_ui.brand_classes }}" id="jazzy-logo">
+        <img src="{% static jazzmin_settings.site_logo %}" alt="{{ jazzmin_settings.site_header }} Logo" class="{{ jazzmin_settings.site_logo_classes }} brand-image elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">{{ jazzmin_settings.site_brand }}</span>
+    </a>
+
+    <div class="sidebar">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        </div>
+
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column {{ jazzmin_ui.sidebar_list_classes }}" data-widget="treeview" role="menu" data-collapsible="false">
+
+                <li class="nav-item">
+                    <a href="{% url 'admin:index' %}" class="nav-link">
+                        <i class="nav-icon fas fa-th-large"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       hx-get="{% url 'panel:home' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/home/"
+                       hx-indicator="#panelLoadingspinner"
+                    >
+                        <i class="nav-icon fas fa-map-marker"></i> <p>Home</p>
+                    </a>
+                </li>
+                {% if perms.raptormc.discord_bot %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       hx-get="{% url 'panel:discordbot' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/discordbot/"
+                       hx-indicator="#panelLoadingspinner"
+                    >
+                        <i class="nav-icon fas fa-robot"></i> <p>Discord Bot</p>
+                    </a>
+                </li>
+                {% endif%}
+                {% if perms.raptormc.server_actions %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       hx-get="{% url 'panel:serveractions' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/serveractions/"
+                       hx-indicator="#panelLoadingspinner"
+                    >
+                        <i class="nav-icon fas fa-gamepad"></i> <p>Server Actions</p>
+                    </a>
+                </li>
+                {% endif%}
+                {% if perms.raptormc.reporting %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       hx-get="{% url 'panel:reporting' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/reporting/"
+                       hx-indicator="#panelLoadingspinner"
+                    >
+                        <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
+                    </a>
+                </li>
+                {% endif%}
+                {% if perms.raptormc.settings %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       hx-get="{% url 'panel:settings' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/settings/"
+                       hx-indicator="#panelLoadingspinner"
+                    >
+                        <i class="nav-icon fas fa-clipboard-list"></i> <p>Settings</p>
+                    </a>
+                </li>
+                {% endif%}
+
+            </ul>
+        </nav>
+    </div>
+</aside>

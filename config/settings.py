@@ -12,6 +12,8 @@ MEDIA_DIR: str = join(RAPTORWEB_DIR, "media")
 LOG_DIR: str = join(BASE_DIR, "logs")
 
 RAPTORMC_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "raptormc")
+PANEL_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "panel")
+RAPTORBOT_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'raptorbot')
 GAMESERVERS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'gameservers')
 STAFFAPPS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'staffapps')
 AUTH_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'authprofiles')
@@ -73,7 +75,8 @@ INSTALLED_APPS: list[str] = [
     'raptorWeb.staffapps',
     'raptorWeb.authprofiles',
     'raptorWeb.gameservers',
-    'raptorWeb.raptorbot'
+    'raptorWeb.raptorbot',
+    'raptorWeb.panel'
 ]
 
 MIDDLEWARE: list[str] = [
@@ -85,7 +88,8 @@ MIDDLEWARE: list[str] = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'raptorWeb.raptorbot.botware.RaptorBotWare'
+    'raptorWeb.raptorbot.botware.RaptorBotWare',
+    'raptorWeb.panel.middleware.PanelMessages'
 ]
 
 ROOT_URLCONF: str = 'config.urls'
@@ -261,6 +265,21 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'panel.routes': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'panel.models': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'panel.views': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'staffapps.views': {
             'handlers': ['console', 'log_file'],
             'level': 'DEBUG',
@@ -379,28 +398,34 @@ STAFF_ROLE_ID: int = int(getenv('STAFF_ROLE_ID'))
 # ** Settings for "django-jazzmin" app **
 JAZZMIN_SETTINGS = {
 
-    "site_title": f"{ADMIN_BRAND_NAME} Admin",
+    "site_title": f"Admin {ADMIN_BRAND_NAME}",
     "site_header": f"{ADMIN_BRAND_NAME}",
     "site_brand": f"{ADMIN_BRAND_NAME}",
     "site_logo_classes": "img-circle",
     "welcome_sign": f"Welcome to {ADMIN_BRAND_NAME}",
-    "copyright": "Admin theme by Acme Library Ltd",
-    "search_model": ["authprofiles.RaptorUser"],
     "topmenu_links": [
         {"name": "Return to Site", "url": "/", "new_window": False},
-        {"name": "Control Panel", "url": "/panel", "new_window": False},
-        
-        {"model": "raptormc.SiteInformation"},
-        {"model": "raptormc.DefaultPages"},
-
+        {"name": "Admin", "url": "/admin/", "new_window": False},
+        {"name": "Control Panel", "url": "/panel/", "new_window": False},
+        {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
+        {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
+        {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
         {"app": "raptormc"},
         {"app": "gameservers"},
         {"app": "raptorbot"},
         {"app": "staffapps"},
         {"app": "authprofiles"},
+        {"name": "Settings", "url": "/panel/settings/", "new_window": False},
     ],
     "usermenu_links": [
-        {"model": "auth.user"}
+        {"model": "auth.user"},
+        {"name": "Return to Site", "url": "/", "new_window": False},
+        {"name": "Admin", "url": "/admin/", "new_window": False},
+        {"name": "Control Panel", "url": "/panel/", "new_window": False},
+        {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
+        {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
+        {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
+        {"name": "Settings", "url": "/panel/settings/", "new_window": False},
     ],
 
     # Sidebar
@@ -409,14 +434,14 @@ JAZZMIN_SETTINGS = {
     "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", "staffapps", "authprofiles"],
     "custom_links": {
         "raptorbot": [{
-            "name": "Bot Actions", 
-            "url": "/panel", 
+            "name": "Discord Bot Control Panel", 
+            "url": "/panel/discordbot/", 
             "icon": "fas fa-terminal",
             "permissions": ["raptorbot.view_discordguild"]
         }],
          "gameservers": [{
             "name": "Server Actions", 
-            "url": "/panel", 
+            "url": "/panel/serveractions/", 
             "icon": "fas fa-terminal",
             "permissions": ["gameservers.view_server"]
         }]
@@ -428,16 +453,12 @@ JAZZMIN_SETTINGS = {
         "raptormc.NavbarDropdown": "fas fa-map-marker",
         "raptormc.NavWidget": "fas fa-map-pin",
         "raptormc.NavWidgetBar": "fas fa-map-pin",
-        "raptormc.SiteInformation": "fas fa-clipboard-list",
-        "raptormc.DefaultPages": "fas fa-clipboard-list",
         "raptormc.NotificationToast": "fas fa-envelope-square",
         "raptormc.Page": "fas fa-file",
         "gameservers": "fas fa-gamepad",
         "gameservers.Player": "fas fa-headset",
-        "gameservers.ServerStatistic": "fas fa-signal",
         "gameservers.Server": "fas fa-server",
         "raptorbot": "fas fa-robot",
-        "raptorbot.DiscordGuild": "fas fa-building",
         "raptorbot.GlobalAnnouncement": "fas fa-bullhorn",
         "raptorbot.ServerAnnouncement": "fas fa-bullhorn",
         "staffapps": "fas fa-book-reader",
@@ -454,12 +475,13 @@ JAZZMIN_SETTINGS = {
     "related_modal_active": True,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
+    "related_modal_active": True
 
 }
 
 JAZZMIN_UI_TWEAKS = {
 
-    "navbar_small_text": False,
+    "navbar_small_text": True,
     "footer_small_text": True,
     "body_small_text": False,
     "brand_small_text": False,
@@ -473,7 +495,8 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_disable_expand": True,
     "theme": "cyborg",
     "actions_sticky_top": False,
-    "sidebar_nav_child_indent": True
+    "sidebar_nav_child_indent": True,
+    "related_modal_active": True
 
 }
 

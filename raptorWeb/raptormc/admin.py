@@ -4,7 +4,7 @@ from django.forms import TextInput
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page, DefaultPages
+from raptorWeb.raptormc.models import InformativeText, SiteInformation, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar, NotificationToast, Page
 
 
 class PageAdminForm(ModelForm):
@@ -82,16 +82,6 @@ class PageAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['name', 'created', 'show_gameservers']
-    
-    
-class DefaultPageAdmin(admin.ModelAdmin):
-    """
-    Object tracking enabled state of default pages
-    """
-    list_display: list[str] = ['announcements', 'rules', 'banned_items', 'voting', 'joining', 'staff_apps', 'members']
-    
-    def has_add_permission(self, request, obj=None):
-        return False
 
 
 class NotificationToastAdmin(admin.ModelAdmin):
@@ -248,63 +238,10 @@ class InformativeTextAdmin(admin.ModelAdmin):
         return False
 
 
-class SiteInformationAdmin(admin.ModelAdmin):
-    """
-    Object defining behavior and display of 
-    SiteInformations in the Django admin interface.
-    """
-    form = SiteInformationAdminForm
-
-    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
-        ('Information', {
-            'fields': (
-                'brand_name',
-                'contact_email')
-        }),
-        ('Colors', {
-            'fields': (
-                'main_color',
-                'use_main_color',
-                'secondary_color',
-                'use_secondary_color')
-        }),
-        ('Images', {
-            'fields': (
-                'branding_image',
-                'background_image',
-                'avatar_image')
-        }),
-        ('SEO', {
-            'fields': (
-                'meta_description',
-                'meta_keywords')
-        }),
-         ('Misc', {
-            'fields': (
-                'enable_footer',
-                'enable_footer_credit',
-                'enable_footer_contact')
-        })
-    )
-
-    list_display: list[str] = [
-        'brand_name',
-        'main_color',
-        'secondary_color',
-        'branding_image',
-        'background_image',
-        'avatar_image']
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-
 admin.site.register(InformativeText, InformativeTextAdmin)
-admin.site.register(SiteInformation, SiteInformationAdmin)
 admin.site.register(NavbarLink, NavbarLinkAdmin)
 admin.site.register(NavbarDropdown, NavbarDropdownAdmin)
 admin.site.register(NavWidget, NavWidgetAdmin)
 admin.site.register(NavWidgetBar, NavWidgetBarAdmin)
 admin.site.register(NotificationToast, NotificationToastAdmin)
 admin.site.register(Page, PageAdmin)
-admin.site.register(DefaultPages, DefaultPageAdmin)

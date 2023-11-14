@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from raptorWeb.raptormc import urls as SR_urls
+from raptorWeb.panel import urls as panel_urls
 from raptorWeb.gameservers import urls as server_urls
 from raptorWeb.staffapps import urls as app_urls
 from raptorWeb.authprofiles import urls as auth_urls
@@ -34,10 +35,11 @@ MEDIA_ROOT: str = getattr(settings, 'MEDIA_ROOT')
 
 urlpatterns: list[URLResolver] = [
 
-    path('admin/', admin.site.urls, name="admin"),
-    path('tinymce/', include('tinymce.urls')),
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
+    path('tinymce/', include('tinymce.urls')),
     path('captcha/', include('captcha.urls')),
+    path('admin/', admin.site.urls, name="admin"),
+    path('panel/', include(panel_urls), name='panel'),
     path('api/servers/', include(server_urls), name="gameservers"),
     path('api/staffapps/', include(app_urls), name="staffapps"),
     path('api/raptorbot/', include(bot_urls), name="raptorbot"),

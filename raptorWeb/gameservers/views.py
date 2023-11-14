@@ -4,6 +4,7 @@ from logging import getLogger
 from django.views.generic import ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.shortcuts import render
+from django.contrib import messages
 from django.conf import settings
 
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
@@ -75,6 +76,12 @@ class Statistic_Filter_Form(TemplateView):
     Return a form to submit server and date filter data
     """
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.reporting'):
+            return HttpResponseRedirect('/')
+        
         if 'Firefox' not in str(request.META['HTTP_USER_AGENT']):
             return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_form.html'), context={
                 'stat_filter_form': StatisticFilterForm()})
@@ -88,6 +95,12 @@ class Player_Count_Statistics(TemplateView):
     Return a plotly chart containing PlayerCountHistoric data
     """
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.reporting'):
+            return HttpResponseRedirect('/')
+        
         start = request.GET.get('start')
         end = request.GET.get('end')
         modpack_name = request.GET.get('server')
@@ -153,12 +166,17 @@ class Import_Servers(TemplateView):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
+        if not request.user.has_perm('raptormc.server_actions'):
+            return HttpResponseRedirect('/')
+        
         if Server.objects.import_server_data() == False:
-            return HttpResponse('<div class= "alert alert-danger">You attempted to import servers, but you did not place server_data_full.json '
-                                'in the root directory of the application.</div>')
+            messages.error(request, ("You attempted to import servers, but you did not place server_data_full.json "
+                                     "in the root directory of the application."))
+            return HttpResponse(status=204)
 
-        return HttpResponse('<div class= "alert alert-success">Servers from server_data_full.json have successfully been imported.</div>')
-
+        messages.success(request, "Servers from server_data_full.json have successfully been imported.")
+        return HttpResponse(status=204)
+        
 
 class Export_Servers(TemplateView):
     """
@@ -171,5 +189,9 @@ class Export_Servers(TemplateView):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
+        if not request.user.has_perm('raptormc.server_actions'):
+            return HttpResponseRedirect('/')
+        
         Server.objects.export_server_data()
-        return HttpResponse('<div class= "alert alert-success">All Servers have successfully been exported to server_data_full.json.</div>')
+        messages.success(request, "All Servers have successfully been exported to server_data_full.json.")
+        return HttpResponse(status=204)

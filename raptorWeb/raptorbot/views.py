@@ -1,7 +1,10 @@
+from os.path import join
 from logging import getLogger
 
 from django.views.generic import ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.contrib import messages
+from django.shortcuts import render
 from django.conf import settings
 
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
@@ -12,6 +15,7 @@ try:
 except ModuleNotFoundError:
     pass
 
+TEMPLATE_DIR_RAPTORBOT = getattr(settings, 'RAPTORBOT_TEMPLATE_DIR')
 USE_GLOBAL_ANNOUNCEMENT: bool = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
 
 if USE_GLOBAL_ANNOUNCEMENT:
@@ -77,6 +81,27 @@ class Server_Announcements(ListView):
                 return super().get(request, *args, **kwargs)
             else:
                 return HttpResponseRedirect('/')
+            
+            
+class Get_Bot_Status(TemplateView):
+    """
+    Return the status of the Discord bot
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
+        
+        if botware.get_bot_status() == True:
+            return render(request, template_name=join(TEMPLATE_DIR_RAPTORBOT, 'bot_status_indicator.html'), context={
+                'bot_status': 'on'
+            })
+            
+        return render(request, template_name=join(TEMPLATE_DIR_RAPTORBOT, 'bot_status_indicator.html'), context={
+                'bot_status': 'off'
+            })
 
 
 class Start_Bot(TemplateView):
@@ -89,15 +114,21 @@ class Start_Bot(TemplateView):
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
 
         if botware.get_bot_status() == True:
-            return HttpResponse('<div class= "alert alert-danger">You cannot start the Discord Bot when it is currently running</div>')
+            messages.error(request, "You cannot start the Discord Bot when it is currently running.")
+            return HttpResponse(status=204)
         
         if botware.is_safe_to_start() == False:
-            return HttpResponse('<div class= "alert alert-danger">You must wait one minute before re-starting the bot.</div>')
+            messages.error(request, "You must wait one minute before restarting the bot.")
+            return HttpResponse(status=204)
         
         botware.start_bot_process()
-        return HttpResponse('<div class= "alert alert-success">The Discord Bot has been started.</div>')
+        messages.success(request, "The Discord Bot has been started.")
+        return HttpResponse(status=204)
 
 
 class Stop_Bot(TemplateView):
@@ -110,12 +141,17 @@ class Stop_Bot(TemplateView):
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
 
         if botware.get_bot_status() == False:
-            return HttpResponse('<div class= "alert alert-danger">You cannot stop the Discord Bot when it is not running</div>')
+            messages.error(request, "You cannot stop the Discord Bot when it is not running.")
+            return HttpResponse(status=204)
         
         botware.stop_bot_process()
-        return HttpResponse('<div class= "alert alert-success">The Discord Bot has been stopped.</div>')
+        messages.success(request, "The Discord Bot has been stopped.")
+        return HttpResponse(status=204)
 
 
 class Update_Global_Announcement(TemplateView):
@@ -128,12 +164,17 @@ class Update_Global_Announcement(TemplateView):
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
 
         if botware.get_bot_status() == False:
-            return HttpResponse('<div class= "alert alert-danger">You cannot send commands to the Discord Bot when it is not running</div>')
+            messages.error(request, "You cannot send commands to the Discord Bot when it is not running.")
+            return HttpResponse(status=204)
         
         botware.send_command_update_global_announcements()
-        return HttpResponse('<div class= "alert alert-success">The command "refresh_global_announcements" has been sent to the Discord Bot.</div>')
+        messages.success(request, "The command 'refresh_global_announcements' has been sent to the Discord Bot.")
+        return HttpResponse(status=204)
 
 
 class Update_Server_Announcement(TemplateView):
@@ -146,12 +187,17 @@ class Update_Server_Announcement(TemplateView):
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
 
         if botware.get_bot_status() == False:
-            return HttpResponse('<div class= "alert alert-danger">You cannot send commands to the Discord Bot when it is not running</div>')
+            messages.error(request, "You cannot send commands to the Discord Bot when it is not running.")
+            return HttpResponse(status=204)
         
         botware.send_command_update_all_server_announcements()
-        return HttpResponse('<div class= "alert alert-success">The command "refresh_server_announcements" has been sent to the Discord Bot.</div>')
+        messages.success(request, "The command 'refresh_server_announcements' has been sent to the Discord Bot.")
+        return HttpResponse(status=204)
 
 
 class Update_Members(TemplateView):
@@ -164,9 +210,13 @@ class Update_Members(TemplateView):
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.discord_bot'):
+            return HttpResponseRedirect('/')
 
         if botware.get_bot_status() == False:
-            return HttpResponse('<div class= "alert alert-danger">You cannot send commands to the Discord Bot when it is not running</div>')
+            messages.error(request, "You cannot send commands to the Discord Bot when it is not running.")
+            return HttpResponse(status=204)
         
-        botware.send_command_update_members()
-        return HttpResponse('<div class= "alert alert-success">Member counts for the Discord Guild have been updated.</div>')
+        messages.success(request, "Member counts for the Discord Guild have been updated.")
+        return HttpResponse(status=204)
