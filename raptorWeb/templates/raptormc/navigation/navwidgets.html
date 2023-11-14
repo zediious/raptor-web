@@ -19,7 +19,15 @@
           <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
              data-bs-toggle="tooltip"
              data-bs-title="{{widget.tooltip|safe}}"
-             href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}" 
+             {% if widget.linked_page %}
+             hx-get="/raptormc/api/html{{widget.linked_page.get_absolute_url}}"
+             hx-target='#home'
+             hx-push-url="{{widget.linked_page.get_absolute_url}}"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
+             href="{{widget.linked_page.get_absolute_url}}"
+             {% else %}
+             href="{{widget.url}}"
+             {% endif %}
              {% if widget.new_tab%}
              target="_blank"
           >  {% else %}
@@ -51,7 +59,15 @@
           <a class="col-3 col-sm-2 col-lg-1 btn btn-outline-secondary" role="button"
              data-bs-toggle="tooltip"
              data-bs-title="{{widget.tooltip|safe}}"
-             href="{% if widget.linked_page %}{{widget.linked_page.get_absolute_url}}{% else %}{{widget.url}}{% endif %}" 
+             {% if widget.linked_page %}
+             hx-get="/raptormc/api/html{{widget.linked_page.get_absolute_url}}"
+             hx-target='#home'
+             hx-push-url="{{widget.linked_page.get_absolute_url}}"
+             hx-indicator="#mainLoadingspinner,.loaded-content"
+             href="{{widget.linked_page.get_absolute_url}}"
+             {% else %}
+             href="{{widget.url}}"
+             {% endif %}
              {% if widget.new_tab%}
              target="_blank"
           > {%else%}

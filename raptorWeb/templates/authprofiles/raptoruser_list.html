@@ -45,6 +45,7 @@
         {% for raptoruser in page_obj %}
         <div class="col-md-4 col-12">
             <a class="htmxLink"
+                href="/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-get="raptormc/api/html/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-target='#home'
                 hx-swap='innerHTML'
