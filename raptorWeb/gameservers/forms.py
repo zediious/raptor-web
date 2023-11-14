@@ -13,6 +13,7 @@ class StatisticFilterForm(forms.Form):
     
     server = forms.ModelChoiceField(
         queryset=Server.objects.filter(archived=False),
+        to_field_name='modpack_name',
         empty_label="Choose a Server")
     
 class StatisticFilterFormFireFox(forms.Form):
