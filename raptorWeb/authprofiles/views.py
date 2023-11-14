@@ -256,7 +256,7 @@ class All_User_Profile(ListView):
                 self.queryset = self.queryset.filter(is_staff=True)
                 
             if request.GET.get('username'):
-                self.queryset = self.queryset.filter(username__contains=request.GET.get('username'))
+                self.queryset = self.queryset.filter(username__icontains=request.GET.get('username'))
                 
             return super().get(request, *args, **kwargs)
         
