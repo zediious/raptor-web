@@ -27,7 +27,6 @@ class ServerManager(models.Manager):
         Use the poll_servers() method to utilize this object.
         """
         _has_run: bool = False
-        _is_running:bool = False
 
         def _query_and_update_server(self, server: 'Server', do_query: bool = True) -> None:
 
@@ -86,7 +85,6 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
-            self._is_running = True
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
             minutes_since_poll = int(str(
@@ -123,7 +121,6 @@ class ServerManager(models.Manager):
                 self._has_run = True
                 statistic_model.time_last_polled = localtime()
                 statistic_model.save()
-                self._is_running = False
                 LOGGER.info("Server data has been retrieved and saved")
     
     _player_poller: _PlayerPoller = _PlayerPoller()
@@ -142,7 +139,7 @@ class ServerManager(models.Manager):
             - Save the total count of all online players to the total_player_count attribute of
             the ServerStatistic model passed as an argument.
         """
-        if self.all().count() > 0 and self._player_poller._is_running == False:
+        if self.all().count() > 0:
             self._player_poller.poll_servers(
                 [server for server in self.filter(archived=False)],
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
