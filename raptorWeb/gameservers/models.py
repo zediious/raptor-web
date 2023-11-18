@@ -144,7 +144,7 @@ class ServerManager(models.Manager):
             - Save the total count of all online players to the total_player_count attribute of
             the ServerStatistic model passed as an argument.
         """
-        if self.all().count() > 0:
+        if self.all().count() > 0 and self._player_poller._is_running == False:
             self._player_poller.poll_servers(
                 [server for server in self.filter(archived=False)],
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
