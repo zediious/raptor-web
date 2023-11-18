@@ -250,7 +250,7 @@ class Server(models.Model):
         default=0,
         verbose_name="Player Count",
         help_text=("The amount of players that were on this server the last time it was queried. Will always be zero "
-            "if ENABLE_SERVER_QUERY is False.")
+            "if server querying is disabled.")
     )
 
     announcement_count = models.IntegerField(
