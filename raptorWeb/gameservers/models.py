@@ -1,5 +1,6 @@
 from json import dumps, load
 from io import TextIOWrapper
+from time import sleep
 from logging import Logger, getLogger
 from typing import Optional
 
@@ -26,6 +27,7 @@ class ServerManager(models.Manager):
         Use the poll_servers() method to utilize this object.
         """
         _has_run: bool = False
+        _is_running: bool = False
 
         def _query_and_update_server(self, server: 'Server', do_query: bool = True) -> None:
 
@@ -93,6 +95,7 @@ class ServerManager(models.Manager):
                 ).split(":")[1])
 
             if minutes_since_poll > 1 or self._has_run == False:
+                self._is_running = True
                 statistic_model.total_player_count = 0
                 all_online_players = []
                 
@@ -123,6 +126,7 @@ class ServerManager(models.Manager):
                 statistic_model.time_last_polled = localtime()
                 statistic_model.save()
                 LOGGER.info("Server data has been retrieved and saved")
+                self._is_running = False
     
     _player_poller: _PlayerPoller = _PlayerPoller()
     
@@ -145,6 +149,16 @@ class ServerManager(models.Manager):
                 [server for server in self.filter(archived=False)],
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
+            
+    def get_servers(self):
+        """
+        Return a list of servers that are not archived. Will check if a query is running, and wait
+        to return servers until the query is finished.
+        """
+        while self._player_poller._is_running == True:
+            sleep(0.1)
+        
+        return self.filter(archived=False).order_by('-pk')
 
     def export_server_data(self) -> dict:
         """
