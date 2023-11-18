@@ -656,7 +656,6 @@ def post_save_site_info(sender, instance, *args, **kwargs):
     small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
     
     if instance.avatar_image:
-        LOGGER.debug(small_site_info.ico_image)
         if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":
             small_site_info.ico_image.save(
                 f"{hash(instance.avatar_image)}.ico",
