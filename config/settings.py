@@ -377,8 +377,8 @@ IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
 # ** Settings for "authprofiles" app **
 AUTH_USER_MODEL: str = 'authprofiles.RaptorUser'
 LOGIN_URL: str = '/login/'
-BASE_USER_URL: str = getenv('BASE_USER_URL')
-USER_RESET_URL: str = getenv('USER_RESET_URL')
+BASE_USER_URL: str = 'user'
+USER_RESET_URL: str = 'reset'
 DISCORD_APP_ID: str = getenv('DISCORD_OAUTH_APP_ID')
 DISCORD_APP_SECRET: str = getenv('DISCORD_OAUTH_APP_SECRET')
 DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/api/user/oauth2/login/redirect"

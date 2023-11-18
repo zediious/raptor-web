@@ -29,8 +29,6 @@ SERVER_PAGINATION_COUNT=
 
 DISCORD_OAUTH_APP_ID=
 DISCORD_OAUTH_APP_SECRET=
-BASE_USER_URL='user'
-USER_RESET_URL='reset'
 DEFAULT_SUPERUSER_USERNAME=''
 DEFAULT_SUPERUSER_EMAIL=''
 
@@ -99,12 +97,6 @@ The app ID of the Discord Application you will be using to process OAuth login r
 
 ### **DISCORD_OAUTH_APP_SECRET**
 The app secret of the Discord Application you will be using to process OAuth login requests
-
-### **BASE_USER_URL**
-The first element of the path for the `raptormc` application's urlpatterns leading to the `authprofiles` app views. **Only change this if you are modifying the URL structure of the application.**
-
-### **USER_RESET_URL**
-The element of the path used to point from the `raptormc` application to `authprofiles` password reset views. **Only change this if you are modifying the URL structure of the application.**
 
 ### **DEFAULT_SUPERUSER_USERNAME**
 The username for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
