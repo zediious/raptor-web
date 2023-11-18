@@ -65,10 +65,25 @@ class PanelSettingsInformation(forms.ModelForm):
         required=False)
     
     enable_server_query: forms.BooleanField = forms.BooleanField(
-         help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
+         help_text=("If this is un-checked, the address/port of created Servers will NOT be "
                    "queried for state and player data. Each server's information will still be "
                    "displayed on the website as normal, however the Player Counts section "
                    "of the Header Box will no longer appear."),
+        required=False)
+    
+    discord_guild: forms.CharField = forms.CharField(
+        help_text=("Set this to the ID for the Discord Guild that the Bot will be reading global and " 
+                   "server announcements from."),
+        required=False)
+    
+    discord_global_announcement_channel: forms.CharField = forms.CharField(
+        help_text=("Set this to the ID for the Discord Channel that the Bot will be looking for " 
+                   "global announcements from."),
+        required=False)
+    
+    discord_staff_role: forms.CharField = forms.CharField(
+        help_text=("Set this to the ID for the Discord Role that the Bot will read messages from as announcements. " 
+                   "Discord Users without this role will not be able to create announcements. "),
         required=False)
 
     class Meta():
@@ -86,7 +101,10 @@ class PanelSettingsInformation(forms.ModelForm):
             'enable_footer_credit',
             'enable_footer_contact',
             'require_login_for_user_list',
-            'enable_server_query'
+            'enable_server_query',
+            'discord_guild',
+            'discord_global_announcement_channel',
+            'discord_staff_role'
             )
         
         
