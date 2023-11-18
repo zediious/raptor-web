@@ -129,7 +129,8 @@ class SettingsPanel(PanelApiBaseView):
             'enable_footer': site_info.enable_footer,
             'enable_footer_credit': site_info.enable_footer_credit,
             'enable_footer_contact': site_info.enable_footer_contact,
-            'require_login_for_user_list': site_info.require_login_for_user_list
+            'require_login_for_user_list': site_info.require_login_for_user_list,
+            'enable_server_query': site_info.enable_server_query
         }
         
         default_pages = DefaultPages.objects.get_or_create(pk=1)[0]
@@ -216,6 +217,10 @@ class SettingsPanel(PanelApiBaseView):
             if site_info.require_login_for_user_list != settings_form.cleaned_data['require_login_for_user_list']:
                 site_info.require_login_for_user_list = settings_form.cleaned_data['require_login_for_user_list']
                 changed.append('Require Login for Member List')
+                
+            if site_info.enable_server_query != settings_form.cleaned_data['enable_server_query']:
+                site_info.enable_server_query = settings_form.cleaned_data['enable_server_query']
+                changed.append('Enable Server Query')
 
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')

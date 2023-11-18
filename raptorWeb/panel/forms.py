@@ -63,6 +63,13 @@ class PanelSettingsInformation(forms.ModelForm):
         help_text=("If this is checked, users will need to create an account and, "
                    "log in before they can access the Site Members list."),
         required=False)
+    
+    enable_server_query: forms.BooleanField = forms.BooleanField(
+         help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
+                   "queried for state and player data. Each server's information will still be "
+                   "displayed on the website as normal, however the Player Counts section "
+                   "of the Header Box will no longer appear."),
+        required=False)
 
     class Meta():
         model: SiteInformation = SiteInformation
@@ -78,7 +85,8 @@ class PanelSettingsInformation(forms.ModelForm):
             'enable_footer',
             'enable_footer_credit',
             'enable_footer_contact',
-            'require_login_for_user_list'
+            'require_login_for_user_list',
+            'enable_server_query'
             )
         
         
