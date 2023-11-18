@@ -89,14 +89,15 @@ class ServerManager(models.Manager):
             
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
+                
             minutes_since_poll = int(str(
                 (localtime() - statistic_model.time_last_polled.astimezone())
                 ).split(":")[1])
 
             if minutes_since_poll > 1 or self._has_run == False:
                 statistic_model.total_player_count = 0
-                
                 all_online_players = []
+                
                 for server in servers:
                     if (server.server_address == "Default"
                     or server.in_maintenance == True
