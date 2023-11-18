@@ -2,6 +2,7 @@ from logging import Logger, getLogger
 
 from discord.ext import tasks
 
+from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import DiscordBotTasks
 from raptorWeb.raptorbot.discordbot.util import announcements, presence
 
@@ -14,15 +15,16 @@ async def check_tasks(bot_instance):
     action if so. Set the attribute to False after action is complete.
     """
     tasks: DiscordBotTasks = await DiscordBotTasks.objects.aget_or_create(pk=1)
+    site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
 
     if tasks[0].refresh_global_announcements:
         await announcements.update_global_announcements(bot_instance)
 
     if tasks[0].refresh_server_announcements:
-        await announcements.update_all_server_announce(bot_instance)
+        await announcements.update_all_server_announce(bot_instance, site_info)
 
     if tasks[0].update_members:
-        await presence.update_member_count(bot_instance)
+        await presence.update_member_count(bot_instance, site_info)
 
     await DiscordBotTasks.objects.aupdate(
         id=1,

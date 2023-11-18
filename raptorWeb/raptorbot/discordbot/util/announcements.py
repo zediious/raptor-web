@@ -1,15 +1,16 @@
 from typing import Optional
+from logging import Logger, getLogger
 
 from django.conf import settings
 
 import discord
 from discord.ext import commands
 
+from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import GlobalAnnouncement
 
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
-STAFF_ROLE_ID: int = getattr(settings, 'STAFF_ROLE_ID')
+LOGGER: Logger = getLogger('raptorbot.discordbot.util.announcements')
 
 if SCRAPE_SERVER_ANNOUNCEMENT:
     from raptorWeb.gameservers.models import Server
@@ -59,7 +60,7 @@ async def check_if_server_announcement_exists(message: discord.Message, modpack_
                 return "edited"
 
 
-async def update_all_server_announce(bot_instance: commands.Bot) -> None:
+async def update_all_server_announce(bot_instance: commands.Bot, site_info: SiteInformation) -> None:
     """
     Runs update_server_announce() against all Servers in database.
     """
@@ -68,7 +69,8 @@ async def update_all_server_announce(bot_instance: commands.Bot) -> None:
     async for server in server_data:
         await update_server_announce(
             server.modpack_name,
-            bot_instance=bot_instance)
+            bot_instance=bot_instance,
+            site_info=site_info)
 
 
 async def update_global_announcements(bot_instance: commands.Bot) -> None:
@@ -76,8 +78,9 @@ async def update_global_announcements(bot_instance: commands.Bot) -> None:
     Gets all messages from defined "ANNOUNCEMENT_CHANNEL" and
     create Announcement objects for each message.
     """
-    channel: discord.guild.GuildChannel = bot_instance.get_channel(GLOBAL_ANNOUNCEMENT_CHANNEL_ID)
-    messages: list[discord.Message] = [message async for message in channel.history(limit=100)]
+    site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
+    channel: discord.guild.GuildChannel = bot_instance.get_channel(int(site_info.discord_global_announcement_channel))
+    messages: list[discord.Message] = [message async for message in channel.history(limit=500)]
 
     for message in messages:
         exists: bool | str = await check_if_global_announcement_exists(message)
@@ -108,7 +111,7 @@ async def update_global_announcements(bot_instance: commands.Bot) -> None:
             )
 
 
-async def update_server_announce(modpack_name: str, bot_instance: commands.Bot):
+async def update_server_announce(modpack_name: str, bot_instance: commands.Bot, site_info: SiteInformation):
     """
     Updates the announcements for a server passed as argument.
     Creates a ServerAnnouncement keyed to iterated server for each
@@ -134,7 +137,7 @@ async def update_server_announce(modpack_name: str, bot_instance: commands.Bot):
             elif exists == None:
                 if message.author != bot_instance.user:
                     try:
-                        if (message.author.get_role(STAFF_ROLE_ID) != None
+                        if (message.author.get_role(int(site_info.discord_staff_role)) != None
                         and str(server_in_db.discord_modpack_role_id) in str(message.content)):
                             await ServerAnnouncement.objects.acreate(
                                 server = await Server.objects.aget(modpack_name = modpack_name),
