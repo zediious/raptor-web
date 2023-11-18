@@ -368,7 +368,6 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
 
 # ** Settings for "gameservers" app **
-ENABLE_SERVER_QUERY: bool = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
 SERVER_PAGINATION_COUNT: int = int(getenv('SERVER_PAGINATION_COUNT'))
 
 # Path to json file to import servers from
