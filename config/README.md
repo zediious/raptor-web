@@ -33,9 +33,6 @@ DEFAULT_SUPERUSER_EMAIL=''
 
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
-DISCORD_GUILD=
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID=
-STAFF_ROLE_ID=
 
 USE_GLOBAL_ANNOUNCEMENT=True
 SCRAPE_SERVER_ANNOUNCEMENT=True
@@ -107,15 +104,6 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
-
-### **DISCORD_GUILD**
-The Guild ID of the Discord Guild that you wish to have linked to the web application
-
-### **GLOBAL_ANNOUNCEMENT_CHANNEL_ID**
-The Channel ID of the Discord Channel you designate as the Global Announcement Channel.
-
-### **STAFF_ROLE_ID**
-The Role ID of the Discord Role you designate as a Staff Member.
 
 ### **USE_GLOBAL_ANNOUNCEMENT and SCRAPE_SERVER_ANNOUNCEMENT**
 These two settings control whether global announcements and server announcements are used. These settings are currently in development, setting them to False will result in errors.
