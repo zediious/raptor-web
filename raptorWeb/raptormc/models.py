@@ -477,6 +477,23 @@ class SiteInformation(models.Model):
                    "log in before they can access the Site Members list."),
         default=True
     )
+    
+    enable_server_query = models.BooleanField(
+        verbose_name="Enable server querying and player counts section",
+        help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
+                   "queried for state and player data. Each server's information will still be "
+                   "displayed on the website as normal, however the Player Counts section "
+                   "of the Header Box will no longer appear."),
+        default=True
+    )
+    
+    server_pagination_count = models.IntegerField(
+        verbose_name="Server button pagination count",
+        help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
+                   "this amount, a set if Next and Previous buttons will appear to cycle between pages "
+                   "of created servers."),
+        default=6
+    )
 
     def __str__(self):
         return str(self.brand_name)
