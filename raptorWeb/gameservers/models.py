@@ -10,11 +10,11 @@ from django.conf import settings
 from mcstatus import JavaServer
 from mcstatus.querier import QueryResponse
 
+from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER: Logger = getLogger('gameservers.models')
 IMPORT_JSON_LOCATION: str = getattr(settings, 'IMPORT_JSON_LOCATION')
-ENABLE_SERVER_QUERY: bool = getattr(settings, 'ENABLE_SERVER_QUERY')
 SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class ServerManager(models.Manager):
@@ -85,6 +85,8 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
+            site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
             minutes_since_poll = int(str(
@@ -98,7 +100,7 @@ class ServerManager(models.Manager):
                 for server in servers:
                     if (server.server_address == "Default"
                     or server.in_maintenance == True
-                    or ENABLE_SERVER_QUERY == False):
+                    or site_info.enable_server_query == False):
                         self._query_and_update_server(
                             server,
                             do_query = False)
