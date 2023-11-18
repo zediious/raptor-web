@@ -24,24 +24,15 @@ MYSQL_DATABASE=raptormc
 MYSQL_USER=raptor
 BASE_PATH=/tmp
 
-ENABLE_SERVER_QUERY=
 SERVER_PAGINATION_COUNT=
 
 DISCORD_OAUTH_APP_ID=
 DISCORD_OAUTH_APP_SECRET=
-BASE_USER_URL='user'
-USER_RESET_URL='reset'
 DEFAULT_SUPERUSER_USERNAME=''
 DEFAULT_SUPERUSER_EMAIL=''
 
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
-DISCORD_GUILD=
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID=
-STAFF_ROLE_ID=
-
-USE_GLOBAL_ANNOUNCEMENT=True
-SCRAPE_SERVER_ANNOUNCEMENT=True
 
 USE_CONSOLE_EMAIL=
 EMAIL_HOST=''
@@ -86,9 +77,6 @@ The root password to the MYSQL database. This password is only used for debug pu
 
 ## *Game Servers*
 
-### **ENABLE_SERVER_QUERY**
-If this is set to `False`, the Domain name/port of created Servers will not be queried for player data. They will still appear everywhere on the website as normal.
-
 ### **SERVER_PAGINATION_COUNT**
 The amount of server buttons that will appear per page. If there are more servers than this value, a "Next" button will appear to cycle through the next X amount of servers. A suitable default for this would be 6.
 
@@ -99,12 +87,6 @@ The app ID of the Discord Application you will be using to process OAuth login r
 
 ### **DISCORD_OAUTH_APP_SECRET**
 The app secret of the Discord Application you will be using to process OAuth login requests
-
-### **BASE_USER_URL**
-The first element of the path for the `raptormc` application's urlpatterns leading to the `authprofiles` app views. **Only change this if you are modifying the URL structure of the application.**
-
-### **USER_RESET_URL**
-The element of the path used to point from the `raptormc` application to `authprofiles` password reset views. **Only change this if you are modifying the URL structure of the application.**
 
 ### **DEFAULT_SUPERUSER_USERNAME**
 The username for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
@@ -120,22 +102,10 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
 
-### **DISCORD_GUILD**
-The Guild ID of the Discord Guild that you wish to have linked to the web application
-
-### **GLOBAL_ANNOUNCEMENT_CHANNEL_ID**
-The Channel ID of the Discord Channel you designate as the Global Announcement Channel.
-
-### **STAFF_ROLE_ID**
-The Role ID of the Discord Role you designate as a Staff Member.
-
-### **USE_GLOBAL_ANNOUNCEMENT and SCRAPE_SERVER_ANNOUNCEMENT**
-These two settings control whether global announcements and server announcements are used. These settings are currently in development, setting them to False will result in errors.
-
 # *Email*
 
 ### **USE_CONSOLE_EMAIL**
-If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to True until you have configured the below settings and are ready to send emails.
+If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to False until you have configured the below settings and are ready to send emails.
 
 ### **EMAIL_HOST**
 The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.

@@ -358,7 +358,9 @@ class NavbarLink(models.Model):
 
 class SiteInformation(models.Model):
     """
-    Website information such as Brand Name, images, colors, and more.
+    Settings model for the application. Contains most settings that the
+    user would change from the user interface in regards to how the
+    application behaves and/or looks.
     """
     brand_name = models.CharField(
         max_length=100,
@@ -474,6 +476,47 @@ class SiteInformation(models.Model):
         help_text=("If this is checked, users will need to create an account and, "
                    "log in before they can access the Site Members list."),
         default=True
+    )
+    
+    enable_server_query = models.BooleanField(
+        verbose_name="Enable server querying and player counts section",
+        help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
+                   "queried for state and player data. Each server's information will still be "
+                   "displayed on the website as normal, however the Player Counts section "
+                   "of the Header Box will no longer appear."),
+        default=True
+    )
+    
+    server_pagination_count = models.IntegerField(
+        verbose_name="Server button pagination count",
+        help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
+                   "this amount, a set if Next and Previous buttons will appear to cycle between pages "
+                   "of created servers."),
+        default=6
+    )
+    
+    discord_guild = models.CharField(
+        verbose_name="The ID for the Discord Guild the Discord Bot will be associated with.",
+        help_text=("Set this to the ID for the Discord Guild that the Bot will be reading global and" 
+                   "server announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_global_announcement_channel = models.CharField(
+        verbose_name="The ID for the Global Announcements Discord Channel.",
+        help_text=("Set this to the ID for the Discord Channel that the Bot will be looking for " 
+                   "global announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_staff_role = models.CharField(
+        verbose_name="The ID for the Discord Role you designate as Staff.",
+        help_text=("Set this to the ID for the Discord Role that the Bot will read messages from as announcements. " 
+                   "Discord Users without this role will not be able to create announcements. "),
+        max_length=500,
+        default="0"
     )
 
     def __str__(self):

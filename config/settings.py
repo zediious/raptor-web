@@ -330,6 +330,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptorbot.discordbot.util.announcements': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.discordbot.util.task_check': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
@@ -368,7 +373,6 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
 
 # ** Settings for "gameservers" app **
-ENABLE_SERVER_QUERY: bool = True if getenv('ENABLE_SERVER_QUERY') == "True" else False
 SERVER_PAGINATION_COUNT: int = int(getenv('SERVER_PAGINATION_COUNT'))
 
 # Path to json file to import servers from
@@ -377,8 +381,8 @@ IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
 # ** Settings for "authprofiles" app **
 AUTH_USER_MODEL: str = 'authprofiles.RaptorUser'
 LOGIN_URL: str = '/login/'
-BASE_USER_URL: str = getenv('BASE_USER_URL')
-USER_RESET_URL: str = getenv('USER_RESET_URL')
+BASE_USER_URL: str = 'user'
+USER_RESET_URL: str = 'reset'
 DISCORD_APP_ID: str = getenv('DISCORD_OAUTH_APP_ID')
 DISCORD_APP_SECRET: str = getenv('DISCORD_OAUTH_APP_SECRET')
 DISCORD_REDIRECT_URL: str = f"{WEB_PROTO}://{DOMAIN_NAME}/api/user/oauth2/login/redirect"
@@ -387,13 +391,8 @@ DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
                         f"&redirect_uri={DISCORD_REDIRECT_URL}&response_type=code&scope=identify%20email")
 
 # ** Settings for "raptorbot" app **
-USE_GLOBAL_ANNOUNCEMENT: bool = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
-SCRAPE_SERVER_ANNOUNCEMENT: bool = True if getenv('SCRAPE_SERVER_ANNOUNCEMENT') == "True" else False
 DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
 DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
-DISCORD_GUILD: int = int(getenv('DISCORD_GUILD'))
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = int(getenv('GLOBAL_ANNOUNCEMENT_CHANNEL_ID'))
-STAFF_ROLE_ID: int = int(getenv('STAFF_ROLE_ID'))
 
 # ** Settings for "django-jazzmin" app **
 JAZZMIN_SETTINGS = {

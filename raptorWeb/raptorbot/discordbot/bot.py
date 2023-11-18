@@ -9,16 +9,12 @@ from django.utils.timezone import localtime
 import discord
 from discord.ext import commands
 
+from raptorWeb.raptormc.models import SiteInformation
+from raptorWeb.gameservers.models import Server
 from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence, task_check
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 DISCORD_BOT_DESCRIPTION: str = getattr(settings, 'DISCORD_BOT_DESCRIPTION')
-GLOBAL_ANNOUNCEMENT_CHANNEL_ID: int = getattr(settings, 'GLOBAL_ANNOUNCEMENT_CHANNEL_ID')
-STAFF_ROLE_ID: int = getattr(settings, 'STAFF_ROLE_ID')
-
-if SCRAPE_SERVER_ANNOUNCEMENT:
-    from raptorWeb.gameservers.models import Server
 
 def _bot_start(bot_instance: commands.Bot, bot_token: str) -> None:
     """
@@ -96,47 +92,49 @@ class BotProcessManager:
 
         @raptor_bot.event
         async def on_message(message: discord.Message) -> None:
+            site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
             channel: discord.guild.GuildChannel = raptor_bot.get_channel(
-                int(GLOBAL_ANNOUNCEMENT_CHANNEL_ID))
+                int(site_info.discord_global_announcement_channel))
 
             if message.channel == channel:
                 await announcements.update_global_announcements(raptor_bot)
 
-            if SCRAPE_SERVER_ANNOUNCEMENT:
-                server_data: Server.objects = Server.objects.all()
+            server_data: Server.objects = Server.objects.all()
 
-                if (message.author != raptor_bot.user
-                and message.author.get_role(STAFF_ROLE_ID) != None):
-                    async for server in server_data:
-                        if message.channel != raptor_bot.get_channel(
-                        int(server.discord_announcement_channel_id)):
-                            continue
+            if (message.author != raptor_bot.user
+            and message.author.get_role(int(site_info.discord_staff_role)) != None):
+                async for server in server_data:
+                    if message.channel != raptor_bot.get_channel(
+                    int(server.discord_announcement_channel_id)):
+                        continue
 
-                        if server.discord_modpack_role_id in str(message.content):
-                            await announcements.update_server_announce(
-                                server.modpack_name,
-                                bot_instance=raptor_bot)
+                    if server.discord_modpack_role_id in str(message.content):
+                        await announcements.update_server_announce(
+                            server.modpack_name,
+                            bot_instance=raptor_bot,
+                            site_info=site_info)
             
 
         @raptor_bot.event
         async def on_raw_message_edit(message: discord.Message) -> None:
             if message.data["author"]["id"] != raptor_bot.user.id:
-                if message.channel_id == GLOBAL_ANNOUNCEMENT_CHANNEL_ID:
+                site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
+                if message.channel_id == int(site_info.discord_global_announcement_channel):
                         await announcements.update_global_announcements(raptor_bot)
 
-                if SCRAPE_SERVER_ANNOUNCEMENT:
-                    try:
-                        server_queryset: Server.objects = Server.objects.filter(
-                            discord_announcement_channel_id = message.channel_id)
-                            
-                        if server_queryset != None:
-                            server: Server = await server_queryset.aget()
-                            await announcements.update_server_announce(
-                                server.modpack_name,
-                                bot_instance=raptor_bot)
+                try:
+                    server_queryset: Server.objects = Server.objects.filter(
+                        discord_announcement_channel_id = message.channel_id)
+                        
+                    if server_queryset != None:
+                        server: Server = await server_queryset.aget()
+                        await announcements.update_server_announce(
+                            server.modpack_name,
+                            bot_instance=raptor_bot,
+                            site_info=site_info)
 
-                    except Server.DoesNotExist:
-                        pass
+                except Server.DoesNotExist:
+                    pass
 
 
         # Commands
@@ -188,7 +186,8 @@ class BotProcessManager:
                 color=0x00ff00),
                 ephemeral=True)
 
-            await announcements.update_all_server_announce(raptor_bot)
+            site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
+            await announcements.update_all_server_announce(raptor_bot, site_info)
 
 
     def stop_process(self) -> Optional[bool]:

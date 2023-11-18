@@ -10,12 +10,11 @@ from django.conf import settings
 from mcstatus import JavaServer
 from mcstatus.querier import QueryResponse
 
+from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER: Logger = getLogger('gameservers.models')
 IMPORT_JSON_LOCATION: str = getattr(settings, 'IMPORT_JSON_LOCATION')
-ENABLE_SERVER_QUERY: bool = getattr(settings, 'ENABLE_SERVER_QUERY')
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class ServerManager(models.Manager):
 
@@ -37,10 +36,9 @@ class ServerManager(models.Manager):
                 server.save()
 
             def _update_announcement_count(server: Server) -> None:
-                if SCRAPE_SERVER_ANNOUNCEMENT:
-                    server.announcement_count = ServerAnnouncement.objects.filter(
-                                                    server=server
-                                                ).count()
+                server.announcement_count = ServerAnnouncement.objects.filter(
+                                                server=server
+                                            ).count()
 
             all_players = Player.objects.all()
             online_players = []
@@ -85,20 +83,23 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
+            site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
+                
             minutes_since_poll = int(str(
                 (localtime() - statistic_model.time_last_polled.astimezone())
                 ).split(":")[1])
 
             if minutes_since_poll > 1 or self._has_run == False:
                 statistic_model.total_player_count = 0
-                
                 all_online_players = []
+                
                 for server in servers:
                     if (server.server_address == "Default"
                     or server.in_maintenance == True
-                    or ENABLE_SERVER_QUERY == False):
+                    or site_info.enable_server_query == False):
                         self._query_and_update_server(
                             server,
                             do_query = False)
@@ -132,8 +133,8 @@ class ServerManager(models.Manager):
             - Query the server_address/server_port attributes of each server
             - Save the player_count and server_state attributes of iterated server to
             the newly queried results
-            - If SCRAPE_SERVER_ANNOUNCEMENT setting is True, set announcement_count class
-            attribute to the count of ServerAnnouncements that exist for the server
+            - Set announcement_count class attribute to the count of ServerAnnouncements
+            that exist for the server
             - Create Player models for each player that is online, with a ForeignKey to the
             server they were on.
             - Save the total count of all online players to the total_player_count attribute of
@@ -247,14 +248,13 @@ class Server(models.Model):
         default=0,
         verbose_name="Player Count",
         help_text=("The amount of players that were on this server the last time it was queried. Will always be zero "
-            "if ENABLE_SERVER_QUERY is False.")
+            "if server querying is disabled.")
     )
 
     announcement_count = models.IntegerField(
         default=0,
         verbose_name="Announcement Count",
-        help_text=("The amount of announcements that were made for this server and retrieved by the Discord Bot. "
-            "Only relevant if SCRAPE_SERVER_ANNOUNCEMENT is True and the Discord Bot is running..")
+        help_text=("The amount of announcements that were made for this server and retrieved by the Discord Bot. ")
     )
 
     server_state = models.BooleanField(

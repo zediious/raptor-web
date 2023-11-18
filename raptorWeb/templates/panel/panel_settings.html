@@ -9,31 +9,124 @@
             </p>
         </div>
     </div>
-    <div class="m-3">
-        <div class="card bg-dark p-2">
-            <div class="card-body">
-                <div class="m-3 mt-1 p-1">
-                    <div class="text-white">
-                        <header class="fs-5">General Settings</header>
+    <form class="form"
+          hx-post="{% url 'panel:settings'%}"
+          hx-swap='none'
+    >
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">General Settings</header>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <div class="w-50">
-                        <form class="form"
-                            hx-post="{% url 'panel:settings'%}"
-                            hx-swap='none'
-                        > 
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
                             {% csrf_token %} 
-                            {{ form.captcha }} 
-                            {% bootstrap_form SettingsInformation %}
+                            {% bootstrap_field SettingsInformation.brand_name %}
+                            {% bootstrap_field SettingsInformation.contact_email %}
+                            {% bootstrap_field SettingsInformation.enable_footer %}
+                            {% bootstrap_field SettingsInformation.enable_footer_contact %}
+                            {% bootstrap_field SettingsInformation.enable_footer_credit %}
                             {% bootstrap_button button_type="submit" content="Update" %}
-
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">SEO</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
+                            {% bootstrap_field SettingsInformation.meta_description %}
+                            {% bootstrap_field SettingsInformation.meta_keywords %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Auth</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
+                            {% bootstrap_field SettingsInformation.require_login_for_user_list %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Game Servers</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">  
+                                {% bootstrap_field SettingsInformation.enable_server_query %}
+                                {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Discord Bot</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
+                            {% bootstrap_field SettingsInformation.discord_guild %}
+                            {% bootstrap_field SettingsInformation.discord_global_announcement_channel %}
+                            {% bootstrap_field SettingsInformation.discord_staff_role %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Colors</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
+                            {% bootstrap_field SettingsInformation.main_color %}
+                            {% bootstrap_field SettingsInformation.use_main_color %}
+                            {% bootstrap_field SettingsInformation.secondary_color %}
+                            {% bootstrap_field SettingsInformation.use_secondary_color %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="m-3">
         <div class="card bg-dark p-2">
             <div class="card-body">
@@ -48,8 +141,7 @@
                             hx-post="{% url 'panel:settings_files_update'%}"
                             hx-swap='none'
                         > 
-                            {% csrf_token %} 
-                            {{ form.captcha }} 
+                            {% csrf_token %}  
                             {% bootstrap_form SettingsInformationFiles %}
                             {% bootstrap_button button_type="submit" content="Update" %}
 
@@ -99,8 +191,7 @@
                             hx-post="{% url 'panel:settings_default_pages'%}"
                             hx-swap='none'
                         > 
-                            {% csrf_token %} 
-                            {{ form.captcha }} 
+                            {% csrf_token %}  
                             {% bootstrap_form SettingsDefaultPages %}
                             {% bootstrap_button button_type="submit" content="Update" %}
 
