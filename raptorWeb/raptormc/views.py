@@ -15,7 +15,6 @@ from raptorWeb.raptormc.routes import check_route
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
-USE_GLOBAL_ANNOUNCEMENT = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
 
 
 class BaseView(TemplateView):
@@ -50,28 +49,27 @@ class HomeServers(TemplateView):
             informative_text_names=["Homepage Information"])
 
 
-if USE_GLOBAL_ANNOUNCEMENT:
-    class Announcements(TemplateView):
-        """
-        Page containing the last 30 announcements from Discord
-        """
-        template_name: str = join(
-            TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
+class Announcements(TemplateView):
+    """
+    Page containing the last 30 announcements from Discord
+    """
+    template_name: str = join(
+        TEMPLATE_DIR_RAPTORMC, 'defaultpages/announcements.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
+            return HttpResponseRedirect('/404')
         
-        def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-            if not DefaultPages.objects.get_or_create(pk=1)[0].announcements:
-                return HttpResponseRedirect('/404')
-            
-            if request.headers.get('HX-Request') != "true":
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
-        def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
-            context: dict[str, Any] = super().get_context_data(**kwargs)
-            return get_or_create_informative_text(
-                context = context,
-                informative_text_names = ["Announcements Information"])
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Announcements Information"])
 
 
 class Rules(TemplateView):

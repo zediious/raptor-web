@@ -391,8 +391,6 @@ DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
                         f"&redirect_uri={DISCORD_REDIRECT_URL}&response_type=code&scope=identify%20email")
 
 # ** Settings for "raptorbot" app **
-USE_GLOBAL_ANNOUNCEMENT: bool = True if getenv('USE_GLOBAL_ANNOUNCEMENT') == "True" else False
-SCRAPE_SERVER_ANNOUNCEMENT: bool = True if getenv('SCRAPE_SERVER_ANNOUNCEMENT') == "True" else False
 DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
 DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
 

@@ -7,15 +7,11 @@ import discord
 from discord.ext import commands
 
 from raptorWeb.raptormc.models import SiteInformation
+from raptorWeb.gameservers.models import Server
+from raptorWeb.raptorbot.models import ServerAnnouncement
 from raptorWeb.raptorbot.models import GlobalAnnouncement
 
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 LOGGER: Logger = getLogger('raptorbot.discordbot.util.announcements')
-
-if SCRAPE_SERVER_ANNOUNCEMENT:
-    from raptorWeb.gameservers.models import Server
-    from raptorWeb.raptorbot.models import ServerAnnouncement
-
 
 async def check_if_global_announcement_exists(message: discord.Message) -> Optional[bool | str]:
     """

@@ -1,7 +1,4 @@
 from django.db import models
-from django.conf import settings
-
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
     
 class Announcement(models.Model):
     """
@@ -44,25 +41,24 @@ class GlobalAnnouncement(Announcement):
         verbose_name = "Global Announcement"
         verbose_name_plural = "Global Announcements"
 
-if SCRAPE_SERVER_ANNOUNCEMENT:
-    class ServerAnnouncement(Announcement):
-        """
-        Announcements that have been made for a specific Minecraft server.
-        """
-        server = models.ForeignKey(
-            'gameservers.Server', 
-            default=0, 
-            on_delete=models.CASCADE)
+class ServerAnnouncement(Announcement):
+    """
+    Announcements that have been made for a specific Minecraft server.
+    """
+    server = models.ForeignKey(
+        'gameservers.Server', 
+        default=0, 
+        on_delete=models.CASCADE)
 
-        def __str__(self) -> str:
-            return f'Announcement by {self.author} for {self.server} made on {self.date}'
+    def __str__(self) -> str:
+        return f'Announcement by {self.author} for {self.server} made on {self.date}'
 
-        def get_server(self):
-            return self.server
+    def get_server(self):
+        return self.server
 
-        class Meta:
-            verbose_name = "Server Announcement"
-            verbose_name_plural = "Server Announcements"
+    class Meta:
+        verbose_name = "Server Announcement"
+        verbose_name_plural = "Server Announcements"
 
 class DiscordGuild(models.Model):
         """

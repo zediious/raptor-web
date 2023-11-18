@@ -34,9 +34,6 @@ DEFAULT_SUPERUSER_EMAIL=''
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
 
-USE_GLOBAL_ANNOUNCEMENT=True
-SCRAPE_SERVER_ANNOUNCEMENT=True
-
 USE_CONSOLE_EMAIL=
 EMAIL_HOST=''
 EMAIL_PORT=
@@ -105,13 +102,10 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
 
-### **USE_GLOBAL_ANNOUNCEMENT and SCRAPE_SERVER_ANNOUNCEMENT**
-These two settings control whether global announcements and server announcements are used. These settings are currently in development, setting them to False will result in errors.
-
 # *Email*
 
 ### **USE_CONSOLE_EMAIL**
-If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to True until you have configured the below settings and are ready to send emails.
+If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to False until you have configured the below settings and are ready to send emails.
 
 ### **EMAIL_HOST**
 The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
