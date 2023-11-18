@@ -358,7 +358,9 @@ class NavbarLink(models.Model):
 
 class SiteInformation(models.Model):
     """
-    Website information such as Brand Name, images, colors, and more.
+    Settings model for the application. Contains most settings that the
+    user would change from the user interface in regards to how the
+    application behaves and/or looks.
     """
     brand_name = models.CharField(
         max_length=100,
