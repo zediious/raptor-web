@@ -330,6 +330,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptorbot.discordbot.util.announcements': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.discordbot.util.task_check': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
