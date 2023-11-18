@@ -494,6 +494,30 @@ class SiteInformation(models.Model):
                    "of created servers."),
         default=6
     )
+    
+    discord_guild = models.CharField(
+        verbose_name="The ID for the Discord Guild the Discord Bot will be associated with.",
+        help_text=("Set this to the ID for the Discord Guild that the Bot will be reading global and" 
+                   "server announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_global_announcement_channel = models.CharField(
+        verbose_name="The ID for the Global Announcements Discord Channel.",
+        help_text=("Set this to the ID for the Discord Channel that the Bot will be looking for " 
+                   "global announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_staff_role = models.CharField(
+        verbose_name="The ID for the Discord Role you designate as Staff.",
+        help_text=("Set this to the ID for the Discord Role that the Bot will read messages from as announcements. " 
+                   "Discord Users without this role will not be able to create announcements. "),
+        max_length=500,
+        default="0"
+    )
 
     def __str__(self):
         return str(self.brand_name)
@@ -632,6 +656,7 @@ def post_save_site_info(sender, instance, *args, **kwargs):
     small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
     
     if instance.avatar_image:
+        LOGGER.debug(small_site_info.ico_image)
         if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":
             small_site_info.ico_image.save(
                 f"{hash(instance.avatar_image)}.ico",
