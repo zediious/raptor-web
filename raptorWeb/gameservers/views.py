@@ -70,6 +70,26 @@ class Player_List(ListView):
             return HttpResponseRedirect('/')
         
         
+class Server_Onboarding(DetailView):
+    """
+    Onboarding view to be linked to players from the game server
+    Contains all information regarding a server
+    """
+    model: Server = Server
+
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:     
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_object(self):
+        for server in Server.objects.filter(archived=False):
+            if slugify(server.modpack_name) == self.kwargs['modpack_name']:
+                return server
+            
+        return False
 class Statistic_Filter_Form(TemplateView):
     """
     Return a form to submit server and date filter data
