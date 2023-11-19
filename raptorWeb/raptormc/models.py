@@ -191,12 +191,16 @@ class NavWidget(models.Model):
         blank=True
     )
 
-    nav_image = models.ImageField(
+    nav_image = ResizedImageField(
         upload_to='navwidgetimage',
         verbose_name="Nav Widget Image",
         help_text=("The image used as an identifier/name for this Nav Widget. "
                     "Optimal size for this image is w250xh72 or within the same aspect ratio."),
-        blank=True
+        blank=True,
+        size=[250,72],
+        quality=50,
+        force_format='WEBP',
+        keep_meta=False
     )
 
     url = models.URLField(
@@ -392,30 +396,42 @@ class SiteInformation(models.Model):
         default="#00233c"
     )
 
-    branding_image = models.ImageField(
+    branding_image = ResizedImageField(
         upload_to='branding',
         verbose_name="Branding Image",
         help_text=("The image displayed in the website Navigation Bar as a link to the "
                     "homepage. Optimal size for this image is w800xh200."),
-        blank=True
+        blank=True,
+        size=[550,170],
+        quality=50,
+        force_format='WEBP',
+        keep_meta=False
     )
 
-    background_image = models.ImageField(
+    background_image = ResizedImageField(
         upload_to='background',
         verbose_name="Background Image",
         help_text=("The image displayed layered behind server buttons. This image will "
                     "cover the defined Secondary Color if used. Optimal size for this image "
                     " is 1920x1080 or within the same aspect ratio."),
-        blank=True
+        blank=True,
+        size=[1920,1080],
+        quality=90,
+        force_format='WEBP',
+        keep_meta=False
     )
     
-    avatar_image = models.ImageField(
+    avatar_image = ResizedImageField(
         upload_to='avatar',
         verbose_name="Avatar Image",
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
                    "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
                    "This will also be used as your Favicon, after being converted to a .ico file."),
-        blank=True
+        blank=True,
+        size=[500,500],
+        quality=100,
+        force_format='WEBP',
+        keep_meta=False
     )
     
     meta_description = models.CharField(
