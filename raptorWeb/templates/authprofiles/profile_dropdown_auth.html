@@ -9,21 +9,21 @@
             <img id="profilePicture" class="border border-danger border-2 w-100"
                  src="{{ loaded_user.user_profile_info.profile_picture.url }}"
                  alt="Profile"
-                 onerror=this.src="{% static 'image/no_user.webp' %}">
+                 onerror=this.src="{% static 'image/no_user.svg' %}">
             {% else %}
             <img id="profilePicture" class="border border-secondary border-2 w-100"
                  src="{{ loaded_user.user_profile_info.profile_picture.url }}"
                  alt="Profile"
-                 onerror=this.src="{% static 'image/no_user.webp' %}">
+                 onerror=this.src="{% static 'image/no_user.svg' %}">
             {% endif %}
         {% else %}
             {% if loaded_user.is_staff %}
-            <img id="noProfilePicture" class="border border-danger border-2 w-100"
-                 src="{% static 'image/no_user.webp' %}"
+            <img id="noProfilePicture" class="filter-white border border-danger border-2 p-2 w-100"
+                 src="{% static 'image/no_user.svg' %}"
                  alt="Profile">
             {% else %}
-            <img id="noProfilePicture" class="border border-secondary border-2 w-100"
-                 src="{% static 'image/no_user.webp' %}"
+            <img id="noProfilePicture" class="filter-white border border-secondary border-2 p-2 w-100"
+                 src="{% static 'image/no_user.svg' %}"
                  alt="Profile">
             {% endif %}
         {% endif %}

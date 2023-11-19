@@ -1,9 +1,11 @@
 from os.path import join
 from logging import getLogger
+from typing import Any
 
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.shortcuts import render
+from django.utils.text import slugify
 from django.contrib import messages
 from django.conf import settings
 
@@ -68,6 +70,48 @@ class Player_List(ListView):
 
         else:
             return HttpResponseRedirect('/')
+        
+        
+class Server_Onboarding(DetailView):
+    """
+    Onboarding view to be linked to players from the game server
+    Contains all information regarding a server
+    """
+    model: Server = Server
+
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:     
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_object(self):
+        for server in Server.objects.filter(archived=False):
+            if slugify(server.modpack_name) == self.kwargs['modpack_name']:
+                return server
+            
+        return False
+    
+    
+class Server_Description(TemplateView):
+    """
+    Return the server description of a requested server
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+            
+        requested_server = request.GET.get('server').replace('onboarding/', '')
+        all_servers = Server.objects.filter(archived=False)
+        for server in all_servers:
+            if slugify(server.modpack_name) == requested_server:
+                return HttpResponse(server.server_description)
+        
+        LOGGER.error(
+            f'Server description for {requested_server} was requested, but not found.'
+        )
+        return HttpResponse("No server found")
         
         
 class Statistic_Filter_Form(TemplateView):

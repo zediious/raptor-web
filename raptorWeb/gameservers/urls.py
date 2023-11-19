@@ -16,6 +16,10 @@ urlpatterns: list[URLPattern] = [
     path('html/server_banned_items_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_banneditems.html'), name="server_banned_items_poll"),
     path('html/server_voting_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_voting.html'), name="server_voting_poll"),
     path('html/server_announcements_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_announcements.html'), name="server_announcements_poll"),
+    # Individual server info endpoints
+    path('html/server/server_description', views.Server_Description.as_view(), name="server_description"),
+    # Onboarding
+    path('html/onboarding/<str:modpack_name>', views.Server_Onboarding.as_view(), name="server_onboarding"),
     # Forms
     path('html/forms/statistic_filter', views.Statistic_Filter_Form.as_view(), name="statistic_filter"),
     # Statistics

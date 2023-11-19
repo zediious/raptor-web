@@ -50,6 +50,29 @@
             </div>
         </div>
     </div>
+    <div class="card bg-dark p-2">
+        <div class="card-body">
+            <div class="m-3 mt-1 p-1">
+                <div class="text-white">
+                    <header class="fs-5">Server Onboarding Links</header>
+                    <p class="fs-7">
+                        Get the links for each server's Onboarding page.
+                    </p>
+                </div>
+            </div>
+            <div id="onboardingCopy" class="m-3 d-flex flex-wrap justify-content-evenly gap-2">
+                {% for server in current_enabled_servers %}
+                    <button class="copy{{server.pk}}OnboardingAddress btn btn-success text-break"
+                            data-clipboard-text="{{web_proto}}://{{pub_domain}}/onboarding/{{server.modpack_name|slugify}}"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="Click to copy {{server.modpack_name}}'s' Onboarding Page address!"
+                    >
+                        {{server.modpack_name}}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -59,4 +82,14 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
+</script>
+
+<script>
+    $( document ).ready(function() {
+        {% for server in current_enabled_servers %}
+        new ClipboardJS('.copy{{ server.pk}}OnboardingAddress', {
+            container: document.getElementById('onboardingCopy')
+        });
+        {% endfor %}
+    });
 </script>
