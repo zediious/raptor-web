@@ -81,12 +81,12 @@
                         {% endif %}   
                     {% else %}
                         {% if raptoruser.is_staff == True %}
-                        <img id="noProfilePicture" class="border border-2 border-danger w-100"
-                                src="{% static 'image/no_user.webp' %}"
+                        <img id="noProfilePicture" class="filter-white border border-2 border-danger p-2 w-100"
+                                src="{% static 'image/no_user.svg' %}"
                                 alt="Profile Picture">
                         {% else %}
-                        <img id="noProfilePicture" class="border border-2 border-secondary w-100"
-                                src="{% static 'image/no_user.webp' %}"
+                        <img id="noProfilePicture" class="filter-white border border-2 border-secondary p-2 w-100"
+                                src="{% static 'image/no_user.svg' %}"
                                 alt="Profile Picture">
                         {% endif %}
                     {% endif %}
