@@ -1,5 +1,6 @@
 from json import dumps, load
 from io import TextIOWrapper
+from time import sleep
 from logging import Logger, getLogger
 from typing import Optional
 
@@ -9,13 +10,13 @@ from django.conf import settings
 
 from mcstatus import JavaServer
 from mcstatus.querier import QueryResponse
+from django_resized import ResizedImageField
 
+from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import ServerAnnouncement
 
 LOGGER: Logger = getLogger('gameservers.models')
 IMPORT_JSON_LOCATION: str = getattr(settings, 'IMPORT_JSON_LOCATION')
-ENABLE_SERVER_QUERY: bool = getattr(settings, 'ENABLE_SERVER_QUERY')
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 
 class ServerManager(models.Manager):
 
@@ -27,6 +28,7 @@ class ServerManager(models.Manager):
         Use the poll_servers() method to utilize this object.
         """
         _has_run: bool = False
+        _is_running: bool = False
 
         def _query_and_update_server(self, server: 'Server', do_query: bool = True) -> None:
 
@@ -37,10 +39,9 @@ class ServerManager(models.Manager):
                 server.save()
 
             def _update_announcement_count(server: Server) -> None:
-                if SCRAPE_SERVER_ANNOUNCEMENT:
-                    server.announcement_count = ServerAnnouncement.objects.filter(
-                                                    server=server
-                                                ).count()
+                server.announcement_count = ServerAnnouncement.objects.filter(
+                                                server=server
+                                            ).count()
 
             all_players = Player.objects.all()
             online_players = []
@@ -85,20 +86,24 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
+            site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
+                
             minutes_since_poll = int(str(
                 (localtime() - statistic_model.time_last_polled.astimezone())
                 ).split(":")[1])
 
             if minutes_since_poll > 1 or self._has_run == False:
+                self._is_running = True
                 statistic_model.total_player_count = 0
-                
                 all_online_players = []
+                
                 for server in servers:
                     if (server.server_address == "Default"
                     or server.in_maintenance == True
-                    or ENABLE_SERVER_QUERY == False):
+                    or site_info.enable_server_query == False):
                         self._query_and_update_server(
                             server,
                             do_query = False)
@@ -122,6 +127,7 @@ class ServerManager(models.Manager):
                 statistic_model.time_last_polled = localtime()
                 statistic_model.save()
                 LOGGER.info("Server data has been retrieved and saved")
+                self._is_running = False
     
     _player_poller: _PlayerPoller = _PlayerPoller()
     
@@ -132,18 +138,28 @@ class ServerManager(models.Manager):
             - Query the server_address/server_port attributes of each server
             - Save the player_count and server_state attributes of iterated server to
             the newly queried results
-            - If SCRAPE_SERVER_ANNOUNCEMENT setting is True, set announcement_count class
-            attribute to the count of ServerAnnouncements that exist for the server
+            - Set announcement_count class attribute to the count of ServerAnnouncements
+            that exist for the server
             - Create Player models for each player that is online, with a ForeignKey to the
             server they were on.
             - Save the total count of all online players to the total_player_count attribute of
             the ServerStatistic model passed as an argument.
         """
-        if self.all().count() > 0:
+        if self.all().count() > 0 and self._player_poller._is_running == False:
             self._player_poller.poll_servers(
                 [server for server in self.filter(archived=False)],
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
+            
+    def get_servers(self):
+        """
+        Return a list of servers that are not archived. Will check if a query is running, and wait
+        to return servers until the query is finished.
+        """
+        while self._player_poller._is_running == True:
+            sleep(0.1)
+        
+        return self.filter(archived=False).order_by('-pk')
 
     def export_server_data(self) -> dict:
         """
@@ -247,14 +263,13 @@ class Server(models.Model):
         default=0,
         verbose_name="Player Count",
         help_text=("The amount of players that were on this server the last time it was queried. Will always be zero "
-            "if ENABLE_SERVER_QUERY is False.")
+            "if server querying is disabled.")
     )
 
     announcement_count = models.IntegerField(
         default=0,
         verbose_name="Announcement Count",
-        help_text=("The amount of announcements that were made for this server and retrieved by the Discord Bot. "
-            "Only relevant if SCRAPE_SERVER_ANNOUNCEMENT is True and the Discord Bot is running..")
+        help_text=("The amount of announcements that were made for this server and retrieved by the Discord Bot. ")
     )
 
     server_state = models.BooleanField(
@@ -332,12 +347,16 @@ class Server(models.Model):
         default="Server-specific Vote Links"
     )
 
-    modpack_picture = models.ImageField(
+    modpack_picture = ResizedImageField(
         upload_to='modpack_pictures',
         verbose_name="Modpack Image",
         help_text=("An image associated with this modpack that will be displayed on the website. The optimal size for this image is "
             "820x200, where the image is wider than it is tall, but you can use any size image."),
-        blank=True)
+        blank=True,
+        size=[545,130],
+        quality=80,
+        force_format='WEBP',
+        keep_meta=False)
 
     modpack_url = models.URLField(
         max_length=200,

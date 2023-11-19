@@ -15,7 +15,13 @@ from raptorWeb.raptorbot.models import DiscordGuild
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
-DISCORD_GUILD: int = getattr(settings, 'DISCORD_GUILD')
+SETTINGS_FIELDS_TO_IGNORE = [
+    'id',
+    'server_pagination_count', # Currently unused as functionality is explored
+    'branding_image',
+    'background_image',
+    'avatar_image'
+]
 
 
 class BaseView(TemplateView):
@@ -117,38 +123,28 @@ class SettingsPanel(PanelApiBaseView):
             return HttpResponseRedirect('/')
         
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
-        site_data = {
-            'brand_name': site_info.brand_name,
-            'contact_email': site_info.contact_email,
-            'main_color': site_info.main_color,
-            'use_main_color': site_info.use_main_color,
-            'secondary_color': site_info.secondary_color,
-            'use_secondary_color': site_info.use_secondary_color,
-            'meta_description': site_info.meta_description,
-            'meta_keywords': site_info.meta_keywords,
-            'enable_footer': site_info.enable_footer,
-            'enable_footer_credit': site_info.enable_footer_credit,
-            'enable_footer_contact': site_info.enable_footer_contact,
-            'require_login_for_user_list': site_info.require_login_for_user_list
-        }
+        site_data = {}
+        for field in site_info._meta.fields:
+            field_string = str(field).replace('raptormc.SiteInformation.', '')
+            if field_string not in SETTINGS_FIELDS_TO_IGNORE:
+                site_data.update({
+                    field_string: getattr(site_info, field_string)
+                })
         
         default_pages = DefaultPages.objects.get_or_create(pk=1)[0]
-        default_data = {
-            'announcements': default_pages.announcements,
-            'rules': default_pages.rules,
-            'banned_items': default_pages.banned_items,
-            'voting': default_pages.voting,
-            'joining': default_pages.joining,
-            'staff_apps': default_pages.staff_apps,
-            'members': default_pages.members,
-        }
+        default_data = {}
+        for field in default_pages._meta.fields:
+            field_string = str(field).replace('raptormc.DefaultPages.', '')
+            default_data.update({
+                field_string: getattr(default_pages, field_string)
+            })
             
         return render(request, template_name=self.template_name, context={
             'SettingsInformation': PanelSettingsInformation(site_data),
             'SettingsInformationFiles': PanelSettingsFiles(),
             'SettingsDefaultPages': PanelDefaultPages(default_data),
             'site_information': site_info,
-            'discord_guild':  DiscordGuild.objects.get(guild_id=DISCORD_GUILD)
+            'discord_guild':  DiscordGuild.objects.filter(guild_id=site_info.discord_guild).first()
         })
         
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
@@ -168,55 +164,23 @@ class SettingsPanel(PanelApiBaseView):
             changed: list = []
             changed_string: str = ""
             site_info = SiteInformation.objects.get_or_create(pk=1)[0]
-
-            if site_info.brand_name != settings_form.cleaned_data['brand_name']:
-                site_info.brand_name = settings_form.cleaned_data['brand_name']
-                changed.append('Brand Name')
-
-            if site_info.contact_email != settings_form.cleaned_data['contact_email']:
-                site_info.contact_email = settings_form.cleaned_data['contact_email']
-                changed.append('Contact Email')
-
-            if site_info.main_color != settings_form.cleaned_data['main_color']:
-                site_info.main_color = settings_form.cleaned_data['main_color']
-                changed.append('Main Color')
-                
-            if site_info.use_main_color != settings_form.cleaned_data['use_main_color']:
-                site_info.use_main_color = settings_form.cleaned_data['use_main_color']
-                changed.append('Use Main Color')
-                
-            if site_info.secondary_color != settings_form.cleaned_data['secondary_color']:
-                site_info.secondary_color = settings_form.cleaned_data['secondary_color']
-                changed.append('Secondary Color')
-                
-            if site_info.use_secondary_color != settings_form.cleaned_data['use_secondary_color']:
-                site_info.use_secondary_color = settings_form.cleaned_data['use_secondary_color']
-                changed.append('Use Secondary Color')
-                
-            if site_info.meta_description != settings_form.cleaned_data['meta_description']:
-                site_info.meta_description = settings_form.cleaned_data['meta_description']
-                changed.append('Meta Description')
-                
-            if site_info.meta_keywords != settings_form.cleaned_data['meta_keywords']:
-                site_info.meta_keywords = settings_form.cleaned_data['meta_keywords']
-                changed.append('Meta Keywords')
-                
-            if site_info.enable_footer != settings_form.cleaned_data['enable_footer']:
-                site_info.enable_footer = settings_form.cleaned_data['enable_footer']
-                changed.append('Enable Footer')
-                
-            if site_info.enable_footer_credit != settings_form.cleaned_data['enable_footer_credit']:
-                site_info.enable_footer_credit = settings_form.cleaned_data['enable_footer_credit']
-                changed.append('Enable Footer Credit')
-                
-            if site_info.enable_footer_contact != settings_form.cleaned_data['enable_footer_contact']:
-                site_info.enable_footer_contact = settings_form.cleaned_data['enable_footer_contact']
-                changed.append('Enable Footer Contact')
-                
-            if site_info.require_login_for_user_list != settings_form.cleaned_data['require_login_for_user_list']:
-                site_info.require_login_for_user_list = settings_form.cleaned_data['require_login_for_user_list']
-                changed.append('Require Login for Member List')
-
+            
+            for field in site_info._meta.fields:
+                field_string = str(field).replace('raptormc.SiteInformation.', '')
+                if field_string not in SETTINGS_FIELDS_TO_IGNORE:
+                    try:
+                        if getattr(site_info, field_string) != settings_form.cleaned_data[field_string]:
+                            setattr(
+                                site_info,
+                                field_string,
+                                settings_form.cleaned_data[field_string]
+                            )
+                            changed.append(field_string.title()) 
+                    except KeyError:
+                        LOGGER.error(f'SitInformation field {field_string} was passed ' 
+                                     'to form, but is not in the form.')
+                        continue
+                        
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')
                 return render(request, self.template_name, context=dictionary)
@@ -247,7 +211,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
         if not request.user.has_perm('raptormc.settings'):
             return HttpResponseRedirect('/')
         
-        settings_files_form: PanelSettingsFiles = PanelSettingsFiles(request.POST)
+        settings_files_form: PanelSettingsFiles = PanelSettingsFiles(
+            data=request.POST,
+            files=request.FILES
+        )
         dictionary: dict = {"SettingsInformationFiles": settings_files_form}
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
 
@@ -306,33 +273,17 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
             
             changed: list = []
             changed_string: str = ""
-            if default_pages.announcements != default_pages_form.cleaned_data['announcements']:
-                default_pages.announcements = default_pages_form.cleaned_data['announcements']
-                changed.append('Announcements')
-                
-            if default_pages.rules != default_pages_form.cleaned_data['rules']:
-                default_pages.rules = default_pages_form.cleaned_data['rules']
-                changed.append('Rules')
-                
-            if default_pages.banned_items != default_pages_form.cleaned_data['banned_items']:
-                default_pages.rules = default_pages_form.cleaned_data['banned_items']
-                changed.append('Banned Items')
-                
-            if default_pages.voting != default_pages_form.cleaned_data['voting']:
-                default_pages.voting = default_pages_form.cleaned_data['voting']
-                changed.append('Voting')
-                
-            if default_pages.joining != default_pages_form.cleaned_data['joining']:
-                default_pages.joining = default_pages_form.cleaned_data['joining']
-                changed.append('Joining')
-                
-            if default_pages.staff_apps != default_pages_form.cleaned_data['staff_apps']:
-                default_pages.staff_apps = default_pages_form.cleaned_data['staff_apps']
-                changed.append('Staff Applications')
-                
-            if default_pages.members != default_pages_form.cleaned_data['members']:
-                default_pages.members = default_pages_form.cleaned_data['members']
-                changed.append('Site Members')
+            
+            for field in default_pages._meta.fields:
+                field_string = str(field).replace('raptormc.DefaultPages.', '')
+                if field_string not in SETTINGS_FIELDS_TO_IGNORE:
+                    if getattr(default_pages, field_string) != default_pages_form.cleaned_data[field_string]:
+                        setattr(
+                            default_pages,
+                            field_string,
+                            default_pages_form.cleaned_data[field_string]
+                        )
+                        changed.append(field_string.title())
                 
             for change in changed:
                 changed_string += f'{change}, '

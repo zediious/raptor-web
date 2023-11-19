@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 
+from raptorWeb.gameservers.models import Server
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorWeb.raptorbot import botware
 
@@ -16,10 +17,6 @@ except ModuleNotFoundError:
     pass
 
 TEMPLATE_DIR_RAPTORBOT = getattr(settings, 'RAPTORBOT_TEMPLATE_DIR')
-USE_GLOBAL_ANNOUNCEMENT: bool = getattr(settings, 'USE_GLOBAL_ANNOUNCEMENT')
-
-if USE_GLOBAL_ANNOUNCEMENT:
-    from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('raptorbot.views')
 

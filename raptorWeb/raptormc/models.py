@@ -191,12 +191,16 @@ class NavWidget(models.Model):
         blank=True
     )
 
-    nav_image = models.ImageField(
+    nav_image = ResizedImageField(
         upload_to='navwidgetimage',
         verbose_name="Nav Widget Image",
         help_text=("The image used as an identifier/name for this Nav Widget. "
                     "Optimal size for this image is w250xh72 or within the same aspect ratio."),
-        blank=True
+        blank=True,
+        size=[250,72],
+        quality=50,
+        force_format='WEBP',
+        keep_meta=False
     )
 
     url = models.URLField(
@@ -358,7 +362,9 @@ class NavbarLink(models.Model):
 
 class SiteInformation(models.Model):
     """
-    Website information such as Brand Name, images, colors, and more.
+    Settings model for the application. Contains most settings that the
+    user would change from the user interface in regards to how the
+    application behaves and/or looks.
     """
     brand_name = models.CharField(
         max_length=100,
@@ -390,30 +396,42 @@ class SiteInformation(models.Model):
         default="#00233c"
     )
 
-    branding_image = models.ImageField(
+    branding_image = ResizedImageField(
         upload_to='branding',
         verbose_name="Branding Image",
         help_text=("The image displayed in the website Navigation Bar as a link to the "
                     "homepage. Optimal size for this image is w800xh200."),
-        blank=True
+        blank=True,
+        size=[550,170],
+        quality=50,
+        force_format='WEBP',
+        keep_meta=False
     )
 
-    background_image = models.ImageField(
+    background_image = ResizedImageField(
         upload_to='background',
         verbose_name="Background Image",
         help_text=("The image displayed layered behind server buttons. This image will "
                     "cover the defined Secondary Color if used. Optimal size for this image "
                     " is 1920x1080 or within the same aspect ratio."),
-        blank=True
+        blank=True,
+        size=[1920,1080],
+        quality=90,
+        force_format='WEBP',
+        keep_meta=False
     )
     
-    avatar_image = models.ImageField(
+    avatar_image = ResizedImageField(
         upload_to='avatar',
         verbose_name="Avatar Image",
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
                    "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
                    "This will also be used as your Favicon, after being converted to a .ico file."),
-        blank=True
+        blank=True,
+        size=[500,500],
+        quality=100,
+        force_format='WEBP',
+        keep_meta=False
     )
     
     meta_description = models.CharField(
@@ -474,6 +492,47 @@ class SiteInformation(models.Model):
         help_text=("If this is checked, users will need to create an account and, "
                    "log in before they can access the Site Members list."),
         default=True
+    )
+    
+    enable_server_query = models.BooleanField(
+        verbose_name="Enable server querying and player counts section",
+        help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
+                   "queried for state and player data. Each server's information will still be "
+                   "displayed on the website as normal, however the Player Counts section "
+                   "of the Header Box will no longer appear."),
+        default=True
+    )
+    
+    server_pagination_count = models.IntegerField(
+        verbose_name="Server button pagination count",
+        help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
+                   "this amount, a set if Next and Previous buttons will appear to cycle between pages "
+                   "of created servers."),
+        default=6
+    )
+    
+    discord_guild = models.CharField(
+        verbose_name="The ID for the Discord Guild the Discord Bot will be associated with.",
+        help_text=("Set this to the ID for the Discord Guild that the Bot will be reading global and" 
+                   "server announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_global_announcement_channel = models.CharField(
+        verbose_name="The ID for the Global Announcements Discord Channel.",
+        help_text=("Set this to the ID for the Discord Channel that the Bot will be looking for " 
+                   "global announcements from."),
+        max_length=500,
+        default="0"
+    )
+    
+    discord_staff_role = models.CharField(
+        verbose_name="The ID for the Discord Role you designate as Staff.",
+        help_text=("Set this to the ID for the Discord Role that the Bot will read messages from as announcements. " 
+                   "Discord Users without this role will not be able to create announcements. "),
+        max_length=500,
+        default="0"
     )
 
     def __str__(self):

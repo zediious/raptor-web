@@ -1,5 +1,12 @@
 {% load static %}
 
+<div id="server_button_reload" 
+     hx-get="/api/servers/html/server_button_poll_loading/"
+     hx-trigger="every 120s"
+     hx-target="#server_buttons"
+     hx-swap="innerHTML"
+></div>
+
 <div id="server_button_container">
     {% comment %} Server button Pagination {% endcomment %}
     {% if page_obj.has_next or page_obj.has_previous%}

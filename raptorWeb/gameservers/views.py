@@ -14,7 +14,6 @@ import plotly.express as plot_express
 
 LOGGER = getLogger('gameservers.views')
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
-SCRAPE_SERVER_ANNOUNCEMENT: bool = getattr(settings, 'SCRAPE_SERVER_ANNOUNCEMENT')
 SERVER_PAGINATION_COUNT: int = getattr(settings, 'SERVER_PAGINATION_COUNT')
 
 
@@ -25,7 +24,7 @@ class Server_List_Base(ListView):
     model: Server = Server
 
     def get_queryset(self) -> ServerManager:
-        return Server.objects.filter(archived=False).order_by('-pk')
+        return Server.objects.get_servers()
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
