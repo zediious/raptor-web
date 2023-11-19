@@ -171,6 +171,10 @@ class PanelDefaultPages(forms.ModelForm):
                    "also disable access to user profile pages, unless a user is logged in "
                    "to view their own profile."),
         required=False)
+    
+    onboarding: forms.BooleanField = forms.BooleanField(
+        help_text=("Pages that contain all information about each server."),
+        required=False)
 
     class Meta():
         model: DefaultPages = DefaultPages
@@ -181,6 +185,7 @@ class PanelDefaultPages(forms.ModelForm):
             'voting',
             'joining',
             'staff_apps',
-            'members'
+            'members',
+            'onboarding'
             )
 

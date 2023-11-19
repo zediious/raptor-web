@@ -268,6 +268,28 @@ class User_Pass_Reset(TemplateView):
             "active_user_password_reset_token": self.request.path.split('/')[7]
         })
         return context
+    
+    
+class Onboarding(TemplateView):
+    """
+    Onboarding page containing all info about a specific server
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/onboarding.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].onboarding:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+                return HttpResponseRedirect('/404')
+     
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Rules Information", "Network Rules"])
 
 
 class View_404(TemplateView):

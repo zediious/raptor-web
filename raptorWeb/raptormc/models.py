@@ -648,6 +648,12 @@ class DefaultPages(models.Model):
         verbose_name="Site Members Page",
         help_text="Whether the default Site Members page is enabled or not."
     )
+    
+    onboarding = models.BooleanField(
+        default=True,
+        verbose_name="Onboarding Pages",
+        help_text="Pages that contain all information about each server."
+    )
 
     def __str__(self):
         return "Default Pages"

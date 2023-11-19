@@ -21,6 +21,8 @@ urlpatterns: list[URLPattern] = [
     path('raptormc/api/html/howtojoin/', views.HowToJoin.as_view(), name="howtojoin"),
     path('raptormc/api/html/applications', views.StaffApps.as_view(), name="applications"),
     path('raptormc/api/html/applications/', views.StaffApps.as_view(), name="applications"),
+    path('raptormc/api/html/onboarding/<str:modpack_name>', views.Onboarding.as_view(), name="onboarding"),
+    path('raptormc/api/html/onboarding/<str:modpack_name>/', views.Onboarding.as_view(), name="onboarding"),
     # Created Pages
     path('raptormc/api/html/pages/<str:page_name>', views.PageView.as_view(), name="pages"),
     path('raptormc/api/html/pages/<str:page_name>/', views.PageView.as_view(), name="pages"),

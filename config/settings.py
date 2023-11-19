@@ -315,6 +315,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'gameservers.serverTags': {
+            'handlers': ['console', 'log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.botware': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
