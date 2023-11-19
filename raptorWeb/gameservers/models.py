@@ -10,6 +10,7 @@ from django.conf import settings
 
 from mcstatus import JavaServer
 from mcstatus.querier import QueryResponse
+from django_resized import ResizedImageField
 
 from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import ServerAnnouncement
@@ -346,12 +347,16 @@ class Server(models.Model):
         default="Server-specific Vote Links"
     )
 
-    modpack_picture = models.ImageField(
+    modpack_picture = ResizedImageField(
         upload_to='modpack_pictures',
         verbose_name="Modpack Image",
         help_text=("An image associated with this modpack that will be displayed on the website. The optimal size for this image is "
             "820x200, where the image is wider than it is tall, but you can use any size image."),
-        blank=True)
+        blank=True,
+        size=[545,130],
+        quality=80,
+        force_format='WEBP',
+        keep_meta=False)
 
     modpack_url = models.URLField(
         max_length=200,
