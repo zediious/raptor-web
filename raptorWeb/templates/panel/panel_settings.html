@@ -10,6 +10,7 @@
         </div>
     </div>
     <form class="form"
+          enctype="multipart/form-data" 
           hx-post="{% url 'panel:settings'%}"
           hx-swap='none'
     >
@@ -138,6 +139,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="w-50">
                         <form class="form"
+                            enctype="multipart/form-data" 
                             hx-post="{% url 'panel:settings_files_update'%}"
                             hx-swap='none'
                         > 
@@ -188,6 +190,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="w-50">
                         <form class="form"
+                            enctype="multipart/form-data" 
                             hx-post="{% url 'panel:settings_default_pages'%}"
                             hx-swap='none'
                         > 

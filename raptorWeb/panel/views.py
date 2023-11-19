@@ -211,7 +211,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
         if not request.user.has_perm('raptormc.settings'):
             return HttpResponseRedirect('/')
         
-        settings_files_form: PanelSettingsFiles = PanelSettingsFiles(request.POST)
+        settings_files_form: PanelSettingsFiles = PanelSettingsFiles(
+            data=request.POST,
+            files=request.FILES
+        )
         dictionary: dict = {"SettingsInformationFiles": settings_files_form}
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
 
@@ -273,13 +276,14 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
             
             for field in default_pages._meta.fields:
                 field_string = str(field).replace('raptormc.DefaultPages.', '')
-                if getattr(default_pages, field_string) != default_pages.cleaned_data[field_string]:
-                    setattr(
-                        default_pages,
-                        field_string,
-                        default_pages.cleaned_data[field_string]
-                    )
-                    changed.append(field_string.title())
+                if field_string not in SETTINGS_FIELDS_TO_IGNORE:
+                    if getattr(default_pages, field_string) != default_pages_form.cleaned_data[field_string]:
+                        setattr(
+                            default_pages,
+                            field_string,
+                            default_pages_form.cleaned_data[field_string]
+                        )
+                        changed.append(field_string.title())
                 
             for change in changed:
                 changed_string += f'{change}, '
