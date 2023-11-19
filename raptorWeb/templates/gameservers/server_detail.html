@@ -1,0 +1,36 @@
+<div class="carousel-item text-white" data-bs-interval="100000">
+    <div class="pageContent p-4">
+        <div id="{{object.modpack_name}}Rules" class="m-5">
+            <h3 class="pageHeader fw-bold text-center text-white mb-2">
+                Server Rules
+            </h3>
+            <div class="pageContent p-4">
+                {{ object.server_rules|safe }}
+            </div>
+          </div>
+    </div>
+</div>
+<div class="carousel-item text-white" data-bs-interval="100000">
+    <div class="pageContent p-4">
+        <div id="{{object.modpack_name}}BannedItems" class="m-5">
+            <h3 class="pageHeader fw-bold text-center text-white mb-2">
+                Banned Items
+            </h3>
+            <div class="pageContent p-4">
+                {{ object.server_banned_items|safe }}
+            </div>
+          </div>
+    </div>
+</div>
+<div class="carousel-item text-white" data-bs-interval="100000">
+    <div class="pageContent p-4">
+        <div id="{{object.modpack_name}}Voting" class="m-5">
+            <h3 class="pageHeader fw-bold text-center text-white mb-2">
+                Voting Links
+            </h3>
+            <div class="pageContent p-4">
+                {{ object.server_vote_links|safe }}
+            </div>
+          </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+{% load serverTags %}
+
+<head hx-head="merge">
+    <title>
+      {{ site_info_model.brand_name }} | {{ request.path|get_server_from_url|slice:"11:"|title }} Onboarding
+    </title>
+    <meta name="description" content="Onboarding" hx-preserve="true" hx-head="re-eval">
+  </head>
+
+<section id="onboardingIntro" class="container mt-4">
+
+  <header class="card bg-dark opacity-75 text-white p-4">
+      <h3 class="pageHeader fw-bold text-center mb-2">
+        {{ request.path|get_server_from_url|slice:"11:"|title }} Onboarding
+      </h3>
+      <hr>
+      {% url 'gameservers:server_description' as server_description_url %}
+      <div id="server_description" class="pageContent"
+           hx-get="{{server_description_url}}?server={{ request.path|get_server_from_url }}"
+           hx-target='#server_description'
+           hx-swap='innerHTML'
+           hx-trigger='load'>
+      </div>
+  </header>
+
+</section>
+
+<div class="d-flex justify-content-evenly m-3">
+  <button class="btn btn-secondary" data-bs-target="#onboardingCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="btn btn-secondary" data-bs-target="#onboardingCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<div id="onboardingCarousel" class="carousel carousel-dark slide container" data-bs-ride="true">
+  <div class="carousel-indicators">
+    <button class="filter-white active" data-bs-target="#onboardingCarousel"
+            data-bs-slide-to="0"
+            aria-label="Network Rules"
+            aria-current="true">
+    </button>
+    <button class='filter-white' data-bs-target="#onboardingCarousel"
+            data-bs-slide-to="1"
+            aria-label="Server Rules">
+    </button>
+    <button class='filter-white' data-bs-target="#onboardingCarousel"
+            data-bs-slide-to="2"
+            aria-label="Banned Items">
+    </button>
+    <button class='filter-white' data-bs-target="#onboardingCarousel"
+            data-bs-slide-to="3"
+            aria-label="Voting Links">
+    </button>
+  </div>
+  <div class="carousel-inner card bg-dark p-2" style='height: 75vh; overflow: auto;'>
+    {% if Network_Rules.enabled %}
+     <div class="carousel-item active text-white" data-bs-interval="100000">
+        <div id="networkRules" class="m-1 m-lg-4">
+          <h3 class="pageHeader fw-bold text-center text-white mb-2">
+              Network Rules
+          </h3>
+          <div class="pageContent p-1 p-lg-3">
+            {{ Network_Rules.content|safe }}
+          </div>
+        </div>
+    </div>
+    {% endif %}
+    <div
+         hx-get="/api/servers/html/{{ request.path|get_server_from_url }}"
+         hx-trigger="load"
+         hx-swap="outerHTML">
+    </div>
+
+  </div>
+</div>
+  
