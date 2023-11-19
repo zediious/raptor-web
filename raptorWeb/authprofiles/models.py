@@ -1,3 +1,5 @@
+from urllib.request import urlopen, Request
+from tempfile import NamedTemporaryFile
 from logging import Logger, getLogger
 
 from django.db import models
@@ -13,9 +15,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 from requests import Response, get, post
-
-from urllib.request import urlopen, Request
-from tempfile import NamedTemporaryFile
+from django_resized import ResizedImageField
 
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
 
@@ -274,11 +274,15 @@ class UserProfileInfo(models.Model):
         verbose_name="Picture has been changed manually"
     )
 
-    profile_picture = models.ImageField(
+    profile_picture = ResizedImageField(
         upload_to='profile_pictures',
         help_text="A user's profile picture, uploaded and stored locally.",
         verbose_name="Profile Picture",
-        blank=True)
+        blank=True,
+        size=[150,150],
+        quality=50,
+        force_format='WEBP',
+        keep_meta=False)
 
     minecraft_username = models.CharField(
         max_length=50,
