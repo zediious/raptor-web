@@ -104,7 +104,7 @@ def check_route(request):
     try:
         site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}{site_info.avatar_image.url}"
     except ValueError:
-        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/static/image/no_user.webp"
+        site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}/static/image/no_user.svg"
     
     # If request is to root path, we do not need to check routes 
     if request.path == '/':
