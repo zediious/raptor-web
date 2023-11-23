@@ -30,14 +30,6 @@
         style="background-color: {{ site_info_model.main_color }}";
         {% endif %}>
 
-    {% comment %} topBox containing Navigation elements {% endcomment %}
-    <div id="topBox" style="z-index: 1">
-
-      {% include "raptormc/navigation/offcanvasnav.html" %}
-      {% include "raptormc/navigation/navwidgets.html" %}
-
-    </div>
-
     <div class="sticky-top" id="sticky-nav" style="z-index: 1">
 
       {% include "raptormc/navigation/lowernav.html" %}
@@ -49,6 +41,14 @@
          {% if site_info_model.use_secondary_color %}
          background-color: {{ site_info_model.secondary_color }};
          {% endif %}">
+
+      {% comment %} topBox containing Navigation elements {% endcomment %}
+    <div id="topBox" style="z-index: 1">
+
+      {% include "raptormc/navigation/offcanvasnav.html" %}
+      {% include "raptormc/navigation/navwidgets.html" %}
+
+    </div>
 
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% include "raptormc/components/headerbox.html" %}
