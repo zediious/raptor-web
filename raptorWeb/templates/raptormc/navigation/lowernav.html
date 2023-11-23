@@ -1,10 +1,10 @@
 {% load static %}
 
-<nav class="navbar navbar-dark bg-dark d-flex align-items-center justify-content-center">
-    <div class="container d-flex align-items-center justify-content-center">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
         <div class="row w-100">
             <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
-                <div class="navbar-header d-flex h-100">
+                <div class="navbar-header d-flex">
                     <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 border-2"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasNav"
@@ -27,7 +27,7 @@
             </div>
             
             <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end">
-                <div class="navbar-header d-flex align-items-end justify-content-end h-100">
+                <div class="navbar-header d-flex align-items-end justify-content-end">
                     <form data-bs-toggle="tooltip"data-bs-title="Collapse Servers"
                           data-bs-placement="bottom"
                           hx-post="{% url 'raptormc:update_headerbox_state' %}"
@@ -45,7 +45,7 @@
                                  alt="Collapse/Expand">
                         </button>
                     </form>
-                    <div class="h-100" id="profile_dropdown"
+                    <div id="profile_dropdown"
                          hx-get="{% url 'authprofiles:user_dropdown' %}"
                          hx-trigger="load"
                          hx-target="#profile_dropdown"
