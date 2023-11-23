@@ -67,6 +67,8 @@ class Announcements(TemplateView):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        if self.request.GET:
+            context['opened_server_pk'] = self.request.GET.get('server')
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Announcements Information"])
@@ -88,7 +90,11 @@ class Rules(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        site_info = SiteInformation.objects.get_or_create(pk=1)[0]
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        context["collapse_network"] = site_info.collapse_network_rules_when_accessing_server_rules
+        if self.request.GET:
+            context['opened_server_pk'] = self.request.GET.get('server')
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Rules Information", "Network Rules"])
@@ -111,6 +117,8 @@ class BannedItems(TemplateView):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        if self.request.GET:
+            context['opened_server_pk'] = self.request.GET.get('server')
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Banneditems Information"])
@@ -133,6 +141,8 @@ class Voting(TemplateView):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        if self.request.GET:
+            context['opened_server_pk'] = self.request.GET.get('server')
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Voting Information"])

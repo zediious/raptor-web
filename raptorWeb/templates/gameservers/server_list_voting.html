@@ -12,7 +12,7 @@
     </button>
     </h2>
     <div id="collapse{{ server.pk }}"
-         class="accordion-collapse collapse"
+         class="accordion-collapse collapse{% if server.pk == opened_server_pk %} show{% endif %}"
          aria-labelledby="collapse{{ server.pk }}"
     >
         <div class="accordion-body pageContent p-4">

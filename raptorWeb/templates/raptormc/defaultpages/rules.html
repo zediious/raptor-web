@@ -33,7 +33,7 @@
           Network-Wide Rules
         </button>
       </h2>
-      <div id="collapseNetwork" class="accordion-collapse collapse show"
+      <div id="collapseNetwork" class="accordion-collapse collapse{% if collapse_network and request.GET %}{% else %} show{% endif %}"
            aria-labelledby="collapseNetwork"
       >
         <div class="accordion-body pageContent p-4">
@@ -45,7 +45,7 @@
   {% endif %}
   
     <div id="server_rules"
-        hx-get="{% url 'gameservers:server_rules_poll' %}"
+        hx-get="{% url 'gameservers:server_rules_poll' %}{% if request.GET %}?server={{opened_server_pk}}{% endif %}"
         hx-trigger="load"
         hx-target="#server_rules"
         hx-swap="outerHTML">

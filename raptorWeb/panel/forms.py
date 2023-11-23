@@ -65,10 +65,15 @@ class PanelSettingsInformation(forms.ModelForm):
         required=False)
     
     enable_server_query: forms.BooleanField = forms.BooleanField(
-         help_text=("If this is un-checked, the address/port of created Servers will NOT be "
+        help_text=("If this is un-checked, the address/port of created Servers will NOT be "
                    "queried for state and player data. Each server's information will still be "
                    "displayed on the website as normal, however the Player Counts section "
                    "of the Header Box will no longer appear."),
+        required=False)
+    
+    collapse_network_rules_when_accessing_server_rules: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is un-checked, the Network Rules section on the Rules page will NOT be "
+                   "collapsed when accessing Rules from a Server Modal"),
         required=False)
     
     discord_guild: forms.CharField = forms.CharField(
