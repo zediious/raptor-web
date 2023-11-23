@@ -49,7 +49,7 @@
       </div>
       
       <div id="server_announcements"
-           hx-get="{% url 'gameservers:server_announcements_poll' %}"
+           hx-get="{% url 'gameservers:server_announcements_poll' %}{% if request.GET %}?server={{opened_server_pk}}{% endif %}"
            hx-trigger="load"
            hx-target="#server_announcements"
            hx-swap="outerHTML"></div>
