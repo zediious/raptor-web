@@ -18,7 +18,7 @@
             </button>
         </div>
     </h2>
-    <div id="collapse{{ server.pk }}" class="accordion-collapse collapse" aria-labelledby="collapse{{ server.pk }}">
+    <div id="collapse{{ server.pk }}" class="accordion-collapse collapse{% if server.pk == opened_server_pk %} show{% endif %}" aria-labelledby="collapse{{ server.pk }}">
         <div class="accordion-body pageContent p-3">
             <div id="announcements_{{server.pk}}"
                 hx-get="{% url 'raptorbot:server_announcements_list' server_pk=server.pk %}"
