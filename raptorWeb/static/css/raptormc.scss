@@ -128,11 +128,6 @@ body {
     width: 100%;
 }
 
-#navImage {
-    width: 100%;
-    height: 100%;
-}
-
 .serverBoxCollapseImage {
     width: 25px;
     height: 25px
@@ -213,6 +208,11 @@ body {
 
 @media (min-width: 768px) {
 
+    #navImage {
+        width: 75%;
+        height: 100%;
+    }
+
     .pageHeader {
         font-size: xx-large;
     }
@@ -252,6 +252,11 @@ body {
 }
 
 @media (max-width: 767px) {
+
+    #navImage {
+        width: 100%;
+        height: 100%;
+    }
 
     .pageHeader {
         font-size: medium;

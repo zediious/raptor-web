@@ -82,6 +82,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="w-50">  
                                 {% bootstrap_field SettingsInformation.enable_server_query %}
+                                {% bootstrap_field SettingsInformation.collapse_network_rules_when_accessing_server_rules %}
                                 {% bootstrap_button button_type="submit" content="Update" %}
                         </div>
                     </div>
@@ -154,22 +155,22 @@
                         </p>
                         <div class="d-flex justify-content-center">
                             <img class="m-3 w-25"
-                                 src="{{ site_information.branding_image.url }}"
-                                 alt="Brand Image"
+                                 src="{% if site_information.branding_image %}{{ site_information.branding_image.url }}{% endif %}"
+                                 alt="No Brand Image"
                                  data-bs-toggle="tooltip"
                                  data-bs-html="true"
                                  data-bs-title="Brand Image">
 
                             <img class="m-3 w-25"
-                                 src="{{ site_information.background_image.url }}"
-                                 alt="Background Image"
+                                 src="{% if site_information.background_image %}{{ site_information.background_image.url }}{% endif %}"
+                                 alt="No Background Image"
                                  data-bs-toggle="tooltip"
                                  data-bs-html="true"
                                  data-bs-title="Background Image">
 
                             <img class="m-3 w-25"
-                                 src="{{ site_information.avatar_image.url }}"
-                                 alt="Avatar Image"
+                                 src="{% if site_information.avatar_image %}{{ site_information.avatar_image.url }}{% endif %}"
+                                 alt="No Avatar Image"
                                  data-bs-toggle="tooltip"
                                  data-bs-html="true"
                                  data-bs-title="Avatar Image">

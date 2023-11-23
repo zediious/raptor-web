@@ -222,6 +222,18 @@ class SettingsPanelFilePost(PanelApiBaseView):
             
             changed: list = []
             changed_string: str = ""
+            if settings_files_form.cleaned_data['remove_branding_image'] == True:
+                site_info.branding_image.delete(save=True)
+                changed.append('Branding Image Deleted')
+                
+            if settings_files_form.cleaned_data['remove_background_image'] == True:
+                site_info.background_image.delete(save=True)
+                changed.append('Background Image Deleted')
+                
+            if settings_files_form.cleaned_data['remove_avatar_image'] == True:
+                site_info.avatar_image.delete(save=True)
+                changed.append('Avatar Image Deleted')
+            
             if settings_files_form.cleaned_data['branding_image'] != None:
                 site_info.branding_image = settings_files_form.cleaned_data['branding_image']
                 changed.append('Branding Image')

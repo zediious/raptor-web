@@ -46,8 +46,8 @@
 
         {% if default_pages.announcements %}
         <a role="button" class="btn btn-outline-secondary"
-           href="/announcements"
-           hx-get="{% url 'raptormc:announcements' %}"
+           href="/announcements?server={{server.pk}}"
+           hx-get="{% url 'raptormc:announcements' %}?server={{server.pk}}"
            hx-target='#home'
            hx-push-url="/announcements"
            hx-indicator="#mainLoadingspinner,.loaded-content"
@@ -59,8 +59,8 @@
         
         {% if default_pages.rules %}
           <a role="button" class="btn btn-outline-secondary"
-             href="/rules"
-             hx-get="{% url 'raptormc:rules' %}"
+             href="/rules?server={{server.pk}}"
+             hx-get="{% url 'raptormc:rules' %}?server={{server.pk}}"
              hx-target='#home'
              hx-push-url="/rules"
              hx-indicator="#mainLoadingspinner,.loaded-content"
@@ -72,8 +72,8 @@
 
         {% if default_pages.banned_items %}
           <a role="button" class="btn btn-outline-secondary"
-             href="/banneditems"
-             hx-get="{% url 'raptormc:banneditems' %}"
+             href="/banneditems?server={{server.pk}}"
+             hx-get="{% url 'raptormc:banneditems' %}?server={{server.pk}}"
              hx-target='#home'
              hx-push-url="/banneditems"
              hx-indicator="#mainLoadingspinner,.loaded-content"
@@ -85,8 +85,8 @@
 
         {% if default_pages.voting %}
           <a role="button" class="btn btn-outline-secondary"
-             href='/voting'
-             hx-get="{% url 'raptormc:voting' %}"
+             href='/voting?server={{server.pk}}'
+             hx-get="{% url 'raptormc:voting' %}?server={{server.pk}}"
              hx-target='#home'
              hx-push-url="/voting"
              hx-indicator="#mainLoadingspinner,.loaded-content"

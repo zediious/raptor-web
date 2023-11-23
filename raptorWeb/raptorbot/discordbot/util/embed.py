@@ -37,9 +37,10 @@ async def craft_embed(server: Server) -> list[discord.Embed]:
         inline=False)
     info_embed.add_field(
         name="\u200b",
-        value=(f"**Rules:** {WEB_PROTO}://{DOMAIN_NAME}/rules/#{server.pk}\n"
-                f"**Banned Items:** {WEB_PROTO}://{DOMAIN_NAME}/banneditems/#{server.pk}\n"
-                f"**Vote Links:** {WEB_PROTO}://{DOMAIN_NAME}/voting/#{server.pk}"))
+        value=( f"**Announcements:** {WEB_PROTO}://{DOMAIN_NAME}/announcements?server={server.pk}\n"
+                f"**Rules:** {WEB_PROTO}://{DOMAIN_NAME}/rules?server={server.pk}\n"
+                f"**Banned Items:** {WEB_PROTO}://{DOMAIN_NAME}/banneditems?server={server.pk}\n"
+                f"**Vote Links:** {WEB_PROTO}://{DOMAIN_NAME}/voting?server={server.pk}"))
     info_embed.add_field(
         name="\u200b",
         value=(f"The server is running;```v{server.modpack_version}```\n"

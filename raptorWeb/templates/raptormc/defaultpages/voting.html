@@ -24,7 +24,7 @@
 
   <div class="accordion opacity-75 mt-2 container" id="votingAccordion">
     <div id="server_voting"
-        hx-get="{% url 'gameservers:server_voting_poll' %}"
+        hx-get="{% url 'gameservers:server_voting_poll' %}{% if request.GET %}?server={{opened_server_pk}}{% endif %}"
         hx-trigger="load"
         hx-target="#server_voting"
         hx-swap="outerHTML">

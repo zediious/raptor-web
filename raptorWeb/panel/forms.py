@@ -65,10 +65,15 @@ class PanelSettingsInformation(forms.ModelForm):
         required=False)
     
     enable_server_query: forms.BooleanField = forms.BooleanField(
-         help_text=("If this is un-checked, the address/port of created Servers will NOT be "
+        help_text=("If this is un-checked, the address/port of created Servers will NOT be "
                    "queried for state and player data. Each server's information will still be "
                    "displayed on the website as normal, however the Player Counts section "
                    "of the Header Box will no longer appear."),
+        required=False)
+    
+    collapse_network_rules_when_accessing_server_rules: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is un-checked, the Network Rules section on the Rules page will NOT be "
+                   "collapsed when accessing Rules from a Server Modal"),
         required=False)
     
     discord_guild: forms.CharField = forms.CharField(
@@ -117,16 +122,28 @@ class PanelSettingsFiles(forms.ModelForm):
                     "homepage. Optimal size for this image is w800xh200."),
         required=False)
     
+    remove_branding_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Branding Image will be cleared "),
+        required=False)
+    
     background_image: forms.ImageField = forms.ImageField(
         help_text=("The image displayed layered behind server buttons. This image will "
                     "cover the defined Secondary Color if used. Optimal size for this image "
                     " is 1920x1080 or within the same aspect ratio."),
         required=False)
     
+    remove_background_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Background Image will be cleared "),
+        required=False)
+    
     avatar_image: forms.ImageField = forms.ImageField(
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
                    "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
                    "This will also be used as your Favicon, after being converted to a .ico file."),
+        required=False)
+    
+    remove_avatar_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Avatar Image will be cleared "),
         required=False)
 
     class Meta():

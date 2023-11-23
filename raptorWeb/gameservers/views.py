@@ -34,6 +34,15 @@ class Server_List_Base(ListView):
 
         else:
             return HttpResponseRedirect('/')
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET:
+            try:
+                context['opened_server_pk'] = int(self.request.GET.get('server'))
+            except ValueError:
+                context['opened_server_pk'] = self.request.GET.get('server')
+        return context
 
 
 class Server_Buttons(Server_List_Base):
