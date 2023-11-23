@@ -30,6 +30,12 @@
         style="background-color: {{ site_info_model.main_color }}";
         {% endif %}>
 
+    <div class="sticky-top" id="sticky-nav" style="z-index: 1">
+
+      {% include "raptormc/navigation/lowernav.html" %}
+
+    </div>
+
     <div id="backgroundWrapper" 
          style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
          {% if site_info_model.use_secondary_color %}
@@ -37,13 +43,12 @@
          {% endif %}">
 
       {% comment %} topBox containing Navigation elements {% endcomment %}
-      <div id="topBox" style="position: relative; z-index: 1">
+    <div id="topBox" style="z-index: 1">
 
-        {% include "raptormc/navigation/offcanvasnav.html" %}
-        {% include "raptormc/navigation/navwidgets.html" %}
-        {% include "raptormc/navigation/lowernav.html" %}
+      {% include "raptormc/navigation/offcanvasnav.html" %}
+      {% include "raptormc/navigation/navwidgets.html" %}
 
-      </div>
+    </div>
 
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% include "raptormc/components/headerbox.html" %}
@@ -60,7 +65,7 @@
 
     {% comment %} Main block for page content {% endcomment %}
     <main id="home" class="container-flex m-xl-5 m-sm-1 mt-0 loaded-content" hx-history-elt>
-
+    
       {% if is_404 == 'true' %}
         {% include "raptormc/404.html" %}
       {% else %}
@@ -86,7 +91,8 @@
     <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
-    <script src="{% static 'javascript/src/raptormc.js' %}"></script>
+    <script src="{% static 'javascript/src/backgroundScroll.js' %}"></script>
+    <script src="{% static 'javascript/src/modalClose.js' %}"></script>
 
     {% comment %} Notification Toast elements and script {% endcomment %}
     {% include "raptormc/components/toasts.html" %}
