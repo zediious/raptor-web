@@ -503,6 +503,13 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    collapse_network_rules_when_accessing_server_rules = models.BooleanField(
+        verbose_name="Enable server querying and player counts section",
+        help_text=("If this is un-checked, the Network Rules section on the Rules page will NOT be "
+                   "collapsed when accessing Rules from a Server Modal"),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server button pagination count",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
