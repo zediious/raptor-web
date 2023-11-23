@@ -122,16 +122,28 @@ class PanelSettingsFiles(forms.ModelForm):
                     "homepage. Optimal size for this image is w800xh200."),
         required=False)
     
+    remove_branding_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Branding Image will be cleared "),
+        required=False)
+    
     background_image: forms.ImageField = forms.ImageField(
         help_text=("The image displayed layered behind server buttons. This image will "
                     "cover the defined Secondary Color if used. Optimal size for this image "
                     " is 1920x1080 or within the same aspect ratio."),
         required=False)
     
+    remove_background_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Background Image will be cleared "),
+        required=False)
+    
     avatar_image: forms.ImageField = forms.ImageField(
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
                    "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
                    "This will also be used as your Favicon, after being converted to a .ico file."),
+        required=False)
+    
+    remove_avatar_image: forms.BooleanField = forms.BooleanField(
+        help_text=("If this is checked, the current Avatar Image will be cleared "),
         required=False)
 
     class Meta():
