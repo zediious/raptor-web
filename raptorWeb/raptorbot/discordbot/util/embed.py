@@ -39,8 +39,12 @@ async def craft_embed(server: Server) -> list[discord.Embed]:
     contains a server's modpack image, the other contains information.
     """
     image_embed = discord.Embed(color=0x00ff00)
+    try:
+        server_image = server.modpack_picture.url
+    except ValueError:
+        server_image = ''
     image_embed.set_image(
-        url=f"{WEB_PROTO}://{DOMAIN_NAME}{server.modpack_picture.url}")
+        url=f"{WEB_PROTO}://{DOMAIN_NAME}{server_image}")
 
     info_embed = discord.Embed(
         title=server.modpack_name,
