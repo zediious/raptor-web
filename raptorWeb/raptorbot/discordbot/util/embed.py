@@ -1,13 +1,37 @@
+from logging import Logger, getLogger
+
 from django.utils.html import strip_tags
+from django.utils.timezone import localtime
 from django.conf import settings
 
 import discord
+from discord.ext import commands
 
 from raptorWeb.gameservers.models import Server
+from raptorWeb.raptorbot.models import SentEmbedMessage
 
+LOGGER: Logger = getLogger('raptorbot.discordbot.util.embed')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 
+
+async def update_embeds(bot_instance: commands.Bot) -> None:
+    """
+    Update all sent embeds with new server information
+    """
+    async for saved_embed in SentEmbedMessage.objects.all():
+        if saved_embed.changed_and_unedited != True:
+            continue
+        server = await SentEmbedMessage.objects.select_related(
+            'server'
+            ).aget(id = saved_embed.id)
+        message_embeds: list[discord.Embed] = await craft_embed(server.server)
+        channel: discord.TextChannel = bot_instance.get_channel(int(saved_embed.channel_id))
+        message = await channel.fetch_message(int(saved_embed.message_id))
+        await message.edit(embeds=message_embeds)
+        saved_embed.modified = localtime()
+        saved_embed.changed_and_unedited = False
+        await saved_embed.asave()
 
 async def craft_embed(server: Server) -> list[discord.Embed]:
     """
