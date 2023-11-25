@@ -325,6 +325,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptorbot.models': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.botware': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
@@ -346,6 +351,11 @@ LOGGING: dict = {
             'propagate': False,
         },
         'raptorbot.discordbot.util.embed': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'raptorbot.discordbot.util.messages': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
