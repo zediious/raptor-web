@@ -119,6 +119,13 @@ class DiscordBotTasks(models.Model):
         
         update_embeds = models.BooleanField(
             default=False)
+        
+        messages_to_delete = models.CharField(
+            max_length=16300,
+            default="",
+            blank=True,
+            null=True
+        )
 
         def __str__(self) -> str:
             return f'DiscordBotTasks#{self.pk}'
@@ -141,6 +148,12 @@ class DiscordBotInternal(models.Model):
         time_last_stopped = models.DateTimeField(
             default=None,
             null=True
+        )
+        
+        deleted_a_message = models.BooleanField(
+            default=False,
+            help_text=("True if the Discord Bot deletes a message. Set back to True" 
+                       "after the delete receiver runs.")
         )
 
         def __str__(self) -> str:
