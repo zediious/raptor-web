@@ -140,8 +140,10 @@ class BotProcessManager:
         # Commands
         @raptor_bot.tree.command(
             name="display_server_info",
-            description="Send a message with an embed displaying server information.")
-        @discord.app_commands.describe(key="Choose a server address prefix")
+            description="Send a message displaying server information. "
+                        "Will update if the server's information is changed.")
+        @discord.app_commands.describe(key="Choose a server address prefix. This is the first part "
+                                           "of a server's domain/address.")
         async def display_server_info(interaction: discord.Interaction, key: str) -> None:
             """
             Send a message with an embed displaying server information. Take a server's address
@@ -153,7 +155,14 @@ class BotProcessManager:
                 if server.server_address.split(".")[0] == key:
                     message_embeds: list[discord.Embed] = await embed.craft_embed(server)
                     await interaction.response.send_message(embeds=message_embeds)
-
+                    sent_message = await interaction.original_response()
+                    
+                    await SentEmbedMessage.objects.acreate(
+                        server=server,
+                        webhook_id='',
+                        message_id=sent_message.id,
+                        channel_id=sent_message.channel.id
+                    )
 
         @raptor_bot.tree.command(
             name="refresh_announcements",
