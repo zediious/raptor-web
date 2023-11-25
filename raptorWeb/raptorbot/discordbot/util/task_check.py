@@ -4,7 +4,7 @@ from discord.ext import tasks
 
 from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.raptorbot.models import DiscordBotTasks
-from raptorWeb.raptorbot.discordbot.util import announcements, presence
+from raptorWeb.raptorbot.discordbot.util import announcements, presence, embed, messages
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.util.task_check')
 
@@ -25,10 +25,18 @@ async def check_tasks(bot_instance):
 
     if tasks[0].update_members:
         await presence.update_member_count(bot_instance, site_info)
+        
+    if tasks[0].update_embeds:
+        await embed.update_embeds(bot_instance)
+    
+    if str(tasks[0].messages_to_delete) != "":
+        await messages.delete_messages(bot_instance, str(tasks[0].messages_to_delete))
 
     await DiscordBotTasks.objects.aupdate(
         id=1,
         refresh_global_announcements=False,
         refresh_server_announcements=False,
-        update_members=False
+        update_members=False,
+        update_embeds=False,
+        messages_to_delete=""
     )

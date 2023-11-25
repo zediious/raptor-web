@@ -1,5 +1,6 @@
 from logging import Logger, getLogger
 from threading import Thread
+from time import sleep
 from typing import Optional
 import ctypes
 
@@ -11,6 +12,7 @@ from discord.ext import commands
 
 from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.gameservers.models import Server
+from raptorWeb.raptorbot.models import SentEmbedMessage, DiscordBotInternal
 from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence, task_check
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
@@ -88,6 +90,23 @@ class BotProcessManager:
         async def on_presence_update(before, after) -> None:
             await presence.update_member_count(raptor_bot)
             await presence.update_invite_link(raptor_bot)
+            
+            
+        @raptor_bot.event
+        async def on_message_delete(message) -> None:
+            try:
+                saved_embed: SentEmbedMessage = await SentEmbedMessage.objects.aget(message_id=message.id)
+                bot_stat: DiscordBotInternal = await DiscordBotInternal.objects.aget(name="botinternal-stat")
+                bot_stat.deleted_a_message = True
+                await bot_stat.asave()
+                await DiscordBotInternal.objects.aupdate(
+                    deleted_a_message=True
+                )
+                sleep(3)
+                await saved_embed.adelete()
+                
+            except SentEmbedMessage.DoesNotExist:
+                pass
         
 
         @raptor_bot.event
@@ -117,31 +136,37 @@ class BotProcessManager:
 
         @raptor_bot.event
         async def on_raw_message_edit(message: discord.Message) -> None:
-            if message.data["author"]["id"] != raptor_bot.user.id:
-                site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
-                if message.channel_id == int(site_info.discord_global_announcement_channel):
-                        await announcements.update_global_announcements(raptor_bot)
+            try:
+                if message.data["author"]["id"] != raptor_bot.user.id:
+                    site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
+                    if message.channel_id == int(site_info.discord_global_announcement_channel):
+                            await announcements.update_global_announcements(raptor_bot)
 
-                try:
-                    server_queryset: Server.objects = Server.objects.filter(
-                        discord_announcement_channel_id = message.channel_id)
-                        
-                    if server_queryset != None:
-                        server: Server = await server_queryset.aget()
-                        await announcements.update_server_announce(
-                            server.modpack_name,
-                            bot_instance=raptor_bot,
-                            site_info=site_info)
+                    try:
+                        server_queryset: Server.objects = Server.objects.filter(
+                            discord_announcement_channel_id = message.channel_id)
+                            
+                        if server_queryset != None:
+                            server: Server = await server_queryset.aget()
+                            await announcements.update_server_announce(
+                                server.modpack_name,
+                                bot_instance=raptor_bot,
+                                site_info=site_info)
 
-                except Server.DoesNotExist:
-                    pass
+                    except Server.DoesNotExist:
+                        pass
+                    
+            except KeyError:
+                pass
 
 
         # Commands
         @raptor_bot.tree.command(
             name="display_server_info",
-            description="Send a message with an embed displaying server information.")
-        @discord.app_commands.describe(key="Choose a server address prefix")
+            description="Send a message displaying server information. "
+                        "Will update if the server's information is changed.")
+        @discord.app_commands.describe(key="Choose a server address prefix. This is the first part "
+                                           "of a server's domain/address.")
         async def display_server_info(interaction: discord.Interaction, key: str) -> None:
             """
             Send a message with an embed displaying server information. Take a server's address
@@ -153,7 +178,14 @@ class BotProcessManager:
                 if server.server_address.split(".")[0] == key:
                     message_embeds: list[discord.Embed] = await embed.craft_embed(server)
                     await interaction.response.send_message(embeds=message_embeds)
-
+                    sent_message = await interaction.original_response()
+                    
+                    await SentEmbedMessage.objects.acreate(
+                        server=server,
+                        webhook_id='',
+                        message_id=sent_message.id,
+                        channel_id=sent_message.channel.id
+                    )
 
         @raptor_bot.tree.command(
             name="refresh_announcements",

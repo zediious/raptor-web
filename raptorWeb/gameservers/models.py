@@ -6,6 +6,8 @@ from typing import Optional
 
 from django.db import models
 from django.utils.timezone import localtime, now
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
 from django.conf import settings
 
 from mcstatus import JavaServer
@@ -13,10 +15,23 @@ from mcstatus.querier import QueryResponse
 from django_resized import ResizedImageField
 
 from raptorWeb.raptormc.models import SiteInformation
-from raptorWeb.raptorbot.models import ServerAnnouncement
+from raptorWeb.raptorbot.models import ServerAnnouncement, DiscordBotTasks, SentEmbedMessage
 
 LOGGER: Logger = getLogger('gameservers.models')
 IMPORT_JSON_LOCATION: str = getattr(settings, 'IMPORT_JSON_LOCATION')
+SERVER_FIELDS_TO_IGNORE = [
+    'player_count',
+    'announcement_count',
+    'server_state',
+    'in_maintenance'
+    'server_port',
+    'server_rules',
+    'server_banned_items'
+    'server_vote_links'
+    'discord_announcement_channel_id',
+    'discord_modpack_role_id '
+]
+
 
 class ServerManager(models.Manager):
 
@@ -448,3 +463,27 @@ class PlayerCountHistoric(models.Model):
     class Meta:
         verbose_name = "Historic Player Count"
         verbose_name_plural = "Historic Player Counts"
+        
+        
+@receiver(pre_save, sender=Server)
+def update_embeds(sender, instance, *args, **kwargs):
+    """
+    If certain fields of a server are modified, tell the Discord Bot
+    to update sent message embeds with the new information.
+    """
+    try:
+        previous = Server.objects.get(id=instance.id)
+        
+        for field in instance._meta.fields:
+            field_string = str(field).replace('gameservers.Server.', '')
+            if field_string not in SERVER_FIELDS_TO_IGNORE:
+                if getattr(previous, field_string) != getattr(instance, field_string):
+                    for message in SentEmbedMessage.objects.filter(server=previous):
+                        message.changed_and_unedited = True
+                        message.save()
+                    tasks: DiscordBotTasks = DiscordBotTasks.objects.get_or_create(pk=1)[0]
+                    tasks.update_embeds = True
+                    tasks.save()
+                    break
+    except Server.DoesNotExist:
+        pass
