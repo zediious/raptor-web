@@ -1,5 +1,6 @@
 from logging import Logger, getLogger
 from threading import Thread
+from time import sleep
 from typing import Optional
 import ctypes
 
@@ -11,7 +12,7 @@ from discord.ext import commands
 
 from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.gameservers.models import Server
-from raptorWeb.raptorbot.models import SentEmbedMessage
+from raptorWeb.raptorbot.models import SentEmbedMessage, DiscordBotInternal
 from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence, task_check
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
@@ -89,6 +90,23 @@ class BotProcessManager:
         async def on_presence_update(before, after) -> None:
             await presence.update_member_count(raptor_bot)
             await presence.update_invite_link(raptor_bot)
+            
+            
+        @raptor_bot.event
+        async def on_message_delete(message) -> None:
+            try:
+                saved_embed: SentEmbedMessage = await SentEmbedMessage.objects.aget(message_id=message.id)
+                bot_stat: DiscordBotInternal = await DiscordBotInternal.objects.aget(name="botinternal-stat")
+                bot_stat.deleted_a_message = True
+                await bot_stat.asave()
+                await DiscordBotInternal.objects.aupdate(
+                    deleted_a_message=True
+                )
+                sleep(3)
+                await saved_embed.adelete()
+                
+            except SentEmbedMessage.DoesNotExist:
+                pass
         
 
         @raptor_bot.event
