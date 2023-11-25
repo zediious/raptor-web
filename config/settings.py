@@ -468,6 +468,7 @@ JAZZMIN_SETTINGS = {
         "gameservers.Player": "fas fa-headset",
         "gameservers.Server": "fas fa-server",
         "raptorbot": "fas fa-robot",
+        "raptorbot.SentEmbedMessage": "fas fa-commenting",
         "raptorbot.GlobalAnnouncement": "fas fa-bullhorn",
         "raptorbot.ServerAnnouncement": "fas fa-bullhorn",
         "staffapps": "fas fa-book-reader",
