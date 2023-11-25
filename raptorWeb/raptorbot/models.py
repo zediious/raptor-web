@@ -115,7 +115,10 @@ class DiscordBotTasks(models.Model):
             default=False)
 
         update_members = models.BooleanField(
-            default=False,)
+            default=False)
+        
+        update_embeds = models.BooleanField(
+            default=False)
 
         def __str__(self) -> str:
             return f'DiscordBotTasks#{self.pk}'
@@ -146,3 +149,53 @@ class DiscordBotInternal(models.Model):
         class Meta:
             verbose_name = "Discord Bot Internal"
             verbose_name_plural = "Discord Bot Internal"
+            
+            
+class SentEmbedMessage(models.Model):
+        """
+        An embed message that has been sent by the Discord Bot
+        via command from a Discord server/channel.
+        """
+        server = models.ForeignKey(
+            'gameservers.Server', 
+            default=0, 
+            on_delete=models.PROTECT
+            )
+        
+        webhook_id = models.CharField(
+            default="",
+            max_length=500
+        )
+        
+        message_id = models.CharField(
+            default="",
+            max_length=500
+        )
+        
+        channel_id = models.CharField(
+            default="",
+            max_length=500
+        )
+        
+        sent = models.DateTimeField(
+            verbose_name="Originally Sent",
+            auto_now_add=True
+        )
+        
+        modified = models.DateTimeField(
+            verbose_name="Last Modified",
+            auto_now_add=True
+        )
+        
+        changed_and_unedited = models.BooleanField(
+            verbose_name="Changed and Unedited",
+            default=False
+        )
+
+        def __str__(self) -> str:
+            return f'{self.server}-{self.pk}'
+
+        class Meta:
+            verbose_name = "Sent Embed Message"
+            verbose_name_plural = "Sent Embed Messages"
+
