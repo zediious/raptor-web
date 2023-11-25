@@ -11,6 +11,7 @@ from discord.ext import commands
 
 from raptorWeb.raptormc.models import SiteInformation
 from raptorWeb.gameservers.models import Server
+from raptorWeb.raptorbot.models import SentEmbedMessage
 from raptorWeb.raptorbot.discordbot.util import announcements, embed, presence, task_check
 
 LOGGER: Logger = getLogger('raptorbot.discordbot.bot')
@@ -117,24 +118,28 @@ class BotProcessManager:
 
         @raptor_bot.event
         async def on_raw_message_edit(message: discord.Message) -> None:
-            if message.data["author"]["id"] != raptor_bot.user.id:
-                site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
-                if message.channel_id == int(site_info.discord_global_announcement_channel):
-                        await announcements.update_global_announcements(raptor_bot)
+            try:
+                if message.data["author"]["id"] != raptor_bot.user.id:
+                    site_info: SiteInformation = await SiteInformation.objects.aget(pk=1)
+                    if message.channel_id == int(site_info.discord_global_announcement_channel):
+                            await announcements.update_global_announcements(raptor_bot)
 
-                try:
-                    server_queryset: Server.objects = Server.objects.filter(
-                        discord_announcement_channel_id = message.channel_id)
-                        
-                    if server_queryset != None:
-                        server: Server = await server_queryset.aget()
-                        await announcements.update_server_announce(
-                            server.modpack_name,
-                            bot_instance=raptor_bot,
-                            site_info=site_info)
+                    try:
+                        server_queryset: Server.objects = Server.objects.filter(
+                            discord_announcement_channel_id = message.channel_id)
+                            
+                        if server_queryset != None:
+                            server: Server = await server_queryset.aget()
+                            await announcements.update_server_announce(
+                                server.modpack_name,
+                                bot_instance=raptor_bot,
+                                site_info=site_info)
 
-                except Server.DoesNotExist:
-                    pass
+                    except Server.DoesNotExist:
+                        pass
+                    
+            except KeyError:
+                pass
 
 
         # Commands
