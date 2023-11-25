@@ -1,4 +1,10 @@
+from logging import Logger, getLogger
+
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
+
+LOGGER: Logger = getLogger('raptorbot.models')
     
 class Announcement(models.Model):
     """
@@ -209,6 +215,28 @@ class SentEmbedMessage(models.Model):
             return f'{self.server}-{self.pk}'
 
         class Meta:
-            verbose_name = "Sent Embed Message"
-            verbose_name_plural = "Sent Embed Messages"
+            verbose_name = "Embed Message"
+            verbose_name_plural = "Embed Messages"
 
+
+@receiver(post_delete, sender=SentEmbedMessage)
+def delete_embed(sender, instance, *args, **kwargs):
+    """
+    If a SentMessageEmbed is deleted, add the message ID
+    of the SentMessageEmbed to the queue of deleted messages
+    for the Bot to delete.
+    """
+    bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
+    if bot_stats.deleted_a_message:
+        bot_stats.deleted_a_message = False
+        bot_stats.save()
+    
+    else:
+        tasks: DiscordBotTasks = DiscordBotTasks.objects.get_or_create(pk=1)[0]
+        if tasks.messages_to_delete == None:
+            tasks.messages_to_delete = ""
+
+        current_queue = tasks.messages_to_delete
+        current_queue += f'({instance.message_id}.{instance.channel_id}),'
+        tasks.messages_to_delete = current_queue
+        tasks.save()
