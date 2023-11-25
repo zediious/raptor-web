@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
+from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage, DiscordBotInternal, DiscordBotTasks
 
 
 class AnnouncementForm(ModelForm):
@@ -41,6 +41,12 @@ class GlobalAnnouncementAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['author', 'date']
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 class ServerAnnouncementAdmin(admin.ModelAdmin):
@@ -71,6 +77,12 @@ class ServerAnnouncementAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['author', 'date', 'server']
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
     
 
 class SentEmbedMessageAdmin(admin.ModelAdmin):
@@ -104,6 +116,12 @@ class SentEmbedMessageAdmin(admin.ModelAdmin):
     ]
 
     list_display: list[str] = ['server', 'modified', 'sent']
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 admin.site.register(GlobalAnnouncement, GlobalAnnouncementAdmin)
