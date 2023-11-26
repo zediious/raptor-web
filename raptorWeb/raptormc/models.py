@@ -1,10 +1,10 @@
+from re import sub
 from logging import Logger, getLogger
 
 from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
-from django.utils.html import escape
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 
 from django_resized import ResizedImageField
 
@@ -691,3 +691,13 @@ def post_save_site_info(sender, instance, *args, **kwargs):
                 instance.avatar_image)
             small_site_info.save()
             LOGGER.info("New Avatar Image detected, new favicon created from it.")
+            
+@receiver(pre_save, sender=NotificationToast)
+def strip_script_tags(sender, instance, *args, **kwargs):
+    """
+    Before saving a Toast's message, remove any html script tags from the message.
+    """
+    LOGGER.debug(instance.message)
+    cleaned_message = sub(r'<.*/script.*?>', '', instance.message)
+    LOGGER.debug(cleaned_message)
+    instance.message = cleaned_message
