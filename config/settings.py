@@ -325,6 +325,11 @@ LOGGING: dict = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptorbot.models': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.botware': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
@@ -341,6 +346,16 @@ LOGGING: dict = {
             'propagate': False,
         },
         'raptorbot.discordbot.util.announcements': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'raptorbot.discordbot.util.embed': {
+            'handlers': ['console', 'bot_log_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'raptorbot.discordbot.util.messages': {
             'handlers': ['console', 'bot_log_file'],
             'level': 'DEBUG',
             'propagate': False,
@@ -468,6 +483,7 @@ JAZZMIN_SETTINGS = {
         "gameservers.Player": "fas fa-headset",
         "gameservers.Server": "fas fa-server",
         "raptorbot": "fas fa-robot",
+        "raptorbot.SentEmbedMessage": "fas fa-comment",
         "raptorbot.GlobalAnnouncement": "fas fa-bullhorn",
         "raptorbot.ServerAnnouncement": "fas fa-bullhorn",
         "staffapps": "fas fa-book-reader",
