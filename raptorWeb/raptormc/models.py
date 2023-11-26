@@ -697,7 +697,5 @@ def strip_script_tags(sender, instance, *args, **kwargs):
     """
     Before saving a Toast's message, remove any html script tags from the message.
     """
-    LOGGER.debug(instance.message)
     cleaned_message = sub(r'<.*/script.*?>', '', instance.message)
-    LOGGER.debug(cleaned_message)
     instance.message = cleaned_message
