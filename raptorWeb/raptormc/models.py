@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django_resized import ResizedImageField
 
@@ -513,6 +514,11 @@ class SiteInformation(models.Model):
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
                    "this amount, a set if Next and Previous buttons will appear to cycle between pages "
                    "of created servers."),
+        validators=[
+            MaxValueValidator(12),
+            MinValueValidator(1)
+        ],
+        choices=[(i, i) for i in range(1, 13)],
         default=6
     )
     
