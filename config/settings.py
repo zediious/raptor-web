@@ -226,9 +226,6 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 # ** Settings for "raptormc" app **
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
 
-# ** Settings for "gameservers" app **
-SERVER_PAGINATION_COUNT: int = int(getenv('SERVER_PAGINATION_COUNT'))
-
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
 
