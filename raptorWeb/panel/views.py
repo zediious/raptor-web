@@ -17,7 +17,6 @@ LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
 SETTINGS_FIELDS_TO_IGNORE = [
     'id',
-    'server_pagination_count', # Currently unused as functionality is explored
     'branding_image',
     'background_image',
     'avatar_image'
