@@ -11,12 +11,12 @@ from django.conf import settings
 
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
 from raptorWeb.gameservers.forms import StatisticFilterForm, StatisticFilterFormFireFox
+from raptorWeb.raptormc.models import SiteInformation
 
 import plotly.express as plot_express
 
 LOGGER = getLogger('gameservers.views')
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
-SERVER_PAGINATION_COUNT: int = getattr(settings, 'SERVER_PAGINATION_COUNT')
 
 
 class Server_List_Base(ListView):
@@ -37,7 +37,7 @@ class Server_List_Base(ListView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.GET:
+        if self.request.GET.get('server'):
             try:
                 context['opened_server_pk'] = int(self.request.GET.get('server'))
             except ValueError:
@@ -50,7 +50,11 @@ class Server_Buttons(Server_List_Base):
     Returns Bootstrap buttons for each server
     Buttons used to open Server Modals
     """
-    paginate_by: int = SERVER_PAGINATION_COUNT
+    paginate_by: int = 6
+    
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        self.paginate_by = SiteInformation.objects.get_or_create(pk=1)[0].server_pagination_count
+        return super().get(request, *args, **kwargs)
 
 
 class Player_List(ListView):

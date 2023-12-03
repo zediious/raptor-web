@@ -24,8 +24,6 @@ MYSQL_DATABASE=raptormc
 MYSQL_USER=raptor
 BASE_PATH=/tmp
 
-SERVER_PAGINATION_COUNT=
-
 DISCORD_OAUTH_APP_ID=
 DISCORD_OAUTH_APP_SECRET=
 DEFAULT_SUPERUSER_USERNAME=''
@@ -74,11 +72,6 @@ The password that will be used by raptorWeb to connect to the MYSQL server. This
 
 ### **MYSQL_ROOT_PASSWORD**
 The root password to the MYSQL database. This password is only used for debug purposes, if you must enter the MYSQL shell. **STORE IT IN A PASSWORD MANAGER!**
-
-## *Game Servers*
-
-### **SERVER_PAGINATION_COUNT**
-The amount of server buttons that will appear per page. If there are more servers than this value, a "Next" button will appear to cycle through the next X amount of servers. A suitable default for this would be 6.
 
 # *Users / Auth*
 
