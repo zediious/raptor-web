@@ -37,7 +37,7 @@ class Server_List_Base(ListView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.GET:
+        if self.request.GET.get('server'):
             try:
                 context['opened_server_pk'] = int(self.request.GET.get('server'))
             except ValueError:
