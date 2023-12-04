@@ -51,9 +51,10 @@ else:
 ALLOWED_HOSTS: list[str] = ['raptorapp', '127.0.0.1', 'localhost']
 
 # Superuser to create when no users are present. To be changed immediately after creation
-ADMINS: tuple[str] = (
+ADMINS: list[tuple[str]] = [(
     (getenv('DEFAULT_SUPERUSER_USERNAME'), getenv('DEFAULT_SUPERUSER_EMAIL')),
-)
+    ('error_logger_user', getenv('ERROR_LOG_EMAIL')),
+)]
 
 # CSRF
 SESSION_COOKIE_SECURE: bool = True
@@ -121,6 +122,7 @@ ASGI_APPLICATION: str = 'config.asgi.application'
 
 # Email
 USE_CONSOLE_EMAIL: bool = True if getenv('USE_CONSOLE_EMAIL') == "True" else False
+SERVER_EMAIL: str = str(getenv('EMAIL_HOST_USER'))
 EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
 if USE_CONSOLE_EMAIL:
     EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
