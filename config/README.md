@@ -33,6 +33,7 @@ DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
 
 USE_CONSOLE_EMAIL=
+ERROR_LOG_EMAIL=''
 EMAIL_HOST=''
 EMAIL_PORT=
 EMAIL_HOST_USER=''
@@ -99,6 +100,9 @@ A description for the Discord Bot, used when creating the Bot
 
 ### **USE_CONSOLE_EMAIL**
 If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to False until you have configured the below settings and are ready to send emails.
+
+### **ERROR_LOG_EMAIL**
+An additional email you want error reports sent to, alongside the default superuser email. This cannot be the same as EMAIL_HOST_USER.
 
 ### **EMAIL_HOST**
 The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
