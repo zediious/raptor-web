@@ -121,6 +121,7 @@ ASGI_APPLICATION: str = 'config.asgi.application'
 
 # Email
 USE_CONSOLE_EMAIL: bool = True if getenv('USE_CONSOLE_EMAIL') == "True" else False
+SERVER_EMAIL: str = str(getenv('EMAIL_HOST_USER'))
 EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
 if USE_CONSOLE_EMAIL:
     EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
