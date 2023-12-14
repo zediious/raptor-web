@@ -31,3 +31,5 @@ dependencies:
     - django-resized==1.0.2
     - pandas==2.1.2
     - plotly==5.18.0
+    - rcon==2.4.4
+    - stripe==7.8.1
