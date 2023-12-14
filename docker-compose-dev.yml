@@ -1,0 +1,49 @@
+# Compose file for raptor-web DEVELOPMENT.
+# NOT suitable for production!
+
+# This re-builds the application image on load without
+# building in the application code. Bind mounts to local
+# directories are used instead. This stack also uses the
+# the django dev server rather than the production ready
+# Daphne server. Use docker-compose.yml for production, you
+# should only utilize this stack when modifying the application.
+
+version: '3'
+services:
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    expose:
+      - 3306
+    env_file:
+    - stack.env
+    volumes:
+      - raptor-db:/var/lib/mysql/
+
+  raptorapp:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: raptorapp
+    expose:
+      - 80
+    volumes:
+      - ./:/raptorWebApp
+      - ./stack.env:/raptorWebApp/stack.env
+    depends_on:
+      - mariadb
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 443:443
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+      - ./raptorWeb/media:/raptor_app/media/
+    depends_on:
+      - raptorapp
+
+volumes:
+  raptor-db:
