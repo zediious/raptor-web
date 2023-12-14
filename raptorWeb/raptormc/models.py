@@ -668,6 +668,12 @@ class DefaultPages(models.Model):
         help_text=("Whether the default pages that contain all information "
                     "about each server are enabled or not.")
     )
+    
+    donations = models.BooleanField(
+        default=True,
+        verbose_name="Donations Pages",
+        help_text=("Whether the Donations system/pages are enabled or not.")
+    )
 
     def __str__(self):
         return "Default Pages"

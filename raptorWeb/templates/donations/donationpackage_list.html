@@ -1,0 +1,42 @@
+{% load static %}
+
+<div class="row">
+    {% for package in page_obj %}
+    <div class="col-md-4 col-12">
+        <a class="htmxLink"
+            data-bs-toggle="modal"
+            data-bs-target="#{{package.name}}Modal"
+        >
+            <div id="package_box" class="card bg-light m-3 p-3 opacity-75">
+                <div id="profile_picture_box" class="mx-auto d-block">
+                    {% if package.package_picture %}
+                    <img class="w-100"
+                         src="{{ package.package_picture.url }}"
+                         alt="Package Picture">
+                    {% else %}
+                    <img id="noPackagePicture" class="filter-white p-2 w-100"
+                         src="{% static 'image/no_user.svg' %}"
+                         alt="Package Picture">
+                    {% endif %}
+                </div>
+                <div class="col-10 w-100 text-center">
+                    <strong>{{package.name}}</strong>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div id="{{package.name}}Modal" class="modal fade" tabindex="-1" aria-labelledby="{{package.name}} Details" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    {{package.name}}
+                </div>
+                <div class="modal-body" id="edit_profile_modal_body">
+                    {{package.package_description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

@@ -78,6 +78,7 @@ INSTALLED_APPS: list[str] = [
     'raptorWeb.staffapps',
     'raptorWeb.authprofiles',
     'raptorWeb.gameservers',
+    'raptorWeb.donations',
     'raptorWeb.raptorbot',
     'raptorWeb.panel'
 ]
@@ -325,10 +326,8 @@ JAZZMIN_SETTINGS = {
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-    "related_modal_active": True,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
-    "related_modal_active": True
 
 }
 

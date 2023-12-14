@@ -178,7 +178,7 @@ class StaffApps(TemplateView):
     """
     Provide links to each staff application
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('applications', 'staffapps.html'))
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'staffapps.html'))
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
@@ -194,6 +194,28 @@ class StaffApps(TemplateView):
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Applications Information"])
+        
+        
+class Donations(TemplateView):
+    """
+    Donation frontend
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
 
 
 class PageView(DetailView):
