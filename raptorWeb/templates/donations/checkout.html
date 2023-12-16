@@ -1,0 +1,35 @@
+{% load django_bootstrap5 %}
+
+{% if user.is_authenticated %}
+
+<div class="d-flex justify-content-center">
+    <div class="d-flex w-50 flex-column">
+        <p class="text-center text-white fs-3">
+            Minecraft Username: {{request.user.user_profile_info.minecraft_username}}
+        </p>
+        <a role="button" class="btn btn-success"
+            href="{% url "donations:stripe_redirect" %}?package={{buying_package}}"
+            >
+            Checkout
+        </a>
+    </div>
+</div>
+
+{% else %}
+
+<div class="d-flex justify-content-center">
+    <form class="form p-3 text-white"
+        enctype="multipart/form-data"
+        method='post'
+        action="{% url "donations:stripe_redirect" %}?package={{buying_package}}"
+    >     
+        {% csrf_token %} 
+        {% bootstrap_field minecraft_username_form.minecraft_username %}
+        <button class="btn btn-success" type='submit'>
+            Checkout
+        </button>
+
+    </form>
+</div>
+
+{% endif %}

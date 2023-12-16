@@ -17,6 +17,7 @@ RAPTORMC_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "raptormc")
 PANEL_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "panel")
 RAPTORBOT_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'raptorbot')
 GAMESERVERS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'gameservers')
+DONATIONS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'donations')
 STAFFAPPS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'staffapps')
 AUTH_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'authprofiles')
 
@@ -228,6 +229,11 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 
 # ** Settings for "raptormc" app **
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
+
+# ** Settings for "donations" app **
+STRIPE_PUBLISHABLE_KEY = str(getenv('STRIPE_PUBLISHABLE_KEY'))
+STRIPE_SECRET_KEY = str(getenv('STRIPE_SECRET_KEY'))
+STRIPE_WEBHOOK_SECRET = str(getenv('STRIPE_WEBHOOK_SECRET'))
 
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')

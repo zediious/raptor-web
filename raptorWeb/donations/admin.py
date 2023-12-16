@@ -25,7 +25,10 @@ class CompletedDonationAdmin(admin.ModelAdmin):
                 'donation_datetime',
                 'donating_user',
                 'minecraft_username',
-                'bought_package')
+                'bought_package',
+                'session_id',
+                'checkout_id',
+                'completed')
         }),
     )
     
@@ -33,7 +36,9 @@ class CompletedDonationAdmin(admin.ModelAdmin):
         'donation_datetime',
         'donating_user',
         'minecraft_username',
-        'bought_package'
+        'bought_package',
+        'session_id',
+        'checkout_id',
     )
 
     search_fields: list[str] = [
@@ -44,7 +49,8 @@ class CompletedDonationAdmin(admin.ModelAdmin):
 
     list_display: list[str] = [
         'minecraft_username',
-        'bought_package'   
+        'bought_package',
+        'completed'  
     ]
     
     def has_add_permission(self, request, obj=None):
@@ -65,13 +71,14 @@ class DonationPackageAdmin(admin.ModelAdmin):
         ('Package Information', {
             'fields': (
                 'name',
+                'price',
                 'package_picture',
-                'package_description',
-                'servers')
+                'package_description')
         }),
         ('Commands on Donation', {
             'fields': (
-                'commands',)
+                'commands',
+                'servers',)
         }),
     )
 
@@ -79,7 +86,7 @@ class DonationPackageAdmin(admin.ModelAdmin):
         'name',
     ]
 
-    list_display: list[str] = ['name']
+    list_display: list[str] = ['name', 'price']
     
     
 class DonationServerCommandAdmin(admin.ModelAdmin):

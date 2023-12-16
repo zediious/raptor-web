@@ -57,6 +57,12 @@ class DonationPackage(models.Model):
         force_format='WEBP',
         keep_meta=False)
     
+    price = models.IntegerField(
+        default=0,
+        verbose_name='Price',
+        help_text='The price of this Package.'
+    )
+    
     servers = models.ManyToManyField(
         to=Server,
         verbose_name="Servers to send Commands to.",
@@ -107,5 +113,25 @@ class CompletedDonation(models.Model):
         verbose_name="Bought Package",
         on_delete=models.PROTECT,
         help_text="The package that was bought."
+    )
+    
+    session_id = models.CharField(
+        default="",
+        max_length=1000,
+        verbose_name="Session ID",
+        help_text=("The session ID used when this donation took place")
+    )
+    
+    checkout_id = models.CharField(
+        default="",
+        max_length=1000,
+        verbose_name="Stripe Checkout ID",
+        help_text=("The unique ID for the Stripe Checkout session this Donation utilized.")
+    )
+    
+    completed = models.BooleanField(
+        default=False,
+        verbose_name="Completed",
+        help_text="Whether this donation has been finalized and paid for."
     )
     
