@@ -12,7 +12,7 @@ WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 STRIPE_PUBLISHABLE_KEY: str = getattr(settings, 'STRIPE_PUBLISHABLE_KEY')
 stripe.api_key = getattr(settings, 'STRIPE_SECRET_KEY')
 
-def create_checkout_session(package: DonationPackage, mninecraft_username: str):
+def create_checkout_session(package: DonationPackage, minecraft_username: str):
     """
     Create a Stripe Checkout Session, using the Donation Package
     and Minecraft Username passed as arguments, and return it.
@@ -23,7 +23,7 @@ def create_checkout_session(package: DonationPackage, mninecraft_username: str):
                 'price_data': {
                     'currency': 'usd',
                     'product_data': {
-                    'name': f'{package.name} for {mninecraft_username}',
+                    'name': f'{package.name} for {minecraft_username}',
                     },
                     'unit_amount': package.price * 100,
                 },
