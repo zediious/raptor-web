@@ -21,6 +21,12 @@ services:
     volumes:
       - raptor-db:/var/lib/mysql/
 
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    expose:
+      - 5672
+
   raptorapp:
     build:
       context: .
@@ -33,6 +39,7 @@ services:
       - ./stack.env:/raptorWebApp/stack.env
     depends_on:
       - mariadb
+      - rabbitmq
 
   nginx:
     image: nginx:latest
