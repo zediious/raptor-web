@@ -110,6 +110,15 @@ class CompletedDonation(models.Model):
                    "username of the associated user, if one exists.")
     )
     
+    discord_username = models.CharField(
+        blank=True,
+        null=True,
+        max_length=100,
+        verbose_name="Discord tag of Donor",
+        help_text=("The Discord tag of the donating user. This will match the Discord "
+                   "tag of the associated user, if one exists.")
+    )
+    
     bought_package = models.ForeignKey(
         to=DonationPackage,
         verbose_name="Bought Package",

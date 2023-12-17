@@ -25,6 +25,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
                 'donation_datetime',
                 'donating_user',
                 'minecraft_username',
+                'discord_username',
                 'bought_package',
                 'session_id',
                 'checkout_id',
@@ -36,6 +37,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
         'donation_datetime',
         'donating_user',
         'minecraft_username',
+        'discord_username',
         'bought_package',
         'session_id',
         'checkout_id',
@@ -43,12 +45,14 @@ class CompletedDonationAdmin(admin.ModelAdmin):
 
     search_fields: list[str] = [
         'minecraft_username',
+        'discord_username',
         'donating_user',
         'bought_package'
     ]
 
     list_display: list[str] = [
         'minecraft_username',
+        'discord_username',
         'bought_package',
         'completed'  
     ]
