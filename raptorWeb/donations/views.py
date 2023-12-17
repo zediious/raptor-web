@@ -14,7 +14,7 @@ from stripe.error import SignatureVerificationError
 
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.donations.forms import SubmittedDonationForm
-from raptorWeb.donations.payments import create_checkout_session
+from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
 STRIPE_WEBHOOK_SECRET:str = getattr(settings, 'STRIPE_WEBHOOK_SECRET')
@@ -52,11 +52,7 @@ class DonationCheckout(TemplateView):
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
-        if self.request.GET.get('package'):
-            try:
-                context['buying_package'] = int(self.request.GET.get('package'))
-            except ValueError:
-                context['buying_package'] = self.request.GET.get('package')
+        context['buying_package'] = str(self.kwargs['package'])
         context['minecraft_username_form'] = SubmittedDonationForm()
         return context
         
@@ -73,26 +69,18 @@ class DonationCheckoutRedirect(View):
             return HttpResponseRedirect('/')
         
         try:
-            bought_package = DonationPackage.objects.get(pk=request.GET.get('package'))
+            bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
             
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
         
-        checkout_session = create_checkout_session(
-            bought_package,
-            request.user.user_profile_info.minecraft_username
+        return redirect(
+            get_checkout_url(
+                request,
+                bought_package,
+                request.user.user_profile_info.minecraft_username
+            )
         )
-        
-        CompletedDonation.objects.create(
-            donating_user=request.user,
-            minecraft_username=request.user.user_profile_info.minecraft_username,
-            bought_package=bought_package,
-            session_id=request.session.session_key,
-            checkout_id=checkout_session.id,
-            completed=False
-        )
-        
-        return redirect(checkout_session.url)
         
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         """
@@ -102,63 +90,35 @@ class DonationCheckoutRedirect(View):
             return HttpResponseRedirect('/')
         
         try:
-            bought_package = DonationPackage.objects.get(pk=request.GET.get('package'))
+            bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
             
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
         
-        checkout_session = create_checkout_session(
-            bought_package,
-            request.POST.get('minecraft_username')
-        )
-        
-        CompletedDonation.objects.create(
-            minecraft_username=request.POST.get('minecraft_username'),
-            bought_package=bought_package,
-            session_id=request.session.session_key,
-            checkout_id=checkout_session.id,
-            completed=False
-        )
-        
-        return redirect(checkout_session.url)
-        
-        
-class DonationSuccess(TemplateView):
-    """
-    Landing page for successful donations
-    """
-    template_name: str = join(DONATIONS_TEMPLATE_DIR, 'donation_success.html')
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        try:
-            CompletedDonation.objects.get(
-                session_id=request.session.session_key,
-                completed=True
+        return redirect(
+            get_checkout_url(
+                request,
+                bought_package,
+                request.POST.get('minecraft_username'),
             )
-            
-            return super().get(request, *args, **kwargs)
-        
-        except CompletedDonation.DoesNotExist:
-            return HttpResponseRedirect('/')
+        )
         
         
-class DonationCancel(TemplateView):
+class DonationCancel(View):
     """
-    Redirect for cancelling payment from Stripe payment page.
+    Delete created donation if it is cancelled
     """
-    template_name: str = join(DONATIONS_TEMPLATE_DIR, 'donation_cancel.html')
-
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
-            CompletedDonation.objects.get(
+            CompletedDonation.objects.filter(
                 session_id=request.session.session_key,
                 completed=False
             ).delete()
             
-            return HttpResponseRedirect('/donations')
+            return HttpResponseRedirect('/donations/failure')
         
         except CompletedDonation.DoesNotExist:
-            return HttpResponseRedirect('/donations')
+            return HttpResponseRedirect('/donations/failure')
         
 
 @csrf_exempt
@@ -195,5 +155,13 @@ def donation_payment_webhook(request: HttpRequest):
             )
             completed_donation.completed = True
             completed_donation.save()
+            
+        elif event['type'] == 'checkout.session.expired':
+            completed_donation = CompletedDonation.objects.get(
+                checkout_id=event['data']['object']['id'],
+                completed=False
+            )
+            completed_donation.delete()
+        
         return HttpResponse(status=200)
         
