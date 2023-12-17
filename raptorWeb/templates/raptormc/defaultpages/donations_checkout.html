@@ -1,7 +1,7 @@
 {% load donationTags %}
 {% load static %}
 
-<div class="mt-4" id="checkout_box"
+<div class="mt-4 container" id="checkout_box"
      hx-get="{% url 'donations:checkout' package=request.path|get_package_from_url %}"
      hx-trigger="load"
      hx-target="#checkout_box"
