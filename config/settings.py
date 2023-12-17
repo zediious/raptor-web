@@ -3,6 +3,8 @@ from os import getenv, makedirs
 from pathlib import Path
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 from config.logging import LOGGING_DEFINITION
 
 # Define project directories
@@ -253,6 +255,14 @@ DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
 # ** Settings for "raptorbot" app **
 DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
 DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
+
+# ** Celery Settings **
+CELERY_BEAT_SCHEDULE = {
+    'donation_command_rerun': {
+        'task': 'raptorWeb.donations.tasks.resend_server_commands',
+        'schedule': crontab(minute='*/5'),
+    },
+}
 
 # ** Settings for "django-jazzmin" app **
 JAZZMIN_SETTINGS = {
