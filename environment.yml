@@ -33,3 +33,4 @@ dependencies:
     - plotly==5.18.0
     - rcon==2.4.4
     - stripe==7.8.1
+    - celery==5.3.6
