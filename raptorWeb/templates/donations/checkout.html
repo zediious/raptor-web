@@ -1,54 +1,74 @@
 {% load django_bootstrap5 %}
 
 <head hx-head="merge">
-    <title>{{ site_info_model.brand_name }} | {{ buying_package|title }} Package</title>
-    <meta name="description" content="Checkout for {{ buying_package|title }} donation package" hx-preserve="true" hx-head="re-eval">
+    <title>{{ site_info_model.brand_name }} | {{ buying_package.name }} Package</title>
+    <meta name="description" content="Checkout for {{ buying_package.name }} donation package" hx-preserve="true" hx-head="re-eval">
 </head>
 
 {% if user.is_authenticated %}
 
-<div class="d-flex justify-content-center">
-    <div class="d-flex w-50 flex-column">
-        <p class="text-center text-white fs-3">
-            Minecraft Username: {{request.user.user_profile_info.minecraft_username}}
-        </p>
-        <p class="text-center text-white fs-6">
-            If the above username is not correct or is empty, go to your profile and set the correct Minecraft Username.
-        </p>
-        <div class='d-flex justify-content-center'>
-            <a class="htmxLink btn btn-secondary w-50 mb-5" type="button"
-            href="/{{base_user_url}}/{{request.user.username|slugify}}"
-            hx-get="/raptormc/api/html/{{base_user_url}}/{{request.user.username|slugify}}"
-            hx-target='#home'
-            hx-swap='innerHTML'
-            hx-push-url="/{{base_user_url}}/{{request.user.username|slugify}}"
-            >
-                Go to Profile
+<div class='card bg-dark m-3 p-3' >
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <p class="text-center text-white fs-3">
+                Minecraft Username: <span class='fs-2 text-bold text-decoration-underline'>{{request.user.user_profile_info.minecraft_username}}</span>
+            </p>
+            <p class="text-center text-white fs-6">
+                If the above username is not correct or is empty, go to your profile and set the correct Minecraft Username.
+            </p>
+            <div class='d-flex justify-content-center'>
+                <a class="htmxLink btn btn-secondary w-50 mb-5" type="button"
+                href="/{{base_user_url}}/{{request.user.username|slugify}}"
+                hx-get="/raptormc/api/html/{{base_user_url}}/{{request.user.username|slugify}}"
+                hx-target='#home'
+                hx-swap='innerHTML'
+                hx-push-url="/{{base_user_url}}/{{request.user.username|slugify}}"
+                >
+                    Go to Profile
+                </a>
+            </div>
+            <hr class="text-white">
+            <div class="text-white text-center fs-4 mt-3 mb-2">
+                {{buying_package.name|safe}}
+            </div>
+            <div class="text-white fs-4 mt-3 mb-3">
+                {{buying_package.package_description|safe}}
+            </div>
+            <a role="button" class="btn btn-success mb-2"
+                href="{% url "donations:stripe_redirect" package=buying_package.name|slugify %}"
+                >
+                Checkout
             </a>
         </div>
-        <a role="button" class="btn btn-success"
-            href="{% url "donations:stripe_redirect" package=buying_package %}"
-            >
-            Checkout
-        </a>
     </div>
 </div>
 
 {% else %}
 
-<div class="d-flex justify-content-center">
-    <form class="form p-3 text-white"
-        enctype="multipart/form-data"
-        method='post'
-        action="{% url "donations:stripe_redirect" package=buying_package %}"
-    >     
-        {% csrf_token %} 
-        {% bootstrap_field minecraft_username_form.minecraft_username %}
-        <button class="btn btn-success" type='submit'>
-            Checkout
-        </button>
+<div class='card bg-dark m-3 p-3' >
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <form class="form p-3 text-white"
+                enctype="multipart/form-data"
+                method='post'
+                action="{% url "donations:stripe_redirect" package=buying_package.name|slugify %}"
+            >     
+                {% csrf_token %} 
+                {% bootstrap_field minecraft_username_form.minecraft_username %}
+                <button class="btn btn-success" type='submit'>
+                    Checkout
+                </button>
 
-    </form>
+            </form>
+            <hr class="text-white">
+            <div class="text-white text-center fs-4 mt-3 mb-2">
+                {{buying_package.name|safe}}
+            </div>
+            <div class="text-white fs-4 mt-3 mb-3">
+                {{buying_package.package_description|safe}}
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endif %}
