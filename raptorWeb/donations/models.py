@@ -137,6 +137,12 @@ class CompletedDonation(models.Model):
         help_text="The package that was bought."
     )
     
+    spent = models.IntegerField(
+        default=0,
+        verbose_name='Amount Spent',
+        help_text='The amount spent for this donation.'
+    )
+    
     session_id = models.CharField(
         default="",
         max_length=1000,

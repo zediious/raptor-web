@@ -27,6 +27,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
                 'minecraft_username',
                 'discord_username',
                 'bought_package',
+                'spent',
                 'session_id',
                 'checkout_id',
                 'completed',
@@ -44,6 +45,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
     list_display: list[str] = [
         'minecraft_username',
         'discord_username',
+        'spent',
         'bought_package',
         'sent_commands_count',
         'completed'  
