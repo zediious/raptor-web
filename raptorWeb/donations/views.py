@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from rcon.source import Client
 from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
@@ -167,6 +166,7 @@ def donation_payment_webhook(request: HttpRequest):
                 completed=False
             )
             completed_donation.completed = True
+            completed_donation.send_server_commands()
             completed_donation.save()
             
         elif event['type'] == 'checkout.session.expired':

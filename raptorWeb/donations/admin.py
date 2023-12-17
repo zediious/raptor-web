@@ -29,18 +29,9 @@ class CompletedDonationAdmin(admin.ModelAdmin):
                 'bought_package',
                 'session_id',
                 'checkout_id',
-                'completed')
+                'completed',
+                'sent_commands_count')
         }),
-    )
-    
-    readonly_fields: tuple[str] = (
-        'donation_datetime',
-        'donating_user',
-        'minecraft_username',
-        'discord_username',
-        'bought_package',
-        'session_id',
-        'checkout_id',
     )
 
     search_fields: list[str] = [
@@ -54,6 +45,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
         'minecraft_username',
         'discord_username',
         'bought_package',
+        'sent_commands_count',
         'completed'  
     ]
     

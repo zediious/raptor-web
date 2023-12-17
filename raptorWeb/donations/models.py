@@ -2,6 +2,7 @@ from logging import Logger, getLogger
 
 from django.db import models
 
+from rcon.source import Client
 from django_resized import ResizedImageField
 
 from raptorWeb.gameservers.models import Server
@@ -140,9 +141,33 @@ class CompletedDonation(models.Model):
         help_text=("The unique ID for the Stripe Checkout session this Donation utilized.")
     )
     
+    sent_commands_count = models.IntegerField(
+        default=0,
+        verbose_name="Times commands were sent",
+        help_text="The amount of times commands were sent for this donation."
+    )
+    
     completed = models.BooleanField(
         default=False,
         verbose_name="Completed",
         help_text="Whether this donation has been finalized and paid for."
     )
+    
+    def send_server_commands(self):
+        """
+        Send commands to servers
+        """
+        
+        for server in self.bought_package.servers.all():
+            with Client(
+                server.rcon_address,
+                server.rcon_port,
+                passwd=server.rcon_password) as client:
+                
+                for command in self.bought_package.commands.all():
+                    response = client.run(command.command)
+                    LOGGER.debug(response)
+                    
+        self.sent_commands_count += 1
+        self.save()
     
