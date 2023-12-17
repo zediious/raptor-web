@@ -184,8 +184,7 @@ class CompletedDonation(models.Model):
                 passwd=server.rcon_password) as client:
                 
                 for command in self.bought_package.commands.all():
-                    response = client.run(command.command)
-                    LOGGER.debug(response)
+                    client.run(command.command)
                     
         self.sent_commands_count += 1
         self.save()
