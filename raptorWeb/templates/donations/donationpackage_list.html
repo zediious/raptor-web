@@ -29,8 +29,16 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content bg-dark text-white">
                 <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-header">
-                    {{package.name}} | {{package.price}}
+                <div class="modal-header d-flex flex-column">
+                    <p class='fs-3'>
+                        {{package.name}}
+                    </p>
+                    {% if package.variable_price %}
+                    {% else %}
+                    <p class='fs-3'>
+                        ${{package.price}}
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="modal-body" id="edit_profile_modal_body">
                     {{package.package_description|safe}}
