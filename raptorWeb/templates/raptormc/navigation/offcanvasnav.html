@@ -101,6 +101,19 @@
             </a>
           </li>{% endif %}
 
+          {% if default_pages.donations %}<li class="btn btn-secondary m-2 p-2">
+            <a class="nav-link text-white text-nowrap fs-5"
+               href="/user"
+               hx-get="{% url 'raptormc:donations' %}"
+               hx-target='#home'
+               hx-push-url="/donations"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
+               onclick='closeOffCanvas()'
+            >
+              Donations
+            </a>
+          </li>{% endif %}
+
           {% for link in nav_links %}
           {% if not link.parent_dropdown %}
           <li class="btn btn-secondary m-2 p-2">
