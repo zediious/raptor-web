@@ -101,6 +101,20 @@ class DonationCheckoutRedirect(View):
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
         
+        if bought_package.variable_price:
+            chosen_price = request.POST.get('chosen_price')
+            bought_package.price = int(chosen_price)
+        
+        if not bought_package.allow_repeat:
+        
+            if CompletedDonation.objects.filter(
+                minecraft_username=minecraft_username,
+                bought_package=bought_package,
+                completed=True
+                ).count() > 0:
+                
+                return HttpResponseRedirect('/donations/previousdonation')
+        
         return redirect(
             get_checkout_url(
                 request,

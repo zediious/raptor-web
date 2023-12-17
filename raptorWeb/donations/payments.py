@@ -68,6 +68,7 @@ def get_checkout_url(request,  bought_package: DonationPackage, minecraft_userna
         new_donation = CompletedDonation.objects.create(
             minecraft_username=minecraft_username,
             bought_package=bought_package,
+            spent=bought_package.price,
             session_id=request.session.session_key,
             checkout_id=checkout_session.id,
             completed=False
