@@ -159,11 +159,15 @@ def donation_payment_webhook(request: HttpRequest):
             completed_donation.save()
             
         elif event['type'] == 'checkout.session.expired':
-            completed_donation = CompletedDonation.objects.get(
-                checkout_id=event['data']['object']['id'],
-                completed=False
-            )
-            completed_donation.delete()
+            try: 
+                completed_donation = CompletedDonation.objects.get(
+                    checkout_id=event['data']['object']['id'],
+                    completed=False
+                )
+                completed_donation.delete()
+            
+            except CompletedDonation.DoesNotExist:
+                pass
         
         return HttpResponse(status=200)
         
