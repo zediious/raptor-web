@@ -38,10 +38,10 @@
                 <div class="modal-footer justify-content-center">
 
                     <a role="button" class="btn btn-outline-success"
-                       href="/api/donate/checkout?package={{package.pk}}"
-                       hx-get="{% url 'donations:checkout' %}?package={{package.pk}}"
+                       href="/donations/checkout/{{package.name|slugify}}"
+                       hx-get="{% url 'donations:checkout' package=package.name|slugify %}"
                        hx-target='#home'
-                       hx-push-url="/donations/checkout?package={{package.pk}}"
+                       hx-push-url="/donations/checkout/{{package.name|slugify}}"
                        hx-indicator="#mainLoadingspinner,.loaded-content"
                        onclick='closeModal()'
                     >
