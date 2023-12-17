@@ -16,7 +16,7 @@ python manage.py createSuper
 celery -A config.celery beat --loglevel=info --detach
 
 # Run celery worker server
-conda run -n djangoWork celery -A config worker -l INFO --detach 
+celery -A config worker -l INFO --detach 
 
 # Run asgi server
 daphne -b 0.0.0.0 -p 80 config.asgi:application
