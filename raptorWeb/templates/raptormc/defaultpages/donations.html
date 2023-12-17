@@ -1,27 +1,25 @@
 <head hx-head="merge">
-    <title>{{ site_info_model.brand_name }} | Donations</title>
-    <meta name="description" content="{{ Donations_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
-  </head>
+  <title>{{ site_info_model.brand_name }} | Donations</title>
+  <meta name="description" content="{{ Donations_Information.content|striptags }}" hx-preserve="true" hx-head="re-eval">
+</head>
   
-  <section id="donationIntro" class="container mt-4">
-  
-    {% if Donations_Information.enabled %}
-    <header class="card bg-dark opacity-75 text-white p-4">
-      <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Donations</h3>
-      <hr>
-      <div class="pageContent">
-        {{ Donations_Information.content|safe }}
-      </div>
-    </header>
-    {% else %}
-    {% endif %}
-  
-  </section>
+<section id="donationIntro" class="container mt-4">
 
-  <div class="container mt-4" id="package_list"
-        hx-get="{% url 'donations:packages' %}"
-        hx-trigger="load"
-        hx-target="#package_list"
-        hx-swap="innerHTML">
+  {% if Donations_Information.enabled %}
+  <header class="card bg-dark opacity-75 text-white p-4">
+    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Donations</h3>
+    <hr>
+    <div class="pageContent">
+      {{ Donations_Information.content|safe }}
     </div>
-  
+  </header>
+  {% endif %}
+
+</section>
+
+<div class="container mt-4" id="package_list"
+      hx-get="{% url 'donations:packages' %}"
+      hx-trigger="load"
+      hx-target="#package_list"
+      hx-swap="innerHTML">
+</div>

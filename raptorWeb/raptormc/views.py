@@ -198,7 +198,7 @@ class StaffApps(TemplateView):
         
 class Donations(TemplateView):
     """
-    Donation frontend
+    Donation packages list
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations.html'))
     
@@ -216,6 +216,54 @@ class Donations(TemplateView):
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Donations Information"])
+        
+        
+class DonationsCheckout(TemplateView):
+    """
+    Donation package checkout
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_checkout.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+        
+class DonationsSuccess(TemplateView):
+    """
+    Donation success page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_success.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    
+class DonationsFailure(TemplateView):
+    """
+    Donation failure page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_failure.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
 
 
 class PageView(DetailView):
