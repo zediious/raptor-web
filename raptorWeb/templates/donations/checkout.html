@@ -1,5 +1,10 @@
 {% load django_bootstrap5 %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | {{ buying_package|title }} Package</title>
+    <meta name="description" content="Checkout for {{ buying_package|title }} donation package" hx-preserve="true" hx-head="re-eval">
+</head>
+
 {% if user.is_authenticated %}
 
 <div class="d-flex justify-content-center">
@@ -8,7 +13,7 @@
             Minecraft Username: {{request.user.user_profile_info.minecraft_username}}
         </p>
         <a role="button" class="btn btn-success"
-            href="{% url "donations:stripe_redirect" %}?package={{buying_package}}"
+            href="{% url "donations:stripe_redirect" package=buying_package %}"
             >
             Checkout
         </a>
@@ -21,7 +26,7 @@
     <form class="form p-3 text-white"
         enctype="multipart/form-data"
         method='post'
-        action="{% url "donations:stripe_redirect" %}?package={{buying_package}}"
+        action="{% url "donations:stripe_redirect" package=buying_package %}"
     >     
         {% csrf_token %} 
         {% bootstrap_field minecraft_username_form.minecraft_username %}
