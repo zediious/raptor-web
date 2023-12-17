@@ -88,12 +88,14 @@
                 method='post'
                 action="{% url "donations:stripe_redirect" package=buying_package.name|slugify %}"
             >     
-                {% csrf_token %} 
+                {% csrf_token %}
                 {% bootstrap_field donation_details_form.minecraft_username %}
-                {% bootstrap_field donation_details_form.discord_username %}
-                <p class='fs-7 text-center mb-3'>
-                    Make sure to confirm the above information before clicking Checkout!
-                </p>
+                {% if buying_package.servers.count > 0 %}
+                    {% bootstrap_field donation_details_form.discord_username %}
+                    <p class='fs-7 text-center mb-3'>
+                        Make sure to confirm the above information before clicking Checkout!
+                    </p>
+                {% endif %}
                 <hr class="text-white">
                 <div class="text-white text-center fs-4 mt-3 mb-2">
                     <div class="d-flex flex-column">
