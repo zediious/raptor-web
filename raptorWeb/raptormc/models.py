@@ -509,6 +509,13 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    navigation_from_top = models.BooleanField(
+        verbose_name="Navigation popup from top of screen.",
+        help_text=("If this is checked, the Navigation popup will come from "
+                   "the top of the screen rather than the left."),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
