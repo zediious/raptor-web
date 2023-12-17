@@ -12,6 +12,9 @@ conda run -n djangoWork python manage.py collectstatic --noinput
 # Create superuser if no users exist
 conda run -n djangoWork python manage.py createSuper
 
+# Run celery beat
+conda run -n djangoWork celery -A config.celery beat --loglevel=info --detach
+
 # Run celery worker server
 conda run -n djangoWork celery -A config worker -l INFO --detach 
 
