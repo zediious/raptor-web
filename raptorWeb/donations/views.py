@@ -12,8 +12,9 @@ from rcon.source import Client
 from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
+from raptorWeb.raptormc.models import DefaultPages
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
-from raptorWeb.donations.forms import SubmittedDonationForm
+from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
@@ -56,41 +57,37 @@ class DonationCheckout(TemplateView):
         bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
-        context['minecraft_username_form'] = SubmittedDonationForm()
+        context['discord_username_form'] = DonationDiscordUsernameForm()
+        context['donation_details_form'] = SubmittedDonationForm()
         return context
         
         
 class DonationCheckoutRedirect(View):
     """
     Handle redirect to Stripe payment gateway
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        """
-        Utilized when a donator is logged in
-        """
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect('/')
-        
-        try:
-            bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
-            
-        except DonationPackage.DoesNotExist:
-            return HttpResponseRedirect('/')
-        
-        return redirect(
-            get_checkout_url(
-                request,
-                bought_package,
-                request.user.user_profile_info.minecraft_username
-            )
-        )
-        
+    """        
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        """
-        Utilized when a donator is not logged in
-        """
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        try:
+            minecraft_username: str = request.POST.get('minecraft_username')
+            discord_username: str = request.POST.get('discord_username')
+            
+        except:
+            minecraft_username: str = ''
+            discord_username: str = ''
+            
         if not request.POST.get('minecraft_username'):
-            return HttpResponseRedirect('/')
+            try:
+                minecraft_username: str = request.user.user_profile_info.minecraft_username
+                discord_username: str = request.user.discord_user_info.tag
+                
+            except AttributeError:
+                pass
+                
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect('/')
         
         try:
             bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
@@ -102,7 +99,8 @@ class DonationCheckoutRedirect(View):
             get_checkout_url(
                 request,
                 bought_package,
-                request.POST.get('minecraft_username'),
+                minecraft_username,
+                discord_username
             )
         )
         

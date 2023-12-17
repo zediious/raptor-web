@@ -42,7 +42,7 @@ def retrieve_checkout_session(checkout_id: str):
         id=checkout_id
     )
     
-def get_checkout_url(request,  bought_package: DonationPackage, minecraft_username: str):
+def get_checkout_url(request,  bought_package: DonationPackage, minecraft_username: str, discord_username: str):
     """
     Return a checkout URL for the given request
     """
@@ -73,8 +73,12 @@ def get_checkout_url(request,  bought_package: DonationPackage, minecraft_userna
             completed=False
         )
         
+        if discord_username != '':
+            new_donation.discord_username = discord_username
+        
         if request.user.is_authenticated:
             new_donation.donating_user = request.user
-            new_donation.save()
+            
+        new_donation.save()
         
     return checkout_url
