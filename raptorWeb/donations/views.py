@@ -181,7 +181,9 @@ def donation_payment_webhook(request: HttpRequest):
                 completed=False
             )
             completed_donation.completed = True
-            completed_donation.send_server_commands()
+            if completed_donation.bought_package.servers.all().count() > 0:
+                completed_donation.send_server_commands()
+                
             completed_donation.save()
             
         elif event['type'] == 'checkout.session.expired':
