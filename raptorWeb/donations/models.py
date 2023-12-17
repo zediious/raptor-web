@@ -169,6 +169,9 @@ class CompletedDonation(models.Model):
         help_text="Whether this donation has been finalized and paid for."
     )
     
+    def __str__(self) -> str:
+        return f'Donation from {self.minecraft_username} for {self.bought_package}'
+    
     def send_server_commands(self):
         """
         Send commands to servers
