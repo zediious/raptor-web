@@ -176,8 +176,6 @@ class SettingsPanel(PanelApiBaseView):
                             )
                             changed.append(field_string.title()) 
                     except KeyError:
-                        LOGGER.error(f'SitInformation field {field_string} was passed ' 
-                                     'to form, but is not in the form.')
                         continue
                         
             if changed == []:
@@ -190,10 +188,10 @@ class SettingsPanel(PanelApiBaseView):
                              ('Settings have been successfully updated for the following: '
                               f'{changed_string[:-1]}'))
             
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=200)
 
         else:
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=400)
         
 
 class SettingsPanelFilePost(PanelApiBaseView):
