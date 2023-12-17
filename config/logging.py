@@ -175,6 +175,11 @@ LOGGING_DEFINITION = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'donations.tasks': {
+            'handlers': ['console', 'celery_log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'raptorbot.models': {
             'handlers': ['console', 'bot_log_file', 'mail_admins'],
             'level': 'DEBUG',

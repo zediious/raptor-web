@@ -14,6 +14,7 @@ from stripe.error import SignatureVerificationError
 from raptorWeb.raptormc.models import DefaultPages
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
+from raptorWeb.donations.tasks import send_server_commands
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
@@ -182,7 +183,10 @@ def donation_payment_webhook(request: HttpRequest):
             )
             completed_donation.completed = True
             if completed_donation.bought_package.servers.all().count() > 0:
-                completed_donation.send_server_commands()
+                send_server_commands.apply_async(
+                    args=(completed_donation.checkout_id,),
+                    countdown=10
+                )
                 
             completed_donation.save()
             
