@@ -1,6 +1,7 @@
 from logging import Logger, getLogger
 
 from django.db import models
+from django.core.validators import MinValueValidator
 
 from rcon.source import Client
 from django_resized import ResizedImageField
@@ -56,8 +57,15 @@ class DonationPackage(models.Model):
     
     price = models.IntegerField(
         default=0,
+        validators=[MinValueValidator(1)],
         verbose_name='Price',
         help_text='The price of this Package.'
+    )
+    
+    variable_price = models.BooleanField(
+        default=False,
+        verbose_name='Variable Price',
+        help_text='If this is enabled, users will be able to input any amount they wish to donate above 1 USD.'
     )
     
     allow_repeat = models.BooleanField(
@@ -68,12 +76,14 @@ class DonationPackage(models.Model):
     
     servers = models.ManyToManyField(
         to=Server,
+        blank=True,
         verbose_name="Servers to send Commands to.",
         help_text="The servers that this package will send commands to."
     )
 
     commands = models.ManyToManyField(
         to=DonationServerCommand,
+        blank=True,
         verbose_name="Commands to Send.",
         help_text="A list of created Server Commands to send when this package is bought."
     )
