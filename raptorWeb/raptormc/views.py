@@ -264,6 +264,27 @@ class DonationsFailure(TemplateView):
             return HttpResponseRedirect('/404')
         
         return super().get(request, *args, **kwargs)
+    
+class DonationsAlreadyDonated(TemplateView):
+    """
+    Donation already made page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_already_made.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
 
 
 class PageView(DetailView):

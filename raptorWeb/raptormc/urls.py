@@ -29,6 +29,7 @@ urlpatterns: list[URLPattern] = [
     path('raptormc/api/html/donations/checkout/<str:package>/', views.DonationsCheckout.as_view(), name="donations/checkout"),
     path('raptormc/api/html/donations/success', views.DonationsSuccess.as_view(), name="donations/success"),
     path('raptormc/api/html/donations/failure', views.DonationsFailure.as_view(), name="donations/failure"),
+    path('raptormc/api/html/donations/previousdonation', views.DonationsAlreadyDonated.as_view(), name="donations/previousdonation"),
     # Created Pages
     path('raptormc/api/html/pages/<str:page_name>', views.PageView.as_view(), name="pages"),
     path('raptormc/api/html/pages/<str:page_name>/', views.PageView.as_view(), name="pages"),
