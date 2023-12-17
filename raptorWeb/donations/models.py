@@ -1,10 +1,6 @@
 from logging import Logger, getLogger
 
 from django.db import models
-from django.utils.timezone import localtime, now
-from django.dispatch import receiver
-from django.db.models.signals import pre_save
-from django.conf import settings
 
 from django_resized import ResizedImageField
 
@@ -61,6 +57,12 @@ class DonationPackage(models.Model):
         default=0,
         verbose_name='Price',
         help_text='The price of this Package.'
+    )
+    
+    allow_repeat = models.BooleanField(
+        default=False,
+        verbose_name='Allow multiple purchases',
+        help_text='If this is enabled, this package can be bought multiple times by the same Minecraft username'
     )
     
     servers = models.ManyToManyField(
