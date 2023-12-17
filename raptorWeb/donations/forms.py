@@ -18,3 +18,11 @@ class DonationDiscordUsernameForm(forms.Form):
                    "username if you want to receive Roles on Discord."),
         required=False,
     )
+    
+    
+class DonationPriceForm(forms.Form):
+    chosen_price = forms.CharField(
+        help_text=("Enter any whole amount you would like to donate "
+                   "above 1 USD."),
+        required=False,
+    )

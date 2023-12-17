@@ -13,7 +13,7 @@ from stripe.error import SignatureVerificationError
 
 from raptorWeb.raptormc.models import DefaultPages
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
-from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm
+from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
@@ -62,6 +62,7 @@ class DonationCheckout(TemplateView):
         bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
+        context['donation_price_form'] = DonationPriceForm({'chosen_price': bought_package.price})
         context['discord_username_form'] = DonationDiscordUsernameForm()
         context['donation_details_form'] = SubmittedDonationForm()
         return context

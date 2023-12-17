@@ -48,6 +48,10 @@
                     {{buying_package.package_description|safe}}
                 </div>
 
+                <div class="d-flex flex-column">
+                    {% if buying_package.variable_price %}
+                    {% bootstrap_field donation_price_form.chosen_price %}
+                    {% endif %}
                 <button class="btn btn-success" type='submit'>
                     Checkout
                 </button>
