@@ -180,7 +180,7 @@ class SettingsPanel(PanelApiBaseView):
                         
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')
-                return render(request, self.template_name, context=dictionary)
+                return HttpResponse(status=200)
             for change in changed:
                 changed_string += f'{change}, '
             site_info.save()
@@ -191,7 +191,7 @@ class SettingsPanel(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
-            return HttpResponse(status=400)
+            return HttpResponse(status=200)
         
 
 class SettingsPanelFilePost(PanelApiBaseView):
