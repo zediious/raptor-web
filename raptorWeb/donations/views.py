@@ -32,6 +32,9 @@ class DonationPackages(ListView):
     model: DonationPackage = DonationPackage
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
 
@@ -46,6 +49,9 @@ class DonationCheckout(TemplateView):
     template_name: str = join(DONATIONS_TEMPLATE_DIR, 'checkout.html')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
         if request.headers.get('HX-Request') == "true":
             return super().get(request, *args, **kwargs)
 
@@ -110,6 +116,9 @@ class DonationCancel(View):
     Delete created donation if it is cancelled
     """
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
         try:
             CompletedDonation.objects.filter(
                 session_id=request.session.session_key,
@@ -127,6 +136,9 @@ def donation_payment_webhook(request: HttpRequest):
     """
     Webhook to listen for payment events from Stripe
     """
+    if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
     if request.method == 'POST':
         payload = request.body
         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
@@ -166,6 +178,7 @@ def donation_payment_webhook(request: HttpRequest):
                 completed_donation.delete()
             
             except CompletedDonation.DoesNotExist:
+                LOGGER.info(f"Did not find {event['data']['object']['id']}. The donation was already deleted.")
                 pass
         
         return HttpResponse(status=200)
