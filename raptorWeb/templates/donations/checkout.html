@@ -12,6 +12,20 @@
         <p class="text-center text-white fs-3">
             Minecraft Username: {{request.user.user_profile_info.minecraft_username}}
         </p>
+        <p class="text-center text-white fs-6">
+            If the above username is not correct or is empty, go to your profile and set the correct Minecraft Username.
+        </p>
+        <div class='d-flex justify-content-center'>
+            <a class="htmxLink btn btn-secondary w-50 mb-5" type="button"
+            href="/{{base_user_url}}/{{request.user.username|slugify}}"
+            hx-get="/raptormc/api/html/{{base_user_url}}/{{request.user.username|slugify}}"
+            hx-target='#home'
+            hx-swap='innerHTML'
+            hx-push-url="/{{base_user_url}}/{{request.user.username|slugify}}"
+            >
+                Go to Profile
+            </a>
+        </div>
         <a role="button" class="btn btn-success"
             href="{% url "donations:stripe_redirect" package=buying_package %}"
             >

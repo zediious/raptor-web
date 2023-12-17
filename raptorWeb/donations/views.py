@@ -17,6 +17,7 @@ from raptorWeb.donations.forms import SubmittedDonationForm
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
+BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 STRIPE_WEBHOOK_SECRET:str = getattr(settings, 'STRIPE_WEBHOOK_SECRET')
 
 LOGGER = getLogger('donations.views')
@@ -52,6 +53,7 @@ class DonationCheckout(TemplateView):
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+        context['base_user_url'] = BASE_USER_URL
         context['buying_package'] = str(self.kwargs['package'])
         context['minecraft_username_form'] = SubmittedDonationForm()
         return context
