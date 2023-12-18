@@ -119,3 +119,14 @@ def readd_discord_bot_roles():
                 
                 donation.give_discord_roles()
                 sleep(3)
+                
+@shared_task
+def clear_donation_goal():
+    """
+    Set to run once a month, this will set the current donation goal
+    progress back to 0
+    """
+    site_info:SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+    
+    site_info.donation_goal_progress = 0
+    site_info.save()
