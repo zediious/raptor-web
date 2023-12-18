@@ -1,4 +1,6 @@
 Thank you so much for your donation, {{ donating_user }}!
 
+Package: {{ package }}
+
 We are sending this email to confirm we got your donation, and that your benefits should have already arrived.
 This is not a receipt! Look for an email from Stripe to keep for your records.

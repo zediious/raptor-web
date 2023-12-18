@@ -34,13 +34,14 @@ def send_donation_email(completed_donation_checkout_id: CompletedDonation):
         
         email_text_string = render_to_string(
             join(DONATIONS_TEMPLATE_DIR, 'successful_email.txt'), {
+                'package': completed_donation.bought_package.name,
                 'donating_user': completed_donation.donating_user.username
             }
         )
         
         email_html_string = render_to_string(
             join(DONATIONS_TEMPLATE_DIR, 'successful_email.html'), {
-                'main_color': site_info.main_color,
+                'package': completed_donation.bought_package.name,
                 'donating_user': completed_donation.donating_user.username
             }
         )
