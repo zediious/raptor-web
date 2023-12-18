@@ -41,6 +41,15 @@
         </span>
     </div>
     {% endif %}
+    
+    {% if show_recent_donators %}
+    <div class="container" id="donation_list"
+         hx-get="{% url 'donations:donations_public' %}"
+         hx-trigger="load"
+         hx-target="#donation_list"
+         hx-swap="innerHTML">
+    </div>
+    {% endif %}
 
     <div class="container">
         <div class='card bg-dark m-3 p-2'>
