@@ -16,4 +16,6 @@ urlpatterns: list[URLPattern] = [
     path('payment/cancel/', views.DonationCancel.as_view(), name="cancel"),
     path('payment/webhook', views.donation_payment_webhook, name="payment_webook"),
     path('payment/webhook/', views.donation_payment_webhook, name="payment_webook"),
+    # Admin
+    path('donation/resend/', views.DonationBenefitResend.as_view(), name="resend"),
 ]

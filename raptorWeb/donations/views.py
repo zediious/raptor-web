@@ -1,11 +1,13 @@
 from logging import getLogger
 from os.path import join
 from typing import Any
+from django.db.models.query import QuerySet
 
 from django.views.generic import ListView, TemplateView, View
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 from django.conf import settings
 
 from stripe import Webhook
@@ -168,6 +170,37 @@ class DonationCancel(View):
         
         except CompletedDonation.DoesNotExist:
             return HttpResponseRedirect('/donations/failure')
+        
+        
+class DonationBenefitResend(View):
+    """
+    Re-send benefits for a given completed donation
+    """
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/404')
+        
+        if not request.user.has_perm('raptormc.donations'):
+            return HttpResponseRedirect('/404')
+        
+        do_commands = request.GET.get('do_commands')
+        do_roles = request.GET.get('do_roles')
+        completed_donation = CompletedDonation.objects.get(
+            checkout_id=request.GET.get('checkout_id')
+        )
+        
+        if do_commands == 'true':
+            completed_donation.send_server_commands()
+            messages.success(request, f'Re-sent server commands for {completed_donation.minecraft_username}')
+            
+        if do_roles == 'true':
+            completed_donation.give_discord_roles()
+            messages.success(request, f'Re-gave Discord Roles for {completed_donation.discord_username}')
+            
+        return HttpResponse(status=200)
         
 
 @csrf_exempt
