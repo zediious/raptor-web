@@ -126,8 +126,15 @@ class DiscordBotTasks(models.Model):
         update_embeds = models.BooleanField(
             default=False)
         
-        messages_to_delete = models.CharField(
-            max_length=16300,
+        messages_to_delete = models.TextField(
+            max_length=15000,
+            default="",
+            blank=True,
+            null=True
+        )
+        
+        users_and_roles_to_give = models.TextField(
+            max_length=15000,
             default="",
             blank=True,
             null=True
