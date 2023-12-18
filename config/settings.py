@@ -262,6 +262,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'raptorWeb.donations.tasks.resend_server_commands',
         'schedule': crontab(minute='*/5'),
     },
+    'donation_role_readd': {
+        'task': 'raptorWeb.donations.tasks.readd_discord_bot_roles',
+        'schedule': crontab(minute='*/5'),
+    },
 }
 
 # ** Settings for "django-jazzmin" app **
