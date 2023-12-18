@@ -215,18 +215,20 @@ class CompletedDonation(models.Model):
         """
         Send commands to servers
         """
+        package_servers = self.bought_package.servers.all()
         
-        for server in self.bought_package.servers.all():
-            with Client(
-                server.rcon_address,
-                server.rcon_port,
-                passwd=server.rcon_password) as client:
-                
-                for command in self.bought_package.commands.all():
-                    client.run(command.command)
+        if package_servers.count() > 0:
+            for server in package_servers:
+                with Client(
+                    server.rcon_address,
+                    server.rcon_port,
+                    passwd=server.rcon_password) as client:
                     
-        self.sent_commands_count += 1
-        self.save()
+                    for command in self.bought_package.commands.all():
+                        client.run(command.command)
+                        
+            self.sent_commands_count += 1
+            self.save()
         
     def give_discord_roles(self):
         """

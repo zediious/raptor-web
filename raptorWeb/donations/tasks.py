@@ -3,7 +3,9 @@ All functions in this module are sent to the celery worker to be executed.
 """
 
 from logging import getLogger
+from os.path import join
 from time import sleep
+
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -61,7 +63,8 @@ def send_server_commands(completed_donation_checkout_id: CompletedDonation):
         checkout_id=completed_donation_checkout_id
     )
     
-    completed_donation.send_server_commands()
+    if completed_donation.bought_package.commands.all().count() > 0:
+        completed_donation.send_server_commands()
     
 @shared_task
 def add_discord_bot_roles(completed_donation_checkout_id: CompletedDonation):
@@ -74,7 +77,8 @@ def add_discord_bot_roles(completed_donation_checkout_id: CompletedDonation):
         checkout_id=completed_donation_checkout_id
     )
     
-    completed_donation.give_discord_roles()
+    if completed_donation.bought_package.discord_roles.all().count() > 0:
+        completed_donation.give_discord_roles()
     
 @shared_task
 def resend_server_commands():
@@ -90,8 +94,9 @@ def resend_server_commands():
     
     if donations_with_no_commands_sent.count() > 0:
         for donation in donations_with_no_commands_sent:
-            donation.send_server_commands()
-            sleep(3)
+            if donation.bought_package.commands.all().count() > 0:
+                donation.send_server_commands()
+                sleep(3)
             
 @shared_task
 def readd_discord_bot_roles():
@@ -107,8 +112,9 @@ def readd_discord_bot_roles():
     
     if donations_with_no_roles_given.count() > 0:
         for donation in donations_with_no_roles_given:
-            if not donation.discord_username:
-                continue
-            
-            donation.give_discord_roles()
-            sleep(3)
+            if donation.bought_package.discord_roles.all().count() > 0:
+                if not donation.discord_username:
+                    continue
+                
+                donation.give_discord_roles()
+                sleep(3)

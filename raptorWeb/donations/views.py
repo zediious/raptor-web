@@ -193,13 +193,21 @@ class DonationBenefitResend(View):
         )
         
         if do_commands == 'true':
-            completed_donation.send_server_commands()
-            messages.success(request, f'Re-sent server commands for {completed_donation.minecraft_username}')
+            if completed_donation.bought_package.commands.all().count() > 0:
+                completed_donation.send_server_commands()
+                messages.success(request, f'Re-sent server commands for {completed_donation.minecraft_username}')
+            
+            else:
+                messages.error(request, f'Cannot re-send commands for this donation, the package has no commands to send!')
             
         if do_roles == 'true':
-            completed_donation.give_discord_roles()
-            messages.success(request, f'Re-gave Discord Roles for {completed_donation.discord_username}')
-            
+            if completed_donation.bought_package.discord_roles.all().count() > 0:
+                completed_donation.give_discord_roles()
+                messages.success(request, f'Re-gave Discord Roles for {completed_donation.discord_username}')
+                
+            else:
+                messages.error(request, f'Cannot re-give Discord Roles for this donation, the package has no roles to give!')
+                
         return HttpResponse(status=200)
         
 
