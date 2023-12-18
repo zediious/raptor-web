@@ -1,6 +1,8 @@
 {% load static %}
+{% load donationTags %}
 
 <div id='donation_package_box'>
+    {% if page_obj.has_next %}
     <div class="pagination d-flex align-items-center justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
