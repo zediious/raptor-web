@@ -20,3 +20,10 @@ def get_package_from_url(value: str) -> str:
     the package from that path.
     """
     return slugify(value[37:].replace('/', ''))
+
+@register.filter
+def convert_to_int(value: str) -> str:
+    """
+    Convert a float to an integer
+    """
+    return int(value)
