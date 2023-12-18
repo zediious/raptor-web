@@ -8,6 +8,7 @@ from django_resized import ResizedImageField
 
 from raptorWeb.gameservers.models import Server
 from raptorWeb.authprofiles.models import RaptorUser
+from raptorWeb.raptorbot.models import DiscordBotTasks
 
 LOGGER: Logger = getLogger('donations.models')
 
@@ -195,6 +196,12 @@ class CompletedDonation(models.Model):
         help_text="The amount of times commands were sent for this donation."
     )
     
+    gave_roles_count = models.IntegerField(
+        default=0,
+        verbose_name="Times Discord roles were given",
+        help_text="The amount of times Discor roles were given for this donation."
+    )
+    
     completed = models.BooleanField(
         default=False,
         verbose_name="Completed",
@@ -219,5 +226,18 @@ class CompletedDonation(models.Model):
                     client.run(command.command)
                     
         self.sent_commands_count += 1
+        self.save()
+        
+    def give_discord_roles(self):
+        """
+        Give roles to Discord Username
+        """
+        tasks: DiscordBotTasks = DiscordBotTasks.objects.get_or_create(pk=1)[0]
+        for role in self.bought_package.discord_roles.all():
+            tasks.users_and_roles_to_give += f'{self.discord_username}.{role.role_id},'
+            
+        tasks.save()
+                    
+        self.gave_roles_count += 1
         self.save()
     
