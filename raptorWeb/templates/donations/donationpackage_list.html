@@ -1,64 +1,104 @@
 {% load static %}
 
-<div class="row">
-    {% for package in page_obj %}
-    <div class="col-md-4 col-12">
-        <a class="htmxLink"
-            data-bs-toggle="modal"
-            data-bs-target="#{{package.name}}Modal"
-        >
-            <div id="package_box" class="card bg-light m-3 p-3 opacity-75">
-                <div id="profile_picture_box" class="mx-auto d-block">
-                    {% if package.package_picture %}
-                    <img class="w-100"
-                         src="{{ package.package_picture.url }}"
-                         alt="Package Picture">
-                    {% else %}
-                    <img id="noPackagePicture" class="filter-white p-2 w-100"
-                         src="{% static 'image/no_user.svg' %}"
-                         alt="Package Picture">
-                    {% endif %}
-                </div>
-                <div class="col-10 w-100 text-center">
-                    <strong>{{package.name}}</strong>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div id="{{package.name}}Modal" class="modal fade" tabindex="-1" aria-labelledby="{{package.name}} Details" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content bg-dark text-white">
-                <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-header d-flex flex-column">
-                    <p class='fs-3'>
-                        {{package.name}}
-                    </p>
-                    {% if package.variable_price %}
-                    {% else %}
-                    <p class='fs-3'>
-                        ${{package.price}}
-                    </p>
-                    {% endif %}
-                </div>
-                <div class="modal-body" id="edit_profile_modal_body">
-                    {{package.package_description|safe}}
-                </div>
-                <div class="modal-footer justify-content-center">
+<div id='donation_package_box'>
+    <div class="pagination d-flex align-items-center justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:packages' %}?page=1"
+                hx-target="#donation_package_box"
+                >
+                &laquo; First
+                </a>
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:packages' %}?page={{ page_obj.previous_page_number }}"
+                hx-target="#donation_package_box"
+                >
+                    Previous
+                </a>
+            {% endif %}
 
-                    <a role="button" class="btn btn-outline-success"
-                       href="/donations/checkout/{{package.name|slugify}}"
-                       hx-get="{% url 'donations:checkout' package=package.name|slugify %}"
-                       hx-target='#home'
-                       hx-push-url="/donations/checkout/{{package.name|slugify}}"
-                       hx-indicator="#mainLoadingspinner,.loaded-content"
-                       onclick='closeModal()'
-                    >
-                      Go to Checkout
-                    </a>
-            
+            <span class="current text-white">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:packages' %}?page={{ page_obj.next_page_number }}"
+                hx-target="#donation_package_box"
+                >
+                    Next
+                </a>
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:packages' %}?page={{ page_obj.paginator.num_pages }}"
+                hx-target="#donation_package_box"
+                >
+                    Last &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="row">
+        {% for package in page_obj %}
+        <div class="col-md-4 col-12">
+            <a class="htmxLink"
+                data-bs-toggle="modal"
+                data-bs-target="#{{package.name}}Modal"
+            >
+                <div id="package_box" class="card bg-light m-3 p-3 opacity-75">
+                    <div id="profile_picture_box" class="mx-auto d-block">
+                        {% if package.package_picture %}
+                        <img class="w-100"
+                            src="{{ package.package_picture.url }}"
+                            alt="Package Picture">
+                        {% else %}
+                        <img id="noPackagePicture" class="filter-white p-2 w-100"
+                            src="{% static 'image/no_user.svg' %}"
+                            alt="Package Picture">
+                        {% endif %}
+                    </div>
+                    <div class="col-10 w-100 text-center">
+                        <strong>{{package.name}}</strong>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div id="{{package.name}}Modal" class="modal fade" tabindex="-1" aria-labelledby="{{package.name}} Details" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-dark text-white">
+                    <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header d-flex flex-column">
+                        <p class='fs-3'>
+                            {{package.name}}
+                        </p>
+                        {% if package.variable_price %}
+                        {% else %}
+                        <p class='fs-3'>
+                            ${{package.price}}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="modal-body" id="edit_profile_modal_body">
+                        {{package.package_description|safe}}
+                    </div>
+                    <div class="modal-footer justify-content-center">
+
+                        <a role="button" class="btn btn-outline-success"
+                        href="/donations/checkout/{{package.name|slugify}}"
+                        hx-get="{% url 'donations:checkout' package=package.name|slugify %}"
+                        hx-target='#home'
+                        hx-push-url="/donations/checkout/{{package.name|slugify}}"
+                        hx-indicator="#mainLoadingspinner,.loaded-content"
+                        onclick='closeModal()'
+                        >
+                        Go to Checkout
+                        </a>
+                
+                    </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>

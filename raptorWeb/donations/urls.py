@@ -7,6 +7,7 @@ app_name: str = "donations"
 urlpatterns: list[URLPattern] = [
     path('packages', views.DonationPackages.as_view(), name="packages"),
     path('packages/', views.DonationPackages.as_view(), name="packages"),
+    path('completeddonations', views.CompletedDonations.as_view(), name="donations"),
     path('checkout/<str:package>', views.DonationCheckout.as_view(), name="checkout"),
     path('checkout/<str:package>/', views.DonationCheckout.as_view(), name="checkout"),
     path('checkout/<str:package>/redirect', views.DonationCheckoutRedirect.as_view(), name="stripe_redirect"),

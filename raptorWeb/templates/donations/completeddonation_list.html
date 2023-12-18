@@ -1,0 +1,101 @@
+{% load static %}
+
+<div id='donation_box'>
+
+    <div class="pagination d-flex align-items-center justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:donations' %}?page=1"
+                hx-target="#donation_box"
+                >
+                &laquo; First
+                </a>
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:donations' %}?page={{ page_obj.previous_page_number }}"
+                hx-target="#donation_box"
+                >
+                    Previous
+                </a>
+            {% endif %}
+
+            <span class="current text-white">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:donations' %}?page={{ page_obj.next_page_number }}"
+                hx-target="#donation_box"
+                >
+                    Next
+                </a>
+                <a role="button" class="btn btn-secondary"
+                hx-get="{% url 'donations:donations' %}?page={{ page_obj.paginator.num_pages }}"
+                hx-target="#donation_box"
+                >
+                    Last &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+
+    <div class='d-flex flex-column gap-2'>
+    {% for package in page_obj %}
+        <button type='button' class="btn btn-secondary"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{package.minecraft_username}}{{package.pk}}Package_box"
+        >
+            <div class='d-flex flex-column p-3'>
+                <p>{{package.minecraft_username}}</p>
+                <p>{{package.discord_username}}</p>
+                <p>{{package.bought_package}}</p>
+            </div>
+        </button>
+        <div id="{{package.minecraft_username}}{{package.pk}}Package_box" class='collapse'>
+            <div class="card bg-light m-3 p-3 opacity-75 d-flex flex-column">
+                <div class="w-100 text-center">
+                    <strong>{{package.name}}</strong>
+                </div>
+                <div class="w-100 text-center d-flex flex-column">
+                    <p>
+                        {{package.donation_datetime}}
+                    </p>
+                    <p>
+                        {{package.donating_user}}
+                    </p>
+                    <p>
+                        {{package.minecraft_username}}
+                    </p>
+                    <p>
+                        {{package.discord_username}}
+                    </p>
+                    <p>
+                        {{package.bought_package}}
+                    </p>
+                    <p>
+                        {{package.spent}}
+                    </p>
+                    <p>
+                        {{package.session_id}}
+                    </p>
+                    <p>
+                        {{package.checkout_id}}
+                    </p>
+                    <p>
+                        {{package.sent_commands_count}}
+                    </p>
+                    <p>
+                        {{package.gave_roles_count}}
+                    </p>
+                    <p>
+                        {{package.completed}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>  
+</div>
+
+<script src="{% static 'javascript/src/modalBackgroundRemove.js' %}"></script>

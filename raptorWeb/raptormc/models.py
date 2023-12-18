@@ -564,6 +564,7 @@ class SiteInformation(models.Model):
             ("discord_bot", "Can access the Discord Bot control panel"),
             ("server_actions", "Can access the Server Actions menu"),
             ("reporting", "Can access Reporting"),
+            ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
         ]
         

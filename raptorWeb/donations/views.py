@@ -22,6 +22,27 @@ BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 STRIPE_WEBHOOK_SECRET:str = getattr(settings, 'STRIPE_WEBHOOK_SECRET')
 
 LOGGER = getLogger('donations.views')
+
+
+class CompletedDonations(ListView):
+    """
+    ListView for all completed donations
+    """
+    paginate_by: int = 9
+    model: CompletedDonation = CompletedDonation
+
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if not request.user.has_perm('raptormc.server_actions'):
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('/')
     
     
 class DonationPackages(ListView):

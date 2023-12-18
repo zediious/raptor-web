@@ -107,6 +107,18 @@ class ReportingPanel(PanelApiBaseView):
         
         return super().get(request, *args, **kwargs)
     
+class DonationsPanel(PanelApiBaseView):
+    """
+    Server actions and configuration
+    """
+    template_name: str = join(TEMPLATE_DIR_PANEL, 'panel_donations.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not request.user.has_perm('raptormc.donations'):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
+    
     
 class SettingsPanel(PanelApiBaseView):
     """
