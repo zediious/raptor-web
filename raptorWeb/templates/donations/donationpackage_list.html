@@ -38,6 +38,25 @@
             {% endif %}
         </span>
     </div>
+    {% endif %}
+
+    <div class="container">
+        <div class='card bg-dark m-3 p-2'>
+            <div class='pageHeader text-white text-center p-1'>
+                Monthly Donation Goal Progress: 
+                <span class='fs-2'>${{donation_goal_progress}}/${{donation_goal}}</span>
+            </div>
+            <div class="progress" role="progressbar" aria-label="Donation Goal Progress"
+                 aria-valuenow="{{donation_goal_percent}}"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+            >
+                <div class="progress-bar bg-success" style="width: {{donation_goal_percent}}%">
+                    {{donation_goal_percent|convert_to_int}}%
+                </div>
+            </div>
+        </div>    
+    </div>
 
     <div class="row">
         {% for package in page_obj %}
