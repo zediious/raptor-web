@@ -13,10 +13,10 @@ from django.conf import settings
 from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
-from raptorWeb.raptormc.models import DefaultPages
+from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
-from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles
+from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
@@ -253,6 +253,12 @@ def donation_payment_webhook(request: HttpRequest):
                 f'for the {completed_donation.bought_package} package'))
                 
             completed_donation.save()
+            
+            if SiteInformation.objects.get_or_create(pk=1)[0].send_donation_email:
+                send_donation_email.apply_async(
+                    args=(completed_donation.checkout_id,),
+                    countdown=5
+                )
             
         elif event['type'] == 'checkout.session.expired':
             try: 

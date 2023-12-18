@@ -516,6 +516,13 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    send_donation_email = models.BooleanField(
+        verbose_name="Send emails upon successful donations.",
+        help_text=("If this is checked, emails will be sent to donators "
+                   "if they are logged into an account when donating."),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
