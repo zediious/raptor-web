@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.donations.models import DonationPackage, DonationServerCommand, CompletedDonation
+from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole, CompletedDonation
 
 class DonationPackageAdminForm(ModelForm):
     class Meta:
@@ -75,10 +75,11 @@ class DonationPackageAdmin(admin.ModelAdmin):
                 'package_picture',
                 'package_description')
         }),
-        ('Commands on Donation', {
+        ('Benefits', {
             'fields': (
+                'servers',
                 'commands',
-                'servers',)
+                'discord_roles',)
         }),
     )
 
@@ -107,6 +108,28 @@ class DonationServerCommandAdmin(admin.ModelAdmin):
 
     list_display: list[str] = ['command']
     
+    
+class DonationDiscordroleAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of Donation
+    Discord Roles in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('Discord Role', {
+            'fields': (
+                'name',
+                'role_id')
+        }),
+    )
+
+    search_fields: list[str] = [
+        'name',
+        'role_id,'
+    ]
+
+    list_display: list[str] = ['name', 'role_id']
+    
 admin.site.register(DonationPackage, DonationPackageAdmin)
 admin.site.register(DonationServerCommand, DonationServerCommandAdmin)
+admin.site.register(DonationDiscordRole, DonationDiscordroleAdmin)
 admin.site.register(CompletedDonation, CompletedDonationAdmin)

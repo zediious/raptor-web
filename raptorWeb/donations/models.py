@@ -18,6 +18,7 @@ class DonationServerCommand(models.Model):
     """
     command = models.CharField(
         default="",
+        help_text="The command to be sent. Do not include a slash.",
         max_length=2000
     )
     
@@ -27,6 +28,30 @@ class DonationServerCommand(models.Model):
     class Meta:
         verbose_name = "Server Command"
         verbose_name_plural = "Server Commands"
+        
+        
+class DonationDiscordRole(models.Model):
+    """
+    A Discord Role to be given upon donating
+    """
+    role_id = models.CharField(
+        default="",
+        help_text="The ID of this Discord Role.",
+        max_length=2000
+    )
+    
+    name = models.CharField(
+        default="",
+        help_text="An internal identifer for this role.",
+        max_length=500
+    )
+    
+    def __str__(self) -> str:
+        return f'`{self.name}`'
+
+    class Meta:
+        verbose_name = "Discord Role"
+        verbose_name_plural = "Discord Roles"
 
 
 class DonationPackage(models.Model):
@@ -86,6 +111,13 @@ class DonationPackage(models.Model):
         blank=True,
         verbose_name="Commands to Send.",
         help_text="A list of created Server Commands to send when this package is bought."
+    )
+    
+    discord_roles = models.ManyToManyField(
+        to=DonationDiscordRole,
+        blank=True,
+        verbose_name="Discord Roles to Give.",
+        help_text="A list of created Discord Roles to give when this package is bought."
     )
     
     def __str__(self) -> str:
