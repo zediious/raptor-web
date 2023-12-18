@@ -523,6 +523,23 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    donation_goal = models.IntegerField(
+        verbose_name="Monthly Donation Goal.",
+        help_text=("The monthly donation goal in USD. This will reset "
+                   "at the beginning of every month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(1)
+        ],
+        default=1
+    )
+    
+    show_donation_goal = models.BooleanField(
+        verbose_name="Show Monthly Donation Goal.",
+        help_text=("Whether the monthly donation goal will appear on the website"),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
