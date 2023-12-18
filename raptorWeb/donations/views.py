@@ -17,6 +17,7 @@ from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
 from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
+from raptorWeb.donations.mojang import verify_minecraft_username
 from raptorWeb.donations.payments import get_checkout_url
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
@@ -156,7 +157,10 @@ class DonationCheckoutRedirect(View):
                 pass
                 
             if not request.user.is_authenticated:
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/donations/failure')
+            
+        if verify_minecraft_username(minecraft_username) == None:
+            return HttpResponseRedirect('/donations/failure/invalidusername')
         
         try:
             bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
