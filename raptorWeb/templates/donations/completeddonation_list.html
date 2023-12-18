@@ -55,31 +55,39 @@
                         <p>Bought Package: {{package.bought_package}}</p>
                     </div>
                     <div class='col-md-6'>
-                        {% if package.discord_username %}
-                        {% if package.completed and package.sent_commands_count > 0 and package.gave_roles_count > 0 %}
+                        {% if package.completed and package.bought_package.discord_roles.all.count == 0 and package.bought_package.commands.all.count == 0 %}
                             <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
-                                data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                                data-bs-title="Donation Completed">
-                            {% else %}
-                            <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
-                                data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                                data-bs-title="Donation Incomplete">
-                             {% endif %}
+                            data-bs-toggle="tooltip"
+                            data-bs-html="true"
+                            data-bs-title="Donation Completed">
                         {% else %}
-                            {% if package.completed and package.sent_commands_count > 0 %}
-                            <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
-                                data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                                data-bs-title="Donation Completed">
+                        
+                            {% if package.discord_username %}
+                                {% if package.completed and package.sent_commands_count > 0 and package.gave_roles_count > 0 %}
+                                    <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-html="true"
+                                        data-bs-title="Donation Completed">
+                                {% else %}
+                                    <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-html="true"
+                                        data-bs-title="Donation Incomplete">
+                                {% endif %}
                             {% else %}
-                            <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
-                                data-bs-toggle="tooltip"
-                                data-bs-html="true"
-                                data-bs-title="Donation Incomplete">
+                                {% if package.completed and package.sent_commands_count > 0 %}
+                                    <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-html="true"
+                                        data-bs-title="Donation Completed">
+                                {% else %}
+                                    <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-html="true"
+                                        data-bs-title="Donation Incomplete">
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
+                        {% endif%}
                     </div>
                 </div>
             </button>
