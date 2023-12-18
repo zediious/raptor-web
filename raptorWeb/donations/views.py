@@ -76,7 +76,8 @@ class DonationPackages(ListView):
         context.update({
             'donation_goal': site_info.donation_goal,
             'donation_goal_progress': site_info.donation_goal_progress,
-            'donation_goal_percent': percent_progress
+            'donation_goal_percent': percent_progress,
+            'show_recent_donators': site_info.show_recent_donators
         })
         
         return context
