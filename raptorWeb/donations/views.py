@@ -67,7 +67,21 @@ class DonationPackages(ListView):
         else:
             return HttpResponseRedirect('/')
         
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
         
+        percent_progress = 100 * float(site_info.donation_goal_progress)/float(site_info.donation_goal)
+        
+        context.update({
+            'donation_goal': site_info.donation_goal,
+            'donation_goal_progress': site_info.donation_goal_progress,
+            'donation_goal_percent': percent_progress
+        })
+        
+        return context
+
+     
 class DonationCheckout(TemplateView):
     """
     Pre-checkout page before redirect to payment
@@ -242,6 +256,8 @@ def donation_payment_webhook(request: HttpRequest):
 
         # Passed signature verification
         if event['type'] == 'checkout.session.completed':
+            site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+            
             completed_donation = CompletedDonation.objects.get(
                 checkout_id=event['data']['object']['id'],
                 completed=False
@@ -262,11 +278,14 @@ def donation_payment_webhook(request: HttpRequest):
                 
             completed_donation.save()
             
-            if SiteInformation.objects.get_or_create(pk=1)[0].send_donation_email:
+            if site_info.send_donation_email:
                 send_donation_email.apply_async(
                     args=(completed_donation.checkout_id,),
                     countdown=5
                 )
+                
+            site_info.donation_goal_progress += completed_donation.spent
+            site_info.save()
             
         elif event['type'] == 'checkout.session.expired':
             try: 
