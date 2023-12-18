@@ -43,6 +43,9 @@ class CompletedDonations(ListView):
 
         else:
             return HttpResponseRedirect('/')
+        
+    def get_queryset(self) -> QuerySet[Any]:
+        return CompletedDonation.objects.all().order_by('-donation_datetime')
     
     
 class DonationPackages(ListView):
