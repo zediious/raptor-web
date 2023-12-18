@@ -1,0 +1,12 @@
+<div class='bg-dark m-3 p-2'>
+    <div class='pageHeader text-white text-center p-1'>
+        Recent Donators
+    </div>
+    <div class='d-flex flex-wrap justify-content-evenly gap-2'>
+    {% for donation in object_list %}
+        <div class='badge bg-success'>
+            {{donation.minecraft_username}} - {{donation.bought_package}}
+        </div>
+    {% endfor %}
+    </div>
+</div>

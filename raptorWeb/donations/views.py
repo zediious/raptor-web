@@ -50,6 +50,27 @@ class CompletedDonations(ListView):
         return CompletedDonation.objects.all().order_by('-donation_datetime')
     
     
+class CompletedDonationsPublic(ListView):
+    """
+    ListView for the last 5 completed donations
+    This is public facing
+    """
+    model: CompletedDonation = CompletedDonation
+
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') == "true":
+            return super().get(request, *args, **kwargs)
+
+        else:
+            return HttpResponseRedirect('/')
+        
+    def get_queryset(self) -> QuerySet[Any]:
+        return CompletedDonation.objects.all().order_by('-donation_datetime')[:5]
+    
+    
 class DonationPackages(ListView):
     """
     ListView for all created DonationPackages
