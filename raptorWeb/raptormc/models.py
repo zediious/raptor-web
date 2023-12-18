@@ -551,6 +551,13 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    show_recent_donators = models.BooleanField(
+        verbose_name="Show Recent Donators.",
+        help_text=("Whether the the last 5 donators will appear on the donations page, "
+                   "along with the package they donated for."),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
