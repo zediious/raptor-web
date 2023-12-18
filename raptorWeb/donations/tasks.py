@@ -22,8 +22,19 @@ def send_server_commands(completed_donation_checkout_id: CompletedDonation):
     )
     
     completed_donation.send_server_commands()
-    LOGGER.info((f'{completed_donation.minecraft_username} has donated '
-                f'for the {completed_donation.bought_package} package'))
+    
+@shared_task
+def add_discord_bot_roles(completed_donation_checkout_id: CompletedDonation):
+    """
+    Given a completed/paid for donation, give all discord roles attached to the
+    bought package to the Discord tag attached to the completed donation. Will
+    only run if the complete donation ahs a Discord tag.
+    """
+    completed_donation = CompletedDonation.objects.get(
+        checkout_id=completed_donation_checkout_id
+    )
+    
+    completed_donation.give_discord_roles()
     
 @shared_task
 def resend_server_commands():
@@ -40,4 +51,24 @@ def resend_server_commands():
     if donations_with_no_commands_sent.count() > 0:
         for donation in donations_with_no_commands_sent:
             donation.send_server_commands()
+            sleep(3)
+            
+@shared_task
+def readd_discord_bot_roles():
+    """
+    If any completed donations exist that have never given roles  to
+    discord tag, give roles for all of those donations. This task is 
+    configured to run every 5 minutes.
+    """
+    donations_with_no_roles_given = CompletedDonation.objects.filter(
+        gave_roles_count=0,
+        completed=True
+    )
+    
+    if donations_with_no_roles_given.count() > 0:
+        for donation in donations_with_no_roles_given:
+            if not donation.discord_username:
+                continue
+            
+            donation.give_discord_roles()
             sleep(3)
