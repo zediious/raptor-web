@@ -225,7 +225,15 @@ class CompletedDonation(models.Model):
                     passwd=server.rcon_password) as client:
                     
                     for command in self.bought_package.commands.all():
-                        client.run(command.command)
+                        sent_command = str(command.command)
+
+                        if '{{minecraft_username}}' in sent_command:
+                            sent_command = sent_command.replace('{{minecraft_username}}', self.minecraft_username)
+                            
+                        if str('{{package_name}}') in str(sent_command):
+                            sent_command = sent_command.replace('{{package_name}}', self.bought_package.name)
+                            
+                        client.run(sent_command)
                         
             self.sent_commands_count += 1
             self.save()
