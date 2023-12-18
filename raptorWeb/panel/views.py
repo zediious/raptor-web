@@ -19,7 +19,8 @@ SETTINGS_FIELDS_TO_IGNORE = [
     'id',
     'branding_image',
     'background_image',
-    'avatar_image'
+    'avatar_image',
+    'donation_goal_progress'
 ]
 
 
@@ -203,6 +204,7 @@ class SettingsPanel(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
+            messages.error(request, 'Error: submitted form data was malformed.')
             return HttpResponse(status=200)
         
 
