@@ -534,6 +534,17 @@ class SiteInformation(models.Model):
         default=1
     )
     
+    donation_goal_progress = models.IntegerField(
+        verbose_name="Monthly Donation Goal Progress.",
+        help_text=("The total donation amount since the "
+                   "beginning of the current month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(0)
+        ],
+        default=0
+    )
+    
     show_donation_goal = models.BooleanField(
         verbose_name="Show Monthly Donation Goal.",
         help_text=("Whether the monthly donation goal will appear on the website"),
