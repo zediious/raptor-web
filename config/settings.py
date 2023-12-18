@@ -283,6 +283,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
         {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
         {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
+        {"name": "Donations", "url": "/panel/donations/", "new_window": False},
         {"app": "raptormc"},
         {"app": "gameservers"},
         {"app": "raptorbot"},
@@ -298,6 +299,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
         {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
         {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
+        {"name": "Donations", "url": "/panel/donations/", "new_window": False},
         {"name": "Settings", "url": "/panel/settings/", "new_window": False},
     ],
 
