@@ -91,6 +91,27 @@
                     <p>
                         {{package.completed}}
                     </p>
+                    <hr>
+                    <div class="d-flex justify-content-center">
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-success m-2'
+                                    hx-post="{% url 'donations:resend' %}?checkout_id={{package.checkout_id}}&do_commands=true&do_roles=false"
+                                    hx-swap='none'
+                            >
+                                Re-send Server Commands
+                            </button>
+                        </form>
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-success m-2'
+                                    hx-post="{% url 'donations:resend' %}?checkout_id={{package.checkout_id}}&do_commands=false&do_roles=true"
+                                    hx-swap='none'
+                            >
+                                Re-give Discord Roles
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
