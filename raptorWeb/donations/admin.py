@@ -31,7 +31,8 @@ class CompletedDonationAdmin(admin.ModelAdmin):
                 'session_id',
                 'checkout_id',
                 'completed',
-                'sent_commands_count')
+                'sent_commands_count',
+                'gave_roles_count')
         }),
     )
 
@@ -48,6 +49,7 @@ class CompletedDonationAdmin(admin.ModelAdmin):
         'spent',
         'bought_package',
         'sent_commands_count',
+        'gave_roles_count',
         'completed'  
     ]
     
