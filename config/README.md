@@ -32,6 +32,10 @@ DEFAULT_SUPERUSER_EMAIL=''
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
 
+STRIPE_PUBLISHABLE_KEY=''
+STRIPE_SECRET_KEY=''
+STRIPE_WEBHOOK_SECRET=''
+
 USE_CONSOLE_EMAIL=
 ERROR_LOG_EMAIL=''
 EMAIL_HOST=''
@@ -95,6 +99,17 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
+
+# *Stripe Payments*
+
+### **STRIPE_PUBLISHABLE_KEY**
+Your Stripe "Publishable Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+
+### **STRIPE_SECRET_KEY**
+Your Stripe "Secret Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+
+### **STRIPE_WEBHOOK_SECRET**
+Your Stripe "Webhook Secret". [Create a Webhook Endpoint here](https://dashboard.stripe.com/webhooks/create), and set the URL to `https://<your.domain.name>/api/donations/payment/webhook`. After doing so, you will be able to get your Webhook Secret.
 
 # *Email*
 
