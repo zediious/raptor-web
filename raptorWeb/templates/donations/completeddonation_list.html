@@ -2,7 +2,7 @@
 
 <div id='donation_box'>
 
-    <div class="pagination d-flex align-items-center justify-content-center">
+    <div class="pagination d-flex align-items-center justify-content-center mb-3">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a role="button" class="btn btn-secondary"
@@ -40,56 +40,87 @@
         </span>
     </div>
 
-    <div class='d-flex flex-column gap-2'>
+    <div class='d-flex flex-column gap-4'>
     {% for package in page_obj %}
-        <button type='button' class="btn btn-secondary"
-            data-bs-toggle="collapse"
-            data-bs-target="#{{package.minecraft_username}}{{package.pk}}Package_box"
-        >
-            <div class='d-flex flex-column p-3'>
-                <p>{{package.minecraft_username}}</p>
-                <p>{{package.discord_username}}</p>
-                <p>{{package.bought_package}}</p>
-            </div>
-        </button>
+        <div class='d-flex justify-content-center m-0'>
+            <button type='button' class="btn btn-secondary w-75"
+                data-bs-toggle="collapse"
+                data-bs-target="#{{package.minecraft_username}}{{package.pk}}Package_box"
+            >
+                <div class='row'>
+                    <div class='col-md-6 align-items-center'>
+                        <p>Time of Donation: {{package.donation_datetime}}</p>
+                        <p>Minecraft Username: {{package.minecraft_username}}</p>
+                        <p>Discord Username: {{package.discord_username}}</p>
+                        <p>Bought Package: {{package.bought_package}}</p>
+                    </div>
+                    <div class='col-md-6'>
+                        {% if package.discord_username %}
+                        {% if package.completed and package.sent_commands_count > 0 and package.gave_roles_count > 0 %}
+                            <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-title="Donation Completed">
+                            {% else %}
+                            <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-title="Donation Incomplete">
+                             {% endif %}
+                        {% else %}
+                            {% if package.completed and package.sent_commands_count > 0 %}
+                            <img class='p-3 w-50' src="{% static 'image/online_indicator.svg' %}" alt="Completed"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-title="Donation Completed">
+                            {% else %}
+                            <img class='p-3 w-50' src="{% static 'image/offline_indicator.svg' %}" alt="Incomplete"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-title="Donation Incomplete">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </button>
+        </div>
         <div id="{{package.minecraft_username}}{{package.pk}}Package_box" class='collapse'>
-            <div class="card bg-light m-3 p-3 opacity-75 d-flex flex-column">
+            <div class="card bg-light m-1 p-3 opacity-75 d-flex flex-column">
                 <div class="w-100 text-center">
                     <strong>{{package.name}}</strong>
                 </div>
                 <div class="w-100 text-center d-flex flex-column">
                     <p>
-                        {{package.donation_datetime}}
+                        Donating User: {{package.donating_user}}
                     </p>
                     <p>
-                        {{package.donating_user}}
+                        Minecraft Username: {{package.minecraft_username}}
                     </p>
                     <p>
-                        {{package.minecraft_username}}
+                        Discord Username: {{package.discord_username}}
+                    </p>
+                    <hr>
+                    <p>
+                        Bought Package: {{package.bought_package}}
                     </p>
                     <p>
-                        {{package.discord_username}}
+                        Amount Spent: {{package.spent}}
                     </p>
                     <p>
-                        {{package.bought_package}}
+                        Session ID: {{package.session_id}}
                     </p>
                     <p>
-                        {{package.spent}}
+                        Stripe Checkout ID: {{package.checkout_id}}
+                    </p>
+                    <hr>
+                    <p>
+                        Times commands were sent: {{package.sent_commands_count}}
                     </p>
                     <p>
-                        {{package.session_id}}
+                        Times roles were given: {{package.gave_roles_count}}
                     </p>
                     <p>
-                        {{package.checkout_id}}
-                    </p>
-                    <p>
-                        {{package.sent_commands_count}}
-                    </p>
-                    <p>
-                        {{package.gave_roles_count}}
-                    </p>
-                    <p>
-                        {{package.completed}}
+                        Completed and paid: {{package.completed}}
                     </p>
                     <hr>
                     <div class="d-flex justify-content-center">
@@ -115,8 +146,16 @@
                 </div>
             </div>
         </div>
+        <hr>
     {% endfor %}
     </div>  
 </div>
 
-<script src="{% static 'javascript/src/modalBackgroundRemove.js' %}"></script>
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>
