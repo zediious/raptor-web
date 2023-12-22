@@ -11,7 +11,9 @@ LOGGER = getLogger('donations.payments')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 STRIPE_PUBLISHABLE_KEY: str = getattr(settings, 'STRIPE_PUBLISHABLE_KEY')
-stripe.api_key = getattr(settings, 'STRIPE_SECRET_KEY')
+
+if getattr(settings, 'STRIPE_SECRET_KEY') != '':
+    stripe.api_key = getattr(settings, 'STRIPE_SECRET_KEY')
 
 def create_checkout_session(package: DonationPackage, minecraft_username: str):
     """

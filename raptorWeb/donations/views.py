@@ -287,6 +287,9 @@ def donation_payment_webhook(request: HttpRequest):
     """
     Webhook to listen for payment events from Stripe
     """
+    if STRIPE_WEBHOOK_SECRET == '':
+        return HttpResponseRedirect('/404')
+    
     if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         

@@ -233,9 +233,9 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
 
 # ** Settings for "donations" app **
-STRIPE_PUBLISHABLE_KEY = str(getenv('STRIPE_PUBLISHABLE_KEY'))
-STRIPE_SECRET_KEY = str(getenv('STRIPE_SECRET_KEY'))
-STRIPE_WEBHOOK_SECRET = str(getenv('STRIPE_WEBHOOK_SECRET'))
+STRIPE_PUBLISHABLE_KEY =  '' if str(getenv('STRIPE_PUBLISHABLE_KEY')) == '' else  str(getenv('STRIPE_PUBLISHABLE_KEY'))
+STRIPE_SECRET_KEY = '' if str(getenv('STRIPE_SECRET_KEY')) == '' else str(getenv('STRIPE_SECRET_KEY'))
+STRIPE_WEBHOOK_SECRET = '' if str(getenv('STRIPE_WEBHOOK_SECRET')) == '' else str(getenv('STRIPE_WEBHOOK_SECRET'))
 
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
