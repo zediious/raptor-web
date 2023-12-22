@@ -90,7 +90,7 @@ The app secret of the Discord Application you will be using to process OAuth log
 The username for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
 
 ### **DEFAULT_SUPERUSER_EMAIL**
-The email for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
+The email for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default. This email will also receive emails when server errors occur.
 
 # *Discord Bot*
 
@@ -117,7 +117,7 @@ Your Stripe "Webhook Secret". [Create a Webhook Endpoint here](https://dashboard
 If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to False until you have configured the below settings and are ready to send emails.
 
 ### **ERROR_LOG_EMAIL**
-An additional email you want error reports sent to, alongside the default superuser email. This cannot be the same as EMAIL_HOST_USER.
+Optional, an additional email you want error reports sent to, alongside the default superuser email. This cannot be the same as EMAIL_HOST_USER.
 
 ### **EMAIL_HOST**
 The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.
