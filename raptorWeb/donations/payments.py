@@ -5,6 +5,7 @@ from django.conf import settings
 import stripe
 
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
+from raptorWeb.raptormc.models import SiteInformation
 
 LOGGER = getLogger('donations.payments')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
@@ -17,11 +18,13 @@ def create_checkout_session(package: DonationPackage, minecraft_username: str):
     Create a Stripe Checkout Session, using the Donation Package
     and Minecraft Username passed as arguments, and return it.
     """
+    site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+    
     return stripe.checkout.Session.create(
         line_items = [
             {
                 'price_data': {
-                    'currency': 'usd',
+                    'currency': str(site_info.donation_currency),
                     'product_data': {
                     'name': f'{package.name} for {minecraft_username}',
                     },
