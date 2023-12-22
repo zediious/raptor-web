@@ -56,7 +56,7 @@
         <div class='card bg-dark m-3 p-2'>
             <div class='pageHeader text-white text-center p-1'>
                 Monthly Donation Goal Progress: 
-                <span class='fs-2'>${{donation_goal_progress}}/${{donation_goal}}</span>
+                <span class='fs-2'>{{donation_goal_progress}}/{{donation_goal}} {{donation_currency|upper}}</span>
             </div>
             <div class="progress" role="progressbar" aria-label="Donation Goal Progress"
                  aria-valuenow="{{donation_goal_percent}}"

@@ -100,7 +100,8 @@ class DonationPackages(ListView):
             'donation_goal_progress': site_info.donation_goal_progress,
             'donation_goal_percent': percent_progress,
             'show_donation_goal': site_info.show_donation_goal,
-            'show_recent_donators': site_info.show_recent_donators
+            'show_recent_donators': site_info.show_recent_donators,
+            'donation_currency': site_info.donation_currency
         })
         
         return context
