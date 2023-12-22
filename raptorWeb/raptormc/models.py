@@ -4,12 +4,20 @@ from logging import Logger, getLogger
 from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django_resized import ResizedImageField
 
 LOGGER: Logger = getLogger('raptormc.models')
+
+class DonationCurrencyChoices(models.TextChoices):
+        USD = 'usd', _('US Dollar')
+        CAD = 'cad', _('Canadian Dollar')
+        MXN = 'mxn', _('Mexican Peso')
+        GBP = 'gbp', _('Pound')
+        EUR = 'eur', _('Euro')
 
 class PageManager(models.Manager):
     """
@@ -516,6 +524,14 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    donation_currency = models.CharField(
+        verbose_name='Donation Currency',
+        help_text='The currency used when accepting donations.',
+        default='usd',
+        max_length=10,
+        choices=DonationCurrencyChoices.choices
+    )
+    
     send_donation_email = models.BooleanField(
         verbose_name="Send emails upon successful donations.",
         help_text=("If this is checked, emails will be sent to donators "
@@ -525,7 +541,7 @@ class SiteInformation(models.Model):
     
     donation_goal = models.IntegerField(
         verbose_name="Monthly Donation Goal.",
-        help_text=("The monthly donation goal in USD. This will reset "
+        help_text=("The monthly donation goal. This will reset "
                    "at the beginning of every month."),
         validators=[
             MaxValueValidator(100000),
