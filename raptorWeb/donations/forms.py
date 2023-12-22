@@ -23,6 +23,6 @@ class DonationDiscordUsernameForm(forms.Form):
 class DonationPriceForm(forms.Form):
     chosen_price = forms.IntegerField(
         help_text=("Enter any whole amount you would like to donate "
-                   "above 1 USD."),
+                   "above the package's price."),
         required=False
     )
