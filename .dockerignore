@@ -11,3 +11,6 @@ media
 /docker/static
 /raptorWeb/media
 __pycache__
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir

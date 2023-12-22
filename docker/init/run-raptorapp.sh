@@ -12,5 +12,11 @@ conda run -n djangoWork python manage.py collectstatic --noinput
 # Create superuser if no users exist
 conda run -n djangoWork python manage.py createSuper
 
-# Run asgi server
-conda run -n djangoWork daphne -b 0.0.0.0 -p 80 config.asgi:application
+# Run celery beat
+conda run -n djangoWork celery -A config.celery beat --loglevel=info --detach
+
+# Run celery worker server
+conda run -n djangoWork celery -A config worker -l INFO --detach 
+
+# Run Django development server, NOT suitable for production!
+conda run -n djangoWork python manage.py runserver 0.0.0.0:80

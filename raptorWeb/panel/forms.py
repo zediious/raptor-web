@@ -13,7 +13,8 @@ class PanelSettingsInformation(forms.ModelForm):
         exclude: tuple[str] = (
             'branding_image',
             'background_image',
-            'avatar_image'
+            'avatar_image',
+            'donation_goal_progress'
             )
         
         

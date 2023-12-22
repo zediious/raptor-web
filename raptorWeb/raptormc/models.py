@@ -4,12 +4,20 @@ from logging import Logger, getLogger
 from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django_resized import ResizedImageField
 
 LOGGER: Logger = getLogger('raptormc.models')
+
+class DonationCurrencyChoices(models.TextChoices):
+        USD = 'usd', _('US Dollar')
+        CAD = 'cad', _('Canadian Dollar')
+        MXN = 'mxn', _('Mexican Peso')
+        GBP = 'gbp', _('Pound')
+        EUR = 'eur', _('Euro')
 
 class PageManager(models.Manager):
     """
@@ -509,6 +517,63 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    navigation_from_top = models.BooleanField(
+        verbose_name="Navigation popup from top of screen.",
+        help_text=("If this is checked, the Navigation popup will come from "
+                   "the top of the screen rather than the left."),
+        default=True
+    )
+    
+    donation_currency = models.CharField(
+        verbose_name='Donation Currency',
+        help_text='The currency used when accepting donations.',
+        default='usd',
+        max_length=10,
+        choices=DonationCurrencyChoices.choices
+    )
+    
+    send_donation_email = models.BooleanField(
+        verbose_name="Send emails upon successful donations.",
+        help_text=("If this is checked, emails will be sent to donators "
+                   "if they are logged into an account when donating."),
+        default=True
+    )
+    
+    donation_goal = models.IntegerField(
+        verbose_name="Monthly Donation Goal.",
+        help_text=("The monthly donation goal. This will reset "
+                   "at the beginning of every month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(1)
+        ],
+        default=1
+    )
+    
+    donation_goal_progress = models.IntegerField(
+        verbose_name="Monthly Donation Goal Progress.",
+        help_text=("The total donation amount since the "
+                   "beginning of the current month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(0)
+        ],
+        default=0
+    )
+    
+    show_donation_goal = models.BooleanField(
+        verbose_name="Show Monthly Donation Goal.",
+        help_text=("Whether the monthly donation goal will appear on the website"),
+        default=True
+    )
+    
+    show_recent_donators = models.BooleanField(
+        verbose_name="Show Recent Donators.",
+        help_text=("Whether the the last 5 donators will appear on the donations page, "
+                   "along with the package they donated for."),
+        default=True
+    )
+    
     server_pagination_count = models.IntegerField(
         verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
@@ -557,6 +622,7 @@ class SiteInformation(models.Model):
             ("discord_bot", "Can access the Discord Bot control panel"),
             ("server_actions", "Can access the Server Actions menu"),
             ("reporting", "Can access Reporting"),
+            ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
         ]
         
@@ -667,6 +733,12 @@ class DefaultPages(models.Model):
         verbose_name="Onboarding Pages",
         help_text=("Whether the default pages that contain all information "
                     "about each server are enabled or not.")
+    )
+    
+    donations = models.BooleanField(
+        default=True,
+        verbose_name="Donations Pages",
+        help_text=("Whether the Donations system/pages are enabled or not.")
     )
 
     def __str__(self):

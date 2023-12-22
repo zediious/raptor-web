@@ -46,6 +46,10 @@ class ServerAdmin(admin.ModelAdmin):
         ('Discord Announcements', {
             'classes': ('collapse',),
             'fields': ('discord_announcement_channel_id', 'discord_modpack_role_id')
+        }),
+        ('Donations', {
+            'classes': ('collapse',),
+            'fields': ('rcon_address', 'rcon_port', 'rcon_password')
         })
     )
 

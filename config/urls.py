@@ -24,6 +24,7 @@ from django.conf import settings
 from raptorWeb.raptormc import urls as SR_urls
 from raptorWeb.panel import urls as panel_urls
 from raptorWeb.gameservers import urls as server_urls
+from raptorWeb.donations import urls as donation_urls
 from raptorWeb.staffapps import urls as app_urls
 from raptorWeb.authprofiles import urls as auth_urls
 from raptorWeb.raptorbot import urls as bot_urls
@@ -41,6 +42,7 @@ urlpatterns: list[URLResolver] = [
     path('admin/', admin.site.urls, name="admin"),
     path('panel/', include(panel_urls), name='panel'),
     path('api/servers/', include(server_urls), name="gameservers"),
+    path('api/donations/', include(donation_urls), name="donations"),
     path('api/staffapps/', include(app_urls), name="staffapps"),
     path('api/raptorbot/', include(bot_urls), name="raptorbot"),
     path('api/user/', include(auth_urls), name="authprofiles"),

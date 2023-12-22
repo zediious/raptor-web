@@ -178,7 +178,7 @@ class StaffApps(TemplateView):
     """
     Provide links to each staff application
     """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('applications', 'staffapps.html'))
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'staffapps.html'))
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not DefaultPages.objects.get_or_create(pk=1)[0].staff_apps:
@@ -194,6 +194,160 @@ class StaffApps(TemplateView):
         return get_or_create_informative_text(
             context = context,
             informative_text_names = ["Applications Information"])
+        
+        
+class Donations(TemplateView):
+    """
+    Donation packages list
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+        
+        
+class DonationsCheckout(TemplateView):
+    """
+    Donation package checkout
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_checkout.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+    
+        
+class DonationsSuccess(TemplateView):
+    """
+    Donation success page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_success.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+    
+    
+class DonationsFailure(TemplateView):
+    """
+    Donation failure page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_failure.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+        
+        
+class DonationsFailureInvalidUsername(TemplateView):
+    """
+    Donation failure page when Minecraft username is invalid
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_invalid_username.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+        
+        
+class DonationsFailureInvalidPrice(TemplateView):
+    """
+    Donation failure page when chosen price is below minimum
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_invalid_price.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
+    
+    
+class DonationsAlreadyDonated(TemplateView):
+    """
+    Donation already made page
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('defaultpages', 'donations_already_made.html'))
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/404')
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return get_or_create_informative_text(
+            context = context,
+            informative_text_names = ["Donations Information"])
 
 
 class PageView(DetailView):

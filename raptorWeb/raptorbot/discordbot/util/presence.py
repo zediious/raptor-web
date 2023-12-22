@@ -1,7 +1,5 @@
 from logging import Logger, getLogger
 
-from django.conf import settings
-
 import discord
 from discord.ext import commands
 
@@ -73,3 +71,23 @@ async def update_member_count(bot_instance: commands.Bot) -> None:
             total_members = member_total,
             online_members = online_members
         )
+        
+        
+async def give_role(bot_instance: commands.Bot, user_role_string: str) -> None:
+    """
+    Give the role to the user in each comma separated pair passed in argument
+    """
+    user_role_pairs = user_role_string[:-1].split(',')
+    
+    for user_role in user_role_pairs:
+        details = user_role.split('.')
+        
+        for member in bot_instance.get_all_members():
+            if str(member.name) == str(details[0]):
+                role = member.guild.get_role(int(details[1]))
+                await member.add_roles(
+                    role,
+                    reason='Donation',
+                    atomic=True
+                )
+

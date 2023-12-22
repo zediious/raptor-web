@@ -69,6 +69,19 @@
                     </a>
                 </li>
                 {% endif%}
+                {% if perms.raptormc.donations %}
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="/panel/donations"
+                       hx-get="{% url 'panel:donations' %}"
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/donations/"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
+                    >
+                        <i class="nav-icon fas fa-clipboard-list"></i> <p>Donations</p>
+                    </a>
+                </li>
+                {% endif%}
                 {% if perms.raptormc.settings %}
                 <li class="nav-item">
                     <a class="nav-link"

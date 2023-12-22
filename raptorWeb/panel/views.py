@@ -19,7 +19,8 @@ SETTINGS_FIELDS_TO_IGNORE = [
     'id',
     'branding_image',
     'background_image',
-    'avatar_image'
+    'avatar_image',
+    'donation_goal_progress'
 ]
 
 
@@ -107,6 +108,18 @@ class ReportingPanel(PanelApiBaseView):
         
         return super().get(request, *args, **kwargs)
     
+class DonationsPanel(PanelApiBaseView):
+    """
+    Server actions and configuration
+    """
+    template_name: str = join(TEMPLATE_DIR_PANEL, 'panel_donations.html')
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not request.user.has_perm('raptormc.donations'):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
+    
     
 class SettingsPanel(PanelApiBaseView):
     """
@@ -176,13 +189,11 @@ class SettingsPanel(PanelApiBaseView):
                             )
                             changed.append(field_string.title()) 
                     except KeyError:
-                        LOGGER.error(f'SitInformation field {field_string} was passed ' 
-                                     'to form, but is not in the form.')
                         continue
                         
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')
-                return render(request, self.template_name, context=dictionary)
+                return HttpResponse(status=200)
             for change in changed:
                 changed_string += f'{change}, '
             site_info.save()
@@ -190,10 +201,11 @@ class SettingsPanel(PanelApiBaseView):
                              ('Settings have been successfully updated for the following: '
                               f'{changed_string[:-1]}'))
             
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=200)
 
         else:
-            return render(request, self.template_name, context=dictionary)
+            messages.error(request, 'Error: submitted form data was malformed.')
+            return HttpResponse(status=200)
         
 
 class SettingsPanelFilePost(PanelApiBaseView):

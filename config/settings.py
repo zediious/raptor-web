@@ -3,6 +3,8 @@ from os import getenv, makedirs
 from pathlib import Path
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 from config.logging import LOGGING_DEFINITION
 
 # Define project directories
@@ -17,6 +19,7 @@ RAPTORMC_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "raptormc")
 PANEL_TEMPLATE_DIR: str = join(TEMPLATE_DIR, "panel")
 RAPTORBOT_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'raptorbot')
 GAMESERVERS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'gameservers')
+DONATIONS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'donations')
 STAFFAPPS_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'staffapps')
 AUTH_TEMPLATE_DIR: str = join(TEMPLATE_DIR, 'authprofiles')
 
@@ -78,6 +81,7 @@ INSTALLED_APPS: list[str] = [
     'raptorWeb.staffapps',
     'raptorWeb.authprofiles',
     'raptorWeb.gameservers',
+    'raptorWeb.donations',
     'raptorWeb.raptorbot',
     'raptorWeb.panel'
 ]
@@ -228,6 +232,11 @@ BACKGROUND_TASK_RUN_ASYNC: bool = True
 # ** Settings for "raptormc" app **
 ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('ADMIN_BRAND_NAME')
 
+# ** Settings for "donations" app **
+STRIPE_PUBLISHABLE_KEY = str(getenv('STRIPE_PUBLISHABLE_KEY'))
+STRIPE_SECRET_KEY = str(getenv('STRIPE_SECRET_KEY'))
+STRIPE_WEBHOOK_SECRET = str(getenv('STRIPE_WEBHOOK_SECRET'))
+
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
 
@@ -247,6 +256,22 @@ DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
 DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
 DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
 
+# ** Celery Settings **
+CELERY_BEAT_SCHEDULE = {
+    'donation_command_rerun': {
+        'task': 'raptorWeb.donations.tasks.resend_server_commands',
+        'schedule': crontab(minute='*/5'),
+    },
+    'donation_role_readd': {
+        'task': 'raptorWeb.donations.tasks.readd_discord_bot_roles',
+        'schedule': crontab(minute='*/5'),
+    },
+    'clear_donation_goal': {
+        'task': 'raptorWeb.donations.tasks.clear_donation_goal',
+        'schedule': crontab(day_of_month='1'),
+    },
+}
+
 # ** Settings for "django-jazzmin" app **
 JAZZMIN_SETTINGS = {
 
@@ -258,26 +283,29 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
         {"name": "Return to Site", "url": "/", "new_window": False},
         {"name": "Admin", "url": "/admin/", "new_window": False},
-        {"name": "Control Panel", "url": "/panel/", "new_window": False},
-        {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
-        {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
-        {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
+        {"name": "Control Panel", "permissions": ["raptormc.panel"], "url": "/panel/", "new_window": False},
+        {"name": "Discord Bot", "permissions": ["raptormc.discord_bot"], "url": "/panel/discordbot/", "new_window": False},
+        {"name": "Server Actions", "permissions": ["raptormc.server_actions"], "url": "/panel/serveractions/", "new_window": False},
+        {"name": "Reporting", "permissions": ["raptormc.reporting"], "url": "/panel/reporting/", "new_window": False},
+        {"name": "Donations", "permissions": ["raptormc.donations"], "url": "/panel/donations/", "new_window": False},
         {"app": "raptormc"},
         {"app": "gameservers"},
         {"app": "raptorbot"},
+        {"app": "donations"},
         {"app": "staffapps"},
         {"app": "authprofiles"},
-        {"name": "Settings", "url": "/panel/settings/", "new_window": False},
+        {"name": "Settings", "permissions": ["raptormc.settings"],  "url": "/panel/settings/", "new_window": False},
     ],
     "usermenu_links": [
         {"model": "auth.user"},
         {"name": "Return to Site", "url": "/", "new_window": False},
         {"name": "Admin", "url": "/admin/", "new_window": False},
-        {"name": "Control Panel", "url": "/panel/", "new_window": False},
-        {"name": "Discord Bot", "url": "/panel/discordbot/", "new_window": False},
-        {"name": "Server Actions", "url": "/panel/serveractions/", "new_window": False},
-        {"name": "Reporting", "url": "/panel/reporting/", "new_window": False},
-        {"name": "Settings", "url": "/panel/settings/", "new_window": False},
+        {"name": "Control Panel", "permissions": ["raptormc.panel"], "url": "/panel/", "new_window": False},
+        {"name": "Discord Bot", "permissions": ["raptormc.discord_bot"], "url": "/panel/discordbot/", "new_window": False},
+        {"name": "Server Actions", "permissions": ["raptormc.server_actions"], "url": "/panel/serveractions/", "new_window": False},
+        {"name": "Reporting", "permissions": ["raptormc.reporting"], "url": "/panel/reporting/", "new_window": False},
+        {"name": "Donations", "permissions": ["raptormc.donations"], "url": "/panel/donations/", "new_window": False},
+        {"name": "Settings", "permissions": ["raptormc.settings"],  "url": "/panel/settings/", "new_window": False},
     ],
 
     # Sidebar
@@ -289,13 +317,19 @@ JAZZMIN_SETTINGS = {
             "name": "Discord Bot Control Panel", 
             "url": "/panel/discordbot/", 
             "icon": "fas fa-terminal",
-            "permissions": ["raptorbot.view_discordguild"]
+            "permissions": ["raptormc.discord_bot"]
         }],
          "gameservers": [{
             "name": "Server Actions", 
             "url": "/panel/serveractions/", 
             "icon": "fas fa-terminal",
-            "permissions": ["gameservers.view_server"]
+            "permissions": ["raptormc.server_actions"]
+        }],
+         "donations": [{
+            "name": "Completed Donations", 
+            "url": "/panel/donations/", 
+            "icon": "fa fa-credit-card",
+            "permissions": ["raptormc.donations"]
         }]
     },
     "icons": {
@@ -321,14 +355,15 @@ JAZZMIN_SETTINGS = {
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",
+        "donations.DonationPackage": "fa fa-archive",
+        "donations.DonationServerCommand": "fa fa-terminal",
+        "donations.DonationDiscordRole": "fa fa-tags",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-    "related_modal_active": True,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
-    "related_modal_active": True
 
 }
 

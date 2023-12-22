@@ -38,6 +38,11 @@ LOGGING_DEFINITION = {
             'formatter': 'debug',
             'filename': join(LOG_DIR, 'django.log'),
         },
+        'celery_log_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'debug',
+            'filename': join(LOG_DIR, 'celery.log'),
+        },
         'log_file': {
             'class': 'logging.FileHandler',
             'formatter': 'debug',
@@ -62,6 +67,11 @@ LOGGING_DEFINITION = {
         },
         'django.request': {
             'handlers': ['console', 'django_log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'config.celery': {
+            'handlers': ['console', 'celery_log_file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,
         },
@@ -142,6 +152,31 @@ LOGGING_DEFINITION = {
         },
         'gameservers.serverTags': {
             'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.models': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.views': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.payments': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.donationTags': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.tasks': {
+            'handlers': ['console', 'celery_log_file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,
         },

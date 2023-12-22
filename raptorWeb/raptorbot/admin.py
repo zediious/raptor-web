@@ -122,6 +122,13 @@ class SentEmbedMessageAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+    
+    
+class DiscordBotTasksDebugAdmin(admin.ModelAdmin):
+    """
+    For debugging purposes
+    """
+    list_display = [field.name for field in DiscordBotTasks._meta.get_fields()]
 
 
 admin.site.register(GlobalAnnouncement, GlobalAnnouncementAdmin)
