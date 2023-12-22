@@ -150,6 +150,18 @@
                                 Re-give Discord Roles
                             </button>
                         </form>
+                    <form>
+                        {% csrf_token %}
+                        <button class='btn btn-danger m-2'
+                                hx-post="{% url 'donations:donation_delete' %}?donation_id={{package.id}}"
+                                hx-swap='none'
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-title="DANGER: You cannot reverse a deleted donation!"
+                        >
+                            Delete Donation
+                        </button>    
+                    </form>                          
                     </div>
                 </div>
             </div>

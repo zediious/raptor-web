@@ -215,6 +215,33 @@ class DonationCancel(View):
             return HttpResponseRedirect('/donations/failure')
         
         
+class DonationDelete(View):
+    """
+    Delete a created donation
+    """
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
+            return HttpResponseRedirect('/404')
+        
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/404')
+        
+        if not request.user.has_perm('raptormc.donations'):
+            return HttpResponseRedirect('/404')
+        
+        try:
+            CompletedDonation.objects.get(
+                pk=request.GET.get('donation_id')
+            ).delete()
+            
+            messages.success(request, 'Donation has been deleted.')
+            return HttpResponse(status=200)
+        
+        except CompletedDonation.DoesNotExist:
+            messages.error(request, 'There was an error processing this package deletion')
+            return HttpResponse(status=400)
+        
+        
 class DonationBenefitResend(View):
     """
     Re-send benefits for a given completed donation
