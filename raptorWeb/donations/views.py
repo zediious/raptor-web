@@ -170,7 +170,7 @@ class DonationCheckoutRedirect(View):
         
         if bought_package.variable_price:
             chosen_price = request.POST.get('chosen_price')
-            if int(chosen_price) < 1:
+            if int(chosen_price) < bought_package.price:
                 return HttpResponseRedirect('/donations/failure/invalidprice')
             
             bought_package.price = int(chosen_price)
