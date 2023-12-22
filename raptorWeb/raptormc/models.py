@@ -4,11 +4,20 @@ from logging import Logger, getLogger
 from django.db import models
 from django.utils.text import slugify
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_save, post_save
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django_resized import ResizedImageField
 
 LOGGER: Logger = getLogger('raptormc.models')
+
+class DonationCurrencyChoices(models.TextChoices):
+        USD = 'usd', _('US Dollar')
+        CAD = 'cad', _('Canadian Dollar')
+        MXN = 'mxn', _('Mexican Peso')
+        GBP = 'gbp', _('Pound')
+        EUR = 'eur', _('Euro')
 
 class PageManager(models.Manager):
     """
@@ -376,7 +385,7 @@ class SiteInformation(models.Model):
     contact_email = models.EmailField(
         max_length=500,
         verbose_name="Contact Email",
-        help_text=("Email to be linked with a mailto in the footer of the website."),
+        help_text=("Email to be linked with a mailto link in the footer of the website."),
         blank=True,
         default=""
     )
@@ -392,7 +401,8 @@ class SiteInformation(models.Model):
         max_length=7,
         verbose_name="Secondary Color",
         help_text=("The hex color code used for the upper body of the website, layered "
-                    "underneath server buttons"),
+                    "underneath server buttons. If using a Background Image, that will "
+                    "always override this color."),
         default="#00233c"
     )
 
@@ -400,7 +410,7 @@ class SiteInformation(models.Model):
         upload_to='branding',
         verbose_name="Branding Image",
         help_text=("The image displayed in the website Navigation Bar as a link to the "
-                    "homepage. Optimal size for this image is w800xh200."),
+                    "homepage. Image will be resized to 550x170 after uploading."),
         blank=True,
         size=[550,170],
         quality=50,
@@ -412,8 +422,8 @@ class SiteInformation(models.Model):
         upload_to='background',
         verbose_name="Background Image",
         help_text=("The image displayed layered behind server buttons. This image will "
-                    "cover the defined Secondary Color if used. Optimal size for this image "
-                    " is 1920x1080 or within the same aspect ratio."),
+                    "cover the defined Secondary Color if used. Image will be resized to "
+                    "1920x1080 after uploading."),
         blank=True,
         size=[1920,1080],
         quality=90,
@@ -425,7 +435,7 @@ class SiteInformation(models.Model):
         upload_to='avatar',
         verbose_name="Avatar Image",
         help_text=("The image displayed in OpenGraph embeds, such as when a link is " 
-                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 image. "
+                   "pasted to a Discord Channel or a Twitter post. This should be a 1x1 ratio image. "
                    "This will also be used as your Favicon, after being converted to a .ico file."),
         blank=True,
         size=[500,500],
@@ -436,7 +446,7 @@ class SiteInformation(models.Model):
     
     meta_description = models.CharField(
         max_length=500,
-        verbose_name="SEO - Meta Description",
+        verbose_name="Meta Description",
         help_text=("The description for your website provided in search engine results. "
                     "This will apply to all pages that do not override."),
         default="",
@@ -445,7 +455,7 @@ class SiteInformation(models.Model):
     
     meta_keywords = models.CharField(
         max_length=500,
-        verbose_name="SEO - Meta Keywords",
+        verbose_name="Meta Keywords",
         help_text=("A series of comma-separated values that represent meta keywords used "
                     "in search engine results. This will apply to all pages that do not override."),
         default="",
@@ -454,16 +464,14 @@ class SiteInformation(models.Model):
     
     use_main_color = models.BooleanField(
         verbose_name="Use Main Color",
-        help_text=("If this is checked, the Main Color chosen above will be used on the website. If not, "
-                   "the color determined from the user's current Light/Dark theme choice will be used instead."),
+        help_text=("If this is checked, the Main Color chosen above will be used on the website."),
         default=True
     )
     
     use_secondary_color = models.BooleanField(
         verbose_name="Use Secondary Color",
-        help_text=("If this is checked, the Secondary Color chosen above will be used on the website. If not, "
-                   "the color determined from the user's current Light/Dark theme choice will be used instead. If "
-                   "you are using a Background Image, that will always take precedence."),
+        help_text=("If this is checked, the Secondary Color chosen above will be used on the website. "
+                   "If you are using a Background Image, that will always take precedence."),
         default=True
     )
     
@@ -475,8 +483,7 @@ class SiteInformation(models.Model):
     
     enable_footer_credit = models.BooleanField(
         verbose_name="Enable Credits in Footer",
-        help_text=("If this is checked, link to Zediious' GitHub profile will appear in the footer. "
-                   "This has no effect if Enable Footer is disabled."),
+        help_text=("If this is checked, a link to the raptor-web repository will appear in the footer. "),
         default=True
     )
     
@@ -488,7 +495,7 @@ class SiteInformation(models.Model):
     )
     
     require_login_for_user_list = models.BooleanField(
-        verbose_name="Require login for Site Members",
+        verbose_name="Require login to access Site Members",
         help_text=("If this is checked, users will need to create an account and, "
                    "log in before they can access the Site Members list."),
         default=True
@@ -499,35 +506,97 @@ class SiteInformation(models.Model):
         help_text=("If this is un-checked, the address/port of created Servers will NOT be, "
                    "queried for state and player data. Each server's information will still be "
                    "displayed on the website as normal, however the Player Counts section "
-                   "of the Header Box will no longer appear."),
+                   "of the Header Box will no longer appear, or the server status indicators."),
         default=True
     )
     
     collapse_network_rules_when_accessing_server_rules = models.BooleanField(
-        verbose_name="Enable server querying and player counts section",
+        verbose_name="Collapse Network Rules section if accessing Rules page from a Server modal link.",
         help_text=("If this is un-checked, the Network Rules section on the Rules page will NOT be "
-                   "collapsed when accessing Rules from a Server Modal"),
+                   "collapsed when accessing Rules from a Server Modal."),
+        default=True
+    )
+    
+    navigation_from_top = models.BooleanField(
+        verbose_name="Navigation popup from top of screen.",
+        help_text=("If this is checked, the Navigation popup will come from "
+                   "the top of the screen rather than the left."),
+        default=True
+    )
+    
+    donation_currency = models.CharField(
+        verbose_name='Donation Currency',
+        help_text='The currency used when accepting donations.',
+        default='usd',
+        max_length=10,
+        choices=DonationCurrencyChoices.choices
+    )
+    
+    send_donation_email = models.BooleanField(
+        verbose_name="Send emails upon successful donations.",
+        help_text=("If this is checked, emails will be sent to donators "
+                   "if they are logged into an account when donating."),
+        default=True
+    )
+    
+    donation_goal = models.IntegerField(
+        verbose_name="Monthly Donation Goal.",
+        help_text=("The monthly donation goal. This will reset "
+                   "at the beginning of every month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(1)
+        ],
+        default=1
+    )
+    
+    donation_goal_progress = models.IntegerField(
+        verbose_name="Monthly Donation Goal Progress.",
+        help_text=("The total donation amount since the "
+                   "beginning of the current month."),
+        validators=[
+            MaxValueValidator(100000),
+            MinValueValidator(0)
+        ],
+        default=0
+    )
+    
+    show_donation_goal = models.BooleanField(
+        verbose_name="Show Monthly Donation Goal.",
+        help_text=("Whether the monthly donation goal will appear on the website"),
+        default=True
+    )
+    
+    show_recent_donators = models.BooleanField(
+        verbose_name="Show Recent Donators.",
+        help_text=("Whether the the last 5 donators will appear on the donations page, "
+                   "along with the package they donated for."),
         default=True
     )
     
     server_pagination_count = models.IntegerField(
-        verbose_name="Server button pagination count",
+        verbose_name="Server buttons per-page",
         help_text=("How many server buttons will appear per page. If the amount of Servers exceeds "
                    "this amount, a set if Next and Previous buttons will appear to cycle between pages "
                    "of created servers."),
+        validators=[
+            MaxValueValidator(12),
+            MinValueValidator(1)
+        ],
+        choices=[(i, i) for i in range(1, 13)],
         default=6
     )
     
     discord_guild = models.CharField(
-        verbose_name="The ID for the Discord Guild the Discord Bot will be associated with.",
-        help_text=("Set this to the ID for the Discord Guild that the Bot will be reading global and" 
-                   "server announcements from."),
+        verbose_name="Discord Guild ID.",
+        help_text=("Set this to the ID for the Discord Guild that the Bot will be linked to. "
+                   "The bot will be able to read announcements and send server information messages here."),
         max_length=500,
         default="0"
     )
     
     discord_global_announcement_channel = models.CharField(
-        verbose_name="The ID for the Global Announcements Discord Channel.",
+        verbose_name="Global Announcements Discord Channel ID",
         help_text=("Set this to the ID for the Discord Channel that the Bot will be looking for " 
                    "global announcements from."),
         max_length=500,
@@ -535,7 +604,7 @@ class SiteInformation(models.Model):
     )
     
     discord_staff_role = models.CharField(
-        verbose_name="The ID for the Discord Role you designate as Staff.",
+        verbose_name="Discord Staff Role ID.",
         help_text=("Set this to the ID for the Discord Role that the Bot will read messages from as announcements. " 
                    "Discord Users without this role will not be able to create announcements. "),
         max_length=500,
@@ -553,6 +622,7 @@ class SiteInformation(models.Model):
             ("discord_bot", "Can access the Discord Bot control panel"),
             ("server_actions", "Can access the Server Actions menu"),
             ("reporting", "Can access Reporting"),
+            ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
         ]
         
@@ -653,13 +723,22 @@ class DefaultPages(models.Model):
     members = models.BooleanField(
         default=True,
         verbose_name="Site Members Page",
-        help_text="Whether the default Site Members page is enabled or not."
+        help_text=("Whether the default Site Members list page is enabled or not. "
+                   "This will also prevent non-admin users from accessing any "
+                   "profiles except for their own.")
     )
     
     onboarding = models.BooleanField(
         default=True,
         verbose_name="Onboarding Pages",
-        help_text="Pages that contain all information about each server."
+        help_text=("Whether the default pages that contain all information "
+                    "about each server are enabled or not.")
+    )
+    
+    donations = models.BooleanField(
+        default=True,
+        verbose_name="Donations Pages",
+        help_text=("Whether the Donations system/pages are enabled or not.")
     )
 
     def __str__(self):

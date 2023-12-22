@@ -129,6 +129,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Celery Beat files
+celerybeat-*
+
 # LOCK Files
 playerCounts.LOCK
 

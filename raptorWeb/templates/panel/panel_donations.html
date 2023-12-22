@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="container">
+    <div class="m-2 mt-3 p-3">
+        <div class="text-white">
+            <header class="fs-3">Donations</header>
+            <p class="fs-5">
+                View all completed donations, and re-send server commands or re-add Discord Roles.
+            </p>
+        </div>
+    </div>
+    <div class="card bg-dark p-2">
+        <div class="card-body">
+            <div class="m-3">
+                <div id='all_donations' class="d-flex flex-column" style="position: relative; z-index: 1"
+                    hx-get="{% url 'donations:donations' %}"
+                    hx-target="#all_donations"
+                    hx-swap="innerHTML"
+                    hx-indicator="#panelLoadingspinner"
+                    hx-trigger="load">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

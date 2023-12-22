@@ -7,6 +7,7 @@ from django.conf import settings
 from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText
 from raptorWeb.authprofiles.models import RaptorUser
 from raptorWeb.gameservers.models import Server
+from raptorWeb.donations.models import DonationPackage
 
 LOGGER = getLogger('raptormc.routes')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
@@ -16,13 +17,14 @@ CURRENT_URLPATTERNS = []
 
 class Route:
     
-    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None) -> None:
+    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None, package=None) -> None:
         self.name: str = name
         self.route_type: str = route_type
         self.informative_text = informative_text
         self.user: RaptorUser = user
         self.page: Page = page
         self.server: Server = server
+        self.package: DonationPackage = package
           
     def __str__(self) -> str:
         return self.name
@@ -89,6 +91,21 @@ def check_route(request):
                 )
             )
             
+    def _get_package_routes():
+        """
+        Iterate all packages and create a Route for
+        each packages's checkout page
+        """
+        all_packages = DonationPackage.objects.all()
+        for package in all_packages:
+            current_routes.append(
+                Route(
+                    name=f'donations/checkout/{slugify(package.name)}',
+                    route_type="package",
+                    package=package,
+                )
+            )
+            
     def _get_main_routes():
         """
         Iterate current URLPatterns and create
@@ -139,6 +156,7 @@ def check_route(request):
     _get_user_routes()
     _get_page_routes()
     _get_server_routes()
+    _get_package_routes()
     
     for route in current_routes:
         first_slash = request.path.index('/')
@@ -179,6 +197,16 @@ def check_route(request):
                     "og_image": f"{site_avatar_url}",
                     "og_title": f"{site_info.brand_name} | {route.server.modpack_name} Onboarding",
                     "og_desc": strip_tags(route.server.modpack_description)
+                }
+                
+            if route.package != None:
+                return {
+                    "og_package": route.package,
+                    "og_color": site_info.main_color,
+                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/donations/checkout{slugify(route.package.name)}",
+                    "og_image": f"{site_avatar_url}",
+                    "og_title": f"{site_info.brand_name} | {route.package.name}",
+                    "og_desc": strip_tags(route.package.package_description)
                 }
                 
             if route.informative_text != None:              

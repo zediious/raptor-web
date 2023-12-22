@@ -394,6 +394,32 @@ class Server(models.Model):
         "will be considered an announcement for this server."),
         default="0"  
     )
+    
+    rcon_address = models.CharField(
+        max_length=200,
+        verbose_name="RCON Connection Address",
+        help_text=("The IP address used to send RCON commands to this server."),
+        blank=True,
+        null=True,
+        default=""  
+    )
+    
+    rcon_port = models.IntegerField(
+        default=00000,
+        verbose_name="RCON Connection Port",
+        help_text=("The network port used to send RCON commands to this server."),
+        blank=True,
+        null=True
+    )
+    
+    rcon_password = models.CharField(
+        max_length=500,
+        verbose_name="RCON Connection Password",
+        help_text=("The password used to authenticate when sending RCON commands to this server."),
+        blank=True,
+        null=True,
+        default=""  
+    )
 
     def __str__(self) -> str:
         return self.modpack_name

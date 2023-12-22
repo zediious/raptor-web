@@ -1,0 +1,13 @@
+{% load donationTags %}
+{% load static %}
+
+<div class="mt-4 container" id="checkout_box"
+     hx-get="{% url 'donations:checkout' package=request.path|get_package_from_url %}"
+     hx-trigger="load"
+     hx-target="#checkout_box"
+     hx-swap="outerHTML"
+>
+    <div class="container-flex text-center">
+        <img class="" id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">
+    </div>
+</div>

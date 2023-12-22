@@ -24,8 +24,6 @@ MYSQL_DATABASE=raptormc
 MYSQL_USER=raptor
 BASE_PATH=/tmp
 
-SERVER_PAGINATION_COUNT=
-
 DISCORD_OAUTH_APP_ID=
 DISCORD_OAUTH_APP_SECRET=
 DEFAULT_SUPERUSER_USERNAME=''
@@ -34,7 +32,12 @@ DEFAULT_SUPERUSER_EMAIL=''
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
 
+STRIPE_PUBLISHABLE_KEY=''
+STRIPE_SECRET_KEY=''
+STRIPE_WEBHOOK_SECRET=''
+
 USE_CONSOLE_EMAIL=
+ERROR_LOG_EMAIL=''
 EMAIL_HOST=''
 EMAIL_PORT=
 EMAIL_HOST_USER=''
@@ -75,11 +78,6 @@ The password that will be used by raptorWeb to connect to the MYSQL server. This
 ### **MYSQL_ROOT_PASSWORD**
 The root password to the MYSQL database. This password is only used for debug purposes, if you must enter the MYSQL shell. **STORE IT IN A PASSWORD MANAGER!**
 
-## *Game Servers*
-
-### **SERVER_PAGINATION_COUNT**
-The amount of server buttons that will appear per page. If there are more servers than this value, a "Next" button will appear to cycle through the next X amount of servers. A suitable default for this would be 6.
-
 # *Users / Auth*
 
 ### **DISCORD_OAUTH_APP_ID**
@@ -92,7 +90,7 @@ The app secret of the Discord Application you will be using to process OAuth log
 The username for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
 
 ### **DEFAULT_SUPERUSER_EMAIL**
-The email for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default.
+The email for the superuser that will be created on first start, when there are no users created yet. Change the password for this user right away, it will be set to "admin" by default. This email will also receive emails when server errors occur.
 
 # *Discord Bot*
 
@@ -102,10 +100,24 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
 
+# *Stripe Payments*
+
+### **STRIPE_PUBLISHABLE_KEY**
+Your Stripe "Publishable Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+
+### **STRIPE_SECRET_KEY**
+Your Stripe "Secret Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+
+### **STRIPE_WEBHOOK_SECRET**
+Your Stripe "Webhook Secret". [Create a Webhook Endpoint here](https://dashboard.stripe.com/webhooks/create), and set the URL to `https://<your.domain.name>/api/donations/payment/webhook`. After doing so, you will be able to get your Webhook Secret.
+
 # *Email*
 
 ### **USE_CONSOLE_EMAIL**
 If this is set to False, then emails sent by the application will *actually* be sent using the SMPT mail driver. While True, emails will be "sent" to the console as messages. Do NOT set this to False until you have configured the below settings and are ready to send emails.
+
+### **ERROR_LOG_EMAIL**
+Optional, an additional email you want error reports sent to, alongside the default superuser email. This cannot be the same as EMAIL_HOST_USER.
 
 ### **EMAIL_HOST**
 The domain name/IP address for the SMTP server you wish to use. For example, gmail's SMTP domain is `smtp.gmail.com`. If you are using self-hosted email, you will place your connection address here.

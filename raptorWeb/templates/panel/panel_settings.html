@@ -30,6 +30,7 @@
                             {% bootstrap_field SettingsInformation.enable_footer %}
                             {% bootstrap_field SettingsInformation.enable_footer_contact %}
                             {% bootstrap_field SettingsInformation.enable_footer_credit %}
+                            {% bootstrap_field SettingsInformation.navigation_from_top %}
                             {% bootstrap_button button_type="submit" content="Update" %}
                         </div>
                     </div>
@@ -82,6 +83,7 @@
                     <div class="d-flex justify-content-center">
                         <div class="w-50">  
                                 {% bootstrap_field SettingsInformation.enable_server_query %}
+                                {% bootstrap_field SettingsInformation.server_pagination_count %}
                                 {% bootstrap_field SettingsInformation.collapse_network_rules_when_accessing_server_rules %}
                                 {% bootstrap_button button_type="submit" content="Update" %}
                         </div>
@@ -102,6 +104,27 @@
                             {% bootstrap_field SettingsInformation.discord_guild %}
                             {% bootstrap_field SettingsInformation.discord_global_announcement_channel %}
                             {% bootstrap_field SettingsInformation.discord_staff_role %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Donations</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="w-50">
+                            {% bootstrap_field SettingsInformation.donation_currency %}
+                            {% bootstrap_field SettingsInformation.donation_goal %}
+                            {% bootstrap_field SettingsInformation.show_donation_goal %}
+                            {% bootstrap_field SettingsInformation.show_recent_donators %}
+                            {% bootstrap_field SettingsInformation.send_donation_email %}
                             {% bootstrap_button button_type="submit" content="Update" %}
                         </div>
                     </div>

@@ -1,20 +1,42 @@
-# Dockerfile for raptor-web development
-# This image does NOT build the app's code into the image.
-# It instead relies on paths to local files in docker-compose.yml
-# Use docker-compose-prod.yml for production.
-
-FROM continuumio/miniconda3:latest
+# Dockerfile for raptorapp
+FROM continuumio/miniconda3:latest as build_image
 
 # Install host dependencies
 RUN apt update
 RUN apt install libmariadb-dev -y
 RUN apt install gcc -y
 
-# Copy Conda environment and install environment
+# Copy and install environment
 COPY environment.yml environment.yml
 RUN conda env create
 
-# Add initialization script and define entrypoint
-ADD docker/init init
-RUN chmod +x+r -R init
-ENTRYPOINT ["/init/run-raptorapp.sh"]
+# Install conda-pack:
+RUN conda install -c conda-forge conda-pack
+
+# Use conda-pack to create a standalone enviornment
+RUN conda-pack -n djangoWork -o /tmp/env.tar && \
+  mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
+  rm /tmp/env.tar
+
+# Extract standalone environment to /venv/
+RUN /venv/bin/conda-unpack
+
+# The Runtime Image
+FROM debian:buster AS runtime_image
+
+# Install mariadb dev tools
+RUN apt update
+RUN apt install libmariadb-dev -y
+
+# Copy /venv from the previous stage:
+COPY --from=build_image /venv /venv
+
+# Copy project files
+COPY . /raptorWebApp
+
+# Define entrypoint
+RUN chmod +x+r -R /raptorWebApp/docker/init
+RUN chmod +x+r /venv/bin/activate
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT source /venv/bin/activate && \
+           ./raptorWebApp/docker/init/run-raptorapp-prod.sh

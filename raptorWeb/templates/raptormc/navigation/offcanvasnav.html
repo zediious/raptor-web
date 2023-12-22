@@ -1,6 +1,9 @@
 {% load static %}
 
-<div class="offcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
+<div class="offcanvas bg-dark 
+           {% if site_info_model.navigation_from_top %}
+           offcanvas-top{% else %}
+           offcanvas-start{% endif %}" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
     <div class="offcanvas-header text-white">
       <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Navigation</h5>
       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -8,7 +11,7 @@
     <div class="m-4"></div>
     <div class="offcanvas-body text-white">
       <div class="navbar-collapse text-center">
-        <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0">
+        <ul class="{% if site_info_model.navigation_from_top %}{% else %}navbar-nav {% endif %}me-auto mt-2 mb-2 mb-lg-0 d-flex flex-wrap justify-content-center gap-0">
 
           {% if default_pages.announcements %}<li class="btn btn-secondary m-2 p-2"> 
             <a class="nav-link text-white text-nowrap fs-5"
@@ -98,6 +101,19 @@
                onclick='closeOffCanvas()'
             >
               Site Members
+            </a>
+          </li>{% endif %}
+
+          {% if default_pages.donations %}<li class="btn btn-secondary m-2 p-2">
+            <a class="nav-link text-white text-nowrap fs-5"
+               href="/donations"
+               hx-get="{% url 'raptormc:donations' %}"
+               hx-target='#home'
+               hx-push-url="/donations"
+               hx-indicator="#mainLoadingspinner,.loaded-content"
+               onclick='closeOffCanvas()'
+            >
+              Donations
             </a>
           </li>{% endif %}
 
