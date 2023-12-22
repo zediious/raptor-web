@@ -91,7 +91,7 @@ class DonationPackage(models.Model):
     variable_price = models.BooleanField(
         default=False,
         verbose_name='Variable Price',
-        help_text='If this is enabled, users will be able to input any amount they wish to donate above 1 USD.'
+        help_text='If this is enabled, users will be able to input any amount they wish to donate above the package price.'
     )
     
     allow_repeat = models.BooleanField(
