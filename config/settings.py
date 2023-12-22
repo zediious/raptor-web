@@ -291,6 +291,7 @@ JAZZMIN_SETTINGS = {
         {"app": "raptormc"},
         {"app": "gameservers"},
         {"app": "raptorbot"},
+        {"app": "donations"},
         {"app": "staffapps"},
         {"app": "authprofiles"},
         {"name": "Settings", "permissions": ["raptormc.settings"],  "url": "/panel/settings/", "new_window": False},
