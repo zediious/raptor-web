@@ -316,13 +316,19 @@ JAZZMIN_SETTINGS = {
             "name": "Discord Bot Control Panel", 
             "url": "/panel/discordbot/", 
             "icon": "fas fa-terminal",
-            "permissions": ["raptorbot.view_discordguild"]
+            "permissions": ["raptormc.discord_bot"]
         }],
          "gameservers": [{
             "name": "Server Actions", 
             "url": "/panel/serveractions/", 
             "icon": "fas fa-terminal",
-            "permissions": ["gameservers.view_server"]
+            "permissions": ["raptormc.server_actions"]
+        }],
+         "donations": [{
+            "name": "Completed Donations", 
+            "url": "/panel/donations/", 
+            "icon": "fa fa-credit-card",
+            "permissions": ["raptormc.donations"]
         }]
     },
     "icons": {
