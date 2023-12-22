@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if RaptorUser.objects.count() == 0:
-            default_admin = ADMINS[0]
+            default_admin = ADMINS[0][0]
             admin_info = UserProfileInfo.objects.create()
             admin_info.save()
             username = default_admin[0].replace(' ', '')
