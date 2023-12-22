@@ -355,6 +355,9 @@ JAZZMIN_SETTINGS = {
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",
+        "donations.DonationPackage": "fa fa-archive",
+        "donations.DonationServerCommand": "fa fa-terminal",
+        "donations.DonationDiscordRole": "fa fa-tags",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
