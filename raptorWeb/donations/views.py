@@ -38,7 +38,7 @@ class CompletedDonations(ListView):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
-        if not request.user.has_perm('raptormc.server_actions'):
+        if not request.user.has_perm('raptormc.donations'):
             return HttpResponseRedirect('/404')
         
         if request.headers.get('HX-Request') == "true":
