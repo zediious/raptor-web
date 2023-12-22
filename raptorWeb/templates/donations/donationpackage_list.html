@@ -51,6 +51,7 @@
     </div>
     {% endif %}
 
+    {% if show_donation_goal %}
     <div class="container">
         <div class='card bg-dark m-3 p-2'>
             <div class='pageHeader text-white text-center p-1'>
@@ -68,6 +69,7 @@
             </div>
         </div>    
     </div>
+    {% endif %}
 
     <div class="row">
         {% for package in page_obj %}
