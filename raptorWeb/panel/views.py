@@ -268,10 +268,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
                              ('The following new files have been successfully uploaded: '
                               f'{changed_string[:-1]}'))
             
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=200)
 
         else:
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=400)
         
         
 class SettingsPanelDefaultPagesPost(PanelApiBaseView):
@@ -319,8 +319,8 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
                              ('The following Default Pages have had their state changed: '
                               f'{changed_string[:-1]}'))
             
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=200)
 
         else:
-            return render(request, self.template_name, context=dictionary)
+            return HttpResponse(status=400)
         
