@@ -1,0 +1,19 @@
+<div style='display: none;'>
+    {{ form.render }}
+</div>
+
+<div align='center'>
+    You are being redirected, please wait.
+</div>
+
+<script>
+
+    window.onload=function(){
+        document.querySelectorAll('form').forEach(submitForm)
+    }
+
+    function submitForm(form){
+        form.submit();
+    }
+
+</script>
