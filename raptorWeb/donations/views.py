@@ -1,12 +1,12 @@
 from logging import getLogger
 from os.path import join
 from typing import Any
-from django.db.models.query import QuerySet
 
 from django.views.generic import ListView, TemplateView, View
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.query import QuerySet
 from django.contrib import messages
 from django.conf import settings
 
@@ -15,10 +15,11 @@ from stripe.error import SignatureVerificationError
 
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
-from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
+from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm, DonationGatewayForm
 from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
 from raptorWeb.donations.mojang import verify_minecraft_username
-from raptorWeb.donations.payments import get_checkout_url
+from raptorWeb.donations.payments.stripe import get_checkout_url
+from raptorWeb.donations.payments.paypal import get_paypal_checkout_button
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
@@ -125,12 +126,14 @@ class DonationCheckout(TemplateView):
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+
         bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
         context['donation_price_form'] = DonationPriceForm({'chosen_price': bought_package.price})
         context['discord_username_form'] = DonationDiscordUsernameForm()
         context['donation_details_form'] = SubmittedDonationForm()
+        context['donation_gateway_form'] = DonationGatewayForm()
         return context
         
         
