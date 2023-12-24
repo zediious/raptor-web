@@ -73,3 +73,53 @@ def get_paypal_checkout_button(request: HttpRequest, bought_package: DonationPac
     
     return PayPalPaymentsForm(initial=form_data)
     
+def receive_paypal_ipn(sender, **kwargs):
+    site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+    ipn_obj = sender
+    if ipn_obj.payment_status == ST_PP_COMPLETED:
+        
+        if ipn_obj.receiver_email != PAYPAL_RECEIVER_EMAIL:
+            return
+        
+        try:
+            completed_donation = CompletedDonation.objects.get(
+                paypal_invoice=ipn_obj.invoice
+            )
+            
+            if (int(ipn_obj.mc_gross) != int(completed_donation.spent)
+                and ipn_obj.mc_currency != site_info.donation_currency.upper()):
+                return
+            
+            completed_donation.completed = True
+            
+            if completed_donation.bought_package.servers.all().count() > 0:
+                send_server_commands.apply_async(
+                    args=(completed_donation.pk,),
+                    countdown=10
+                )
+                
+            if completed_donation.bought_package.discord_roles.all().count() > 0:
+                add_discord_bot_roles.apply_async(
+                    args=(completed_donation.pk,),
+                    countdown=5
+                )
+                
+            completed_donation.save()
+            
+            if site_info.send_donation_email:
+                send_donation_email.apply_async(
+                    args=(completed_donation.checkout_id,),
+                    countdown=5
+                )
+                
+            site_info.donation_goal_progress += completed_donation.spent
+            site_info.save()
+        
+        except CompletedDonation.DoesNotExist:
+            return
+
+    else:
+        return
+
+# Register receive_paypal_ipn function with paypal-django's IPN listener
+valid_ipn_received.connect(receive_paypal_ipn)
