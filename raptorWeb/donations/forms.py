@@ -26,3 +26,14 @@ class DonationPriceForm(forms.Form):
                    "above the package's price."),
         required=False
     )
+
+
+class DonationGatewayForm(forms.Form):
+    payment_gateway = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        required=True,
+        choices=[
+            ('stripe', 'Stripe'),
+            ('paypal', 'Paypal'),
+        ], 
+    )
