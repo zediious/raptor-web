@@ -1,5 +1,6 @@
 from logging import getLogger
 
+from django.http import HttpRequest
 from django.conf import settings
 
 import stripe
@@ -7,7 +8,7 @@ import stripe
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.raptormc.models import SiteInformation
 
-LOGGER = getLogger('donations.payments')
+LOGGER = getLogger('donations.payments.stripe')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 STRIPE_PUBLISHABLE_KEY: str = getattr(settings, 'STRIPE_PUBLISHABLE_KEY')
@@ -47,7 +48,7 @@ def retrieve_checkout_session(checkout_id: str):
         id=checkout_id
     )
     
-def get_checkout_url(request,  bought_package: DonationPackage, minecraft_username: str, discord_username: str):
+def get_checkout_url(request: HttpRequest, bought_package: DonationPackage, minecraft_username: str, discord_username: str):
     """
     Return a checkout URL for the given request
     """
