@@ -117,9 +117,15 @@
                     <p>
                         Session ID: {{package.session_id}}
                     </p>
+                    {% if package.checkout_id %}
                     <p>
                         Stripe Checkout ID: {{package.checkout_id}}
                     </p>
+                    {% else %}
+                    <p>
+                        Paypal Invoice ID: {{package.paypal_invoice}}
+                    </p>
+                    {% endif %}
                     <hr>
                     <p>
                         Times commands were sent: {{package.sent_commands_count}}
@@ -135,7 +141,7 @@
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-success m-2'
-                                    hx-post="{% url 'donations:resend' %}?checkout_id={{package.checkout_id}}&do_commands=true&do_roles=false"
+                                    hx-post="{% url 'donations:resend' %}?id={{package.id}}&do_commands=true&do_roles=false"
                                     hx-swap='none'
                             >
                                 Re-send Server Commands
@@ -144,7 +150,7 @@
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-success m-2'
-                                    hx-post="{% url 'donations:resend' %}?checkout_id={{package.checkout_id}}&do_commands=false&do_roles=true"
+                                    hx-post="{% url 'donations:resend' %}?id={{package.id}}&do_commands=false&do_roles=true"
                                     hx-swap='none'
                             >
                                 Re-give Discord Roles

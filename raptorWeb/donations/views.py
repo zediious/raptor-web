@@ -284,7 +284,7 @@ class DonationBenefitResend(View):
         do_commands = request.GET.get('do_commands')
         do_roles = request.GET.get('do_roles')
         completed_donation = CompletedDonation.objects.get(
-            checkout_id=request.GET.get('checkout_id')
+            id=request.GET.get('id')
         )
         
         if do_commands == 'true':
@@ -296,12 +296,13 @@ class DonationBenefitResend(View):
                 messages.error(request, f'Cannot re-send commands for this donation, the package has no commands to send!')
             
         if do_roles == 'true':
-            if completed_donation.bought_package.discord_roles.all().count() > 0:
+            if completed_donation.bought_package.discord_roles.all().count() > 0 and completed_donation.discord_username != None:
                 completed_donation.give_discord_roles()
                 messages.success(request, f'Re-gave Discord Roles for {completed_donation.discord_username}')
                 
             else:
-                messages.error(request, f'Cannot re-give Discord Roles for this donation, the package has no roles to give!')
+                messages.error(request, f'Cannot re-give Discord Roles for this donation, the package has no roles to give '
+                                        'or the donation was not made with a Discord Username')
                 
         return HttpResponse(status=200)
         
