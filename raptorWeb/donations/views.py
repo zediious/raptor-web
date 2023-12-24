@@ -145,6 +145,8 @@ class DonationCheckoutRedirect(View):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
+        payment_gateway_choice = request.POST.get('payment_gateway')
+        
         try:
             minecraft_username: str = request.POST.get('minecraft_username')
             discord_username: str = request.POST.get('discord_username')
@@ -189,15 +191,33 @@ class DonationCheckoutRedirect(View):
                 ).count() > 0:
                 
                 return HttpResponseRedirect('/donations/previousdonation')
-        
-        return redirect(
-            get_checkout_url(
+            
+        if payment_gateway_choice == 'stripe':
+            return redirect(
+                get_checkout_url(
+                    request,
+                    bought_package,
+                    minecraft_username,
+                    discord_username
+                )
+            )
+            
+        if payment_gateway_choice == 'paypal': 
+            paypal_button = get_paypal_checkout_button(
                 request,
                 bought_package,
                 minecraft_username,
                 discord_username
             )
-        )
+            
+            return render(
+                request,
+                join(DONATIONS_TEMPLATE_DIR, 'paypal_checkout_redirect.html'),
+                context={'form': paypal_button}
+            )
+        
+        else:
+            return HttpResponseRedirect('/donations/failure')
         
         
 class DonationCancel(View):
