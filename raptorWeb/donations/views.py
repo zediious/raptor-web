@@ -326,11 +326,13 @@ def donation_payment_webhook(request: HttpRequest):
             completed_donation.completed = True
             if completed_donation.bought_package.servers.all().count() > 0:
                 send_server_commands.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=10
                 )
+                
+            if completed_donation.bought_package.discord_roles.all().count() > 0:
                 add_discord_bot_roles.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=5
                 )
                 
@@ -341,7 +343,7 @@ def donation_payment_webhook(request: HttpRequest):
             
             if site_info.send_donation_email:
                 send_donation_email.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=5
                 )
                 

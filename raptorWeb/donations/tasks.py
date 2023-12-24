@@ -55,27 +55,27 @@ def send_donation_email(completed_donation_checkout_id: CompletedDonation):
         )
 
 @shared_task
-def send_server_commands(completed_donation_checkout_id: CompletedDonation):
+def send_server_commands(completed_donation_id: CompletedDonation):
     """
     Given a completed/paid for donation, send all commands attached to the
     bought package to all the servers attached to the bought package.
     """
     completed_donation = CompletedDonation.objects.get(
-        checkout_id=completed_donation_checkout_id
+        pk=completed_donation_id
     )
     
     if completed_donation.bought_package.commands.all().count() > 0:
         completed_donation.send_server_commands()
     
 @shared_task
-def add_discord_bot_roles(completed_donation_checkout_id: CompletedDonation):
+def add_discord_bot_roles(completed_donation_id: CompletedDonation):
     """
     Given a completed/paid for donation, give all discord roles attached to the
     bought package to the Discord tag attached to the completed donation. Will
     only run if the complete donation ahs a Discord tag.
     """
     completed_donation = CompletedDonation.objects.get(
-        checkout_id=completed_donation_checkout_id
+        pk=completed_donation_id
     )
     
     if completed_donation.bought_package.discord_roles.all().count() > 0:
