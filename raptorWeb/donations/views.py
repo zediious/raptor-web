@@ -154,8 +154,6 @@ class DonationCheckoutRedirect(View):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
-        payment_gateway_choice = request.POST.get('payment_gateway')
-        
         try:
             minecraft_username: str = request.POST.get('minecraft_username')
             discord_username: str = request.POST.get('discord_username')
