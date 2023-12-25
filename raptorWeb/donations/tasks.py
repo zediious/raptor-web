@@ -20,13 +20,13 @@ DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
 EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
 
 @shared_task
-def send_donation_email(completed_donation_checkout_id: CompletedDonation):
+def send_donation_email(completed_donation_id: CompletedDonation):
     """
     Given a completed/paid for donation, send an email to the email associated
     with the donating user, if the donation has a donating user.
     """
     completed_donation = CompletedDonation.objects.get(
-        checkout_id=completed_donation_checkout_id
+        pk=completed_donation_id
     )
 
     if completed_donation.donating_user != None:

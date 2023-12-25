@@ -108,7 +108,7 @@ def receive_paypal_ipn(sender, **kwargs):
             
             if site_info.send_donation_email:
                 send_donation_email.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=5
                 )
                 
