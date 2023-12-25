@@ -315,6 +315,7 @@ JAZZMIN_SETTINGS = {
     # Sidebar
     "show_sidebar": True,
     "navigation_expanded": False,
+    "hide_apps": ['ipn'],
     "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", "staffapps", "authprofiles"],
     "custom_links": {
         "raptorbot": [{
