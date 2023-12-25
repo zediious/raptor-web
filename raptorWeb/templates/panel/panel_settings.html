@@ -120,6 +120,8 @@
                     </div>
                     <div class="d-flex justify-content-center">
                         <div class="w-50">
+                            {% bootstrap_field SettingsInformation.stripe_enabled %}
+                            {% bootstrap_field SettingsInformation.paypal_enabled %}
                             {% bootstrap_field SettingsInformation.donation_currency %}
                             {% bootstrap_field SettingsInformation.donation_goal %}
                             {% bootstrap_field SettingsInformation.show_donation_goal %}

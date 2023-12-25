@@ -190,6 +190,11 @@ class SettingsPanel(PanelApiBaseView):
                             changed.append(field_string.title()) 
                     except KeyError:
                         continue
+                    
+            if (settings_form.cleaned_data['stripe_enabled'] == False
+            and settings_form.cleaned_data['paypal_enabled'] == False):
+                messages.error(request, 'You must have at least one Payment Gateway enabled.')
+                return HttpResponse(status=200)
                         
             if changed == []:
                 messages.error(request, 'You must change some values to update settings.')
