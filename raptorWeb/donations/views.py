@@ -184,6 +184,17 @@ class DonationCheckoutRedirect(View):
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
         
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+        
+        if site_info.paypal_enabled and site_info.stripe_enabled:
+            payment_gateway_choice = request.POST.get('payment_gateway')
+            
+        elif site_info.paypal_enabled == False and site_info.stripe_enabled:
+            payment_gateway_choice = 'stripe'
+            
+        elif site_info.paypal_enabled and site_info.stripe_enabled == False:
+            payment_gateway_choice = 'paypal'
+        
         if bought_package.variable_price:
             chosen_price = request.POST.get('chosen_price')
             if int(chosen_price) < bought_package.price:
