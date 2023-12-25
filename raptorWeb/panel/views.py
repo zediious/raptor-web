@@ -261,7 +261,7 @@ class SettingsPanelFilePost(PanelApiBaseView):
                 changed_string += f'{change}, '
             if changed == []:
                 messages.error(request, 'You must change upload new files to update settings.')
-                return render(request, self.template_name, context=dictionary)
+                return HttpResponse(status=200)
             
             site_info.save()
             messages.success(request,
@@ -312,7 +312,7 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
                 changed_string += f'{change}, '
             if changed == []:
                 messages.error(request, 'You must change the current settings before updating them.')
-                return render(request, self.template_name, context=dictionary)
+                return HttpResponse(status=200)
             
             default_pages.save()
             messages.success(request,
