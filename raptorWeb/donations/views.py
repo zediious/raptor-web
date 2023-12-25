@@ -126,14 +126,23 @@ class DonationCheckout(TemplateView):
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
-
+        
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
         bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
+        
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
         context['donation_price_form'] = DonationPriceForm({'chosen_price': bought_package.price})
         context['discord_username_form'] = DonationDiscordUsernameForm()
         context['donation_details_form'] = SubmittedDonationForm()
-        context['donation_gateway_form'] = DonationGatewayForm()
+        
+        if site_info.paypal_enabled and site_info.stripe_enabled:
+            context['donation_gateway_form'] = DonationGatewayForm()
+            context['single_gateway'] = False
+            
+        else:
+            context['single_gateway'] = True
+            
         return context
         
         
