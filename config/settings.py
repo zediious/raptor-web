@@ -316,7 +316,7 @@ JAZZMIN_SETTINGS = {
     "show_sidebar": True,
     "navigation_expanded": False,
     "hide_apps": ['ipn'],
-    "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", "staffapps", "authprofiles"],
+    "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", 'donations', "staffapps", "authprofiles"],
     "custom_links": {
         "raptorbot": [{
             "name": "Discord Bot Control Panel", 
@@ -333,7 +333,13 @@ JAZZMIN_SETTINGS = {
          "donations": [{
             "name": "Completed Donations", 
             "url": "/panel/donations/", 
-            "icon": "fa fa-credit-card",
+            "icon": "fa fa-check-double",
+            "permissions": ["raptormc.donations"]
+        }],
+         "donations": [{
+            "name": "Completed Donations", 
+            "url": "/panel/donations/", 
+            "icon": "fa fa-check-double",
             "permissions": ["raptormc.donations"]
         }]
     },
@@ -360,9 +366,10 @@ JAZZMIN_SETTINGS = {
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",
+        "donations": "fa fa-coins",
         "donations.DonationPackage": "fa fa-archive",
         "donations.DonationServerCommand": "fa fa-terminal",
-        "donations.DonationDiscordRole": "fa fa-tags",
+        "donations.DonationDiscordRole": "fa fa-mask",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -389,7 +396,6 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "cyborg",
     "actions_sticky_top": False,
     "sidebar_nav_child_indent": True,
-    "related_modal_active": True
 
 }
 
