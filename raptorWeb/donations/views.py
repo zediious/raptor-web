@@ -211,31 +211,38 @@ class DonationCheckoutRedirect(View):
                 return HttpResponseRedirect('/donations/previousdonation')
             
         if payment_gateway_choice == 'stripe':
-            return redirect(
-                get_checkout_url(
+            if site_info.stripe_enabled:
+                return redirect(
+                    get_checkout_url(
+                        request,
+                        bought_package,
+                        minecraft_username,
+                        discord_username
+                    )
+                )
+                
+            else:
+                return HttpResponseRedirect('/donations/failure')
+            
+        if payment_gateway_choice == 'paypal': 
+            if site_info.paypal_enabled:
+                paypal_button = get_paypal_checkout_button(
                     request,
                     bought_package,
                     minecraft_username,
                     discord_username
                 )
-            )
-            
-        if payment_gateway_choice == 'paypal': 
-            paypal_button = get_paypal_checkout_button(
-                request,
-                bought_package,
-                minecraft_username,
-                discord_username
-            )
-            
-            return render(
-                request,
-                join(DONATIONS_TEMPLATE_DIR, 'paypal_checkout_redirect.html'),
-                context={'form': paypal_button}
-            )
+                
+                return render(
+                    request,
+                    join(DONATIONS_TEMPLATE_DIR, 'paypal_checkout_redirect.html'),
+                    context={'form': paypal_button}
+                )
+                
+            else:
+                return HttpResponseRedirect('/donations/failure')
         
-        else:
-            return HttpResponseRedirect('/donations/failure')
+        return HttpResponseRedirect('/donations/failure')
         
         
 class DonationCancel(View):
@@ -333,6 +340,11 @@ def donation_payment_webhook(request: HttpRequest):
     if STRIPE_WEBHOOK_SECRET == '':
         return HttpResponseRedirect('/404')
     
+    site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+    
+    if site_info.stripe_enabled == False:
+        return HttpResponseRedirect('/404')
+    
     if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
@@ -359,7 +371,6 @@ def donation_payment_webhook(request: HttpRequest):
 
         # Passed signature verification
         if event['type'] == 'checkout.session.completed':
-            site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
             
             completed_donation = CompletedDonation.objects.get(
                 checkout_id=event['data']['object']['id'],
