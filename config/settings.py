@@ -239,7 +239,7 @@ STRIPE_SECRET_KEY = '' if str(getenv('STRIPE_SECRET_KEY')) == '' else str(getenv
 STRIPE_WEBHOOK_SECRET = '' if str(getenv('STRIPE_WEBHOOK_SECRET')) == '' else str(getenv('STRIPE_WEBHOOK_SECRET'))
 PAYPAL_RECEIVER_EMAIL = '' if getenv('PAYPAL_RECEIVER_EMAIL') == '' else getenv('PAYPAL_RECEIVER_EMAIL')
 PAYPAL_DEV_WEBHOOK_DOMAIN = '' if getenv('PAYPAL_DEV_WEBHOOK_DOMAIN') == '' else getenv('PAYPAL_DEV_WEBHOOK_DOMAIN')
-PAYPAL_TEST = True
+PAYPAL_TEST = True if DEBUG else False
 
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
