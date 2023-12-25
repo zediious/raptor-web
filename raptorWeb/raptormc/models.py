@@ -736,7 +736,7 @@ class DefaultPages(models.Model):
     )
     
     donations = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name="Donations Pages",
         help_text=("Whether the Donations system/pages are enabled or not.")
     )
