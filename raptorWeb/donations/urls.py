@@ -1,4 +1,4 @@
-from django.urls import URLPattern, path
+from django.urls import URLPattern, path, include
 
 from raptorWeb.donations import views
 
@@ -18,6 +18,7 @@ urlpatterns: list[URLPattern] = [
     path('donation/delete/', views.DonationDelete.as_view(), name="donation_delete"),
     path('payment/webhook', views.donation_payment_webhook, name="payment_webook"),
     path('payment/webhook/', views.donation_payment_webhook, name="payment_webook"),
+    path('payment/paypal_webhook', include('paypal.standard.ipn.urls')),
     # Admin
     path('donation/resend/', views.DonationBenefitResend.as_view(), name="resend"),
 ]

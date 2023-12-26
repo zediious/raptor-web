@@ -36,6 +36,9 @@ STRIPE_PUBLISHABLE_KEY=''
 STRIPE_SECRET_KEY=''
 STRIPE_WEBHOOK_SECRET=''
 
+PAYPAL_RECEIVER_EMAIL=''
+PAYPAL_DEV_WEBHOOK_DOMAIN=''
+
 USE_CONSOLE_EMAIL=
 ERROR_LOG_EMAIL=''
 EMAIL_HOST=''
@@ -103,13 +106,21 @@ A description for the Discord Bot, used when creating the Bot
 # *Stripe Payments*
 
 ### **STRIPE_PUBLISHABLE_KEY**
-Your Stripe "Publishable Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+Your Stripe "Publishable Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys). This can be left blank if the Donations module will be disabled.
 
 ### **STRIPE_SECRET_KEY**
-Your Stripe "Secret Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys).
+Your Stripe "Secret Key". After signing in to Stripe, [you can find this by going to your Stripe Dashboard](https://dashboard.stripe.com/apikeys). This can be left blank if the Donations module will be disabled.
 
 ### **STRIPE_WEBHOOK_SECRET**
-Your Stripe "Webhook Secret". [Create a Webhook Endpoint here](https://dashboard.stripe.com/webhooks/create), and set the URL to `https://<your.domain.name>/api/donations/payment/webhook`. After doing so, you will be able to get your Webhook Secret.
+Your Stripe "Webhook Secret". [Create a Webhook Endpoint here](https://dashboard.stripe.com/webhooks/create), and set the URL to `https://<your.domain.name>/api/donations/payment/webhook`. After doing so, you will be able to get your Webhook Secret. This can be left blank if the Donations module will be disabled.
+
+# *Paypal Payments*
+
+### **PAYPAL_RECEIVER_EMAIL**
+The email for the Paypal account that you wish to receive donation payments. This can be left blank if the Donations module will be disabled.
+
+### **PAYPAL_DEV_WEBHOOK_DOMAIN**
+The publicly accessible domain for Paypal to send POST requests to on successful payments in a DEV environment. This is only required in a development environment, you should leave this empty in production.
 
 # *Email*
 

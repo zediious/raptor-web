@@ -165,7 +165,12 @@ LOGGING_DEFINITION = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'donations.payments': {
+        'donations.payments.stripe': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'donations.payments.paypal': {
             'handlers': ['console', 'log_file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,

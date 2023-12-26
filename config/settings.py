@@ -83,7 +83,8 @@ INSTALLED_APPS: list[str] = [
     'raptorWeb.gameservers',
     'raptorWeb.donations',
     'raptorWeb.raptorbot',
-    'raptorWeb.panel'
+    'raptorWeb.panel',
+    'paypal.standard.ipn'
 ]
 
 MIDDLEWARE: list[str] = [
@@ -236,6 +237,9 @@ ADMIN_BRAND_NAME = "Default" if getenv('ADMIN_BRAND_NAME') == '' else getenv('AD
 STRIPE_PUBLISHABLE_KEY =  '' if str(getenv('STRIPE_PUBLISHABLE_KEY')) == '' else  str(getenv('STRIPE_PUBLISHABLE_KEY'))
 STRIPE_SECRET_KEY = '' if str(getenv('STRIPE_SECRET_KEY')) == '' else str(getenv('STRIPE_SECRET_KEY'))
 STRIPE_WEBHOOK_SECRET = '' if str(getenv('STRIPE_WEBHOOK_SECRET')) == '' else str(getenv('STRIPE_WEBHOOK_SECRET'))
+PAYPAL_RECEIVER_EMAIL = '' if getenv('PAYPAL_RECEIVER_EMAIL') == '' else getenv('PAYPAL_RECEIVER_EMAIL')
+PAYPAL_DEV_WEBHOOK_DOMAIN = '' if getenv('PAYPAL_DEV_WEBHOOK_DOMAIN') == '' else getenv('PAYPAL_DEV_WEBHOOK_DOMAIN')
+PAYPAL_TEST = True if DEBUG else False
 
 # Path to json file to import servers from
 IMPORT_JSON_LOCATION: str = join(BASE_DIR, 'server_data_full.json')
@@ -311,7 +315,8 @@ JAZZMIN_SETTINGS = {
     # Sidebar
     "show_sidebar": True,
     "navigation_expanded": False,
-    "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", "staffapps", "authprofiles"],
+    "hide_apps": ['ipn'],
+    "order_with_respect_to": ["raptormc", "gameservers", "raptorbot", 'donations', "staffapps", "authprofiles"],
     "custom_links": {
         "raptorbot": [{
             "name": "Discord Bot Control Panel", 
@@ -328,7 +333,13 @@ JAZZMIN_SETTINGS = {
          "donations": [{
             "name": "Completed Donations", 
             "url": "/panel/donations/", 
-            "icon": "fa fa-credit-card",
+            "icon": "fa fa-check-double",
+            "permissions": ["raptormc.donations"]
+        }],
+         "donations": [{
+            "name": "Completed Donations", 
+            "url": "/panel/donations/", 
+            "icon": "fa fa-check-double",
             "permissions": ["raptormc.donations"]
         }]
     },
@@ -355,9 +366,10 @@ JAZZMIN_SETTINGS = {
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",
+        "donations": "fa fa-coins",
         "donations.DonationPackage": "fa fa-archive",
         "donations.DonationServerCommand": "fa fa-terminal",
-        "donations.DonationDiscordRole": "fa fa-tags",
+        "donations.DonationDiscordRole": "fa fa-mask",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -384,7 +396,6 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "cyborg",
     "actions_sticky_top": False,
     "sidebar_nav_child_indent": True,
-    "related_modal_active": True
 
 }
 
