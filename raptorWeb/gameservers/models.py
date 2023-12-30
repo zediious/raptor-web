@@ -3,6 +3,7 @@ from io import TextIOWrapper
 from time import sleep
 from logging import Logger, getLogger
 from typing import Optional
+from dns.resolver import LifetimeTimeout
 
 from django.db import models
 from django.utils.timezone import localtime, now
@@ -92,7 +93,7 @@ class ServerManager(models.Manager):
                             )
                             new_player.save()
 
-                except TimeoutError:
+                except TimeoutError or LifetimeTimeout:
                     _set_offline_server(server)
 
             else:
