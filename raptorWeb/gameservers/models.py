@@ -166,13 +166,14 @@ class ServerManager(models.Manager):
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
             
-    def get_servers(self):
+    def get_servers(self, wait=True):
         """
         Return a list of servers that are not archived. Will check if a query is running, and wait
         to return servers until the query is finished.
         """
-        while self._player_poller._is_running == True:
-            sleep(0.1)
+        if wait:
+            while self._player_poller._is_running == True:
+                sleep(0.1)
         
         return self.filter(archived=False).order_by('-pk')
 
