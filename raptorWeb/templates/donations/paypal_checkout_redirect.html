@@ -1,19 +1,54 @@
-<div style='display: none;'>
-    {{ form.render }}
-</div>
+<!DOCTYPE html>
 
-<div align='center'>
-    You are being redirected, please wait.
-</div>
+{% load static %}
 
-<script>
+<html lang="en" dir="ltr">
 
-    window.onload=function(){
-        document.querySelectorAll('form').forEach(submitForm)
-    }
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redirecting to PayPal Payment</title>
+    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+    <link rel="shortcut icon" type="image/x-icon"
+          href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
+  </head>
 
-    function submitForm(form){
-        form.submit();
-    }
+  <body class='bg-dark'>
 
-</script>
+    <main class="container-flex m-xl-5 m-sm-1 mt-0">
+
+        <div class="d-flex flex-column">
+            <div class="d-flex justify-content-center m-5 mb-5">
+                <img id="mainLoadingspinner"
+                    class="w-25 mb-5"
+                    src="{% static 'image/tail-spin.svg' %}"
+                    alt="Loading...">
+            </div>
+            
+            <div class="d-flex justify-content-center text-center text-white fs-2">
+                You are being redirected, please wait.
+            </div>
+        </div>
+      
+    </main>
+
+    <div style='display: none;'>
+        {{ form.render }}
+    </div>
+
+    <script>
+    
+        window.onload=function(){
+            document.querySelectorAll('form').forEach(submitForm)
+        }
+    
+        function submitForm(form){
+            form.submit();
+        }
+    
+    </script>
+
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
+
+  </body>
