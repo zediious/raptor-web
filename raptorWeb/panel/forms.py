@@ -10,6 +10,10 @@ class PanelSettingsInformation(forms.ModelForm):
     class Meta():
         model: SiteInformation = SiteInformation
         fields: str = "__all__"
+        widgets = {
+            'main_color': forms.TextInput(attrs={'type': 'color'}),
+            'secondary_color': forms.TextInput(attrs={'type': 'color'}),
+        }
         exclude: tuple[str] = (
             'branding_image',
             'background_image',
