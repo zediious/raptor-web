@@ -33,7 +33,6 @@ async def check_tasks(bot_instance):
         await messages.delete_messages(bot_instance, str(tasks[0].messages_to_delete))
         
     if str(tasks[0].users_and_roles_to_give) != "":
-        LOGGER.debug('about to run give_role')
         await presence.give_role(bot_instance, str(tasks[0].users_and_roles_to_give))
 
     await DiscordBotTasks.objects.aupdate(

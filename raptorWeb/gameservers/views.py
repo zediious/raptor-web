@@ -26,7 +26,10 @@ class Server_List_Base(ListView):
     model: Server = Server
 
     def get_queryset(self) -> ServerManager:
-        return Server.objects.get_servers()
+        if 'loading' not in self.template_name:
+            return Server.objects.get_servers()
+        
+        return Server.objects.get_servers(wait=False)
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":

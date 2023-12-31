@@ -100,6 +100,12 @@ class DonationPackage(models.Model):
         help_text='If this is enabled, this package can be bought multiple times by the same Minecraft username'
     )
     
+    priority = models.IntegerField(
+        default=0,
+        verbose_name='Priority',
+        help_text='The order that this package will appear in the package list..'
+    )
+    
     servers = models.ManyToManyField(
         to=Server,
         blank=True,
@@ -184,10 +190,19 @@ class CompletedDonation(models.Model):
     )
     
     checkout_id = models.CharField(
-        default="",
         max_length=1000,
+        blank=True,
+        null=True,
         verbose_name="Stripe Checkout ID",
         help_text=("The unique ID for the Stripe Checkout session this Donation utilized.")
+    )
+    
+    paypal_invoice = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        verbose_name="Paypal Invoice ID",
+        help_text=("The unique ID for the Paypal Invoice generated for this donation.")
     )
     
     sent_commands_count = models.IntegerField(

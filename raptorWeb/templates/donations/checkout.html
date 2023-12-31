@@ -42,9 +42,6 @@
                                 Go to Profile
                             </a>
                         </div>
-                        <p class='fs-7 text-center mb-3'>
-                            Make sure to confirm the above information before clicking Checkout!
-                        </p>
                         <hr class="text-white">
                     {% endif %}
                     <div class="text-white text-center fs-4 mt-3 mb-2">
@@ -63,6 +60,12 @@
                     <div class="text-white fs-4 mt-3 mb-3">
                         {{buying_package.package_description|safe}}
                     </div>
+                    <hr>
+                    {% if not single_gateway %}
+                    <div class="d-flex flex-column">
+                        {% bootstrap_field donation_gateway_form.payment_gateway %}
+                    </div>
+                    {% endif %}
                     
                     <div class="d-flex flex-column">
                         {% if buying_package.variable_price %}
@@ -71,6 +74,11 @@
                         <button class="btn btn-success" type='submit'>
                             Checkout
                         </button>
+                        <p class='fs-9 text-center mt-2'>
+                            Clicking the above button will redirect you to the payment processor 
+                            to complete this donation. Make sure to confirm the above information 
+                            before clicking Checkout!
+                        </p>
                     </div>
 
                     </div>
@@ -95,9 +103,6 @@
                     {% bootstrap_field donation_details_form.minecraft_username %}
                     {% if buying_package.servers.count > 0 %}
                         {% bootstrap_field donation_details_form.discord_username %}
-                        <p class='fs-7 text-center mb-3'>
-                            Make sure to confirm the above information before clicking Checkout!
-                        </p>
                     {% endif %}
                     <hr class="text-white">
                     <div class="text-white text-center fs-4 mt-3 mb-2">
@@ -116,6 +121,13 @@
                     <div class="text-white fs-4 mt-3 mb-3">
                         {{buying_package.package_description|safe}}
                     </div>
+                    <hr>
+                    {% if not single_gateway %}
+                    <div class="d-flex flex-column">
+                        {% bootstrap_field donation_gateway_form.payment_gateway %}
+                    </div>
+                    {% endif %}
+
                     <div class='d-flex flex-column'>
                         {% if buying_package.variable_price %}
                         {% bootstrap_field donation_price_form.chosen_price %}
@@ -123,6 +135,11 @@
                         <button class="btn btn-success" type='submit'>
                             Checkout
                         </button>
+                        <p class='fs-9 text-center mt-2'>
+                            Clicking the above button will redirect you to the payment processor 
+                            to complete this donation. Make sure to confirm the above information 
+                            before clicking Checkout!
+                        </p>
                     </div>
 
                 </form>

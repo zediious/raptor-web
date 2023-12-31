@@ -1,12 +1,12 @@
 from logging import getLogger
 from os.path import join
 from typing import Any
-from django.db.models.query import QuerySet
 
 from django.views.generic import ListView, TemplateView, View
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.query import QuerySet
 from django.contrib import messages
 from django.conf import settings
 
@@ -15,10 +15,11 @@ from stripe.error import SignatureVerificationError
 
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 from raptorWeb.donations.models import DonationPackage, CompletedDonation
-from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm
+from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm, DonationGatewayForm
 from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
 from raptorWeb.donations.mojang import verify_minecraft_username
-from raptorWeb.donations.payments import get_checkout_url
+from raptorWeb.donations.payments.stripe import get_checkout_url
+from raptorWeb.donations.payments.paypal import get_paypal_checkout_button
 
 DONATIONS_TEMPLATE_DIR: str = getattr(settings, 'DONATIONS_TEMPLATE_DIR')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
@@ -78,6 +79,9 @@ class DonationPackages(ListView):
     """
     paginate_by: int = 9
     model: DonationPackage = DonationPackage
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().order_by('priority')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
@@ -125,12 +129,23 @@ class DonationCheckout(TemplateView):
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+        
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
         bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
+        
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
         context['donation_price_form'] = DonationPriceForm({'chosen_price': bought_package.price})
         context['discord_username_form'] = DonationDiscordUsernameForm()
         context['donation_details_form'] = SubmittedDonationForm()
+        
+        if site_info.paypal_enabled and site_info.stripe_enabled:
+            context['donation_gateway_form'] = DonationGatewayForm()
+            context['single_gateway'] = False
+            
+        else:
+            context['single_gateway'] = True
+            
         return context
         
         
@@ -170,6 +185,17 @@ class DonationCheckoutRedirect(View):
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
         
+        site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+        
+        if site_info.paypal_enabled and site_info.stripe_enabled:
+            payment_gateway_choice = request.POST.get('payment_gateway')
+            
+        elif site_info.paypal_enabled == False and site_info.stripe_enabled:
+            payment_gateway_choice = 'stripe'
+            
+        elif site_info.paypal_enabled and site_info.stripe_enabled == False:
+            payment_gateway_choice = 'paypal'
+        
         if bought_package.variable_price:
             chosen_price = request.POST.get('chosen_price')
             if int(chosen_price) < bought_package.price:
@@ -186,15 +212,40 @@ class DonationCheckoutRedirect(View):
                 ).count() > 0:
                 
                 return HttpResponseRedirect('/donations/previousdonation')
+            
+        if payment_gateway_choice == 'stripe':
+            if site_info.stripe_enabled:
+                return redirect(
+                    get_checkout_url(
+                        request,
+                        bought_package,
+                        minecraft_username,
+                        discord_username
+                    )
+                )
+                
+            else:
+                return HttpResponseRedirect('/donations/failure')
+            
+        if payment_gateway_choice == 'paypal': 
+            if site_info.paypal_enabled:
+                paypal_button = get_paypal_checkout_button(
+                    request,
+                    bought_package,
+                    minecraft_username,
+                    discord_username
+                )
+                
+                return render(
+                    request,
+                    join(DONATIONS_TEMPLATE_DIR, 'paypal_checkout_redirect.html'),
+                    context={'form': paypal_button}
+                )
+                
+            else:
+                return HttpResponseRedirect('/donations/failure')
         
-        return redirect(
-            get_checkout_url(
-                request,
-                bought_package,
-                minecraft_username,
-                discord_username
-            )
-        )
+        return HttpResponseRedirect('/donations/failure')
         
         
 class DonationCancel(View):
@@ -261,7 +312,7 @@ class DonationBenefitResend(View):
         do_commands = request.GET.get('do_commands')
         do_roles = request.GET.get('do_roles')
         completed_donation = CompletedDonation.objects.get(
-            checkout_id=request.GET.get('checkout_id')
+            id=request.GET.get('id')
         )
         
         if do_commands == 'true':
@@ -273,12 +324,13 @@ class DonationBenefitResend(View):
                 messages.error(request, f'Cannot re-send commands for this donation, the package has no commands to send!')
             
         if do_roles == 'true':
-            if completed_donation.bought_package.discord_roles.all().count() > 0:
+            if completed_donation.bought_package.discord_roles.all().count() > 0 and completed_donation.discord_username != None:
                 completed_donation.give_discord_roles()
                 messages.success(request, f'Re-gave Discord Roles for {completed_donation.discord_username}')
                 
             else:
-                messages.error(request, f'Cannot re-give Discord Roles for this donation, the package has no roles to give!')
+                messages.error(request, f'Cannot re-give Discord Roles for this donation, the package has no roles to give '
+                                        'or the donation was not made with a Discord Username')
                 
         return HttpResponse(status=200)
         
@@ -289,6 +341,11 @@ def donation_payment_webhook(request: HttpRequest):
     Webhook to listen for payment events from Stripe
     """
     if STRIPE_WEBHOOK_SECRET == '':
+        return HttpResponseRedirect('/404')
+    
+    site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
+    
+    if site_info.stripe_enabled == False:
         return HttpResponseRedirect('/404')
     
     if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
@@ -317,7 +374,6 @@ def donation_payment_webhook(request: HttpRequest):
 
         # Passed signature verification
         if event['type'] == 'checkout.session.completed':
-            site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
             
             completed_donation = CompletedDonation.objects.get(
                 checkout_id=event['data']['object']['id'],
@@ -326,11 +382,13 @@ def donation_payment_webhook(request: HttpRequest):
             completed_donation.completed = True
             if completed_donation.bought_package.servers.all().count() > 0:
                 send_server_commands.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=10
                 )
+                
+            if completed_donation.bought_package.discord_roles.all().count() > 0:
                 add_discord_bot_roles.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=5
                 )
                 
@@ -341,7 +399,7 @@ def donation_payment_webhook(request: HttpRequest):
             
             if site_info.send_donation_email:
                 send_donation_email.apply_async(
-                    args=(completed_donation.checkout_id,),
+                    args=(completed_donation.pk,),
                     countdown=5
                 )
                 

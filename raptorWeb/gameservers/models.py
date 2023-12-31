@@ -3,6 +3,7 @@ from io import TextIOWrapper
 from time import sleep
 from logging import Logger, getLogger
 from typing import Optional
+from dns.resolver import LifetimeTimeout
 
 from django.db import models
 from django.utils.timezone import localtime, now
@@ -92,7 +93,7 @@ class ServerManager(models.Manager):
                             )
                             new_player.save()
 
-                except TimeoutError:
+                except TimeoutError or LifetimeTimeout:
                     _set_offline_server(server)
 
             else:
@@ -166,13 +167,14 @@ class ServerManager(models.Manager):
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
             
-    def get_servers(self):
+    def get_servers(self, wait=True):
         """
         Return a list of servers that are not archived. Will check if a query is running, and wait
         to return servers until the query is finished.
         """
-        while self._player_poller._is_running == True:
-            sleep(0.1)
+        if wait:
+            while self._player_poller._is_running == True:
+                sleep(0.1)
         
         return self.filter(archived=False).order_by('-pk')
 

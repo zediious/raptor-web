@@ -524,6 +524,20 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    stripe_enabled = models.BooleanField(
+        verbose_name="Stripe Payment Gateway",
+        help_text=("If this is checked, Stripe will be given as an option "
+                   "to pay when Donating. At least one Payment Gateway must be enabled."),
+        default=True
+    )
+    
+    paypal_enabled = models.BooleanField(
+        verbose_name="PayPal Payment Gateway",
+        help_text=("If this is checked, PayPal will be given as an option "
+                   "to pay when Donating. At least one Payment Gateway must be enabled."),
+        default=True
+    )
+    
     donation_currency = models.CharField(
         verbose_name='Donation Currency',
         help_text='The currency used when accepting donations.',
@@ -736,7 +750,7 @@ class DefaultPages(models.Model):
     )
     
     donations = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name="Donations Pages",
         help_text=("Whether the Donations system/pages are enabled or not.")
     )

@@ -28,6 +28,7 @@ class DonationPackageAdmin(admin.ModelAdmin):
                 'price',
                 'variable_price',
                 'allow_repeat',
+                'priority',
                 'package_picture',
                 'package_description')
         }),
@@ -43,7 +44,7 @@ class DonationPackageAdmin(admin.ModelAdmin):
         'name',
     ]
 
-    list_display: list[str] = ['name', 'allow_repeat', 'variable_price', 'price']
+    list_display: list[str] = ['name', 'allow_repeat', 'variable_price', 'price', 'priority']
     
     
 class DonationServerCommandAdmin(admin.ModelAdmin):
