@@ -79,6 +79,9 @@ class DonationPackages(ListView):
     """
     paginate_by: int = 9
     model: DonationPackage = DonationPackage
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().order_by('priority')
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:

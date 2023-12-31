@@ -100,6 +100,12 @@ class DonationPackage(models.Model):
         help_text='If this is enabled, this package can be bought multiple times by the same Minecraft username'
     )
     
+    priority = models.IntegerField(
+        default=0,
+        verbose_name='Priority',
+        help_text='The order that this package will appear in the package list..'
+    )
+    
     servers = models.ManyToManyField(
         to=Server,
         blank=True,
