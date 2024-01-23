@@ -14,7 +14,7 @@
                 <form class="form p-3 text-white"
                     enctype="multipart/form-data"
                     method='post'
-                    action="{% url "donations:stripe_redirect" package=buying_package.name|slugify %}"
+                    action="{% url "donations:stripe_redirect" package=buying_package.pk %}"
                 >   
                     {% csrf_token %}
                     {% if buying_package.servers.count > 0 %}
@@ -97,7 +97,7 @@
                 <form class="form p-3 text-white"
                     enctype="multipart/form-data"
                     method='post'
-                    action="{% url "donations:stripe_redirect" package=buying_package.name|slugify %}"
+                    action="{% url "donations:stripe_redirect" package=buying_package.pk %}"
                 >     
                     {% csrf_token %}
                     {% bootstrap_field donation_details_form.minecraft_username %}

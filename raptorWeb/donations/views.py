@@ -131,7 +131,7 @@ class DonationCheckout(TemplateView):
         context =  super().get_context_data(**kwargs)
         
         site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
-        bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
+        bought_package = DonationPackage.objects.get(pk=str(self.kwargs['package']))
         
         context['buying_package'] = bought_package
         context['base_user_url'] = BASE_USER_URL
@@ -180,7 +180,7 @@ class DonationCheckoutRedirect(View):
             return HttpResponseRedirect('/donations/failure/invalidusername')
         
         try:
-            bought_package = DonationPackage.objects.get(name=str(self.kwargs['package']))
+            bought_package = DonationPackage.objects.get(pk=str(self.kwargs['package']))
             
         except DonationPackage.DoesNotExist:
             return HttpResponseRedirect('/')
