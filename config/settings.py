@@ -133,10 +133,10 @@ if USE_CONSOLE_EMAIL:
     EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS: bool = True
-EMAIL_HOST: str = str(getenv('EMAIL_HOST'))
-EMAIL_PORT: int = int(getenv('EMAIL_PORT'))
-EMAIL_HOST_USER: str = str(getenv('EMAIL_HOST_USER'))
-EMAIL_HOST_PASSWORD: str = str(getenv('EMAIL_HOST_PASSWORD'))
+EMAIL_HOST: str = str(getenv('EMAIL_HOST')) if str(getenv('EMAIL_HOST')) != '' else 'test@example.com'
+EMAIL_PORT: int = int(getenv('EMAIL_PORT')) if getenv('EMAIL_PORT') != '' else 587
+EMAIL_HOST_USER: str = str(getenv('EMAIL_HOST_USER')) if str(getenv('EMAIL_HOST_USER')) != '' else 'Test'
+EMAIL_HOST_PASSWORD: str = str(getenv('EMAIL_HOST_PASSWORD')) if str(getenv('EMAIL_HOST_PASSWORD')) != '' else ''
 
 # Database
 DATABASES: dict = {}
