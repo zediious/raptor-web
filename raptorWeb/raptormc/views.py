@@ -389,6 +389,14 @@ class SiteMembers(TemplateView):
     
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
         context: dict[str, Any] = super().get_context_data(**kwargs)
+        get_data = self.request.GET
+        if get_data.get('username'):
+            context['filtered_username'] = self.request.GET.get('username')
+        if get_data.get('is_staff'): 
+            context['filtered_is_staff'] = self.request.GET.get('is_staff')
+        if get_data.get('page'):
+            context['filtered_page'] = self.request.GET.get('page')
+            
         return get_or_create_informative_text(
             context=context,
             informative_text_names=["User Information"])

@@ -25,14 +25,18 @@
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a role="button" class="btn btn-secondary"
-                   hx-get="{% url 'authprofiles:all_user_profile' %}?page=1"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page=1
+                            &is_staff={{ form_data.is_staff }}&username={{ form_data.username }}"
                    hx-target="#user_list_container"
+                   hx-push-url="{{base_user_url}}?page=1"
                 >
                    &laquo; First
                 </a>
                 <a role="button" class="btn btn-secondary"
-                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.previous_page_number }}
+                            &is_staff={{ form_data.is_staff }}&username={{ form_data.username }}"
                    hx-target="#user_list_container"
+                   hx-push-url="{{base_user_url}}?page={{ page_obj.previous_page_number }}"
                 >
                     Previous
                 </a>
@@ -44,14 +48,18 @@
 
             {% if page_obj.has_next %}
                 <a role="button" class="btn btn-secondary"
-                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.next_page_number }}
+                            &is_staff={{ form_data.is_staff }}&username={{ form_data.username }}"
                    hx-target="#user_list_container"
+                   hx-push-url="{{base_user_url}}?page={{ page_obj.next_page_number }}"
                 >
                     Next
                 </a>
                 <a role="button" class="btn btn-secondary"
-                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}"
+                   hx-get="{% url 'authprofiles:all_user_profile' %}?page={{ page_obj.paginator.num_pages }}
+                            &is_staff={{ form_data.is_staff }}&username={{ form_data.username }}"
                    hx-target="#user_list_container"
+                   hx-push-url="{{base_user_url}}?page={{ page_obj.paginator.num_pages }}"
                 >
                     Last &raquo;
                 </a>

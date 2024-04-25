@@ -20,7 +20,7 @@
 {% endif %}
 
 <div class="container mt-4" id="all_profiles"
-     hx-get="{% url 'authprofiles:all_user_profile' %}"
+     hx-get="{% url 'authprofiles:all_user_profile' %}{% if request.GET %}?page={{filtered_page}}&username={{filtered_username}}&is_staff={{filtered_is_staff}}{% endif %}"
      hx-trigger="load"
      hx-target="#all_profiles"
      hx-swap="innerHTML">
