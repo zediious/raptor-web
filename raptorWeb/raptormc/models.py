@@ -510,6 +510,36 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    server_online_message = models.CharField(
+        verbose_name='Server Online Message',
+        help_text=('Text shown in tooltip while hovering over an online server status icon. ' 
+                   'If left blank, no tooltip will appear.'),
+        default='Server is online!',
+        max_length=500,
+        blank=True,
+        null=True
+    )
+    
+    server_offline_message = models.CharField(
+        verbose_name='Server Offline Message',
+        help_text=('Text shown in tooltip while hovering over an offline server status icon. ' 
+                   'If left blank, no tooltip will appear.'),
+        default='Server is offline!',
+        max_length=500,
+        blank=True,
+        null=True
+    )
+    
+    server_maintenance_message = models.CharField(
+        verbose_name='Server Maintenance Message',
+        help_text=("Text shown in tooltip while hovering over a server in maintenance mode's status icon. "
+                   "If left blank, no tooltip will appear."),
+        default='Server is in maintenance mode!',
+        max_length=500,
+        blank=True,
+        null=True
+    )
+    
     collapse_network_rules_when_accessing_server_rules = models.BooleanField(
         verbose_name="Collapse Network Rules section if accessing Rules page from a Server modal link.",
         help_text=("If this is un-checked, the Network Rules section on the Rules page will NOT be "
