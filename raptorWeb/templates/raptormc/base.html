@@ -76,7 +76,7 @@
                hx-swap="innerHTML"
                hx-indicator="#mainLoadingspinner"></div>
         {% else %}
-          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}{% if request.GET %}?{% for param in request.GET %}{{param}}={% get_param param %}{% endfor %}{% endif %}"
+          <div hx-get="/raptormc/api/html/{{request.path|strip_slash}}{% if request.GET %}?{% for param in request.GET %}{{param}}={% get_param param %}&{% endfor %}{% endif %}"
                hx-trigger='load'
                hx-target='#home'
                hx-swap="innerHTML"
