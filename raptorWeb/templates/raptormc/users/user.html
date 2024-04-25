@@ -3,7 +3,7 @@
 
 <div class="mt-4" id="user_box"
      hx-get="{% url 'authprofiles:user_profile' user_slug=request.path|get_user_from_url %}"
-     hx-trigger="load delay:0.1s"
+     hx-trigger="load"
      hx-target="#user_box"
      hx-swap="innerHTML"
 >
