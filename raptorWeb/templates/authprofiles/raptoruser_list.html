@@ -3,7 +3,7 @@
 
 <div id="user_list_container" class="container-flex">
     {% comment %} User list filter form {% endcomment %}
-    <div class="d-flex justify-content-center">
+    <div>
         <form id="user_list_filter_form" class="form p-3 text-white htmxLink"
             enctype="multipart/form-data" 
             hx-get="{% url 'authprofiles:all_user_profile' %}"
@@ -13,7 +13,10 @@
         >     
             {% csrf_token %} 
             <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-            {% bootstrap_form user_filter_form %}
+            <div class="d-flex justify-content-evenly align-items-center">
+                {% bootstrap_field user_filter_form.is_staff %}
+                {% bootstrap_field user_filter_form.username %}
+            </div>
 
         </form>
     </div>
