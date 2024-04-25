@@ -43,12 +43,12 @@
          {% endif %}">
 
       {% comment %} topBox containing Navigation elements {% endcomment %}
-    <div id="topBox" style="z-index: 1">
+      <div id="topBox" style="z-index: 1">
 
-      {% include "raptormc/navigation/offcanvasnav.html" %}
-      {% include "raptormc/navigation/navwidgets.html" %}
+        {% include "raptormc/navigation/offcanvasnav.html" %}
+        {% include "raptormc/navigation/navwidgets.html" %}
 
-    </div>
+      </div>
 
       {% comment %} header_box containing Server button and player count elements {% endcomment %}
       {% include "raptormc/components/headerbox.html" %}
@@ -58,13 +58,13 @@
     {% comment %} Loading indicator for requests that replace #home {% endcomment %}
     <div class="d-flex justify-content-center">
       <img id="mainLoadingspinner"
-           class="htmx-indicator w-50 mt-5 pt-5"
+           class="htmx-indicator loadingSpinnerMain mt-5 pt-5"
            src="{% static 'image/tail-spin.svg' %}"
            alt="Loading...">
     </div>
 
     {% comment %} Main block for page content {% endcomment %}
-    <main id="home" class="container-flex m-xl-5 m-sm-1 mt-0 loaded-content" hx-history-elt>
+    <main id="home" class="container-flex m-xl-5 m-sm-1 mt-0 fade-in-main loaded-content" hx-history-elt>
     
       {% if is_404 == 'true' %}
         {% include "raptormc/404.html" %}
