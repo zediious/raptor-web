@@ -3,11 +3,11 @@
 
 <div class="mt-4" id="user_box"
      hx-get="{% url 'authprofiles:user_profile' user_slug=request.path|get_user_from_url %}"
-     hx-trigger="load delay:0.1s"
+     hx-trigger="load"
      hx-target="#user_box"
      hx-swap="innerHTML"
 >
     <div class="container-flex text-center">
-        <img class="" id="loadingSpinnerCount" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">
+        <img class="loadingSpinnerMain" src="{% static 'image/tail-spin.svg' %}" alt="Loading...">
     </div>
 </div>

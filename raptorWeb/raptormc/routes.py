@@ -100,7 +100,7 @@ def check_route(request):
         for package in all_packages:
             current_routes.append(
                 Route(
-                    name=f'donations/checkout/{slugify(package.name)}',
+                    name=f'donations/checkout/{slugify(package.pk)}',
                     route_type="package",
                     package=package,
                 )
@@ -203,7 +203,7 @@ def check_route(request):
                 return {
                     "og_package": route.package,
                     "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/donations/checkout{slugify(route.package.name)}",
+                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/donations/checkout{slugify(route.package.pk)}",
                     "og_image": f"{site_avatar_url}",
                     "og_title": f"{site_info.brand_name} | {route.package.name}",
                     "og_desc": strip_tags(route.package.package_description)

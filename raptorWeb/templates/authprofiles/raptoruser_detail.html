@@ -10,7 +10,7 @@
 {% include "raptormc/404.html" %}
 {% else %}
 
-<div class="container">
+<div class="container fade-in-main">
     {% if user.is_authenticated and user.username == object.username %}
     {% comment %} Display Profile Editing functions if user is authenticated
     and visiting their own profile. {% endcomment %}

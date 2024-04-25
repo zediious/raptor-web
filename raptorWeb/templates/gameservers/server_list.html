@@ -75,16 +75,28 @@
                     {% if server.in_maintenance %}
                     <img class="w-25 indicatorImage p-2 fade-in"
                         src="{% static 'image/maintenance_indicator.svg' %}"
-                        alt="Maintenance">
+                        alt="Maintenance"
+                        {% if server_maintenance_message|length > 0 %}
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ server_maintenance_message }}">
+                        {% endif %}
                     {% else %}
                     {% if server.server_state %}
                     <img class="w-25 indicatorImage p-2 fade-in"
                         src="{% static 'image/online_indicator.svg' %}"
-                        alt="Online">
+                        alt="Online"
+                        {% if server_online_message|length > 0 %}
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ server_online_message }}">
+                        {% endif %}
                     {% else %}
                     <img class="w-25 indicatorImage p-2 fade-in"
                         src="{% static 'image/offline_indicator.svg' %}"
-                        alt="Offline">
+                        alt="Offline"
+                        {% if server_offline_message|length > 0 %}
+                            data-bs-toggle="tooltip"
+                            data-bs-title="{{ server_offline_message }}">
+                        {% endif %}
                     {% endif %}
                     {% endif %}
                     {% else %}

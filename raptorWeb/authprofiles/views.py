@@ -291,7 +291,8 @@ class All_User_Profile(ListView):
         context.update(
             {
                 "base_user_url": BASE_USER_URL,
-                "user_filter_form": user_filter_form
+                "user_filter_form": user_filter_form,
+                "form_data": form_data
             }
         )
         return context

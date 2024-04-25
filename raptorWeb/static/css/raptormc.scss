@@ -112,6 +112,11 @@ body {
     position: relative;
 }
 
+.loadingSpinnerMain {
+    width: 25%;
+    position: relative;
+}
+
 .htmxLink:hover {
     cursor:pointer;
 }
@@ -171,6 +176,14 @@ body {
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
     animation-duration: 0.6s;
+}
+
+.fade-in-main {
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.2s;
 }
 
 .btn-discord {
