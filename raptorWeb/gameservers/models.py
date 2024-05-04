@@ -30,7 +30,10 @@ SERVER_FIELDS_TO_IGNORE = [
     'server_banned_items'
     'server_vote_links'
     'discord_announcement_channel_id',
-    'discord_modpack_role_id '
+    'discord_modpack_role_id ',
+    'rcon_address',
+    'rcon_port',
+    'rcon_password'
 ]
 
 
