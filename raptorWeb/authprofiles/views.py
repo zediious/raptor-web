@@ -2,6 +2,7 @@ from os.path import join
 from logging import Logger, getLogger
 from typing import Any
 
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib import messages
@@ -240,7 +241,9 @@ class All_User_Profile(ListView):
     """
     paginate_by: int = 9
     model: RaptorUser = RaptorUser
-    queryset: RaptorUserManager = RaptorUser.objects.filter(is_superuser = False).order_by('-date_joined')
+    queryset: RaptorUserManager = RaptorUser.objects.filter(
+        is_superuser=False, is_active=True, user_profile_info__hidden_from_public=False).order_by('-date_joined'
+    )
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
@@ -322,6 +325,11 @@ class User_Profile(DetailView):
             pass
         
         if request.headers.get('HX-Request') == "true":
+            
+            if (RaptorUser.objects.filter(user_slug=self.kwargs['user_slug'])[0].user_profile_info.hidden_from_public and
+            request.user.user_slug != self.kwargs['user_slug']):
+                return HttpResponseRedirect('/404')
+            
             return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('/')
@@ -341,15 +349,20 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     """
     template_name: str = join(AUTH_TEMPLATE_DIR, 'profile_edit.html')
     login_url: str = LOGIN_URL
-    extra_edit_form: UserProfileEditForm = UserProfileEditForm()
+    extra_edit_form: UserProfileEditForm
 
     def get(self, request: HttpRequest, profile_name: str) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
             if slugify(str(request.user)) == slugify(profile_name):
-                instance_dict: dict = {"extra_edit_form": self.extra_edit_form}
                 displayed_user: RaptorUser = RaptorUser.objects.find_slugged_user(profile_name)
                 if displayed_user != None:
-                    instance_dict["displayed_profile"] = displayed_user
+                    self.extra_edit_form: UserProfileEditForm = UserProfileEditForm({
+                        'hidden_from_public': displayed_user.user_profile_info.hidden_from_public
+                    })
+                    instance_dict: dict = {
+                        "extra_edit_form": self.extra_edit_form,
+                        "displayed_profile": displayed_user
+                    }
                     return render(request, self.template_name, context=instance_dict)
 
                 else:
