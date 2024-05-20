@@ -297,6 +297,13 @@ class UserProfileInfo(models.Model):
         verbose_name="Favorite Modpack",
         blank=True
     )
+    
+    hidden_from_public = models.BooleanField(
+        default=False,
+        null=True,
+        help_text="Indicates whether this user appears on the user list, and whether their profile is publicly accessible.",
+        verbose_name="Hidden from Public"
+    )
 
     def update_user_profile_details(self, profile_edit_form: ModelForm, uploaded_files: dict) -> 'UserProfileInfo':
         """
@@ -332,6 +339,10 @@ class UserProfileInfo(models.Model):
         if profile_edit_form.cleaned_data["reset_toasts"] == True:
             changed_user.toasts_seen = dict()
             changed_user.save()
+        
+        is_hidden = profile_edit_form.cleaned_data["hidden_from_public"]
+        if is_hidden != self.hidden_from_public:
+            self.hidden_from_public = is_hidden        
 
         self.save()
         return self

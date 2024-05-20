@@ -64,10 +64,15 @@ class UserProfileEditForm(forms.ModelForm):
         help_text = "If this is checked, your user data about what notification toasts you have seen will be erased, and you will see all of them again.",
         required = False
     )
+    hidden_from_public: forms.BooleanField = forms.BooleanField(
+        label = "Hidden from Public",
+        help_text="Indicates whether your profile appears on the user list, and whether it is publicly accessible.",
+        required = False
+    )
 
     class Meta():
         model: UserProfileInfo = UserProfileInfo
-        fields: tuple[str] = ('reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
+        fields: tuple[str] = ('hidden_from_public', 'reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
 
     def clean(self):
         """

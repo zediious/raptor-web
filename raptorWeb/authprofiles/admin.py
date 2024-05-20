@@ -63,6 +63,7 @@ class UserProfileInfoAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('General', {
             'fields': (
+                'hidden_from_public',
                 'minecraft_username',
                 'favorite_modpack')
         }),
