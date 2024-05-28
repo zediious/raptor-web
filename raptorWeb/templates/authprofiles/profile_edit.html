@@ -23,8 +23,20 @@
 
 </form>
 
-<div class="mb-0 mt-1">
-    <button class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#deletion_request_modal_inner">
-        Request Account Deletion
-    </button>
+<hr>
+
+<div class='d-flex justify-content-around'>
+    {% if not request.user.is_discord_user %}
+    <div class="mb-0 mt-1">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mfa_enable_modal_inner">
+            Enable Multi-Factor Authentication
+        </button>
+    </div>
+    {% endif %}
+
+    <div class="mb-0 mt-1">
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletion_request_modal_inner">
+            Request Account Deletion
+        </button>
+    </div>
 </div>

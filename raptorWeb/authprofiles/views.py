@@ -1,4 +1,5 @@
 from os.path import join
+from os import remove
 from datetime import datetime
 from logging import Logger, getLogger
 from pytz import timezone
@@ -16,10 +17,10 @@ from django.utils.text import slugify
 from django.utils.timezone import localtime
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm, MFARequestQR, MFATotpCodeSubmit
 from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser
 from raptorWeb.authprofiles.tasks import send_delete_request_email
-from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
+from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator, generate_totp_token, check_totp_token
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 
 try:
@@ -29,6 +30,7 @@ except ModuleNotFoundError:
 
 LOGGER: Logger = getLogger('authprofiles.views')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
+MEDIA_DIR: str = getattr(settings, 'MEDIA_DIR')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 DISCORD_AUTH_URL: str = getattr(settings, 'DISCORD_AUTH_URL')
 LOGIN_URL: str = getattr(settings, 'LOGIN_URL')
@@ -92,7 +94,7 @@ class RequestDeleteUser(TemplateView):
             if delete_form.cleaned_data['username'] != requesting_user.username:
                 messages.error(request, "The entered username was incorrect.")
                 return render(request, self.template_name, context=dictionary)
-                
+            
             requesting_user.date_queued_for_delete = datetime.now()
             requesting_user.save()
             logout(request)
@@ -112,6 +114,126 @@ class RequestDeleteUser(TemplateView):
         else:
             messages.error(request, "The form was malformed!")
             return render(request, self.template_name, context=dictionary)
+        
+        
+class GenerateTotpQr(TemplateView):
+    """
+    Generate a QR code for MFA setup
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'mfa_setup.html')
+    otp_template: str = join(AUTH_TEMPLATE_DIR, 'otp_submit.html')
+    qr_code_form: MFARequestQR = MFARequestQR
+    otp_form: MFATotpCodeSubmit = MFATotpCodeSubmit
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        qr_code_form: UserDeleteForm = self.qr_code_form(request.POST)
+        otp_form: MFATotpCodeSubmit = self.otp_form()
+        dictionary: dict = {"qr_code_form": qr_code_form}
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        if request.user.is_discord_user:
+            return HttpResponseRedirect('/')
+        
+        if qr_code_form.is_valid():
+            
+            clean_data = qr_code_form.cleaned_data
+            user = authenticate(request, username=clean_data['username'], password=clean_data['password'])
+            
+            if user != None:
+                generate_totp_token(user)
+                dictionary.update({
+                    'otp_form': otp_form,
+                    'otp_user': user
+                })
+                return render(request, self.otp_template, context=dictionary)
+            
+            messages.error(request, "The entered username or password was incorrect.")
+            return render(request, self.template_name, context=dictionary)
+        
+        messages.error(request, [str(message[1][0]) for message in otp_form.errors.items()])
+        return render(request, self.template_name, context=dictionary)
+    
+    
+class VerifyOtpCodeSetup(TemplateView):
+    """
+    Verify OTP code, enable and setup up MFA if successful
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'otp_submit.html')
+    otp_form: MFATotpCodeSubmit = MFATotpCodeSubmit
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        otp_form: MFATotpCodeSubmit = self.otp_form(request.POST)
+        dictionary: dict = {"otp_form": otp_form}
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        if request.user.is_anonymous:
+            return HttpResponseRedirect('/')
+        
+        if request.user.is_discord_user:
+            return HttpResponseRedirect('/')
+        
+        if otp_form.is_valid():
+            
+            clean_data = otp_form.cleaned_data
+            if check_totp_token(request.user, clean_data['totp']):
+                request.user.mfa_enabled = True
+                remove(
+                    f'/raptorWebApp/raptorWeb{request.user.totp_qr_path}'
+                )
+                request.user.totp_qr_path = None
+                request.user.save()
+                return render(request, self.template_name, context={
+                    'mfa_complete': True
+                })
+                
+            messages.error(request, 'The entered OTP was incorrect.')
+            dictionary.update({
+                'otp_form': otp_form,
+                'otp_user': request.user
+            })
+            return render(request, self.template_name, context=dictionary)
+                
+        messages.error(request, [str(message[1][0]) for message in otp_form.errors.items()])
+        return render(request, self.template_name, context=dictionary)
+    
+    
+class VerifyOtpCodeLogin(TemplateView):
+    """
+    Verify OTP code, login the user if successful
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'mfa_entry.html')
+    otp_form: MFATotpCodeSubmit = MFATotpCodeSubmit
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        otp_form: MFATotpCodeSubmit = self.otp_form(request.POST)
+        dictionary: dict = {"otp_form": otp_form}
+        
+        if otp_form.is_valid():
+            
+            clean_data = otp_form.cleaned_data
+            user = RaptorUser.objects.get(username=clean_data['username'])
+            if check_totp_token(user, clean_data['totp']):
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return render(request, self.template_name, context={
+                    'mfa_complete': True
+                })
+                
+            messages.error(request, 'The entered OTP was incorrect.')
+            dictionary.update({
+                'signin_mfa_form': otp_form,
+                'otp_username': clean_data['username']
+            })
+            return render(request, self.template_name, context=dictionary)
+                
+        messages.error(request, [str(message[1][0]) for message in otp_form.errors.items()])
+        dictionary.update({
+                'otp_form': otp_form
+            })
+        return render(request, self.template_name, context=dictionary)
 
 
 class UserResetPasswordForm(TemplateView):
@@ -195,7 +317,9 @@ class User_Login_Form(TemplateView):
     Returns a form for a user to login with Username and Password
     """
     login_form: UserLoginForm = UserLoginForm()
+    signin_mfa_form: MFATotpCodeSubmit = MFATotpCodeSubmit
     template_name: str = join(AUTH_TEMPLATE_DIR, 'login.html')
+    mfa_template: str = join(AUTH_TEMPLATE_DIR, 'mfa_entry.html')
 
     def get(self, request: HttpRequest) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
@@ -212,6 +336,13 @@ class User_Login_Form(TemplateView):
             password: str = login_form.cleaned_data["password"]
             user: RaptorUser = authenticate(username=username, password=password)
             if user:
+                
+                if user.mfa_enabled:
+                    return render(request, self.mfa_template, context={
+                        "otp_username": user.username,
+                        'signin_mfa_form': self.signin_mfa_form()
+                    })
+                    
                 LOGGER.info(f"{username} logged in!")
                 login(request, user)
                 if user.date_queued_for_delete != None:
@@ -326,7 +457,7 @@ class All_User_Profile(ListView):
                 
             if request.GET.get('username'):
                 self.queryset = self.queryset.filter(username__icontains=request.GET.get('username'))
-                
+            
             return super().get(request, *args, **kwargs)
         
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
@@ -394,6 +525,7 @@ class User_Profile(DetailView):
 
     def get_object(self):
         try:
+            # generate_totp_token(RaptorUser.objects.get(user_slug = self.kwargs['user_slug']))
             return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
         
         except RaptorUser.DoesNotExist:
@@ -401,7 +533,10 @@ class User_Profile(DetailView):
         
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["delete_form"] = UserDeleteForm()
+        context.update({
+            'qr_code_form': MFARequestQR(),
+            'delete_form': UserDeleteForm()
+        })
         return context
     
 
