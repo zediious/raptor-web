@@ -29,9 +29,11 @@
             {% csrf_token %}
             {{ form.captcha }} 
             <span class="text-white">{% bootstrap_form delete_form %}</span>
-            <button class="btn btn-danger w-25" type="submit">
-                Request Account Deletion
-            </button>
+            <div class='d-flex justify-content-center mt-4'>
+                <button class="btn btn-danger w-25" type="submit">
+                    Request Account Deletion
+                </button>
+            </div>  
 
         </form>
     </div>
