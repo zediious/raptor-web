@@ -130,7 +130,8 @@ USE_CONSOLE_EMAIL: bool = True if getenv('USE_CONSOLE_EMAIL') == "True" else Fal
 SERVER_EMAIL: str = str(getenv('EMAIL_HOST_USER'))
 EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
 if USE_CONSOLE_EMAIL:
-    EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND: str = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = f"{LOG_DIR}/email" 
 
 EMAIL_USE_TLS: bool = True
 EMAIL_HOST: str = str(getenv('EMAIL_HOST')) if str(getenv('EMAIL_HOST')) != '' else 'test@example.com'
