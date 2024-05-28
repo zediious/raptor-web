@@ -434,6 +434,8 @@ class RaptorUser(AbstractUser):
         default=dict,
         help_text="JSON data representing which Notification Toasts this user has seen",
         verbose_name="Seen Notifications",
+        blank=True,
+        null=True
     )
 
     def get_profile_info(self):
