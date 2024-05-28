@@ -209,7 +209,10 @@ class SettingsPanel(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
-            messages.error(request, 'Error: submitted form data was malformed.')
+            
+            messages.error(
+                request, [str(message[1][0]) for message in settings_form.errors.items()]
+            )
             return HttpResponse(status=200)
         
 
