@@ -48,12 +48,36 @@ class UserRegisterForm(forms.ModelForm):
 
         if not(clean_data.get("password") == clean_data.get("password_v")):
             raise forms.ValidationError("Password fields must match")
-        
+     
+   
 class UserDeleteForm(forms.Form):
     """
     Form returned for requestion account deletion
     """
     username: forms.CharField = forms.CharField()
+    
+    
+class MFARequestQR(forms.Form):
+    """
+    Form returned to request a QR code for MFA setup
+    """
+    username: forms.CharField = forms.CharField()
+    password: forms.CharField = forms.CharField(widget=forms.PasswordInput())
+    
+    
+class MFATotpCodeSubmit(forms.Form):
+    """
+    Form returned to enter generated TOTP code
+    """
+    totp: forms.CharField = forms.CharField(
+        max_length=6,
+        label='MFA Code'
+    )
+    
+    username: forms.CharField = forms.CharField(
+        max_length=500,
+        required=False
+    )
 
 
 class UserProfileEditForm(forms.ModelForm):

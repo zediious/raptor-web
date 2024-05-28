@@ -140,6 +140,11 @@ LOGGING_DEFINITION = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'authprofiles.tokens': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'gameservers.views': {
             'handlers': ['console', 'log_file', 'mail_admins'],
             'level': 'DEBUG',

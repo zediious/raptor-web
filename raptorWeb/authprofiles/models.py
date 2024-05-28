@@ -396,12 +396,33 @@ class RaptorUser(AbstractUser):
         blank=True,
         null=True
     )
+    
+    totp_token = models.BinaryField(
+        verbose_name="User TOTP Token",
+        editable=True,
+        default=None,
+        blank=True,
+        null=True
+    )
+    
+    totp_qr_path = models.CharField(
+        null=True,
+        blank=True,
+        max_length=500,
+        verbose_name="TOT QR Image Filename"
+    )
 
     password_reset_token = models.CharField(
         null=True,
         blank=True,
         max_length=250,
         verbose_name="Password Reset Token"
+    )
+    
+    mfa_enabled=  models.BooleanField(
+        default=False,
+        help_text="Indicates if a user has MFA enabled on their account.",
+        verbose_name="MFA Enabled"
     )
     
     user_slug = models.SlugField(

@@ -12,6 +12,10 @@ urlpatterns: list[URLPattern] = [
     path('html/login/', views.User_Login_Form.as_view(), name="login"),
     path('oauth2/login/', views.UserLogin_OAuth.as_view(), name="login_oauth"),
     path('oauth2/login/redirect', views.UserLogin_OAuth_Success.as_view(), name="login_oauth_success"),
+    path('auth/totp/setup/generate', views.GenerateTotpQr.as_view(), name="mfa_generate_qr"),
+    path('auth/totp/setup/verify', views.VerifyOtpCodeSetup.as_view(), name="mfa_verify_setup"),
+    path('auth/totp/setup/disable', views.DisableOtpAuth.as_view(), name="mfa_disable"),
+    path('auth/totp/login', views.VerifyOtpCodeLogin.as_view(), name="mfa_login"),
     path('auth/logout/', views.user_logout, name="logout"),
     # Password Resets
     path('html/reset_password/', views.UserResetPasswordForm.as_view(), name="reset_password_form"),

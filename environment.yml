@@ -36,3 +36,5 @@ dependencies:
     - celery==5.3.6
     - mojang==1.1.0
     - django-paypal==2.0
+    - qrcode==7.4.2
+    - pyotp==2.9.0
