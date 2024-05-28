@@ -2,8 +2,9 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser, RaptorUserGroup
 
 
 class RaptorUserAdmin(UserAdmin):
@@ -17,6 +18,7 @@ class RaptorUserAdmin(UserAdmin):
                 'user_profile_info',
                 'discord_user_info',
                 'is_active',
+                'date_queued_for_delete',
                 'is_discord_user',
                 'email',
                 'first_name',
@@ -33,7 +35,7 @@ class RaptorUserAdmin(UserAdmin):
         }),
         ('Sensitive', {
             'classes': ('collapse',),
-            'fields': ('is_superuser', 'is_staff', 'password', 'password_reset_token')
+            'fields': ('is_superuser', 'is_staff', 'mfa_enabled', 'password', 'password_reset_token')
         })
     )
 
@@ -42,7 +44,8 @@ class RaptorUserAdmin(UserAdmin):
         'date_joined',
         'last_login',
         'user_profile_info',
-        'discord_user_info'
+        'discord_user_info',
+        'mfa_enabled'
     )
 
     search_fields: list[str] = [
@@ -52,7 +55,7 @@ class RaptorUserAdmin(UserAdmin):
         'discord_user_info__tag'
     ]
 
-    list_display: list[str] = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
+    list_display: list[str] = ['username', 'email', 'is_discord_user', 'mfa_enabled', 'is_staff', 'is_active', 'date_joined']
 
 
 class UserProfileInfoAdmin(admin.ModelAdmin):
@@ -63,6 +66,7 @@ class UserProfileInfoAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('General', {
             'fields': (
+                'hidden_from_public',
                 'minecraft_username',
                 'favorite_modpack')
         }),
@@ -114,8 +118,47 @@ class DiscordUserInfoAdmin(admin.ModelAdmin):
     ]
 
 
+class DeletionQueueForUserAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    UserDeleteQueue in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('General', {
+            'fields': (
+                'user',)
+        }),
+    )
+
+    readonly_fields: tuple[str] = (
+        'user',
+    )
+
+    list_display: list[str] = ['user']
+    
+
+    
+    
+class RaptorUserGroupAdminForm(forms.ModelForm):
+  class Meta:
+    model = RaptorUserGroup
+    widgets = {
+      'permissions': FilteredSelectMultiple("permissions", False),
+    }
+    fields = '__all__'
+    
+class RaptorUserGroupAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    RaptorUserGroup in the Django admin interface.
+    """
+    form = RaptorUserGroupAdminForm
+
+
 admin.site.unregister(Group)
 
 admin.site.register(RaptorUser, RaptorUserAdmin)
 admin.site.register(UserProfileInfo, UserProfileInfoAdmin)
 admin.site.register(DiscordUserInfo, DiscordUserInfoAdmin)
+admin.site.register(DeletionQueueForUser, DeletionQueueForUserAdmin)
+admin.site.register(RaptorUserGroup, RaptorUserGroupAdmin)

@@ -130,7 +130,8 @@ USE_CONSOLE_EMAIL: bool = True if getenv('USE_CONSOLE_EMAIL') == "True" else Fal
 SERVER_EMAIL: str = str(getenv('EMAIL_HOST_USER'))
 EMAIL_BACKEND: str = 'django.core.mail.backends.smtp.EmailBackend'
 if USE_CONSOLE_EMAIL:
-    EMAIL_BACKEND: str = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND: str = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = f"{LOG_DIR}/email" 
 
 EMAIL_USE_TLS: bool = True
 EMAIL_HOST: str = str(getenv('EMAIL_HOST')) if str(getenv('EMAIL_HOST')) != '' else 'test@example.com'
@@ -274,6 +275,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'raptorWeb.donations.tasks.clear_donation_goal',
         'schedule': crontab(day_of_month='1'),
     },
+    'check_for_deletable_users': {
+        'task': 'raptorWeb.authprofiles.tasks.check_for_deletable_users',
+        'schedule': crontab(minute='*/15'),
+    },
 }
 
 # ** Settings for "django-jazzmin" app **
@@ -363,6 +368,7 @@ JAZZMIN_SETTINGS = {
         "staffapps.ModeratorApplication": "fas fa-book-open",
         "staffapps.AdminApplication": "fas fa-book-open",
         "authprofiles": "fas fa-users",
+        "authprofiles.RaptorUserGroup": "fas fa-users",
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",

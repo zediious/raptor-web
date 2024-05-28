@@ -1,0 +1,24 @@
+{% load django_bootstrap5 %}
+
+<div id="mfa_form_replace">
+    {% if messages %}
+    <ul class="messages alert alert-warning m-3 p-3">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <form id="mfa_form_alone" class="form p-3 text-white"
+        hx-post="{% url 'authprofiles:mfa_generate_qr' %}"
+        hx-swap="outerHTML"
+        hx-target="#mfa_form_replace">
+            
+        {% csrf_token %}
+        {{ form.captcha }} 
+        <span class="text-white">{% bootstrap_form qr_code_form %}</span>
+        <button class="btn btn-success w-25" type="submit">
+            Generate QR Code
+        </button>
+
+    </form>
+</div>

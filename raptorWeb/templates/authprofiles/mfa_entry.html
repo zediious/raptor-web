@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+{% load static %}
+{% load django_bootstrap5 %}
+
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MFA Code Entry</title>
+    <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
+    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
+    <link rel="shortcut icon" type="image/x-icon"
+            href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}">
+</head>
+
+<body class='bg-dark'>
+
+    {% if mfa_complete %}
+
+        <script>
+            window.location.replace('/')
+        </script>
+
+    {% else %}
+
+        <main class="row" id="signin_mfa_form_replace">
+            <div class="container col-12">
+                <header class="text-white p-4 mt-4">
+                    <h3 class="pageHeader fw-bold text-center">
+                        Please enter your MFA code below.
+                    </h3>
+                </header>
+            </div>
+
+            <div class='container col-12'>
+                {% if messages %}
+                <ul class="messages alert alert-warning m-3 p-3">
+                {% for message in messages %}
+                    {{message}}
+                {% endfor %}
+                </ul>
+                {% endif %}
+                <form id="signin_mfa_form_alone" class="form p-3 text-white"
+                    hx-post="{% url 'authprofiles:mfa_login' %}"
+                    hx-swap="outerHTML"
+                    hx-target="#signin_mfa_form_replace">
+                        
+                    {% csrf_token %}
+                    {{ form.captcha }} 
+                    <span class="text-white">{% bootstrap_field signin_mfa_form.totp %}</span>
+                    <input name='username' type="hidden" value="{{otp_username}}">
+                    <button class="btn btn-success" type="submit">
+                        Submit Code
+                    </button>
+
+                </form>
+            </div>
+        </main>
+
+    {% endif %}
+
+</body>
+
+<script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>

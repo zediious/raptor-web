@@ -48,12 +48,42 @@ class UserRegisterForm(forms.ModelForm):
 
         if not(clean_data.get("password") == clean_data.get("password_v")):
             raise forms.ValidationError("Password fields must match")
+     
+   
+class UserDeleteForm(forms.Form):
+    """
+    Form returned for requestion account deletion
+    """
+    username: forms.CharField = forms.CharField()
+    
+    
+class MFARequestQR(forms.Form):
+    """
+    Form returned to request a QR code for MFA setup
+    """
+    username: forms.CharField = forms.CharField()
+    password: forms.CharField = forms.CharField(widget=forms.PasswordInput())
+    
+    
+class MFATotpCodeSubmit(forms.Form):
+    """
+    Form returned to enter generated TOTP code
+    """
+    totp: forms.CharField = forms.CharField(
+        max_length=6,
+        label='MFA Code'
+    )
+    
+    username: forms.CharField = forms.CharField(
+        max_length=500,
+        required=False
+    )
+
 
 class UserProfileEditForm(forms.ModelForm):
     """
     Form returned for editing profile information
     """  
-    captcha: CaptchaField = CaptchaField()
     picture_changed_manually: forms.BooleanField = forms.BooleanField(
         label = "Reset Profile Picture",
         help_text = "If this is checked, your Profile Picture will be reset to your current Discord Avatar. This setting has no effect for Users that did not sign up with Discord.",
@@ -64,10 +94,15 @@ class UserProfileEditForm(forms.ModelForm):
         help_text = "If this is checked, your user data about what notification toasts you have seen will be erased, and you will see all of them again.",
         required = False
     )
+    hidden_from_public: forms.BooleanField = forms.BooleanField(
+        label = "Hidden from Public",
+        help_text="Indicates whether your profile appears on the user list, and whether it is publicly accessible.",
+        required = False
+    )
 
     class Meta():
         model: UserProfileInfo = UserProfileInfo
-        fields: tuple[str] = ('reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
+        fields: tuple[str] = ('hidden_from_public', 'reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
 
     def clean(self):
         """

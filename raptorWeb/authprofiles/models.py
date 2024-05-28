@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 from logging import Logger, getLogger
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.http import HttpRequest
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
@@ -297,6 +297,13 @@ class UserProfileInfo(models.Model):
         verbose_name="Favorite Modpack",
         blank=True
     )
+    
+    hidden_from_public = models.BooleanField(
+        default=False,
+        null=True,
+        help_text="Indicates whether this user appears on the user list, and whether their profile is publicly accessible.",
+        verbose_name="Hidden from Public"
+    )
 
     def update_user_profile_details(self, profile_edit_form: ModelForm, uploaded_files: dict) -> 'UserProfileInfo':
         """
@@ -332,6 +339,10 @@ class UserProfileInfo(models.Model):
         if profile_edit_form.cleaned_data["reset_toasts"] == True:
             changed_user.toasts_seen = dict()
             changed_user.save()
+        
+        is_hidden = profile_edit_form.cleaned_data["hidden_from_public"]
+        if is_hidden != self.hidden_from_public:
+            self.hidden_from_public = is_hidden        
 
         self.save()
         return self
@@ -372,21 +383,46 @@ class UserProfileInfo(models.Model):
 
 class RaptorUser(AbstractUser):
     """
-    A User on the website. Has optional OneToOne Fields to UserProfileInfo Model
-    and DiscordUserInfo Model, which store extra information about the user.
-
-    Users can be registered with the website using a form, or they can register
-    using Discord OAuth2. If a User registers with the latter, they will not be
-    able to log into their account using a password, and their password field will
-    be rendered unuseable.
+    A User on the website. Users can be registered with the website using a form, or
+    they can register using Discord OAuth2. If a User registers with the latter, they
+    will not be able to log into their account using a password, and their password
+    field will be rendered unuseable.
     """
     objects = RaptorUserManager()
+
+    date_queued_for_delete = models.DateTimeField(
+        verbose_name="Date Queued for Deletion",
+        default=None,
+        blank=True,
+        null=True
+    )
+    
+    totp_token = models.BinaryField(
+        verbose_name="User TOTP Token",
+        editable=True,
+        default=None,
+        blank=True,
+        null=True
+    )
+    
+    totp_qr_path = models.CharField(
+        null=True,
+        blank=True,
+        max_length=500,
+        verbose_name="TOT QR Image Filename"
+    )
 
     password_reset_token = models.CharField(
         null=True,
         blank=True,
         max_length=250,
         verbose_name="Password Reset Token"
+    )
+    
+    mfa_enabled=  models.BooleanField(
+        default=False,
+        help_text="Indicates if a user has MFA enabled on their account.",
+        verbose_name="MFA Enabled"
     )
     
     user_slug = models.SlugField(
@@ -423,6 +459,8 @@ class RaptorUser(AbstractUser):
         default=dict,
         help_text="JSON data representing which Notification Toasts this user has seen",
         verbose_name="Seen Notifications",
+        blank=True,
+        null=True
     )
 
     def get_profile_info(self):
@@ -450,3 +488,28 @@ class RaptorUser(AbstractUser):
             self.discord_user_info.delete()
             
         return super(self.__class__, self).delete(*args, **kwargs)
+    
+    
+class RaptorUserGroup(Group):
+    """
+    A group for assigning permissions to Users.
+    """
+    class Meta:
+        verbose_name = "Permission Group"
+        verbose_name_plural = "Permission Groups"
+    
+
+class DeletionQueueForUser(models.Model):
+    """
+    A list of users who have requested account deletion.
+    """
+    user = models.ForeignKey(
+        RaptorUser, 
+        on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = "Users Queued for Deletion"
+        verbose_name_plural = "Users Queued for Deletion"

@@ -510,6 +510,17 @@ class SiteInformation(models.Model):
         default=True
     )
     
+    query_delay = models.IntegerField(
+        verbose_name="Time between Server Queries",
+        help_text=("The time in minutes to wait between server queries. Every time the server box is loaded, "
+                   "servers will be checked if a query can occur. This determines how long that delay is."),
+        validators=[
+            MaxValueValidator(60),
+            MinValueValidator(1)
+        ],
+        default=1
+    )
+    
     server_online_message = models.CharField(
         verbose_name='Server Online Message',
         help_text=('Text shown in tooltip while hovering over an online server status icon. ' 
