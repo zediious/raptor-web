@@ -297,6 +297,13 @@ class UserProfileInfo(models.Model):
         verbose_name="Favorite Modpack",
         blank=True
     )
+    
+    hidden_from_public = models.BooleanField(
+        default=False,
+        null=True,
+        help_text="Indicates whether this user appears on the user list, and whether their profile is publicly accessible.",
+        verbose_name="Hidden from Public"
+    )
 
     def update_user_profile_details(self, profile_edit_form: ModelForm, uploaded_files: dict) -> 'UserProfileInfo':
         """
@@ -332,6 +339,10 @@ class UserProfileInfo(models.Model):
         if profile_edit_form.cleaned_data["reset_toasts"] == True:
             changed_user.toasts_seen = dict()
             changed_user.save()
+        
+        is_hidden = profile_edit_form.cleaned_data["hidden_from_public"]
+        if is_hidden != self.hidden_from_public:
+            self.hidden_from_public = is_hidden        
 
         self.save()
         return self
@@ -382,6 +393,13 @@ class RaptorUser(AbstractUser):
     """
     objects = RaptorUserManager()
 
+    date_queued_for_delete = models.DateTimeField(
+        verbose_name="Date Queued for Deletion",
+        default=None,
+        blank=True,
+        null=True
+    )
+
     password_reset_token = models.CharField(
         null=True,
         blank=True,
@@ -423,6 +441,8 @@ class RaptorUser(AbstractUser):
         default=dict,
         help_text="JSON data representing which Notification Toasts this user has seen",
         verbose_name="Seen Notifications",
+        blank=True,
+        null=True
     )
 
     def get_profile_info(self):
@@ -450,3 +470,19 @@ class RaptorUser(AbstractUser):
             self.discord_user_info.delete()
             
         return super(self.__class__, self).delete(*args, **kwargs)
+    
+
+class DeletionQueueForUser(models.Model):
+    """
+    A list of users who have requested account deletion.
+    """
+    user = models.ForeignKey(
+        RaptorUser, 
+        on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = "Users Queued for Deletion"
+        verbose_name_plural = "Users Queued for Deletion"

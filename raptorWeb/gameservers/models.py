@@ -1,6 +1,7 @@
 from json import dumps, load
 from io import TextIOWrapper
 from time import sleep
+from datetime import datetime
 from logging import Logger, getLogger
 from typing import Optional
 from dns.resolver import LifetimeTimeout
@@ -109,12 +110,10 @@ class ServerManager(models.Manager):
             
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
-                
-            minutes_since_poll = int(str(
-                (localtime() - statistic_model.time_last_polled.astimezone())
-                ).split(":")[1])
 
-            if minutes_since_poll > 1 or self._has_run == False:
+            minutes_since_poll = datetime.now().astimezone() - statistic_model.time_last_polled.astimezone()
+
+            if float(float(minutes_since_poll.total_seconds()) / float(60)) > float(1.0) or self._has_run == False:
                 self._is_running = True
                 statistic_model.total_player_count = 0
                 all_online_players = []

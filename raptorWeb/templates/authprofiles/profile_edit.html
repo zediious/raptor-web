@@ -16,9 +16,15 @@
     {% endif %}
     
     {% csrf_token %} 
-    {{ form.captcha }} 
     {% bootstrap_form extra_edit_form %}
-    {% bootstrap_button button_type="submit" content="Edit Details" %}
-    {% bootstrap_button button_type="reset" content="Reset" %}
+    <button type="submit" class="btn btn-success">
+        Update Details
+    </button>
+
+    <div class="mt-4 m-0">
+        <button class="btn btn-danger w-25" data-bs-toggle="modal" data-bs-target="#deletion_request_modal_inner">
+            Request Account Deletion
+        </button>
+    </div>
 
 </form>

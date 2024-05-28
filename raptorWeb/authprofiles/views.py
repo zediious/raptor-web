@@ -1,7 +1,10 @@
 from os.path import join
+from datetime import datetime
 from logging import Logger, getLogger
+from pytz import timezone
 from typing import Any
 
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib import messages
@@ -10,10 +13,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.utils.text import slugify
+from django.utils.timezone import localtime
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser
+from raptorWeb.authprofiles.tasks import send_delete_request_email
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 
@@ -28,6 +33,7 @@ TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 DISCORD_AUTH_URL: str = getattr(settings, 'DISCORD_AUTH_URL')
 LOGIN_URL: str = getattr(settings, 'LOGIN_URL')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
+TIME_ZONE = getattr(settings, 'TIME_ZONE')
 
 token_generator: RaptorUserTokenGenerator = RaptorUserTokenGenerator()
 
@@ -62,6 +68,49 @@ class RegisterUser(TemplateView):
             return render(request, self.template_name, context=dictionary)
 
         else:
+            return render(request, self.template_name, context=dictionary)
+        
+
+class RequestDeleteUser(TemplateView):
+    """
+    Returns a form for a user to request their account to be deleted in 30 days.
+    If the account is logged into within 30 days, the deletion is cancelled.
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'deletion.html')
+    delete_form: UserDeleteForm = UserDeleteForm
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        delete_form: UserDeleteForm = self.delete_form(request.POST)
+        dictionary: dict = {"delete_form": delete_form}
+
+        if delete_form.is_valid():
+            requesting_user = request.user
+            if requesting_user.is_superuser:
+                messages.error(request, "Superusers cannot delete their own profiles with this method.")
+                return render(request, self.template_name, context=dictionary)
+            
+            if delete_form.cleaned_data['username'] != requesting_user.username:
+                messages.error(request, "The entered username was incorrect.")
+                return render(request, self.template_name, context=dictionary)
+                
+            requesting_user.date_queued_for_delete = datetime.now()
+            requesting_user.save()
+            logout(request)
+            DeletionQueueForUser.objects.create(
+                user=requesting_user
+            )
+            send_delete_request_email.apply_async(
+                args=([requesting_user.username,requesting_user.email],),
+                countdown=5
+            )
+            LOGGER.info(f"{requesting_user.username} has requested account deletion")
+            dictionary.update(
+                {'deleted': True}
+            )
+            return render(request, self.template_name, context=dictionary)
+
+        else:
+            messages.error(request, "The form was malformed!")
             return render(request, self.template_name, context=dictionary)
 
 
@@ -165,6 +214,11 @@ class User_Login_Form(TemplateView):
             if user:
                 LOGGER.info(f"{username} logged in!")
                 login(request, user)
+                if user.date_queued_for_delete != None:
+                    user.date_queued_for_delete = None
+                    DeletionQueueForUser.objects.get(user=user).delete()
+                    user.save()
+
                 return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
             else:
@@ -199,6 +253,11 @@ class UserLogin_OAuth_Success(TemplateView):
             login(request, 
                 discord_user,
                 backend='raptorWeb.authprofiles.auth.DiscordAuthBackend')
+            if discord_user.date_queued_for_delete != None:
+                discord_user.date_queued_for_delete = None
+                DeletionQueueForUser.objects.get(user=discord_user).delete()
+                discord_user.save()
+
             return redirect('/')
             
         except KeyError:
@@ -240,7 +299,9 @@ class All_User_Profile(ListView):
     """
     paginate_by: int = 9
     model: RaptorUser = RaptorUser
-    queryset: RaptorUserManager = RaptorUser.objects.filter(is_superuser = False).order_by('-date_joined')
+    queryset: RaptorUserManager = RaptorUser.objects.filter(
+        is_superuser=False, is_active=True, user_profile_info__hidden_from_public=False).order_by('-date_joined'
+    )
 
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
@@ -322,6 +383,11 @@ class User_Profile(DetailView):
             pass
         
         if request.headers.get('HX-Request') == "true":
+            
+            if (RaptorUser.objects.filter(user_slug=self.kwargs['user_slug'])[0].user_profile_info.hidden_from_public and
+            request.user.user_slug != self.kwargs['user_slug']):
+                return HttpResponseRedirect('/404')
+            
             return super().get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('/')
@@ -332,6 +398,12 @@ class User_Profile(DetailView):
         
         except RaptorUser.DoesNotExist:
             return False
+        
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["delete_form"] = UserDeleteForm()
+        return context
+    
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
@@ -341,15 +413,20 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     """
     template_name: str = join(AUTH_TEMPLATE_DIR, 'profile_edit.html')
     login_url: str = LOGIN_URL
-    extra_edit_form: UserProfileEditForm = UserProfileEditForm()
+    extra_edit_form: UserProfileEditForm
 
     def get(self, request: HttpRequest, profile_name: str) -> HttpResponse:
         if request.headers.get('HX-Request') == "true":
             if slugify(str(request.user)) == slugify(profile_name):
-                instance_dict: dict = {"extra_edit_form": self.extra_edit_form}
                 displayed_user: RaptorUser = RaptorUser.objects.find_slugged_user(profile_name)
                 if displayed_user != None:
-                    instance_dict["displayed_profile"] = displayed_user
+                    self.extra_edit_form: UserProfileEditForm = UserProfileEditForm({
+                        'hidden_from_public': displayed_user.user_profile_info.hidden_from_public
+                    })
+                    instance_dict: dict = {
+                        "extra_edit_form": self.extra_edit_form,
+                        "displayed_profile": displayed_user
+                    }
                     return render(request, self.template_name, context=instance_dict)
 
                 else:

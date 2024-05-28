@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser
 
 
 class RaptorUserAdmin(UserAdmin):
@@ -17,6 +17,7 @@ class RaptorUserAdmin(UserAdmin):
                 'user_profile_info',
                 'discord_user_info',
                 'is_active',
+                'date_queued_for_delete',
                 'is_discord_user',
                 'email',
                 'first_name',
@@ -63,6 +64,7 @@ class UserProfileInfoAdmin(admin.ModelAdmin):
     fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
         ('General', {
             'fields': (
+                'hidden_from_public',
                 'minecraft_username',
                 'favorite_modpack')
         }),
@@ -114,8 +116,28 @@ class DiscordUserInfoAdmin(admin.ModelAdmin):
     ]
 
 
+class DeletionQueueForUserAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    UserDeleteQueue in the Django admin interface.
+    """
+    fieldsets: tuple[tuple[str, dict[str, tuple[str]]]] = (
+        ('General', {
+            'fields': (
+                'user',)
+        }),
+    )
+
+    readonly_fields: tuple[str] = (
+        'user',
+    )
+
+    list_display: list[str] = ['user']
+
+
 admin.site.unregister(Group)
 
 admin.site.register(RaptorUser, RaptorUserAdmin)
 admin.site.register(UserProfileInfo, UserProfileInfoAdmin)
 admin.site.register(DiscordUserInfo, DiscordUserInfoAdmin)
+admin.site.register(DeletionQueueForUser, DeletionQueueForUserAdmin)

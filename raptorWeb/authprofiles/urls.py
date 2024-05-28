@@ -8,6 +8,7 @@ urlpatterns: list[URLPattern] = [
 
     # Auth
     path('html/register/', views.RegisterUser.as_view(), name="register"),
+    path('html/delete/', views.RequestDeleteUser.as_view(), name="request_delete"),
     path('html/login/', views.User_Login_Form.as_view(), name="login"),
     path('oauth2/login/', views.UserLogin_OAuth.as_view(), name="login_oauth"),
     path('oauth2/login/redirect', views.UserLogin_OAuth_Success.as_view(), name="login_oauth_success"),
