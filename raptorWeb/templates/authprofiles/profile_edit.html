@@ -1,42 +1,54 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-<form id="profile_edit_form_alone" class="form p-3 text-white"
-      enctype="multipart/form-data" 
-      hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}"
-      hx-swap="outerHTML"
-      hx-target="#profile_edit_form_alone">
+<div id='profile_edit_wrapper'>
 
-    {% if messages %}
-    <ul class="messages alert alert-success">
-    {% for message in messages %}
-        {{message}}
-    {% endfor %}
-    </ul>
-    {% endif %}
-    
-    {% csrf_token %} 
-    {% bootstrap_form extra_edit_form %}
-    <button type="submit" class="btn btn-success">
-        Update Details
-    </button>
+    <form id="profile_edit_form_alone" class="form p-3 text-white"
+        enctype="multipart/form-data" 
+        hx-post="{% url 'authprofiles:user_profile_edit' profile_name=displayed_profile.username %}"
+        hx-swap="outerHTML"
+        hx-target="#profile_edit_wrapper">
 
-</form>
-
-<hr>
-
-<div class='d-flex justify-content-around'>
-    {% if not request.user.is_discord_user %}
-    <div class="mb-0 mt-1">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mfa_enable_modal_inner">
-            Enable Multi-Factor Authentication
+        {% if messages %}
+        <ul class="messages alert alert-success">
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+        </ul>
+        {% endif %}
+        
+        {% csrf_token %} 
+        {% bootstrap_form extra_edit_form %}
+        <button type="submit" class="btn btn-success">
+            Update Details
         </button>
-    </div>
-    {% endif %}
 
-    <div class="mb-0 mt-1">
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletion_request_modal_inner">
-            Request Account Deletion
-        </button>
+    </form>
+
+    <hr>
+
+    <div class='d-flex justify-content-around'>
+        {% if not request.user.is_discord_user %}
+            {% if request.user.mfa_enabled %}
+                <div class="mb-0 mt-1">
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#mfa_disable_modal_inner">
+                        Disable Multi-Factor Authentication
+                    </button>
+                </div>
+            {% else %}
+                <div class="mb-0 mt-1">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mfa_enable_modal_inner">
+                        Enable Multi-Factor Authentication
+                    </button>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="mb-0 mt-1">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletion_request_modal_inner">
+                Request Account Deletion
+            </button>
+        </div>
     </div>
+
 </div>

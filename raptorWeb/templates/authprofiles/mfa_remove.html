@@ -1,0 +1,39 @@
+{% load django_bootstrap5 %}
+
+{% if mfa_disabled_message %}
+
+    <div class="pageContent fw-bold fs-4 text-center">
+        Multi Factor Authentication has been disabled.
+    </div>
+    <p class="pageContent text-center">
+        Re-enable this as soon as possible!
+    </p>
+
+{% else %}
+
+    <div id="mfa_disable_form_replace">
+        {% if messages %}
+        <ul class="messages alert alert-warning m-3 p-3">
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+        </ul>
+        {% endif %}
+        <form id="mfa_disable_form_alone" class="form p-3 text-white"
+            hx-post="{% url 'authprofiles:mfa_disable' %}"
+            hx-swap="outerHTML"
+            hx-target="#mfa_disable_form_replace">
+                
+            {% csrf_token %}
+            {{ form.captcha }} 
+            <span class="text-white">{% bootstrap_form disable_mfa_form %}</span>
+            <div class='d-flex justify-content-center'>
+                <button class="btn btn-danger" type="submit">
+                    Disable Multi Factor Authentication
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+{% endif %}

@@ -35,31 +35,60 @@
     </div>
 
     {% if not request.user.is_discord_user%}
-    <div id="mfa_enable_modal">
-        <div class="modal fade" id="mfa_enable_modal_inner"tabindex="-1" aria-labelledby="Enable MFA" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content bg-dark text-white">
-                    <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="modal-header">
-                        Enable Multi-Factor Authentication
-                    </div>
-                    <div class="modal-body" id="mfa_modal_body">
-                    
-                        <div class="pageContent fw-bold fs-4 text-center">
-                            Here you can enable Enable Multi-Factor Authentication on your account, to authenticate with
-                            a code from your authenticator app before logging in.
+        {% if not request.user.mfa_enabled %}
+            <div id="mfa_enable_modal">
+                <div class="modal fade" id="mfa_enable_modal_inner"tabindex="-1" aria-labelledby="Enable MFA" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-dark text-white">
+                            <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-header">
+                                Enable Multi-Factor Authentication
+                            </div>
+                            <div class="modal-body" id="mfa_modal_body">
+                            
+                                <div class="pageContent fw-bold fs-4 text-center">
+                                    Here you can enable Multi-Factor Authentication on your account, to authenticate with
+                                    a code from your authenticator app before logging in.
+                                </div>
+                                <p class="pageContent text-center">
+                                    Enter your account details below to generate a QR code, then scan it with your MFA app.
+                                    Afterwards, enter the code you get into the field below.
+                                </p>
+                                {% include "authprofiles/mfa_setup.html" %}
+                            
+                            </div>
                         </div>
-                        <p class="pageContent text-center">
-                            Enter your account details below to generate a QR code, then scan it with your MFA app.
-                            Afterwards, enter the code you get into the field below.
-                        </p>
-                        {% include "authprofiles/mfa_setup.html" %}
-                    
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+        {% else%}
+
+            <div id="mfa_disable_modal">
+                <div class="modal fade" id="mfa_disable_modal_inner"tabindex="-1" aria-labelledby="Disable MFA" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-dark text-white">
+                            <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-header">
+                                Disable Multi-Factor Authentication
+                            </div>
+                            <div class="modal-body" id="mfa_modal_body">
+                            
+                                <div class="pageContent fw-bold fs-4 text-center">
+                                    Here you can disable Multi-Factor Authentication on your account. Afer this, you will not
+                                    require your OTP to log in.
+                                </div>
+                                <p class="pageContent text-center">
+                                    Enter your account details below to authorize this change.
+                                </p>
+                                {% include "authprofiles/mfa_remove.html" %}
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif%}
     {% endif %}
 
     <div id="deletion_request_modal">

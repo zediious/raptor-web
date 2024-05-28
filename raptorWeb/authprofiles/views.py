@@ -116,6 +116,44 @@ class RequestDeleteUser(TemplateView):
             return render(request, self.template_name, context=dictionary)
         
         
+class DisableOtpAuth(TemplateView):
+    """
+    Disable MFA for the given user
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'mfa_remove.html')
+    disable_mfa_form: MFARequestQR = MFARequestQR
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        disable_mfa_form: MFARequestQR = self.disable_mfa_form(request.POST)
+        dictionary: dict = {"disable_mfa_form": disable_mfa_form}
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        if request.user.is_anonymous:
+            return HttpResponseRedirect('/')
+        
+        if request.user.is_discord_user:
+            return HttpResponseRedirect('/')
+        
+        if disable_mfa_form.is_valid():
+            clean_data = disable_mfa_form.cleaned_data
+            
+            if (authenticate(
+            request, username=clean_data['username'], password=clean_data['password'])) != None:
+            
+                request.user.mfa_enabled = False
+                request.user.save()
+                return render(request, self.template_name, context={
+                    "mfa_disabled_message": True
+                })
+                
+            messages.error(request, "The entered username or password was incorrect.")
+            return render(request, self.template_name, context=dictionary)
+
+        return render(request, self.template_name, context=dictionary)
+        
+        
 class GenerateTotpQr(TemplateView):
     """
     Generate a QR code for MFA setup
@@ -534,6 +572,7 @@ class User_Profile(DetailView):
         context = super().get_context_data(**kwargs)
         context.update({
             'qr_code_form': MFARequestQR(),
+            'disable_mfa_form': MFARequestQR(),
             'delete_form': UserDeleteForm()
         })
         return context
