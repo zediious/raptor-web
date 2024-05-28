@@ -340,6 +340,12 @@ class User_Profile(DetailView):
         
         except RaptorUser.DoesNotExist:
             return False
+        
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["delete_form"] = UserDeleteForm()
+        return context
+    
 
 
 class User_Profile_Edit(LoginRequiredMixin, TemplateView):
