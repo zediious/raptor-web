@@ -383,13 +383,10 @@ class UserProfileInfo(models.Model):
 
 class RaptorUser(AbstractUser):
     """
-    A User on the website. Has optional OneToOne Fields to UserProfileInfo Model
-    and DiscordUserInfo Model, which store extra information about the user.
-
-    Users can be registered with the website using a form, or they can register
-    using Discord OAuth2. If a User registers with the latter, they will not be
-    able to log into their account using a password, and their password field will
-    be rendered unuseable.
+    A User on the website. Users can be registered with the website using a form, or
+    they can register using Discord OAuth2. If a User registers with the latter, they
+    will not be able to log into their account using a password, and their password
+    field will be rendered unuseable.
     """
     objects = RaptorUserManager()
 
@@ -474,7 +471,7 @@ class RaptorUser(AbstractUser):
     
 class RaptorUserGroup(Group):
     """
-    A group for assigning permissions to RaptorUsers. Extends Django's default group
+    A group for assigning permissions to Users.
     """
     class Meta:
         verbose_name = "Permission Group"
