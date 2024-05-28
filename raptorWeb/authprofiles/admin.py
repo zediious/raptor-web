@@ -35,7 +35,7 @@ class RaptorUserAdmin(UserAdmin):
         }),
         ('Sensitive', {
             'classes': ('collapse',),
-            'fields': ('is_superuser', 'is_staff', 'password', 'password_reset_token')
+            'fields': ('is_superuser', 'is_staff', 'mfa_enabled', 'password', 'password_reset_token')
         })
     )
 
@@ -44,7 +44,8 @@ class RaptorUserAdmin(UserAdmin):
         'date_joined',
         'last_login',
         'user_profile_info',
-        'discord_user_info'
+        'discord_user_info',
+        'mfa_enabled'
     )
 
     search_fields: list[str] = [
@@ -54,7 +55,7 @@ class RaptorUserAdmin(UserAdmin):
         'discord_user_info__tag'
     ]
 
-    list_display: list[str] = ['username', 'email', 'is_discord_user', 'is_staff', 'is_active', 'date_joined']
+    list_display: list[str] = ['username', 'email', 'is_discord_user', 'mfa_enabled', 'is_staff', 'is_active', 'date_joined']
 
 
 class UserProfileInfoAdmin(admin.ModelAdmin):
