@@ -1,4 +1,5 @@
 {% load static %}
+{% load django_bootstrap5 %}
 
 <head hx-head="merge">
     <title>{{ site_info_model.brand_name }} | {{object.username}}</title>
@@ -33,20 +34,47 @@
         </div>
     </div>
 
+    <div id="deletion_request_modal">
+        <div class="modal fade" id="deletion_request_modal_inner"tabindex="-1" aria-labelledby="Delete Account" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content bg-dark text-white">
+                    <button class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header">
+                        Request Account Deletion
+                    </div>
+                    <div class="modal-body" id="deletion_modal_body">
+                    
+                        <div class="pageHeader fw-bold text-center">
+                            Here you can request your account to be deleted in 30 days.
+                        </div>
+                        <p class="pageContent">
+                            If you change your mind, log back in to your account in 30 days to cancel the account deletion.
+                        </p>
+                        {% include "authprofiles/deletion.html" %}
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if messages %}
+    <ul class="messages alert alert-warning m-3 p-3">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+    </ul>
+    {% endif %}
+
     <div class="m-3 p-3">
         <div class="row"> 
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile_modal">
                 Edit Profile Details
             </button>
-            {% if messages %}
-            <ul class="messages alert alert-warning">
-            {% for message in messages %}
-                {{message}}
-            {% endfor %}
-            </ul>
-            {% endif %}
         </div>
     </div>
+
     {% endif %}
     {% comment %} Display profile details for fetched user {% endcomment %}
     <div class="card bg-dark m-3 p-3 text-white">
