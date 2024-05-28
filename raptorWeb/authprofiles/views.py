@@ -64,6 +64,49 @@ class RegisterUser(TemplateView):
 
         else:
             return render(request, self.template_name, context=dictionary)
+        
+
+class RequestDeleteUser(TemplateView):
+    """
+    Returns a form for a user to request their account to be deleted in 30 days.
+    If the account is logged into within 30 days, the deletion is cancelled.
+    """
+    template_name: str = join(AUTH_TEMPLATE_DIR, 'deletion.html')
+    delete_form: UserDeleteForm = UserDeleteForm
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        delete_form: UserDeleteForm = self.delete_form(request.POST)
+        dictionary: dict = {"delete_form": delete_form}
+
+        if delete_form.is_valid():
+            requesting_user = request.user
+            if requesting_user.is_superuser:
+                messages.error(request, "Superusers cannot delete their own profiles with this method.")
+                return render(request, self.template_name, context=dictionary)
+            
+            if delete_form.cleaned_data['username'] != requesting_user.username:
+                messages.error(request, "The entered username was incorrect.")
+                return render(request, self.template_name, context=dictionary)
+                
+            requesting_user.date_queued_for_delete = datetime.now()
+            requesting_user.save()
+            logout(request)
+            DeletionQueueForUser.objects.create(
+                user=requesting_user
+            )
+            send_delete_request_email.apply_async(
+                args=([requesting_user.username,requesting_user.email],),
+                countdown=5
+            )
+            LOGGER.info(f"{requesting_user.username} has requested account deletion")
+            dictionary.update(
+                {'deleted': True}
+            )
+            return render(request, self.template_name, context=dictionary)
+
+        else:
+            messages.error(request, "The form was malformed!")
+            return render(request, self.template_name, context=dictionary)
 
 
 class UserResetPasswordForm(TemplateView):
