@@ -368,6 +368,7 @@ JAZZMIN_SETTINGS = {
         "staffapps.ModeratorApplication": "fas fa-book-open",
         "staffapps.AdminApplication": "fas fa-book-open",
         "authprofiles": "fas fa-users",
+        "authprofiles.RaptorUserGroup": "fas fa-users",
         "authprofiles.RaptorUser": "fas fa-user",
         "authprofiles.UserProfileInfo": "fas fa-user-tag",
         "authprofiles.DiscordUserInfo": "fas fa-user-tag",
