@@ -113,7 +113,7 @@ class ServerManager(models.Manager):
 
             minutes_since_poll = datetime.now().astimezone() - statistic_model.time_last_polled.astimezone()
 
-            if float(float(minutes_since_poll.total_seconds()) / float(60)) > float(1.0) or self._has_run == False:
+            if float(float(minutes_since_poll.total_seconds()) / float(60)) > float(site_info.query_delay) or self._has_run == False:
                 self._is_running = True
                 statistic_model.total_player_count = 0
                 all_online_players = []
