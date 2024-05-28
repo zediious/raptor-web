@@ -393,6 +393,13 @@ class RaptorUser(AbstractUser):
     """
     objects = RaptorUserManager()
 
+    date_queued_for_delete = models.DateTimeField(
+        verbose_name="Date Queued for Deletion",
+        default=None,
+        blank=True,
+        null=True
+    )
+
     password_reset_token = models.CharField(
         null=True,
         blank=True,
@@ -463,3 +470,19 @@ class RaptorUser(AbstractUser):
             self.discord_user_info.delete()
             
         return super(self.__class__, self).delete(*args, **kwargs)
+    
+
+class DeletionQueueForUser(models.Model):
+    """
+    A list of users who have requested account deletion.
+    """
+    user = models.ForeignKey(
+        RaptorUser, 
+        on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = "Users Queued for Deletion"
+        verbose_name_plural = "Users Queued for Deletion"
