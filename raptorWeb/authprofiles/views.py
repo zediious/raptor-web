@@ -209,6 +209,11 @@ class User_Login_Form(TemplateView):
             if user:
                 LOGGER.info(f"{username} logged in!")
                 login(request, user)
+                if user.date_queued_for_delete != None:
+                    user.date_queued_for_delete = None
+                    DeletionQueueForUser.objects.get(user=user).delete()
+                    user.save()
+
                 return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
             else:
@@ -243,6 +248,11 @@ class UserLogin_OAuth_Success(TemplateView):
             login(request, 
                 discord_user,
                 backend='raptorWeb.authprofiles.auth.DiscordAuthBackend')
+            if discord_user.date_queued_for_delete != None:
+                discord_user.date_queued_for_delete = None
+                DeletionQueueForUser.objects.get(user=discord_user).delete()
+                discord_user.save()
+
             return redirect('/')
             
         except KeyError:
