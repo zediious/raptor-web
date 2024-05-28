@@ -48,12 +48,18 @@ class UserRegisterForm(forms.ModelForm):
 
         if not(clean_data.get("password") == clean_data.get("password_v")):
             raise forms.ValidationError("Password fields must match")
+        
+class UserDeleteForm(forms.Form):
+    """
+    Form returned for requestion account deletion
+    """
+    username: forms.CharField = forms.CharField()
+
 
 class UserProfileEditForm(forms.ModelForm):
     """
     Form returned for editing profile information
     """  
-    captcha: CaptchaField = CaptchaField()
     picture_changed_manually: forms.BooleanField = forms.BooleanField(
         label = "Reset Profile Picture",
         help_text = "If this is checked, your Profile Picture will be reset to your current Discord Avatar. This setting has no effect for Users that did not sign up with Discord.",
