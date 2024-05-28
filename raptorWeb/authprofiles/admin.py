@@ -2,8 +2,9 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser, RaptorUserGroup
 
 
 class RaptorUserAdmin(UserAdmin):
@@ -133,6 +134,24 @@ class DeletionQueueForUserAdmin(admin.ModelAdmin):
     )
 
     list_display: list[str] = ['user']
+    
+
+    
+    
+class RaptorUserGroupAdminForm(forms.ModelForm):
+  class Meta:
+    model = RaptorUserGroup
+    widgets = {
+      'permissions': FilteredSelectMultiple("permissions", False),
+    }
+    fields = '__all__'
+    
+class RaptorUserGroupAdmin(admin.ModelAdmin):
+    """
+    Object defining behavior and display of 
+    RaptorUserGroup in the Django admin interface.
+    """
+    form = RaptorUserGroupAdminForm
 
 
 admin.site.unregister(Group)
@@ -141,3 +160,4 @@ admin.site.register(RaptorUser, RaptorUserAdmin)
 admin.site.register(UserProfileInfo, UserProfileInfoAdmin)
 admin.site.register(DiscordUserInfo, DiscordUserInfoAdmin)
 admin.site.register(DeletionQueueForUser, DeletionQueueForUserAdmin)
+admin.site.register(RaptorUserGroup, RaptorUserGroupAdmin)

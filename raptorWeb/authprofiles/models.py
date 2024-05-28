@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 from logging import Logger, getLogger
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.http import HttpRequest
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
@@ -470,6 +470,15 @@ class RaptorUser(AbstractUser):
             self.discord_user_info.delete()
             
         return super(self.__class__, self).delete(*args, **kwargs)
+    
+    
+class RaptorUserGroup(Group):
+    """
+    A group for assigning permissions to RaptorUsers. Extends Django's default group
+    """
+    class Meta:
+        verbose_name = "Permission Group"
+        verbose_name_plural = "Permission Groups"
     
 
 class DeletionQueueForUser(models.Model):
