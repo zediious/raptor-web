@@ -21,6 +21,20 @@ AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
 EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
 
 @shared_task
+def check_for_deletable_users():
+    """
+    Check if any users in the queue have been there for 30 days, and delete them if so.
+    """    
+    current_datetime = datetime.now()
+            
+    for user in DeletionQueueForUser.objects.all():
+        time_since = current_datetime.astimezone() - user.user.date_queued_for_delete.astimezone()
+        if time_since.total_seconds() / 60 >= 43200:
+            user.user.delete()
+            user.delete()
+
+
+@shared_task
 def send_delete_request_email(deleting_user: list):
     """
     Send email when a user requests to delete their account.
