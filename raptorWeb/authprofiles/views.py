@@ -1,5 +1,7 @@
 from os.path import join
+from datetime import datetime
 from logging import Logger, getLogger
+from pytz import timezone
 from typing import Any
 
 from django.db.models.query import QuerySet
@@ -11,10 +13,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.utils.text import slugify
+from django.utils.timezone import localtime
 from django.conf import settings
 
-from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser
+from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser
+from raptorWeb.authprofiles.tasks import send_delete_request_email
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 
@@ -29,6 +33,7 @@ TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
 DISCORD_AUTH_URL: str = getattr(settings, 'DISCORD_AUTH_URL')
 LOGIN_URL: str = getattr(settings, 'LOGIN_URL')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
+TIME_ZONE = getattr(settings, 'TIME_ZONE')
 
 token_generator: RaptorUserTokenGenerator = RaptorUserTokenGenerator()
 
