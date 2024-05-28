@@ -525,7 +525,6 @@ class User_Profile(DetailView):
 
     def get_object(self):
         try:
-            # generate_totp_token(RaptorUser.objects.get(user_slug = self.kwargs['user_slug']))
             return RaptorUser.objects.get(user_slug = self.kwargs['user_slug'])
         
         except RaptorUser.DoesNotExist:
