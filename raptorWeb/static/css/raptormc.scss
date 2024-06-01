@@ -142,6 +142,16 @@ body {
     width: 15rem;
     height: 10rem
 }
+
+a:hover #profile_picture_box {
+    transform: scale(1.4);
+    transition: 0.1s;
+  }
+
+#profile_picture_box {
+    transition: 0.1s;
+  }
+
 .filter-white {
     filter: invert(44%) sepia(9%) saturate(362%) hue-rotate(7deg) brightness(97%) contrast(86%);
 }
