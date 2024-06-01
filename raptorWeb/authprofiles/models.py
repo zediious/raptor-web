@@ -341,7 +341,10 @@ class UserProfileInfo(models.Model):
         
         is_hidden = profile_edit_form.cleaned_data["hidden_from_public"]
         if is_hidden != self.hidden_from_public:
-            self.hidden_from_public = is_hidden        
+            self.hidden_from_public = is_hidden
+            
+        if profile_edit_form.cleaned_data['email'] != changed_user.email:
+            changed_user.email = profile_edit_form.cleaned_data['email']
 
         self.save()
         changed_user.save()
