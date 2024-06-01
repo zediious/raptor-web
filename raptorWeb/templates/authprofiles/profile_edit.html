@@ -27,7 +27,7 @@
 
     <hr>
 
-    <div class='d-flex justify-content-around'>
+    <div class='d-flex justify-content-evenly gap-4'>
         {% if not request.user.is_discord_user %}
             {% if request.user.mfa_enabled %}
                 <div class="mb-0 mt-1">
