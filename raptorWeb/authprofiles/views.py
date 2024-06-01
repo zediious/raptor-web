@@ -466,7 +466,7 @@ class All_User_Profile(ListView):
     """
     ListView for all Users
     """
-    paginate_by: int = 9
+    paginate_by: int = 12
     model: RaptorUser = RaptorUser
     queryset: RaptorUserManager = RaptorUser.objects.filter(
         is_superuser=False, is_active=True, user_profile_info__hidden_from_public=False).order_by('-date_joined'
@@ -594,7 +594,10 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
                 displayed_user: RaptorUser = RaptorUser.objects.find_slugged_user(profile_name)
                 if displayed_user != None:
                     self.extra_edit_form: UserProfileEditForm = UserProfileEditForm({
-                        'hidden_from_public': displayed_user.user_profile_info.hidden_from_public
+                        'hidden_from_public': displayed_user.user_profile_info.hidden_from_public,
+                        'minecraft_username': displayed_user.user_profile_info.minecraft_username,
+                        'favorite_modpack': displayed_user.user_profile_info.favorite_modpack,
+                        'email': displayed_user.email
                     })
                     instance_dict: dict = {
                         "extra_edit_form": self.extra_edit_form,

@@ -16,7 +16,7 @@
         {% csrf_token %}
         {{ form.captcha }} 
         <span class="text-white">{% bootstrap_form qr_code_form %}</span>
-        <button class="btn btn-success w-25" type="submit">
+        <button class="btn btn-success" type="submit">
             Generate QR Code
         </button>
 

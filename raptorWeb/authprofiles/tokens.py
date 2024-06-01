@@ -1,8 +1,8 @@
 from six import text_type
-from os.path import join
+from os.path import join, exists
+from os import makedirs
 from qrcode import make
 import qrcode.image.svg
-from tempfile import NamedTemporaryFile
 from datetime import datetime
 from logging import Logger, getLogger
 
@@ -10,7 +10,6 @@ from pyotp import random_base32, TOTP
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.files import File
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from raptorWeb.raptormc.models import SiteInformation
@@ -48,6 +47,9 @@ def generate_totp_token(user: AbstractUser) -> str:
     site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
     user.totp_token = bytes(random_base32(), 'utf-8')
     
+    if not exists(QR_MEDIA_DIR):
+        makedirs(QR_MEDIA_DIR)
+    
     totp = TOTP(user.totp_token)
     qr_uri = totp.provisioning_uri(
         name=f'{user.username}/{user.email}',
@@ -55,7 +57,6 @@ def generate_totp_token(user: AbstractUser) -> str:
     )
     
     qr_filename =  f'{QR_MEDIA_DIR}{hash(datetime.now())}.svg'
-    LOGGER.debug(qr_filename)
 
     qr_code_image = make(
         qr_uri,

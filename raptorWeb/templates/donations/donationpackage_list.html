@@ -71,15 +71,15 @@
     </div>
     {% endif %}
 
-    <div class="row">
+    <div class="row justify-content-evenly">
         {% for package in page_obj %}
-        <div class="col-md-4 col-12">
-            <a class="htmxLink"
+        <div class="col-md-4 col-12 user_card">
+            <a class="htmxLink d-block h-100"
                 data-bs-toggle="modal"
                 data-bs-target="#packageModal{{package.pk}}"
             >
-                <div id="package_box" class="card bg-light m-3 p-3 opacity-75">
-                    <div id="profile_picture_box" class="mx-auto d-block">
+                <div id="package_box" class="card bg-light m-3 p-3 opacity-75 border border-2 border-black">
+                    <div id="profile_picture_box" class="picture_transition mx-auto d-block">
                         {% if package.package_picture %}
                         <img class="w-100"
                             src="{{ package.package_picture.url }}"
@@ -90,7 +90,7 @@
                             alt="Package Picture">
                         {% endif %}
                     </div>
-                    <div class="col-10 w-100 text-center">
+                    <div class="col-10 w-100 mt-3 text-center">
                         <strong>{{package.name}}</strong>
                     </div>
                 </div>

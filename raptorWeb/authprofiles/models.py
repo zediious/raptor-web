@@ -338,13 +338,16 @@ class UserProfileInfo(models.Model):
         
         if profile_edit_form.cleaned_data["reset_toasts"] == True:
             changed_user.toasts_seen = dict()
-            changed_user.save()
         
         is_hidden = profile_edit_form.cleaned_data["hidden_from_public"]
         if is_hidden != self.hidden_from_public:
-            self.hidden_from_public = is_hidden        
+            self.hidden_from_public = is_hidden
+            
+        if profile_edit_form.cleaned_data['email'] != changed_user.email:
+            changed_user.email = profile_edit_form.cleaned_data['email']
 
         self.save()
+        changed_user.save()
         return self
     
     def save_profile_picture_from_url(self, url: str) -> None:
