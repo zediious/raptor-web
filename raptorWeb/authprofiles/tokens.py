@@ -1,9 +1,8 @@
 from six import text_type
 from os.path import join, exists
-from os import getenv, makedirs
+from os import makedirs
 from qrcode import make
 import qrcode.image.svg
-from tempfile import NamedTemporaryFile
 from datetime import datetime
 from logging import Logger, getLogger
 
@@ -11,7 +10,6 @@ from pyotp import random_base32, TOTP
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.files import File
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from raptorWeb.raptormc.models import SiteInformation
