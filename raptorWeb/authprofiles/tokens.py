@@ -1,5 +1,6 @@
 from six import text_type
-from os.path import join
+from os.path import join, exists
+from os import getenv, makedirs
 from qrcode import make
 import qrcode.image.svg
 from tempfile import NamedTemporaryFile
@@ -47,6 +48,9 @@ def generate_totp_token(user: AbstractUser) -> str:
     """
     site_info: SiteInformation = SiteInformation.objects.get_or_create(pk=1)[0]
     user.totp_token = bytes(random_base32(), 'utf-8')
+    
+    if not exists(QR_MEDIA_DIR):
+        makedirs(QR_MEDIA_DIR)
     
     totp = TOTP(user.totp_token)
     qr_uri = totp.provisioning_uri(
