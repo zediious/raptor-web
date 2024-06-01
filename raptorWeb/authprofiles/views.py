@@ -466,7 +466,7 @@ class All_User_Profile(ListView):
     """
     ListView for all Users
     """
-    paginate_by: int = 9
+    paginate_by: int = 12
     model: RaptorUser = RaptorUser
     queryset: RaptorUserManager = RaptorUser.objects.filter(
         is_superuser=False, is_active=True, user_profile_info__hidden_from_public=False).order_by('-date_joined'

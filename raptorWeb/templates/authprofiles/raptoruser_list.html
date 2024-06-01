@@ -68,18 +68,18 @@
     </div>
     
     {% comment %} User List {% endcomment %}
-    <div class="row">
+    <div class="row justify-content-evenly">
         {% for raptoruser in page_obj %}
-        <div class="col-md-4 col-12">
-            <a class="htmxLink"
+        <div class="user_card m-3">
+            <a class="htmxLink d-block h-100"
                 href="/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-get="raptormc/api/html/{{base_user_url}}/{{raptoruser.username|slugify}}"
                 hx-target='#home'
                 hx-swap='innerHTML'
                 hx-push-url="{{base_user_url}}/{{raptoruser.username|slugify}}"
             >
-                <div id="profile_box" class="card bg-light m-3 p-3 opacity-75">
-                    <div id="profile_picture_box" class="mx-auto d-block">
+                <div id="profile_box" class="card bg-light m-3 opacity-75 border border-2 border-black">
+                    <div id="profile_picture_box" class="picture_transition mx-auto d-block mt-3">
                     {% if raptoruser.user_profile_info.profile_picture %}
                         {% if raptoruser.is_staff == True %}
                         <img class="border border-2 border-danger w-100"
@@ -102,8 +102,8 @@
                         {% endif %}
                     {% endif %}
                     </div>
-                    <div class="col-10 w-100 text-center">
-                        <strong>{{raptoruser.username}}</strong>
+                    <div class="col-10 w-100 text-center mt-4">
+                        <strong>{{raptoruser.username|truncatechars:18}}</strong>
                     </div>
                 </div>
             </a>
