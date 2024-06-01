@@ -99,10 +99,14 @@ class UserProfileEditForm(forms.ModelForm):
         help_text="Indicates whether your profile appears on the user list, and whether it is publicly accessible.",
         required = False
     )
+    email: forms.EmailField = forms.EmailField(
+        label = 'Email',
+        help_text='The email address associated with your account.'
+    )
 
     class Meta():
         model: UserProfileInfo = UserProfileInfo
-        fields: tuple[str] = ('hidden_from_public', 'reset_toasts', 'picture_changed_manually', 'profile_picture', 'minecraft_username', 'favorite_modpack')
+        fields: tuple[str] = ('hidden_from_public', 'reset_toasts', 'picture_changed_manually', 'email', 'profile_picture', 'minecraft_username', 'favorite_modpack')
 
     def clean(self):
         """
