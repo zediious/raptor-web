@@ -277,6 +277,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'raptorWeb.authprofiles.tasks.check_for_deletable_users',
         'schedule': crontab(minute='*/15'),
     },
+    'check_for_deletable_qr_images': {
+        'task': 'raptorWeb.authprofiles.tasks.check_for_deletable_qr_images',
+        'schedule': crontab(minute='*/5'),
+    }
 }
 
 # ** Settings for "django-jazzmin" app **

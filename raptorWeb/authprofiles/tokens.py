@@ -57,7 +57,6 @@ def generate_totp_token(user: AbstractUser) -> str:
     )
     
     qr_filename =  f'{QR_MEDIA_DIR}{hash(datetime.now())}.svg'
-    LOGGER.debug(qr_filename)
 
     qr_code_image = make(
         qr_uri,
