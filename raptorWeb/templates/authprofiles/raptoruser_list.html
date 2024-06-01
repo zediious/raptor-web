@@ -79,7 +79,7 @@
                 hx-push-url="{{base_user_url}}/{{raptoruser.username|slugify}}"
             >
                 <div id="profile_box" class="card bg-light m-3 opacity-75 border border-2 border-black">
-                    <div id="profile_picture_box" class="mx-auto d-block mt-3">
+                    <div id="profile_picture_box" class="picture_transition mx-auto d-block mt-3">
                     {% if raptoruser.user_profile_info.profile_picture %}
                         {% if raptoruser.is_staff == True %}
                         <img class="border border-2 border-danger w-100"

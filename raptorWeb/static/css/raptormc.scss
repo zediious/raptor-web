@@ -143,12 +143,12 @@ body {
     height: 10rem
 }
 
-a:hover #profile_picture_box {
+a:hover .picture_transition {
     transform: scale(1.4);
     transition: 0.1s;
   }
 
-#profile_picture_box {
+.picture_transition {
     transition: 0.1s;
   }
 
