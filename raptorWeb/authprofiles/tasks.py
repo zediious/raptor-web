@@ -3,9 +3,10 @@ All functions in this module are sent to the celery worker to be executed.
 """
 
 from logging import getLogger
-from os.path import join
+from os.path import join, getmtime
+from os import listdir, remove
 from datetime import datetime
-from time import sleep
+import time
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -13,11 +14,12 @@ from django.conf import settings
 
 from celery import shared_task
 
-from raptorWeb.authprofiles.models import RaptorUser, DeletionQueueForUser
+from raptorWeb.authprofiles.models import DeletionQueueForUser
 from raptorWeb.raptormc.models import SiteInformation
 
 LOGGER = getLogger('authprofiles.tasks')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
+QR_MEDIA_DIR: str = join(getattr(settings, 'MEDIA_DIR'), 'totp/')
 EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
 
 @shared_task
@@ -33,6 +35,16 @@ def check_for_deletable_users():
             user.user.delete()
             user.delete()
 
+@shared_task
+def check_for_deletable_qr_images():
+    """
+    Check if any QR code images have existed for more than an hour, and delete them if so..
+    """
+    epoch_time = int(time.time())
+      
+    for qr_image in listdir(QR_MEDIA_DIR):
+        if (epoch_time - int(getmtime(join(QR_MEDIA_DIR, qr_image)))) / 60  >= 15:
+            remove(join(QR_MEDIA_DIR, qr_image))
 
 @shared_task
 def send_delete_request_email(deleting_user: list):
