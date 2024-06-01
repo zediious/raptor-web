@@ -16,7 +16,7 @@ from celery import shared_task
 from raptorWeb.authprofiles.models import RaptorUser, DeletionQueueForUser
 from raptorWeb.raptormc.models import SiteInformation
 
-LOGGER = getLogger('donations.tasks')
+LOGGER = getLogger('authprofiles.tasks')
 AUTH_TEMPLATE_DIR: str = getattr(settings, 'AUTH_TEMPLATE_DIR')
 EMAIL_HOST_USER: str = getattr(settings, 'EMAIL_HOST_USER')
 
