@@ -77,7 +77,7 @@ class DonationPackages(ListView):
     """
     ListView for all created DonationPackages
     """
-    paginate_by: int = 9
+    paginate_by: int = 12
     model: DonationPackage = DonationPackage
     
     def get_queryset(self) -> QuerySet[Any]:
