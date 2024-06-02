@@ -234,7 +234,6 @@ class SettingsPanelFilePost(PanelApiBaseView):
             data=request.POST,
             files=request.FILES
         )
-        dictionary: dict = {"SettingsInformationFiles": settings_files_form}
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
 
         if settings_files_form.is_valid():
