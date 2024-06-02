@@ -278,6 +278,7 @@ class SettingsPanelFilePost(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
+            messages.error(request, [str(message[1][0]) for message in settings_files_form.errors.items()])
             return HttpResponse(status=400)
         
         
