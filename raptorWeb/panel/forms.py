@@ -42,6 +42,7 @@ class PanelSettingsFiles(forms.ModelForm):
         model: SiteInformation = SiteInformation
         fields: tuple[str] = (
             'branding_image',
+            'branding_image_svg',
             'background_image',
             'avatar_image'
             )
