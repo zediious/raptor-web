@@ -19,9 +19,15 @@
                        hx-push-url="/"
                        hx-indicator="#mainLoadingspinner,.loaded-content"
                     >
-                        <img id="navImage"
-                             src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}"
-                             alt="{{ site_info_model.brand_name}}">
+                        {% if site_info_model.use_svg_brand %}
+                            <img class='w-100' id="navImageSvg"
+                                src="{% if site_info_model.branding_image_svg %}{{site_info_model.branding_image_svg.url}}{% endif %}"
+                                alt="{{ site_info_model.brand_name}}">
+                        {% else %}
+                            <img id="navImage"
+                                src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}"
+                                alt="{{ site_info_model.brand_name}}">
+                        {% endif %}
                     </a>
                 </div>
             </div>

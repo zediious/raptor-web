@@ -18,6 +18,7 @@ TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
 SETTINGS_FIELDS_TO_IGNORE = [
     'id',
     'branding_image',
+    'branding_image_svg',
     'background_image',
     'avatar_image',
     'donation_goal_progress'
@@ -234,7 +235,6 @@ class SettingsPanelFilePost(PanelApiBaseView):
             data=request.POST,
             files=request.FILES
         )
-        dictionary: dict = {"SettingsInformationFiles": settings_files_form}
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
 
         if settings_files_form.is_valid():
@@ -256,6 +256,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
             if settings_files_form.cleaned_data['branding_image'] != None:
                 site_info.branding_image = settings_files_form.cleaned_data['branding_image']
                 changed.append('Branding Image')
+                
+            if settings_files_form.cleaned_data['branding_image_svg'] != None:
+                site_info.branding_image_svg = settings_files_form.cleaned_data['branding_image_svg']
+                changed.append('Branding Image - SVG')
                 
             if settings_files_form.cleaned_data['background_image'] != None:
                 site_info.background_image = settings_files_form.cleaned_data['background_image']
@@ -279,6 +283,7 @@ class SettingsPanelFilePost(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
+            messages.error(request, [str(message[1][0]) for message in settings_files_form.errors.items()])
             return HttpResponse(status=400)
         
         
