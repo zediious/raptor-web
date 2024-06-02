@@ -406,6 +406,22 @@ class SiteInformation(models.Model):
                     "always override this color."),
         default="#00233c"
     )
+    
+    use_svg_brand = models.BooleanField(
+        verbose_name="Use SVG Branding Image",
+        help_text=("If this is checked, the SVG Branding Image will be used instead of the "
+                   "uploaded raster Branding Image."),
+        default=False
+    )
+    
+    branding_image_svg = models.FileField(
+        upload_to='branding_svg',
+        verbose_name="Branding Image - SVG",
+        help_text=("The image displayed in the website Navigation Bar as a link to the "
+                    "homepage. This must be an SVG, and will override the webp Branding Image."),
+        blank=True,
+        null=True
+    )
 
     branding_image = ResizedImageField(
         upload_to='branding',
