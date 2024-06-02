@@ -18,6 +18,7 @@ class DonationCurrencyChoices(models.TextChoices):
         MXN = 'mxn', _('Mexican Peso')
         GBP = 'gbp', _('Pound')
         EUR = 'eur', _('Euro')
+        
 
 class PageManager(models.Manager):
     """
