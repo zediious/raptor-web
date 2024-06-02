@@ -16,6 +16,7 @@ class PanelSettingsInformation(forms.ModelForm):
         }
         exclude: tuple[str] = (
             'branding_image',
+            'branding_image_svg',
             'background_image',
             'avatar_image',
             'donation_goal_progress'
