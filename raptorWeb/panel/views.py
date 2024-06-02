@@ -18,6 +18,7 @@ TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
 SETTINGS_FIELDS_TO_IGNORE = [
     'id',
     'branding_image',
+    'branding_image_svg',
     'background_image',
     'avatar_image',
     'donation_goal_progress'
@@ -255,6 +256,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
             if settings_files_form.cleaned_data['branding_image'] != None:
                 site_info.branding_image = settings_files_form.cleaned_data['branding_image']
                 changed.append('Branding Image')
+                
+            if settings_files_form.cleaned_data['branding_image_svg'] != None:
+                site_info.branding_image_svg = settings_files_form.cleaned_data['branding_image_svg']
+                changed.append('Branding Image - SVG')
                 
             if settings_files_form.cleaned_data['background_image'] != None:
                 site_info.background_image = settings_files_form.cleaned_data['background_image']
