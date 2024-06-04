@@ -4,20 +4,13 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django.conf import settings
 
+from raptorWeb.raptormc.routes import Route
+
 LOGGER = getLogger('raptormc.routes')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 CURRENT_URLPATTERNS = []
-
-class Route:
-    
-    def __init__(self, name, route_type) -> None:
-        self.name: str = name
-        self.route_type: str = route_type
-          
-    def __str__(self) -> str:
-        return self.name
 
 def check_route(request):
     """
