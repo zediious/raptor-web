@@ -1,0 +1,18 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+{{ form.media }}
+
+<div id='update_form_wrapper' class='container-flex'>
+    <form id="update_form_alone" class="form text-white"
+        enctype="multipart/form-data" 
+        hx-post="{% url 'panel:server/update_IR' pk=server.pk %} "
+        hx-swap="none"
+    >
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class='btn btn-success' type='submit'>
+            Save Changes
+        </button>
+    </form>
+</div>

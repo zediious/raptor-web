@@ -189,7 +189,7 @@ class SettingsPanel(PanelApiBaseView):
                                 field_string,
                                 settings_form.cleaned_data[field_string]
                             )
-                            changed.append(field_string.title()) 
+                            changed.append(field_string.title().replace('_', ' ')) 
                     except KeyError:
                         continue
                     
@@ -320,7 +320,7 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
                             field_string,
                             default_pages_form.cleaned_data[field_string]
                         )
-                        changed.append(field_string.title())
+                        changed.append(field_string.title().replace('_', ' '))
                 
             for change in changed:
                 changed_string += f'{change}, '
@@ -362,3 +362,81 @@ class PanelServerList(ListView):
         context = super().get_context_data(**kwargs)
         return context
     
+
+class PanelUpdateView(UpdateView):
+    """
+    Abstract UpdateView used in Panel CRUD views
+    Overwrite post() to conform to SPA style. Messages
+    are returned as HTTP headers to be picked up without
+    refreshing the page
+    """
+    template_name_suffix = "_update_form"
+    image_fields: list = []
+    ignored_fields: list = []
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        model_form = self.get_form()
+        if model_form.is_valid():
+            model_form_data = model_form.cleaned_data
+            changed_object = self.get_object()
+            changed: list = []
+            changed_string: str = ""
+            
+            for field in self.model._meta.fields:
+                field_string = str(field).replace('gameservers.Server.', '')
+                if field_string not in self.ignored_fields:
+                    if field_string in self.image_fields:
+                        if model_form_data[field_string] != None:
+                            setattr(
+                                changed_object,
+                                field_string,
+                                model_form_data[field_string]
+                            )
+                            changed.append(field_string.title().replace('_', ' '))
+
+                        continue
+
+                    if getattr(changed_object, field_string) != model_form_data[field_string]:
+                        setattr(
+                            changed_object,
+                            field_string,
+                            model_form_data[field_string]
+                        )
+                        changed.append(field_string.title().replace('_', ' '))
+                
+            for change in changed:
+                changed_string += f'{change}, '
+            if changed == []:
+                messages.error(request, 'You must change some details before updating them.')
+                return HttpResponse(status=200)
+            
+            changed_object.save()
+
+            messages.success(request,
+                             ((f'The following fields have been successfully updated '
+                               f'for {self.get_object()}: '
+                               f'{changed_string[:-1]}')))
+            return HttpResponse(status=200)
+
+        else:  
+            messages.error(
+                request, [str(message[1][0]) for message in model_form.errors.items()]
+            )
+            return HttpResponse(status=200)
+        
+
+class PanelServerUpdate(PanelUpdateView):
+    """
+    Return a list of server fields for editing.
+    """
+    model: Server = Server
+    form_class = PanelServerUpdateForm
+    image_fields = ['modpack_picture']
+    ignored_fields = [
+        'id',
+        'announcement_count',
+        'in_maintenance',
+        'server_state',
+        'player_count',
+        'archived'
+    ]

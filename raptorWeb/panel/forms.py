@@ -1,10 +1,26 @@
 from logging import getLogger
 
 from django import forms
+from django.utils.safestring import mark_safe
+
+from tinymce.widgets import TinyMCE
 
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages
+from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('panel.forms')
+
+
+class PictureWidget(forms.widgets.FileInput):
+    """
+    Widget to display image in ImageFields when returned in forms
+    along with option to upload new image
+    """
+    def render(self, name, value, attrs=None, **kwargs):
+        LOGGER.debug(value)
+        input_html = super().render(name, value, attrs=None, **kwargs)
+        img_html = mark_safe(f'<br><br><img src="{value.url}"/>')
+        return mark_safe(f'{input_html}{img_html}')
 
 
 class PanelSettingsInformation(forms.ModelForm):
@@ -49,7 +65,7 @@ class PanelSettingsFiles(forms.ModelForm):
             'branding_image',
             'branding_image_svg',
             'background_image',
-            'avatar_image'
+            'avatar_image',
             )
         
         
@@ -60,4 +76,34 @@ class PanelDefaultPages(forms.ModelForm):
     class Meta():
         model: DefaultPages = DefaultPages
         fields: str = '__all__'
+
+
+class PanelServerUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Server
+        fields = (
+        'modpack_name',
+        'modpack_version',
+        'server_address',
+        'server_port',
+        'modpack_url',
+        'modpack_picture',
+        'discord_announcement_channel_id',
+        'discord_modpack_role_id',
+        'rcon_address',
+        'rcon_port',
+        'rcon_password',
+        'modpack_description',
+        'server_description',
+        'server_rules',
+        'server_banned_items',
+        'server_vote_links',)
+        widgets = {
+            'modpack_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_rules': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_banned_items': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_vote_links': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'modpack_picture': PictureWidget
+        }
 

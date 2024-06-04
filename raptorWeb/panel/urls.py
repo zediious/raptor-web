@@ -15,6 +15,7 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/server/importexport', views.ServerActionsPanel.as_view(), name="server/importexport"),
     path('api/html/panel/server/importexport/', views.ServerActionsPanel.as_view(), name="server/importexport"),
     path('api/html/panel/server/list/', views.PanelServerList.as_view(template_name='panel/crud/server_list.html'), name="server/list"),
+    path('api/html/panel/server/update/<int:pk>', views.PanelServerUpdate.as_view(template_name='panel/crud/server_update.html'), name="server/update_IR"),
     path('api/html/panel/reporting', views.ReportingPanel.as_view(), name="reporting"),
     path('api/html/panel/reporting/', views.ReportingPanel.as_view(), name="reporting"),
     path('api/html/panel/donations/', views.DonationsPanel.as_view(), name="donations"),
