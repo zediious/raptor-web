@@ -1,6 +1,10 @@
+from logging import getLogger
+
 from django import forms
 
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages
+
+LOGGER = getLogger('panel.forms')
 
 
 class PanelSettingsInformation(forms.ModelForm):
