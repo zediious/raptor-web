@@ -2,16 +2,17 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, UpdateView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 
 from raptorWeb.panel.routes import check_route
-from raptorWeb.panel.forms import PanelSettingsInformation, PanelSettingsFiles, PanelDefaultPages
+from raptorWeb.panel.forms import PanelSettingsInformation, PanelSettingsFiles, PanelDefaultPages, PanelServerUpdateForm
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages
 from raptorWeb.raptorbot.models import DiscordGuild
+from raptorWeb.gameservers.models import Server, ServerManager
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
@@ -336,4 +337,28 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
 
         else:
             return HttpResponse(status=400)
+
+
+class PanelServerList(ListView):
+    """
+    Return a list of servers for viewing and accessing CRUD actions
+    """
+    model: Server = Server
+    paginate_by = 2
+
+    def get_queryset(self) -> ServerManager:
+        return Server.objects.get_servers(wait=False).reverse()
+
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
         
+        if not request.user.has_perm('raptormc.server_list'):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
