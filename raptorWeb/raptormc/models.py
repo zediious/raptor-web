@@ -692,7 +692,8 @@ class SiteInformation(models.Model):
         permissions = [
             ("panel", "Can access the Control Panel Homepage"),
             ("discord_bot", "Can access the Discord Bot control panel"),
-            ("server_actions", "Can access the Server Actions menu"),
+            ("server_import_export", "Can access the Server Import/Export menu"),
+            ("server_list", "Can access the list of created servers"),
             ("reporting", "Can access Reporting"),
             ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
