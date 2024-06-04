@@ -20,7 +20,7 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/settings', views.SettingsPanel.as_view(), name="settings"),
     path('api/html/panel/settings/', views.SettingsPanel.as_view(), name="settings"),
     path('api/html/panel/settings/files/update', views.SettingsPanelFilePost.as_view(), name="settings_files_update"),
-    path('api/html/panel/settings/defaultpagese/update', views.SettingsPanelDefaultPagesPost.as_view(), name="settings_default_pages"),
+    path('api/html/panel/settings/defaultpages/update', views.SettingsPanelDefaultPagesPost.as_view(), name="settings_default_pages"),
     # Admin Panel Base View
     re_path(r'\S*', views.BaseView.as_view(), name='admin_panel_base'),
 
