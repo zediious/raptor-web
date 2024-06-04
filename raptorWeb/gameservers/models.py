@@ -427,6 +427,10 @@ class Server(models.Model):
 
     def __str__(self) -> str:
         return self.modpack_name
+    
+    def get_absolute_url(self):
+        return f'/panel/server/update/{self.pk}'
+    
 
     class Meta:
         verbose_name = "Server"
