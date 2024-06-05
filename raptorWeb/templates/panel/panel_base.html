@@ -1,62 +1,92 @@
-{% extends "admin/index.html" %}
+<!DOCTYPE html>
 
 {% load static %}
+{% load django_bootstrap5 %}
 {% load urlStrip %}
+{% load addParams %}
 
-{% block title %}Control Panel | {{ jazzmin_settings.site_title }}{% endblock %}
+<html lang="en" dir="ltr">
 
-{% block extrahead %}
-<script src="{% static 'javascript/src/dep/htmx.min.js' %}"></script>
-<link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
-{% endblock %}
+<head>
+    <meta charset="utf-8" hx-preserve="true">
+    <meta name="viewport" content="width=device-width, initial-scale=1" hx-preserve="true">
+    <title>{{site_info.brand_name}} - Control Panel</title>
+    <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
+    <link rel="stylesheet" href="{% static 'css/raptormc.css' %}" hx-preserve="true">
+</head>
 
-{% block page_actions %}{% endblock %}
+<body hx-ext="head-support"
+      id="body"
+      {% if site_info.use_main_color %}
+      style="background-color: {{ site_info.main_color }}";
+      {% endif %}
+>
 
-{% block sidebar%}
+    {% include "panel/top_bar.html" %}
+
+    {% include "panel/panel_toasts.html" %}
+
     {% include "panel/panel_sidebar.html" %}
-{% endblock %}
 
-{% block page_content %}
-
-{% include "panel/panel_toasts.html" %}
-  
-
-<div class="d-flex justify-content-center">
-    <img id="panelLoadingspinner"
-         class="htmx-indicator w-50 pt-5"
-         src="{% static 'image/tail-spin.svg' %}"
-         alt="Loading...">
-</div>
-
-<div class="m-5 mt-4 p-3">
-    <div id='panel_main'>
-
-    {% if is_404 == 'true' %}
-        {% include "raptormc/404.html" %}
-    {% else %}
-        {% if request.path == '/panel/' %}
-            <div hx-get='{% url "panel:home" %}'
-                hx-trigger='load'
-                hx-target='#panel_main'
-                hx-swap="innerHTML"
-                hx-push-url="home/"
-                hx-indicator="#panelLoadingspinner"></div>
-        {% else %}
-            <div hx-get="/panel/api/html/{{request.path|strip_slash}}"
-                hx-trigger='load'
-                hx-target='#panel_main'
-                hx-swap="innerHTML"
-                hx-indicator="#panelLoadingspinner">
-            </div>
-        {% endif %}
-    {% endif %}
-
+    <div class="d-flex justify-content-center">
+        <img id="panelLoadingspinner"
+            class="htmx-indicator w-50 pt-5"
+            src="{% static 'image/tail-spin.svg' %}"
+            alt="Loading...">
     </div>
-</div>
 
-{% endblock %}
+    <div class="m-5 mt-4 p-3">
+        <div id='panel_main' class='fade-in-main loaded-content' hx-history-elt>
 
-{% block extrajs %}
-<script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
-{% endblock %}
+        {% if is_404 == 'true' %}
+            {% include "raptormc/404.html" %}
+        {% else %}
+            {% if request.path == '/panel/' %}
+                <div hx-get='{% url "panel:home" %}'
+                    hx-trigger='load'
+                    hx-target='#panel_main'
+                    hx-swap="innerHTML"
+                    hx-push-url="home/"
+                    hx-indicator="#panelLoadingspinner"></div>
+            {% else %}
+                <div hx-get="/panel/api/html/{{request.path|strip_slash}}"
+                    hx-trigger='load'
+                    hx-target='#panel_main'
+                    hx-swap="innerHTML"
+                    hx-indicator="#panelLoadingspinner">
+                </div>
+            {% endif %}
+        {% endif %}
+
+        </div>
+    </div>
+
+    <p class="pageContent text-center">
+        <a class="text-white" href="https://github.com/zediious/raptor-web" target="_blank">
+            Powered by Raptor-Web
+        </a>
+    </p>
+
+    {% comment %} JS Imports {% endcomment %}
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/alpine.min.js' %}"></script>
+    <script src="{% static 'javascript/src/modalClose.js' %}"></script>
+
+    <script>
+        var select_1 = ''
+        var select_2 = ''
+        var select_3 = ''
+        var select_4 = ''
+        var select_5 = ''
+        var section_1 = ''
+        var section_2 = ''
+        var section_3 = ''
+        var section_4 = ''
+        var section_5 = ''
+    
+        var select_list = []
+    </script>
+
+</body>
