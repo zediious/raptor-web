@@ -17,7 +17,7 @@ CURRENT_URLPATTERNS = []
 
 class Route:
     
-    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None, package=None) -> None:
+    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None, package=None, informativetext=None) -> None:
         self.name: str = name
         self.route_type: str = route_type
         self.informative_text = informative_text
@@ -25,6 +25,7 @@ class Route:
         self.page: Page = page
         self.server: Server = server
         self.package: DonationPackage = package
+        self.informativetext: InformativeText = informativetext
           
     def __str__(self) -> str:
         return self.name
