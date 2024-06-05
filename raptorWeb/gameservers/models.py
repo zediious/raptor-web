@@ -456,6 +456,10 @@ class Player(models.Model):
     
     online = models.BooleanField(
         default=False)
+    
+    first_joined = models.DateTimeField(
+        verbose_name="First Joined Date",
+        auto_now_add=True)
      
     last_online = models.DateTimeField(
         verbose_name="Last Online",
