@@ -76,7 +76,8 @@ class PlayerAdmin(admin.ModelAdmin):
                 'server',
                 'name',
                 'online',
-                'last_online')
+                'last_online',
+                'first_joined')
         }),
     )
 
