@@ -383,7 +383,9 @@ class Server(models.Model):
     modpack_url = models.URLField(
         max_length=200,
         verbose_name="Link to Modpack Page",
-        help_text="A URL to the website where this modpack can be downloaded from."
+        help_text="A URL to the website where this modpack can be downloaded from.",
+        blank=True,
+        null=True
     )
 
     discord_announcement_channel_id = models.CharField(
