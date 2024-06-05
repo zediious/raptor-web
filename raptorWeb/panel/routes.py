@@ -1,10 +1,9 @@
 from logging import getLogger
 
-from django.utils.text import slugify
-from django.utils.html import strip_tags
 from django.conf import settings
 
 from raptorWeb.raptormc.routes import Route
+from raptorWeb.raptormc.models import InformativeText
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('raptormc.routes')
@@ -48,6 +47,21 @@ def check_route(request):
                     server=server,
                 )
             )
+            
+    def _get_informative_text_routes():
+        """
+        Iterate all Informative Texts and create a Route for
+        each one's update page.
+        """
+        all_texts = InformativeText.objects.all()
+        for text in all_texts:
+            current_routes.append(
+                Route(
+                    name=f'panel/content/informativetext/update/{text.pk}',
+                    route_type="informativetext",
+                    informativetext=text
+                )
+            )
     
     # If request is to root path, we do not need to check routes 
     if request.path == '/panel/':
@@ -57,6 +71,7 @@ def check_route(request):
     
     _get_main_routes()
     _get_server_routes()
+    _get_informative_text_routes()
     
     for route in current_routes:
         first_slash = request.path.index('/')
