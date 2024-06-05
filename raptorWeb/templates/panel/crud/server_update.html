@@ -3,115 +3,75 @@
 
 {{ form.media }}
 
-<div class='d-flex justify-content-evenly mb-0'>
-    <button id='select-button-1' class='btn btn-primary selection-button'>
-        General
-    </button>
-    <button id='select-button-2' class='btn btn-outline-secondary selection-button'>
-        Information
-    </button>
-    <button id='select-button-3' class='btn btn-outline-secondary selection-button'>
-        Querying
-    </button>
-    <button id='select-button-4' class='btn btn-outline-secondary selection-button'>
-        Discord Announcements
-    </button>
-    <button id='select-button-5' class='btn btn-outline-secondary selection-button'>
-        Donations
-    </button>
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Update existing information for {{server.modpack_name}}</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of
+            the page.
+        </p>
+    </div>
 </div>
 
-<hr class='mt-0 mb-4'>
-
-<div id='update_form_wrapper' class='container-flex'>
-    <form id="update_form_alone" class="form text-white"
-        enctype="multipart/form-data" 
-        hx-post="{% url 'panel:server/update_IR' pk=server.pk %} "
-        hx-swap="none"
-    >
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button class='btn btn-success' type='submit'>
-            Save Changes
+<div class='card bg-dark m-0 p-3'>
+    <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
+        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+            General
         </button>
-    </form>
+        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+            Information
+        </button>
+        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+            Querying
+        </button>
+        <button id='select-button-4' class='btn btn-sm btn-secondary selection-button'>
+            Discord Announcements
+        </button>
+        <button id='select-button-5' class='btn btn-sm btn-secondary selection-button'>
+            Donations
+        </button>
+    </div>
+
+    <hr class='mt-0 mb-4'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:server/update_IR' pk=server.pk %} "
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            <div id='server_general' style='display: block'>
+                {% bootstrap_field form.modpack_name %}
+                {% bootstrap_field form.modpack_version %}
+                {% bootstrap_field form.modpack_url %}
+                {% bootstrap_field form.modpack_picture %}
+            </div>
+            <div id='server_information' style='display: none'>
+                {% bootstrap_field form.modpack_description %}
+                {% bootstrap_field form.server_description %}
+                {% bootstrap_field form.server_rules %}
+                {% bootstrap_field form.server_banned_items %}
+                {% bootstrap_field form.server_vote_links %}
+            </div>
+            <div id='server_querying' style='display: none'>
+                {% bootstrap_field form.server_address %}
+                {% bootstrap_field form.server_port %}
+            </div>
+            <div id='server_discord_announcements' style='display: none'>
+                {% bootstrap_field form.discord_announcement_channel_id %}
+                {% bootstrap_field form.discord_modpack_role_id %}
+            </div>
+            <div id='server_donations' style='display: none'>
+                {% bootstrap_field form.rcon_address %}
+                {% bootstrap_field form.rcon_port %}
+                {% bootstrap_field form.rcon_password %}
+            </div>
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
 </div>
 
-<script>
-
-let select_1 = $('#select-button-1')
-let select_2 = $('#select-button-2')
-let select_3 = $('#select-button-3')
-let select_4 = $('#select-button-4')
-let select_5 = $('#select-button-5')
-
-const select_list = [select_1, select_2, select_3, select_4, select_5]
-
-function checkButtonState(button) {
-    if (button.hasClass('btn-primary')) {
-        button.toggleClass('btn-primary')
-    }
-    if (button.hasClass('btn-outline-secondary')) {
-        void 0;
-    }
-    else {
-        button.toggleClass('btn-outline-secondary')
-    }
-}
-
-document.getElementById('select-button-1').addEventListener('click', function(e) {
-    if (select_1.hasClass('btn-primary')) {
-        void 0;
-    }
-    else {
-        select_list.forEach(checkButtonState)
-        select_1.toggleClass('btn-outline-secondary')
-        select_1.toggleClass('btn-primary')
-    }
-});
-
-document.getElementById('select-button-2').addEventListener('click', function(e) {
-    if (select_2.hasClass('btn-primary')) {
-        void 0;
-    }
-    else {
-        select_list.forEach(checkButtonState)
-        select_2.toggleClass('btn-outline-secondary')
-        select_2.toggleClass('btn-primary')
-    }
-});
-
-document.getElementById('select-button-3').addEventListener('click', function(e) {
-    if (select_3.hasClass('btn-primary')) {
-        void 0;
-    }
-    else {
-        select_list.forEach(checkButtonState)
-        select_3.toggleClass('btn-outline-secondary')
-        select_3.toggleClass('btn-primary')
-    }
-});
-
-document.getElementById('select-button-4').addEventListener('click', function(e) {
-    if (select_4.hasClass('btn-primary')) {
-        void 0;
-    }
-    else {
-        select_list.forEach(checkButtonState)
-        select_4.toggleClass('btn-outline-secondary')
-        select_4.toggleClass('btn-primary')
-    }
-});
-
-document.getElementById('select-button-5').addEventListener('click', function(e) {
-    if (select_5.hasClass('btn-primary')) {
-        void 0;
-    }
-    else {
-        select_list.forEach(checkButtonState)
-        select_5.toggleClass('btn-outline-secondary')
-        select_5.toggleClass('btn-primary')
-    }
-});
-
-</script>
+<script src="{% static 'javascript/src/serverSelectButtons.js' %}"></script>

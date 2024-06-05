@@ -2,19 +2,20 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import TemplateView, ListView, UpdateView
+from django.db.models.query import QuerySet
+from django.views.generic import TemplateView, ListView, UpdateView, CreateView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 
 from raptorWeb.panel.routes import check_route
-from raptorWeb.panel.forms import PanelSettingsInformation, PanelSettingsFiles, PanelDefaultPages, PanelServerUpdateForm
-from raptorWeb.raptormc.models import SiteInformation, DefaultPages
+from raptorWeb.panel.forms import PanelSettingsInformation, PanelSettingsFiles, PanelDefaultPages, PanelServerUpdateForm, PanelServerCreateForm, PanelPlayerFilterForm, PanelPlayerPaginateForm, PanelInformativeTextUpdateForm
+from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText
 from raptorWeb.raptorbot.models import DiscordGuild
-from raptorWeb.gameservers.models import Server, ServerManager
+from raptorWeb.gameservers.models import Server, ServerManager, Player
 
-LOGGER = getLogger('raptormc.views')
+LOGGER = getLogger('panel.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
 SETTINGS_FIELDS_TO_IGNORE = [
     'id',
@@ -303,7 +304,6 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
             return HttpResponseRedirect('/')
         
         default_pages_form: PanelDefaultPages = PanelDefaultPages(request.POST)
-        dictionary: dict = {"SettingsDefaultPages": default_pages_form}
         default_pages = DefaultPages.objects.get_or_create(pk=1)[0]
 
         if default_pages_form.is_valid():
@@ -337,32 +337,8 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
 
         else:
             return HttpResponse(status=400)
-
-
-class PanelServerList(ListView):
-    """
-    Return a list of servers for viewing and accessing CRUD actions
-    """
-    model: Server = Server
-    paginate_by = 2
-
-    def get_queryset(self) -> ServerManager:
-        return Server.objects.get_servers(wait=False).reverse()
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.server_list'):
-            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
-        return super().get(request, *args, **kwargs)
-        
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-    
-
 class PanelUpdateView(UpdateView):
     """
     Abstract UpdateView used in Panel CRUD views
@@ -371,10 +347,18 @@ class PanelUpdateView(UpdateView):
     refreshing the page
     """
     template_name_suffix = "_update_form"
+    permission: str = ''
+    model_classpath: str = ''
     image_fields: list = []
     ignored_fields: list = []
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm(self.permission):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
         model_form = self.get_form()
         if model_form.is_valid():
             model_form_data = model_form.cleaned_data
@@ -383,7 +367,7 @@ class PanelUpdateView(UpdateView):
             changed_string: str = ""
             
             for field in self.model._meta.fields:
-                field_string = str(field).replace('gameservers.Server.', '')
+                field_string = str(field).replace(f'{self.model_classpath}.', '')
                 if field_string not in self.ignored_fields:
                     if field_string in self.image_fields:
                         if model_form_data[field_string] != None:
@@ -424,6 +408,79 @@ class PanelUpdateView(UpdateView):
             )
             return HttpResponse(status=200)
         
+        
+class PanelListView(ListView):
+    """
+    Abstract ListView used in Panel CRUD views
+    """
+    permission: str = ''
+    model_name: str = ''
+    
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm(self.permission):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'model': self.model,
+            'model_name': self.model_name
+        })
+        return context
+    
+    
+class PanelCreateView(CreateView):
+    """
+    Abstract CreateView used in Panel CRUD views
+    """
+    template_name_suffix = "_create_form"
+    permission: str = ''
+    redirect_url: str = ''
+    
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if not request.user.has_perm(self.permission):
+            HttpResponseRedirect('/')
+            
+        model_form = self.get_form()
+        if model_form.is_valid():
+            model_form.save()
+            model_string = str(self.model).split('.')[3].replace("'", "")
+            messages.success(
+                request, f'A new {model_string.replace(">", "").title()} has been added!'
+            )
+            return HttpResponseRedirect(self.redirect_url)
+
+
+class PanelServerList(PanelListView):
+    """
+    Return a list of servers for viewing and accessing CRUD actions
+    """
+    model: Server = Server
+    paginate_by = 10
+    permission: str = 'raptormc.server_list'
+    model_name: str = 'Server'
+
+    def get_queryset(self) -> ServerManager:
+        if 'archived' in self.request.path:
+            return Server.objects.get_servers(wait=False,get_archived=True).reverse()
+        
+        return Server.objects.get_servers(wait=False).reverse()
+        
+        
+class PanelServerCreate(PanelCreateView):
+    """
+    Return a form to create/add a new server.
+    """
+    model: Server = Server
+    form_class = PanelServerCreateForm
+    redirect_url: str = '/panel/api/html/panel/server/list/'
+    permission: str = 'raptormc.server_update'
+        
 
 class PanelServerUpdate(PanelUpdateView):
     """
@@ -431,6 +488,8 @@ class PanelServerUpdate(PanelUpdateView):
     """
     model: Server = Server
     form_class = PanelServerUpdateForm
+    permission: str = 'raptormc.server_update'
+    model_classpath: str = 'gameservers.Server'
     image_fields = ['modpack_picture']
     ignored_fields = [
         'id',
@@ -440,3 +499,102 @@ class PanelServerUpdate(PanelUpdateView):
         'player_count',
         'archived'
     ]
+    
+    
+class PanelPlayerList(PanelListView):
+    """
+    Return a list of players that have joined servers for viewing and CRUD actions
+    """
+    model: Player = Player
+    paginate_by = 50
+    permission: str = 'raptormc.player_list'
+    model_name:str = "Player"
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = Player.objects.all().order_by('-last_online')
+        get = self.request.GET
+        if get.get('username') != None:
+            queryset = queryset.filter(name__icontains=get.get('username'))
+        
+        if get.get('order_by') != None:
+            order_by = get.get('order_by')
+            direction = get.get('direction')
+            ordering = order_by.lower()
+            if direction == 'desc':
+                ordering = '-{}'.format(ordering)
+                
+            queryset = queryset.order_by(ordering)
+            
+        if get.get('paginate_by') != None:
+            self.paginate_by = get.get('paginate_by')
+    
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        filter_form = PanelPlayerFilterForm
+        paginate_form = PanelPlayerPaginateForm
+        form_data = {}
+        paginate_data = {}
+        get = self.request.GET
+        if get.get('username') != None:
+            form_data.update({
+                'username': get.get('username')
+            })
+            context.update({
+                'form_data': get
+            })
+            
+        if get.get('order_by') != None:
+            context.update({
+                'order_by': get.get('order_by'),
+                'direction': get.get('direction')
+            })
+            
+        if get.get('paginate_by') != None:
+            context.update({
+                'paginate_by': get.get('paginate_by')
+            })
+            paginate_data.update({
+                'paginate_by': get.get('paginate_by')
+            })
+            
+        else:
+            context.update({
+                'paginate_by': self.paginate_by
+            })
+            paginate_data.update({
+                'paginate_by': self.paginate_by
+            })
+            
+        context.update({
+            'player_filter_form': filter_form(form_data),
+            'player_paginate_form': paginate_form(paginate_data),
+            'total_player_count': Player.objects.count()
+        })
+        return context
+    
+    
+class PanelInformativeTextList(PanelListView):
+    """
+    Used by Panel to display list of Informative Text's for editing
+    """
+    model: InformativeText = InformativeText
+    permission: str = 'raptormc.informativetext_view'
+    model_name: str = 'Informative Text'
+    paginate_by = 10
+    
+    
+class PanelInformativeTextUpdate(PanelUpdateView):
+    """
+    Update changed information for a given Informative Text
+    """
+    model: InformativeText = InformativeText
+    form_class = PanelInformativeTextUpdateForm
+    permission: str = 'raptormc.informativetext_update'
+    model_classpath: str = 'raptormc.InformativeText'
+    ignored_fields = [
+        'id',
+        'name'
+    ]
+    

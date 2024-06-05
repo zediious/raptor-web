@@ -1,0 +1,20 @@
+<form>
+    {% csrf_token %}
+    {% if server.in_maintenance or maintenance_status %}
+        <button id="panel_maintenance_button_{{server.pk}}" class='btn btn-success'
+                hx-post="{% url 'gameservers:update_maintenance' server.pk %} "
+                hx-target="#panel_maintenance_button_replace_{{server.pk}}"
+                hx-swap'outerHTML'
+            >
+            Disable Maintenance Mode
+        </button>
+    {% else%}
+        <button id="panel_maintenance_button_{{server.pk}}" class='btn btn-warning'
+                hx-post="{% url 'gameservers:update_maintenance' server.pk %} "
+                hx-target="#panel_maintenance_button_replace_{{server.pk}}"
+                hx-swap'outerHTML'
+        >
+            Enable Maintenance Mode
+        </button>
+    {% endif %}
+</form>

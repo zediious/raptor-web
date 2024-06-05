@@ -1,6 +1,83 @@
+{% load adminDoc %}
+
 <div id='server_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Server List</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+        <button id='add_server_button' class='btn btn-primary'
+                href='/panel/server/create/'
+                hx-get="{% url 'panel:server/create'%} "
+                hx-push-url='/panel/server/create/'
+                hx-target='#panel_main'
+                hx-indicator="#panelLoadingspinner,.loaded-content"
+        >
+            Add Server
+        </button>
+    </div>
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Modpack Name</th>
+                <th class='text-white' scope="col">Modpack Version</th>
+                <th class='text-white' scope="col">Server Address</th>
+                <th class='text-white' scope="col">Server State</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for server in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{server.pk}}</th>
+                <td>{{server.modpack_name}}</td>
+                <td>{{server.modpack_version}}</td>
+                <td>{{server.server_address}}</td>
+                <td>{%if server.server_state%}<div class='badge bg-success'>Online</div>{%else%}<div class='badge bg-danger'>Offline</div>{%endif%}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        <button id='panel_edit_button' class='btn btn-primary'
+                                href='/panel/server/update/{{server.pk}}'
+                                hx-get="{% url 'panel:server/update_IR' pk=server.pk %} "
+                                hx-push-url='/panel/server/update/{{server.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            Edit
+                        </button>
+
+                        <div id="panel_maintenance_button_replace_{{server.pk}}">
+                            {% include "panel/crud/panel_maintenance_button.html" %}
+                        </div>
+
+                        <form>
+                            {% csrf_token %}
+                            <button id='panel_archive_button' class='btn btn-danger'
+                                    hx-get="{% url 'gameservers:update_archive' server.pk%}"
+                                    hx-target='#server_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Archive
+                            </button>
+                        </form>
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
     {% if page_obj.has_next or page_obj.has_previous%}
-        <div class="pagination d-flex align-items-center justify-content-center">
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
             <span class="step-links">
                 {% if page_obj.has_previous %}
                     <a role="button" class="btn btn-dark opacity-75"
@@ -16,6 +93,10 @@
                         Previous
                     </a>
                 {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
 
                 {% if page_obj.has_next %}
                     <a role="button" class="btn btn-dark opacity-75"
@@ -34,53 +115,4 @@
             </span>
         </div>
     {% endif %}
-
-    <div class='table-responsive-sm'>
-        <table class="table table-dark table-hover text-white">
-            <thead>
-                <tr>
-                <th class='text-white' scope="col">#</th>
-                <th class='text-white' scope="col">Modpack Name</th>
-                <th class='text-white' scope="col">Modpack Version</th>
-                <th class='text-white' scope="col">Server Address</th>
-                <th class='text-white text-center' scope="col">Actions</th>
-                </tr>
-            </thead>
-            {% for server in page_obj %}
-            <tbody class="table-group-divider">
-                <tr>
-                <th scope="row">{{server.pk}}</th>
-                <td>{{server.modpack_name}}</td>
-                <td>{{server.modpack_version}}</td>
-                <td>{{server.server_address}}</td>
-                <td>
-                    <div class='d-flex justify-content-evenly w-100'>
-                        <button id='panel_edit_button' class='btn btn-primary'
-                                href='/panel/server/update/{{server.pk}}'
-                                hx-get="{% url 'panel:server/update_IR' pk=server.pk %} "
-                                hx-push-url='/panel/server/update/{{server.pk}}'
-                                hx-target='#panel_main'
-                                hx-indicator="#panelLoadingspinner,.loaded-content"
-                        >
-                            Edit
-                        </button>
-                        <button id='panel_maintenance_button' class='btn btn-warning'
-                                {% comment %} hx-post="{% url 'panel:server/maintenance'%} server" {% endcomment %}
-                                hx-target='#panel_maintenance_button'
-                        >
-                            Enable Maintenance Mode
-                        </button>
-                        <button id='panel_archive_button' class='btn btn-danger'
-                                {% comment %} hx-post="{% url 'panel:server/archive'%} server" {% endcomment %}
-                                hx-target='#panel_archive_button'
-                        >
-                            Archive
-                        </button>
-                    </div>
-                </td>
-                </tr>
-            </tbody>
-            {% endfor %}
-        </table>
-    </div>
 </div>
