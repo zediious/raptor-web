@@ -17,9 +17,13 @@ class PictureWidget(forms.widgets.FileInput):
     along with option to upload new image
     """
     def render(self, name, value, attrs=None, **kwargs):
-        LOGGER.debug(value)
         input_html = super().render(name, value, attrs=None, **kwargs)
-        img_html = mark_safe(f'<br><br><img src="{value.url}"/>')
+        try:    
+            img_html = mark_safe(f'<br><br><img class="panel-modpack-image mb-3" src="{value.url}"/>')
+            
+        except ValueError:
+            return mark_safe(f'{input_html}')
+        
         return mark_safe(f'{input_html}{img_html}')
 
 
