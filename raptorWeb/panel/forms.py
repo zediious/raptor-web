@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import SiteInformation, DefaultPages
+from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('panel.forms')
@@ -80,6 +80,36 @@ class PanelDefaultPages(forms.ModelForm):
     class Meta():
         model: DefaultPages = DefaultPages
         fields: str = '__all__'
+        
+        
+class PanelServerCreateForm(forms.ModelForm):
+    class Meta:
+        model = Server
+        fields = (
+        'modpack_name',
+        'modpack_version',
+        'server_address',
+        'server_port',
+        'modpack_url',
+        'modpack_picture',
+        'discord_announcement_channel_id',
+        'discord_modpack_role_id',
+        'rcon_address',
+        'rcon_port',
+        'rcon_password',
+        'modpack_description',
+        'server_description',
+        'server_rules',
+        'server_banned_items',
+        'server_vote_links',)
+        widgets = {
+            'modpack_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_rules': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_banned_items': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'server_vote_links': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'rcon_password': forms.PasswordInput
+        }
 
 
 class PanelServerUpdateForm(forms.ModelForm):
@@ -108,6 +138,37 @@ class PanelServerUpdateForm(forms.ModelForm):
             'server_rules': TinyMCE(attrs={'cols': 80, 'rows': 30}),
             'server_banned_items': TinyMCE(attrs={'cols': 80, 'rows': 30}),
             'server_vote_links': TinyMCE(attrs={'cols': 80, 'rows': 30}),
-            'modpack_picture': PictureWidget
+            'modpack_picture': PictureWidget,
+            'rcon_password': forms.PasswordInput(render_value = True)
         }
 
+
+class PanelPlayerFilterForm(forms.Form):
+    """
+    Form returned to filter the player list
+    """
+    username: forms.CharField = forms.CharField(
+        label="Username",
+        required=False
+    )
+    
+    
+class PanelPlayerPaginateForm(forms.Form):
+    """
+    Form returned to choose amount of players on each page
+    """   
+    paginate_by: forms.IntegerField = forms.IntegerField(
+        label='Players per Page',
+        required=False
+    )
+
+
+class PanelInformativeTextUpdateForm(forms.ModelForm):
+    class Meta:
+        model = InformativeText
+        fields = (
+        'content',
+        'enabled',)
+        widgets = {
+            'content': TinyMCE(attrs={'cols': 80, 'rows': 30})
+        }
