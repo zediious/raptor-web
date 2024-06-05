@@ -61,13 +61,3 @@
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
 </script>
-
-<script>
-    $( document ).ready(function() {
-        {% for server in current_enabled_servers %}
-        new ClipboardJS('.copy{{ server.pk}}OnboardingAddress', {
-            container: document.getElementById('onboardingCopy')
-        });
-        {% endfor %}
-    });
-</script>
