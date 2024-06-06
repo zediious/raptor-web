@@ -139,6 +139,9 @@ class NotificationToast(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    def get_absolute_url(self):
+        return f'/panel/content/toast/update/{self.pk}'
 
     class Meta:
         verbose_name = "Notification Toast",
@@ -174,6 +177,9 @@ class NavWidgetBar(models.Model):
 
     def enabled_links_in_widgetbar(self):
         return self.nestednavwidget.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navwidgetbar/update/{self.pk}'
 
     class Meta:
         verbose_name = "Nav Widget Bar",
@@ -296,6 +302,9 @@ class NavbarDropdown(models.Model):
 
     def enabled_links_in_dropdown(self):
         return self.nestedlink.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navbardropdown/update/{self.pk}'
 
     class Meta:
         verbose_name = "Navigation Drodown",
