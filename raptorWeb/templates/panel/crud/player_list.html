@@ -75,7 +75,7 @@
                     <td>{{player.first_joined}}</td>
                     <td>{{player.last_online}}</td>
                     <td>{%if player.online%}<div class='badge bg-success'>Online</div>{%else%}<div class='badge bg-danger'>Offline</div>{%endif%}</td>
-                    <td>{{player.server}}</td>
+                    <td><a href="{{player.server.get_absolute_url}}">{{player.server}}</a></td>
                     </td>
                     </tr>
                 </tbody>
@@ -133,7 +133,7 @@
                     hx-trigger='keyup delay:1s'
                 >
                     <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-                    {% bootstrap_field player_paginate_form.paginate_by %}
+                    {% bootstrap_field paginate_form.paginate_by %}
                 </form>
             </div>
         </div>
