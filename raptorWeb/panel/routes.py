@@ -6,6 +6,7 @@ from raptorWeb.raptormc.routes import Route
 from raptorWeb.raptormc.models import InformativeText, Page, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
+from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('raptormc.routes')
@@ -229,6 +230,51 @@ def check_route(request):
                     donationdiscordrole=role,
                 )
             )
+            
+    def _get_submittedstaffapplication_routes():
+        """
+        Iterate all Submitted Staff Applications and create a Route for
+        each one.
+        """
+        all_submittedstaffapplication = SubmittedStaffApplication.objects.all()
+        for application in all_submittedstaffapplication:
+            current_routes.append(
+                Route(
+                    name=f'panel/staffapps/submittedstaffapplication/view/{application.pk}',
+                    route_type="submittedstaffapplication",
+                    submittedstaffapplication=application,
+                )
+            )
+            
+    def _get_createdstaffapplication_routes():
+        """
+        Iterate all Created Staff Applications and create a Route for
+        each one.
+        """
+        all_createdstaffapplication = CreatedStaffApplication.objects.all()
+        for application in all_createdstaffapplication:
+            current_routes.append(
+                Route(
+                    name=f'panel/staffapps/createdstaffapplication/update/{application.pk}',
+                    route_type="createdstaffapplication",
+                    createdstaffapplication=application,
+                )
+            )
+            
+    def _get_staffapplicationfield_routes():
+        """
+        Iterate all Staff Application Fields and create a Route for
+        each one.
+        """
+        all_staffapplicationfield = StaffApplicationField.objects.all()
+        for form_field in all_staffapplicationfield:
+            current_routes.append(
+                Route(
+                    name=f'panel/staffapps/staffapplicationfield/update/{form_field.pk}',
+                    route_type="staffapplicationfield",
+                    staffapplicationfield=form_field,
+                )
+            )
     
     # If request is to root path, we do not need to check routes 
     if request.path == '/panel/':
@@ -250,6 +296,9 @@ def check_route(request):
     _get_donationpackage_routes()
     _get_donationservercommand_routes()
     _get_donationdiscordrole_routes()
+    _get_submittedstaffapplication_routes()
+    _get_createdstaffapplication_routes()
+    _get_staffapplicationfield_routes()
     
     for route in current_routes:
         first_slash = request.path.index('/')

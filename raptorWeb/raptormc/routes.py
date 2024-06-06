@@ -9,6 +9,7 @@ from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorWeb.authprofiles.models import RaptorUser
 from raptorWeb.gameservers.models import Server
 from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
+from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
 
 LOGGER = getLogger('raptormc.routes')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
@@ -21,7 +22,9 @@ class Route:
     def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None,
                  package=None, informativetext=None, toast=None, navbarlink=None, navbardropdown=None, navwidget=None,
                  navwidgetbar=None, globalannouncement=None, serverannouncement=None, donationservercommand=None,
-                 donationdiscordrole=None) -> None:
+                 donationdiscordrole=None, staffapplicationfield=None, submittedstaffapplication=None,
+                 createdstaffapplication=None) -> None:
+        
         self.name: str = name
         self.route_type: str = route_type
         self.informative_text = informative_text
@@ -39,6 +42,9 @@ class Route:
         self.serverannouncement: ServerAnnouncement = serverannouncement
         self.donationservercommand: DonationServerCommand = donationservercommand
         self.donationdiscordrole: DonationDiscordRole = donationdiscordrole
+        self.staffapplicationfield: StaffApplicationField = staffapplicationfield
+        self.submittedstaffapplication: SubmittedStaffApplication = submittedstaffapplication
+        self.createdstaffapplication: CreatedStaffApplication = createdstaffapplication
           
     def __str__(self) -> str:
         return self.name
