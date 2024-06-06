@@ -270,7 +270,7 @@
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/bot/sentembedmessage/list"
-                            {% comment %} hx-get="{% url 'panel:bot/sentembedmessage/list' %}" {% endcomment %}
+                            hx-get="{% url 'panel:bot/sentembedmessage/list' %}"
                             hx-target='#panel_main'
                             hx-push-url="/panel/bot/sentembedmessage/list"
                             hx-indicator="#panelLoadingspinner,.loaded-content"
