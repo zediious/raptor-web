@@ -180,7 +180,8 @@ class DiscordBotInternal(models.Model):
 class SentEmbedMessage(models.Model):
         """
         An embed message that has been sent by the Discord Bot
-        via command from a Discord server/channel.
+        via command from a Discord server/channel. If one of these messages
+        is deleted here or in Discord, it will be deleted in the other place.
         """
         server = models.ForeignKey(
             'gameservers.Server', 

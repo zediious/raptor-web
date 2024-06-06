@@ -37,8 +37,9 @@ class PageManager(models.Manager):
 
 class Page(models.Model):
     """
-    A new webpage with a Title and Content. This page will extend to entire
-    base website, but you can choose whether to include Server buttons or not.
+    A new webpage with a Title and Content. This page will extend the entire
+    base website, but you can provide custom CSS and JS as well as SEO
+    attributes to apply to a created page.
     """
     objects = PageManager()
 
@@ -112,7 +113,9 @@ class Page(models.Model):
 class NotificationToast(models.Model):
     """
     A Notification/Toast that will appear on the bottom right of the website.
-    Users will only see these messages once, until their session expires.
+    Non logged in users will only see these messages once, until their session expires.
+    If a user is logged in, they will not see a toast again unless they reset their seen
+    notifications from their profile.
     """
     enabled = models.BooleanField(
         default=True,

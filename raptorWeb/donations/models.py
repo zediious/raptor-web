@@ -15,7 +15,9 @@ LOGGER: Logger = getLogger('donations.models')
 
 class DonationServerCommand(models.Model):
     """
-    A command to be sent to a server
+    A command to be sent to a server. Use {{minecraft_username}}
+    and {{package_name}} as placeholders for the package that the
+    player bought when creation commands.
     """
     command = models.CharField(
         default="",
@@ -57,7 +59,9 @@ class DonationDiscordRole(models.Model):
 
 class DonationPackage(models.Model):
     """
-    A donation package
+    A donation package. Donation packages can be given a name, description and image.
+    You can further define pricing data, as well as define what benefits the package
+    will give purchasing players on Discord and chosen created servers.
     """
     name = models.CharField(
         default="",
