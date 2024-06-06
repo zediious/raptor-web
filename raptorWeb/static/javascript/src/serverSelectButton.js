@@ -1,16 +1,16 @@
-select_1 = $('#select-button-1')
-select_2 = $('#select-button-2')
-select_3 = $('#select-button-3')
-select_4 = $('#select-button-4')
-select_5 = $('#select-button-5')
+var select_1 = $('#select-button-1')
+var select_2 = $('#select-button-2')
+var select_3 = $('#select-button-3')
+var select_4 = $('#select-button-4')
+var select_5 = $('#select-button-5')
 
-section_1 = $('#server_general')
-section_2 = $('#server_information')
-section_3 = $('#server_querying')
-section_4 = $('#server_discord_announcements')
-section_5 = $('#server_donations')
+var section_1 = $('#server_general')
+var section_2 = $('#server_information')
+var section_3 = $('#server_querying')
+var section_4 = $('#server_discord_announcements')
+var section_5 = $('#server_donations')
 
-select_list = [select_1, select_2, select_3, select_4, select_5]
+var select_list = [select_1, select_2, select_3, select_4, select_5]
 
 function resetButtonStates(button) {
     if (button.hasClass('btn-primary')) {
