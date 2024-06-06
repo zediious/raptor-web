@@ -57,7 +57,7 @@ class ServerAnnouncement(Announcement):
         on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f'Announcement by {self.author} for {self.server} made on {self.date}'
+        return f'Announcement by {self.author} for {self.server} made on {self.date.fromisoformat("2021-01-24 05:12:21.517854+00:00").strftime("%I:%M%p %d%b%Y")}'
 
     def get_server(self):
         return self.server
