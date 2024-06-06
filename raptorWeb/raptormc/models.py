@@ -52,6 +52,7 @@ class Page(models.Model):
     content = models.TextField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Content",
         help_text="The content of this page."
     )
@@ -89,14 +90,16 @@ class Page(models.Model):
         verbose_name="Page CSS",
         help_text=("Custom style sheet that will only apply on this page. "
                     "This will apply only to this page, overriding any defaults."),
-        blank=True
+        blank=True,
+        null=True
     )
     
     page_js = models.FileField(
         upload_to='page_js',
         verbose_name="Page JavaScript",
         help_text=("Custom Javascript that will only apply on this page."),
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __str__(self):
@@ -132,6 +135,7 @@ class NotificationToast(models.Model):
     message = models.CharField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Message",
         help_text="The message for this notification"
     )
@@ -316,7 +320,7 @@ class NavbarDropdown(models.Model):
 
 class NavbarLink(models.Model):
     """
-    A Navigation Link which will be added to the Navigation sidebar. Can be placed inside
+    A Navigation Link which will be added to the site Navigation menu. Can be placed inside
     of a created Dropdown Menu.
     """
     name = models.CharField(
