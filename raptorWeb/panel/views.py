@@ -2,9 +2,7 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.apps import apps
 from django.db.models.query import QuerySet
-from django.db.models.fields.reverse_related import ManyToManyRel
 from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -18,11 +16,14 @@ from raptorWeb.panel.forms import (PanelSettingsInformation, PanelSettingsFiles,
                                    PanelPlayerPaginateForm, PanelInformativeTextUpdateForm,
                                    PanelPageForm, PanelToastForm, PanelNavWidgetUpdateForm,
                                    PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
-                                   PanelDonationPackageCreateForm,)
+                                   PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
+                                   )
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, PageManager, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
 from raptorWeb.raptorbot.models import DiscordGuild, GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.donations.models import CompletedDonation, DonationPackage, DonationServerCommand, DonationDiscordRole
+from raptorWeb.staffapps.models import SubmittedStaffApplication, CreatedStaffApplication, StaffApplicationField
 from raptorWeb.gameservers.models import Server, ServerManager, Player
+from raptorWeb.panel.models import PanelLogEntry
 
 LOGGER = getLogger('panel.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
@@ -1158,3 +1159,112 @@ class PanelCompletedDonationList(PanelListViewSearchable):
         })
         return context
     
+    
+class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
+    """
+    Return a list of Submitted Staff Applications for viewing and accessing CRUD actions
+    """
+    model: SubmittedStaffApplication = SubmittedStaffApplication
+    paginate_by = 15
+    permission: str = 'raptormc.submittedstaffapplication_list'
+    model_name: str = 'SubmittedStaffApplication'
+    default_ordering: str = '-submitted_date'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'total_submittedstaffapplication_count': SubmittedStaffApplication.objects.count()
+        })
+        return context
+    
+    
+class PanelSubmittedStaffApplicationView(PanelDetailView):
+    """
+    Return details about a given Submitted Staff Application
+    """
+    model: SubmittedStaffApplication = SubmittedStaffApplication
+    permission: str = 'raptormc.submittedstaffapplication_view'
+    
+    
+class PanelCreatedStaffApplicationList(PanelListView):
+    """
+    Return a list of Created Staff Applications for viewing and accessing CRUD actions
+    """
+    model: CreatedStaffApplication = CreatedStaffApplication
+    paginate_by = 10
+    permission: str = 'raptormc.createdstaffapplication_list'
+    model_name: str = 'CreatedStaffApplication'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return CreatedStaffApplication.objects.all()
+    
+    
+class PanelCreatedStaffApplicationUpdate(PanelUpdateView):
+    """
+    Update changed information for a given Created Staff Application
+    """
+    model: CreatedStaffApplication = CreatedStaffApplication
+    form_class = PanelCreatedStaffApplicationForm
+    permission: str = 'raptormc.createdstaffapplication_update'
+    model_classpath: str = 'staffapps.CreatedStaffApplication'
+    ignored_fields = [
+        'id'
+    ]
+    
+    
+class PanelCreatedStaffApplicationCreate(PanelCreateView):
+    """
+    Return a form to create/add a new Created Staff Application
+    """
+    model: CreatedStaffApplication = CreatedStaffApplication
+    form_class = PanelCreatedStaffApplicationForm
+    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'createdstaffapplication_create.html'))
+    redirect_url: str = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
+    permission: str = 'raptormc.createdstaffapplication_create'
+    
+    
+class PanelStaffApplicationFieldList(PanelListView):
+    """
+    Return a list of Staff Application Fields for viewing and accessing CRUD actions
+    """
+    model: StaffApplicationField = StaffApplicationField
+    paginate_by = 10
+    permission: str = 'raptormc.staffapplicationfield_list'
+    model_name: str = 'StaffApplicationField'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return StaffApplicationField.objects.all()
+    
+    
+class PanelStaffApplicationFieldUpdate(PanelUpdateView):
+    """
+    Update changed information for a given Staff Application Field
+    """
+    model: StaffApplicationField = StaffApplicationField
+    permission: str = 'raptormc.staffapplicationfield_update'
+    model_classpath: str = 'staffapps.StaffApplicationField'
+    ignored_fields = [
+        'id'
+    ]
+    fields = [
+        'name',
+        'help_text',
+        'widget',
+        'priority'
+    ]
+    
+    
+class PanelStaffApplicationFieldCreate(PanelCreateView):
+    """
+    Return a form to create/add a new Staff Application Field
+    """
+    model: StaffApplicationField = StaffApplicationField
+    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'staffapplicationfield_create.html'))
+    redirect_url: str = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
+    permission: str = 'raptormc.staffapplicationfield_create'
+    fields = [
+        'name',
+        'help_text',
+        'widget',
+        'priority'
+    ]
