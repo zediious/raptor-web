@@ -9,7 +9,7 @@
             </p>
         </div>
     </div>
-    <div class="card bg-dark p-2">
+    <div class="card bg-dark p-2 mt-2">
         <div class="card-body">
             <div class="m-3 mt-1 p-1">
                 <div class="text-white">
@@ -19,7 +19,7 @@
                     </p>
                 </div>
             </div>
-            <div class="m-3">
+            <div class="m-3 text-white">
                 <div id="player_counts_current" class="m-5" style="position: relative; z-index: 1"
                     hx-get="{% url 'gameservers:total_counts_poll_simple' %}"
                     hx-target="#player_counts_current"
@@ -37,7 +37,7 @@
 
         </div>
     </div>
-    <div class="card bg-dark p-2">
+    <div class="card bg-dark p-2 mt-2">
         <div class="card-body">
             <div class="m-3 mt-1 p-1">
                 <div class="text-white">
@@ -48,7 +48,7 @@
                 </div>
             </div>
            
-            <div class="m-3">
+            <div class="m-3 text-white">
                 {% include "panel/reporting/gameservers_statistics.html" %}
             </div>
 
