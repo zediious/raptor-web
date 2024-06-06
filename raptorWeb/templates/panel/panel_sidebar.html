@@ -284,12 +284,12 @@
                 </div>
                 {% endif %}
                 {% if perms.raptormc.donations %}
-                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#content_nav_collapse'
-                        aria-expanded="false" aria-controls="content_nav_collapse"
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#donation_nav_collapse'
+                        aria-expanded="false" aria-controls="donation_nav_collapse"
                 >
                 <i class='nav-icon fas fa-gamepad'></i> <p>Donations</p>
                 </button>
-                <div id='content_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                <div id='donation_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
                         {% if perms.raptormc.completeddonations_list %}
                         <button class="nav-item btn btn-secondary">
@@ -386,19 +386,19 @@
                         </button>
                         {% endif%}
                         {% if perms.raptormc.staffapplicationfield_list %}
-                <button class="nav-item btn btn-secondary">
-                    <a class="nav-link"
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
                             href="/panel/staffapps/staffapplicationfield_/list"
                             hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}"
-                    hx-target='#panel_main'
+                            hx-target='#panel_main'
                             hx-push-url="/panel/staffapps/staffapplicationfield/list"
-                    hx-indicator="#panelLoadingspinner,.loaded-content"
-                    onclick='closeOffCanvas()'
-                    >
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
                                 <i class="nav-icon fa fa-check-double"></i> <p>Form Fields</p>
-                    </a>
-                </button>
-                {% endif%}
+                            </a>
+                        </button>
+                        {% endif%}
                     </div>
                 </div>
                 {% if perms.raptormc.settings %}
