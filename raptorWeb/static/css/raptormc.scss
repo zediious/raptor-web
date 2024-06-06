@@ -93,6 +93,10 @@ body {
     opacity: 1.00;
 }
 
+.navwidgetbar {
+    width: 35%;
+}
+
 .panelOffcanvas {
     @extend .offcanvas;
     --bs-offcanvas-width: 300px;
