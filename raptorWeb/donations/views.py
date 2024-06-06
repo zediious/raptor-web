@@ -14,7 +14,7 @@ from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
-from raptorWeb.donations.models import DonationPackage, CompletedDonation
+from raptorWeb.donations.models import DonationPackage, CompletedDonation, DonationServerCommand, DonationDiscordRole
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm, DonationGatewayForm
 from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
 from raptorWeb.donations.mojang import verify_minecraft_username
@@ -26,30 +26,6 @@ BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 STRIPE_WEBHOOK_SECRET:str = getattr(settings, 'STRIPE_WEBHOOK_SECRET')
 
 LOGGER = getLogger('donations.views')
-
-
-class CompletedDonations(ListView):
-    """
-    ListView for all completed donations
-    """
-    paginate_by: int = 9
-    model: CompletedDonation = CompletedDonation
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
-            return HttpResponseRedirect('/404')
-        
-        if not request.user.has_perm('raptormc.donations'):
-            return HttpResponseRedirect('/404')
-        
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
-        
-    def get_queryset(self) -> QuerySet[Any]:
-        return CompletedDonation.objects.all().order_by('-donation_datetime')
     
     
 class CompletedDonationsPublic(ListView):
@@ -284,15 +260,72 @@ class DonationDelete(View):
         
         try:
             CompletedDonation.objects.get(
-                pk=request.GET.get('donation_id')
+                pk=request.GET.get('pk')
             ).delete()
             
-            messages.success(request, 'Donation has been deleted.')
-            return HttpResponse(status=200)
+            messages.success(request, 'Donation has been permanently deleted!')
+            return HttpResponseRedirect('/panel/api/html/panel/donations/completeddonation/list')
         
         except CompletedDonation.DoesNotExist:
             messages.error(request, 'There was an error processing this package deletion')
-            return HttpResponse(status=400)
+            return HttpResponse(status=200)
+        
+        
+class DonationPackageDelete(View):
+    """
+    Permanently delete a given Donation Package
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.donationpackage_delete'):
+            messages.error(request, 'You do not have permission to delete Donation Packages.')
+            return HttpResponse(status=200)
+        
+        changing_donationpackage = DonationPackage.objects.get(pk=self.kwargs['pk'])
+        changing_donationpackage.delete()
+            
+        messages.success(request, f'{changing_donationpackage} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/donations/donationpackage/list')
+    
+    
+class DonationServerCommandDelete(View):
+    """
+    Permanently delete a given Donation Server Command
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.donationservercommand_delete'):
+            messages.error(request, 'You do not have permission to delete Donation Server Commands.')
+            return HttpResponse(status=200)
+        
+        changing_donationservercommand = DonationServerCommand.objects.get(pk=self.kwargs['pk'])
+        changing_donationservercommand.delete()
+            
+        messages.success(request, f'{changing_donationservercommand} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/donations/donationservercommand/list')
+    
+    
+class DonationDiscordRoleDelete(View):
+    """
+    Permanently delete a given Donation Discord Role
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.donationdiscordrole_delete'):
+            messages.error(request, 'You do not have permission to delete Donation Discord Roles.')
+            return HttpResponse(status=200)
+        
+        changing_donationdiscordrole = DonationDiscordRole.objects.get(pk=self.kwargs['pk'])
+        changing_donationdiscordrole.delete()
+            
+        messages.success(request, f'{changing_donationdiscordrole} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/donations/donationdiscordrole/list')
         
         
 class DonationBenefitResend(View):
@@ -312,13 +345,16 @@ class DonationBenefitResend(View):
         do_commands = request.GET.get('do_commands')
         do_roles = request.GET.get('do_roles')
         completed_donation = CompletedDonation.objects.get(
-            id=request.GET.get('id')
+            pk=request.GET.get('pk')
         )
         
         if do_commands == 'true':
             if completed_donation.bought_package.commands.all().count() > 0:
-                completed_donation.send_server_commands()
-                messages.success(request, f'Re-sent server commands for {completed_donation.minecraft_username}')
+                try:
+                    completed_donation.send_server_commands()
+                    messages.success(request, f'Re-sent server commands for {completed_donation.minecraft_username}')
+                except ConnectionRefusedError:
+                    messages.error(request, f'The Server(s) commands were sent to appear to be offline!')
             
             else:
                 messages.error(request, f'Cannot re-send commands for this donation, the package has no commands to send!')
