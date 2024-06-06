@@ -74,19 +74,15 @@
     <script src="{% static 'javascript/src/dep/alpine.min.js' %}"></script>
     <script src="{% static 'javascript/src/modalClose.js' %}"></script>
 
+
     <script>
-        var select_1 = ''
-        var select_2 = ''
-        var select_3 = ''
-        var select_4 = ''
-        var select_5 = ''
-        var section_1 = ''
-        var section_2 = ''
-        var section_3 = ''
-        var section_4 = ''
-        var section_5 = ''
-    
-        var select_list = []
+        if( typeof window.tinymce != 'undefined' && $(window.tinymce.editors).length > 0 ){
+            $(window.tinymce.editors).each(function(idx) {
+              try {
+              tinymce.remove(idx);
+              } catch (e) {}
+            });
+          }
     </script>
 
 </body>
