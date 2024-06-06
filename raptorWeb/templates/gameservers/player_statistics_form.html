@@ -5,7 +5,7 @@
     <form class="form"
             hx-get="{% url 'gameservers:player_statistics_chart'%}"
             hx-target='#fetched_chart'
-            hx-indicator='#gameserverChartLoadingSpinner,.loaded-content'
+            hx-indicator='#gameserverChartLoadingSpinner,.loaded-chart'
             hx-swap='innerHTML'
     >
         
@@ -24,5 +24,5 @@
          alt="Loading...">
 </div>
 
-<div id="fetched_chart" class="col-12 w-100 mt-3 loaded-content">
+<div id="fetched_chart" class="col-12 w-100 mt-3 loaded-chart">
 </div>
