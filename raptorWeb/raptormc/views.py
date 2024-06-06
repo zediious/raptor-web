@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
@@ -515,6 +516,13 @@ class PageDelete(View):
         
         changing_page = Page.objects.get(pk=self.kwargs['pk'])
         changing_page.delete()
+        
+        model_string = str(Page).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_page}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_page} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/page/list')
@@ -534,6 +542,13 @@ class NotificationToastDelete(View):
         
         changing_toast = NotificationToast.objects.get(pk=self.kwargs['pk'])
         changing_toast.delete()
+        
+        model_string = str(NotificationToast).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_toast}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_toast} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/toast/list')
@@ -553,6 +568,13 @@ class NavbarLinkDelete(View):
         
         changing_navbarlink = NavbarLink.objects.get(pk=self.kwargs['pk'])
         changing_navbarlink.delete()
+        
+        model_string = str(NavbarLink).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navbarlink}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_navbarlink} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/navbarlink/list')
@@ -572,6 +594,13 @@ class NavbarDropdownDelete(View):
         
         changing_navbardropdown = NavbarDropdown.objects.get(pk=self.kwargs['pk'])
         changing_navbardropdown.delete()
+        
+        model_string = str(NavbarDropdown).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navbardropdown}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_navbardropdown} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/navbardropdown/list')
@@ -591,6 +620,13 @@ class NavWidgetDelete(View):
         
         changing_navwidget = NavWidget.objects.get(pk=self.kwargs['pk'])
         changing_navwidget.delete()
+        
+        model_string = str(NavWidget).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navwidget}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_navwidget} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/navwidget/list')
@@ -610,6 +646,13 @@ class NavWidgetBarDelete(View):
         
         changing_navwidgetbar = NavWidgetBar.objects.get(pk=self.kwargs['pk'])
         changing_navwidgetbar.delete()
+        
+        model_string = str(NavWidgetBar).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navwidgetbar}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_navwidgetbar} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/content/navwidgetbar/list')

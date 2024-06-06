@@ -415,6 +415,13 @@ class PanelUpdateView(UpdateView):
                 
             if has_m2o:
                 message = message.replace('ManyToMany', 'ManyToMany and ManytoOne')
+            
+            model_string = str(self.model).split('.')[3].replace("'", "").replace('>', '')
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'{model_string} - {self.get_object()}'),
+                action='Changed'
+            )
 
             messages.success(request, message)
             return HttpResponse(status=200)
@@ -525,6 +532,14 @@ class PanelCreateView(CreateView):
         if model_form.is_valid():
             model_form.save()
             model_string = str(self.model).split('.')[3].replace("'", "")
+            
+            model_string = str(self.model).split('.')[3].replace("'", "").replace('>', '')
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'{model_string} - {model_form.instance}'),
+                action='Created'
+            )
+            
             messages.success(
                 request, f'A new {model_string.replace(">", "").title()} has been added!'
             )

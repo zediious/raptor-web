@@ -13,6 +13,7 @@ from django.conf import settings
 from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
 from raptorWeb.donations.models import DonationPackage, CompletedDonation, DonationServerCommand, DonationDiscordRole
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm, DonationGatewayForm
@@ -259,9 +260,17 @@ class DonationDelete(View):
             return HttpResponseRedirect('/404')
         
         try:
-            CompletedDonation.objects.get(
+            deleted_donation = CompletedDonation.objects.get(
                 pk=request.GET.get('pk')
-            ).delete()
+            )
+            deleted_donation.delete()
+            
+            model_string = str(CompletedDonation).split('.')[3].replace("'", "").replace('>', '')
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'{model_string} - {deleted_donation.donation_datetime}'),
+                action='Deleted'
+            )
             
             messages.success(request, 'Donation has been permanently deleted!')
             return HttpResponseRedirect('/panel/api/html/panel/donations/completeddonation/list')
@@ -285,6 +294,13 @@ class DonationPackageDelete(View):
         
         changing_donationpackage = DonationPackage.objects.get(pk=self.kwargs['pk'])
         changing_donationpackage.delete()
+        
+        model_string = str(DonationPackage).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_donationpackage}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_donationpackage} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/donations/donationpackage/list')
@@ -304,6 +320,13 @@ class DonationServerCommandDelete(View):
         
         changing_donationservercommand = DonationServerCommand.objects.get(pk=self.kwargs['pk'])
         changing_donationservercommand.delete()
+        
+        model_string = str(DonationServerCommand).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_donationservercommand}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_donationservercommand} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/donations/donationservercommand/list')
@@ -323,6 +346,13 @@ class DonationDiscordRoleDelete(View):
         
         changing_donationdiscordrole = DonationDiscordRole.objects.get(pk=self.kwargs['pk'])
         changing_donationdiscordrole.delete()
+        
+        model_string = str(DonationDiscordRole).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_donationdiscordrole}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_donationdiscordrole} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/donations/donationdiscordrole/list')

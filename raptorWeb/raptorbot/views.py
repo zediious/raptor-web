@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.gameservers.models import Server
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.raptorbot import botware
@@ -233,6 +234,13 @@ class GlobalAnnouncementDelete(View):
         
         changing_globalannouncement = GlobalAnnouncement.objects.get(pk=self.kwargs['pk'])
         changing_globalannouncement.delete()
+        
+        model_string = str(GlobalAnnouncement).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_globalannouncement}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_globalannouncement} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/bot/globalannouncement/list')
@@ -252,6 +260,13 @@ class ServerAnnouncementDelete(View):
         
         changing_serverannouncement = ServerAnnouncement.objects.get(pk=self.kwargs['pk'])
         changing_serverannouncement.delete()
+        
+        model_string = str(ServerAnnouncement).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_serverannouncement}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_serverannouncement} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/bot/serverannouncement/list')
@@ -271,6 +286,13 @@ class SentEmbedMessageDelete(View):
         
         changing_sentembedmessage = SentEmbedMessage.objects.get(pk=self.kwargs['pk'])
         changing_sentembedmessage.delete()
+        
+        model_string = str(SentEmbedMessage).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_sentembedmessage}'),
+            action='Deleted'
+        )
             
         messages.success(request, f'{changing_sentembedmessage} has been permanently deleted!')
         return HttpResponseRedirect('/panel/api/html/panel/bot/sentembedmessage/list')

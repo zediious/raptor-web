@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.conf import settings
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
 from raptorWeb.gameservers.forms import StatisticFilterForm, StatisticFilterFormFireFox
 from raptorWeb.raptormc.models import SiteInformation
@@ -288,6 +289,14 @@ class DeleteServer(View):
         if changing_server.archived:
             messages.success(request, f'{changing_server} has been permanently deleted!')
             changing_server.delete()
+            
+            model_string = str(Server).split('.')[3].replace("'", "").replace('>', '')
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'{model_string} - {changing_server}'),
+                action='Deleted'
+            )
+            
             return HttpResponseRedirect('/panel/api/html/panel/server/archivedlist')
             
         else:
