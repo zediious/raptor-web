@@ -1,0 +1,31 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+{{ form.media }}
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Add a new Nav Widget Bar</header>
+        <p class="fs-5">
+            Create a new Nav Widget Bar to be added to the app.
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+
+    <form id="create_form_alone" class="form text-white"
+        enctype="multipart/form-data" 
+        hx-post="{% url 'panel:content/navwidgetbar/create' %} "
+        hx-push-url='/panel/content/navwidgetbar/list'
+        hx-target='#panel_main'
+        hx-swap="innerHTML"
+    >
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class='btn btn-success' type='submit'>
+            Add
+        </button>
+    </form>
+
+</div>

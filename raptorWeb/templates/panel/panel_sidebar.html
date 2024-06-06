@@ -27,6 +27,71 @@
                 </button>
                 <div id='content_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
+                        <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#content_nav_collapse'
+                        aria-expanded="false" aria-controls="content_nav_collapse"
+                        >
+                        <i class='nav-icon fas fa-gamepad'></i> <p>Navigation</p>
+                        </button>
+                        <div id='content_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                            <div class='d-flex flex-column gap-2'>
+                                {% if perms.raptormc.navbarlinks_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navbarlink/list"
+                                    hx-get="{% url 'panel:content/navbarlink/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navbarlink/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Navigation Links</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navbardropdown_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navbardropdown/list"
+                                    hx-get="{% url 'panel:content/navbardropdown/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navbardropdown/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Navigation Dropdowns</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navwidget_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navwidget/list"
+                                    hx-get="{% url 'panel:content/navwidget/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navwidget/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Nav Widgets</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navwidgetbar_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navwidgetbar/list"
+                                    hx-get="{% url 'panel:content/navwidgetbar/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navwidgetbar/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Nav Widget Bars</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                            </div>
+                        </div>
                         {% if perms.raptormc.server_list %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
@@ -38,6 +103,34 @@
                             onclick='closeOffCanvas()'
                             >
                                 <p>Informative Texts</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.page_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/content/page/list"
+                            hx-get="{% url 'panel:content/page/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/content/page/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Pages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.toast_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/content/toast/list"
+                            hx-get="{% url 'panel:content/toast/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/content/toast/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Notification Toasts</p>
                             </a>
                         </button>
                         {% endif%}
@@ -110,19 +203,139 @@
                 </div>
                 </button>
                 {% if perms.raptormc.discord_bot %}
-                <button class="nav-item btn btn-secondary">
-                    <a class="nav-link"
-                    href="/panel/discordbot"
-                    hx-get="{% url 'panel:discordbot' %}"
-                    hx-target='#panel_main'
-                    hx-push-url="/panel/discordbot/"
-                    hx-indicator="#panelLoadingspinner,.loaded-content"
-                    onclick='closeOffCanvas()'
-                    >
-                        <i class="nav-icon fas fa-robot"></i> <p>Discord Bot</p>
-                    </a>
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#discord_nav_collapse'
+                        aria-expanded="false" aria-controls="discord_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Discord Bot</p>
                 </button>
-                {% endif%}
+                <div id='discord_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.discord_bot_panel %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/discordbot"
+                            hx-get="{% url 'panel:discordbot' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/discordbot/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fas fa-robot"></i> <p>Discord Bot Panel</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.globalannounce_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/globalannouncement/list"
+                            hx-get="{% url 'panel:bot/globalannouncement/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/globalannouncement/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Global Announcements</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.serverannounce_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/serverannouncement/list"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/serverannouncement/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Server Announcements</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.sentembedmessage_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/sentembedmessage/list"
+                            {% comment %} hx-get="{% url 'panel:bot/sentembedmessage/list' %}" {% endcomment %}
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/sentembedmessage/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Sent Embed Messages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                {% endif %}
+                {% if perms.raptormc.donations %}
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#content_nav_collapse'
+                        aria-expanded="false" aria-controls="content_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Donations</p>
+                </button>
+                <div id='content_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.completeddonations_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/completeddonation/list"
+                            hx-get="{% url 'panel:donations/completeddonation/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/completeddonation/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Completed Donations</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationpackage_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationpackage/list"
+                            hx-get="{% url 'panel:donations/donationpackage/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationpackage/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Donation Packages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationservercommand_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationservercommand/list"
+                            hx-get="{% url 'panel:donations/donationservercommand/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationservercommand/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Server Commands</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationdiscordrole_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationdiscordrole/list"
+                            hx-get="{% url 'panel:donations/donationdiscordrole/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationdiscordrole/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Discord Roles</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                {% endif %}
                 {% if perms.raptormc.reporting %}
                 <button class="nav-item btn btn-secondary">
                     <a class="nav-link"
@@ -134,20 +347,6 @@
                     onclick='closeOffCanvas()'
                     >
                         <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
-                    </a>
-                </button>
-                {% endif%}
-                {% if perms.raptormc.donations %}
-                <button class="nav-item btn btn-secondary">
-                    <a class="nav-link"
-                    href="/panel/donations"
-                    hx-get="{% url 'panel:donations' %}"
-                    hx-target='#panel_main'
-                    hx-push-url="/panel/donations/"
-                    hx-indicator="#panelLoadingspinner,.loaded-content"
-                    onclick='closeOffCanvas()'
-                    >
-                        <i class="nav-icon fa fa-check-double"></i> <p>Donations</p>
                     </a>
                 </button>
                 {% endif%}

@@ -2,10 +2,12 @@ from logging import getLogger
 
 from django import forms
 from django.utils.safestring import mark_safe
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from tinymce.widgets import TinyMCE
 
-from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText
+from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, NotificationToast, NavWidget
+from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('panel.forms')
@@ -171,4 +173,94 @@ class PanelInformativeTextUpdateForm(forms.ModelForm):
         'enabled',)
         widgets = {
             'content': TinyMCE(attrs={'cols': 80, 'rows': 30})
+        }
+        
+        
+class PanelPageForm(forms.ModelForm):
+    class Meta:
+        model = Page
+        fields = (
+        'name',
+        'content',
+        'meta_description',
+        'meta_keywords',
+        'page_css',
+        'page_js',)
+        widgets = {
+            'content': TinyMCE(attrs={'cols': 80, 'rows': 30})
+        }
+        
+
+class PanelToastForm(forms.ModelForm):
+    class Meta:
+        model = NotificationToast
+        fields = (
+        'name',
+        'message',
+        'enabled',)
+        widgets = {
+            'message': TinyMCE(attrs={'cols': 80, 'rows': 30})
+        }
+        
+        
+class PanelNavWidgetUpdateForm(forms.ModelForm):
+    class Meta:
+        model = NavWidget
+        fields = (
+        'name',
+        'url',
+        'linked_page',
+        'parent_bar',
+        'nav_image',
+        'tooltip',
+        'priority',
+        'new_tab',
+        'enabled',)
+        widgets = {
+            'nav_image': PictureWidget
+        }
+        
+        
+class PanelNavWidgetCreateForm(forms.ModelForm):
+    class Meta:
+        model = NavWidget
+        fields = (
+        'name',
+        'url',
+        'linked_page',
+        'parent_bar',
+        'nav_image',
+        'tooltip',
+        'priority',
+        'new_tab',
+        'enabled',)
+        
+        
+class PanelDonationPackageUpdateForm(forms.ModelForm): 
+    class Meta:
+        model = DonationPackage
+        fields: str = "__all__"
+        widgets = {
+            'package_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'package_picture': PictureWidget,
+            'servers': forms.CheckboxSelectMultiple,
+            'commands': forms.CheckboxSelectMultiple,
+            'discord_roles': forms.CheckboxSelectMultiple
+        }
+        
+        
+class PanelDonationPackageCreateForm(forms.ModelForm):
+    price = forms.IntegerField(
+        required=True,
+        min_value=1
+    )
+    
+    class Meta:
+        model = DonationPackage
+        fields: str = "__all__"
+        widgets = {
+            'package_description': TinyMCE(attrs={'cols': 80, 'rows': 30}),
+            'servers': forms.CheckboxSelectMultiple,
+            'commands': forms.CheckboxSelectMultiple,
+            'discord_roles': forms.CheckboxSelectMultiple
         }
