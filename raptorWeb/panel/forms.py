@@ -2,12 +2,12 @@ from logging import getLogger
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from tinymce.widgets import TinyMCE
 
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, NotificationToast, NavWidget
-from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
+from raptorWeb.donations.models import DonationPackage
+from raptorWeb.staffapps.models import CreatedStaffApplication
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('panel.forms')
@@ -160,7 +160,7 @@ class PanelPlayerPaginateForm(forms.Form):
     Form returned to choose amount of players on each page
     """   
     paginate_by: forms.IntegerField = forms.IntegerField(
-        label='Players per Page',
+        label='Items per Page',
         required=False
     )
 
@@ -263,4 +263,13 @@ class PanelDonationPackageCreateForm(forms.ModelForm):
             'servers': forms.CheckboxSelectMultiple,
             'commands': forms.CheckboxSelectMultiple,
             'discord_roles': forms.CheckboxSelectMultiple
+        }
+        
+        
+class PanelCreatedStaffApplicationForm(forms.ModelForm): 
+    class Meta:
+        model = CreatedStaffApplication
+        fields: str = "__all__"
+        widgets = {
+            'form_fields': forms.CheckboxSelectMultiple
         }
