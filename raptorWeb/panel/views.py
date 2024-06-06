@@ -641,7 +641,7 @@ class PanelPlayerList(PanelListViewSearchable):
     paginate_by = 50
     permission: str = 'raptormc.player_list'
     model_name: str = "Player"
-    default_ordering: str = 'last_online'
+    default_ordering: str = '-last_online'
     
     def get_queryset(self) -> QuerySet[Any]:
         queryset = super().get_queryset()
@@ -653,7 +653,8 @@ class PanelPlayerList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-                'player_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')})
+                'player_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
+                'total_player_count': Player.objects.count()
             })
         
         if self.request.GET.get('username') != None:
