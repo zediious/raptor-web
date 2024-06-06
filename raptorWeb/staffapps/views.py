@@ -69,7 +69,6 @@ class AllAppsSubmit(TemplateView):
         messages.success(request, f'{form_data["Application_Position"]} Application has been submitted!')
                 
         json_form_data = dumps(form_data)
-        LOGGER.debug(json_form_data)
         SubmittedStaffApplication.objects.create(submitted_data=json_form_data)
         
         return render(request, join(STAFFAPPS_TEMPLATE_DIR, 'submit_success.html'), )
