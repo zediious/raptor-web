@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class='table-responsive-md'>
+        <div class='table-responsive-xl'>
             <table class="table table-dark table-hover text-white border border-black border-2">
                 <thead>
                     <tr>
@@ -72,8 +72,8 @@
                 <tbody class="item">
                     <tr>
                     <th scope="row">{{player.name}}</th>
-                    <td>{{player.first_joined}}</td>
-                    <td>{{player.last_online}}</td>
+                    <td class='text-nowrap'>{{player.first_joined}}</td>
+                    <td class='text-nowrap'>{{player.last_online}}</td>
                     <td>{%if player.online%}<div class='badge bg-success'>Online</div>{%else%}<div class='badge bg-danger'>Offline</div>{%endif%}</td>
                     <td><a href="{{player.server.get_absolute_url}}">{{player.server}}</a></td>
                     </td>

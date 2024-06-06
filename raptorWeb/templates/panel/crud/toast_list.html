@@ -44,7 +44,7 @@
                 <td>{{toast.name}}</td>
                 <td>{{toast.message|striptags|truncatechars:50}}</td>
                 <td>{%if toast.enabled%}<div class='badge bg-success'>Enabled</div>{%else%}<div class='badge bg-danger'>Disabled</div>{%endif%}</td>
-                <td>{{toast.created}}</td>
+                <td class='text-nowrap'>{{toast.created}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
                         <a role='button' class='btn btn-primary'
