@@ -14,6 +14,7 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/discordbot/', views.DiscordBotPanel.as_view(), name="discordbot"),
     path('api/html/panel/server/importexport', views.ServerActionsPanel.as_view(), name="server/importexport"),
     path('api/html/panel/server/importexport/', views.ServerActionsPanel.as_view(), name="server/importexport"),
+    path('api/html/panel/logentry/list', views.PanelLogEntryList.as_view(template_name='panel/crud/logentry_list.html'), name="logentry/list"),
     path('api/html/panel/server/list/', views.PanelServerList.as_view(template_name='panel/crud/server_list.html'), name="server/list"),
     path('api/html/panel/server/archivedlist', views.PanelServerList.as_view(template_name='panel/crud/server_list_archived.html'), name="server/archivedlist"),
     path('api/html/panel/server/update/<int:pk>', views.PanelServerUpdate.as_view(template_name='panel/crud/server_update.html'), name="server/update_IR"),

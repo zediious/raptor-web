@@ -1,0 +1,88 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Change History</header>
+        </div>
+    </div>
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white htmxLink' scope="col"
+                    hx-get="{% url 'panel:logentry/list' %}?paginate_by={{paginate_by}}&order_by=date&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                    hx-target='#content_table_wrapper'
+                    hx-swap='innerHTML'
+                    hx-trigger='click'
+                >
+                    Date<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                </th>
+                <th class='text-white' scope="col">Changed Item</th>
+                <th class='text-white' scope="col">Action</th>
+                <th class='text-white htmxLink' scope="col"
+                    hx-get="{% url 'panel:logentry/list' %}?paginate_by={{paginate_by}}&order_by=changing_user&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                    hx-target='#content_table_wrapper'
+                    hx-swap='innerHTML'
+                    hx-trigger='click'
+                >
+                    Changing User<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                </th>
+                </tr>
+            </thead>
+            {% for logentry in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{logentry.pk}}</th>
+                <td>{{logentry.date}}</td>
+                <td>{{logentry.changed_model}}</td>
+                <td>{{logentry.action}}</td>
+                <td>{{logentry.changing_user}}</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:logentry/list' %}?page=1"
+                        hx-target="#content_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:logentry/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:logentry/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:logentry/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

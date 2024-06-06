@@ -565,6 +565,25 @@ class PanelDetailView(DetailView):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
         return super().get(request, *args, **kwargs)
+    
+    
+class PanelLogEntryList(PanelListViewSearchable):
+    """
+    Return a list of Panel Log Entries for viewing
+    """
+    model: PanelLogEntry = PanelLogEntry
+    paginate_by = 50
+    permission: str = 'raptormc.logentry_list'
+    model_name: str = "PanelLogEntry"
+    default_ordering: str = '-date'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+                'total_panellogentry_count': PanelLogEntry.objects.count()
+            })
+
+        return context
 
 
 class PanelServerList(PanelListView):

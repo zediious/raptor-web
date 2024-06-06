@@ -5,4 +5,11 @@
         </div>
     </div>
     <hr class='text-white'>
+    <div id='log_wrapper'
+         hx-get="{% url 'panel:logentry/list' %}"
+         hx-trigger='load'
+         hx-target='#log_wrapper'
+         hx-swap='innerHTML'
+    >
+    </div>
 </div>
