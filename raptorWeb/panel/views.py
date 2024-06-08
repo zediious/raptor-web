@@ -460,7 +460,7 @@ class PanelUpdateView(UpdateView):
             model_string = str(self.model).split('.')[3].replace("'", "").replace('>', '')
             PanelLogEntry.objects.create(
                 changing_user=request.user,
-                changed_model=str(f'{model_string} - {self.get_object()}'),
+                changed_model=str(f'{model_string} - {self.get_object()} - {changed_string[:-1]}'),
                 action='Changed'
             )
 
