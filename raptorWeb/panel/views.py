@@ -382,6 +382,7 @@ class PanelUpdateView(UpdateView):
             changed: list = []
             changed_string: str = ""
             has_m2m = False
+            has_o2o = False
             has_m2o = False
             
             for field in changed_object._meta.get_fields():
@@ -390,7 +391,15 @@ class PanelUpdateView(UpdateView):
                     has_m2o = True
                     continue
                 
-                if 'ManyToManyField' or 'ManyToManyRel' in str(field.__class__):
+                if 'OneToOneRel' in str(field.__class__):
+                    has_o2o = True
+                    continue
+                
+                if 'ManyToManyField' in str(field.__class__):
+                    has_m2m = True
+                    continue
+                
+                if 'ManyToManyRel' in str(field.__class__):
                     has_m2m = True
                     continue
 
@@ -409,18 +418,30 @@ class PanelUpdateView(UpdateView):
             if changed == []:
                 if not has_m2m:
                     if not has_m2o:
-                        messages.error(request, 'You must change some details before updating them.')
-                        return HttpResponse(status=200)
+                        if not has_o2o:
+                            messages.error(request, 'You must change some details before updating them.')
+                            return HttpResponse(status=200)
 
             model_form.save()
             message = ((f'The following fields have been successfully updated '
-                        f'for {self.get_object()}: '
+                        f'for {self.get_object()}:\n\n'
                         f'{changed_string[:-1]}'))
             if has_m2m:
                 message = f'{message} Any ManyToMany fields that have changed.'
                 
             if has_m2o:
-                message = message.replace('ManyToMany', 'ManyToMany and ManytoOne')
+                if 'ManyToMany' in message:
+                    message = message.replace('ManyToMany', 'ManyToMany and ManyToOne')
+                else:
+                    message = f'{message} Any ManytoOne fields that have changed.'
+                    
+            if has_o2o:
+                if 'ManyToOne' in message:
+                    message = message.replace('ManyToOne', 'ManyToOne and OneToOne')
+                elif 'ManyToMany' in message:
+                    message = message.replace('ManyToMany', 'ManyToMany and OneToOne')
+                else:
+                    message = f'{message} Any OneToOne fields that have changed.'
             
             model_string = str(self.model).split('.')[3].replace("'", "").replace('>', '')
             PanelLogEntry.objects.create(
@@ -434,7 +455,7 @@ class PanelUpdateView(UpdateView):
 
         else:
             messages.error(
-                request, [str(message[1][0]) for message in model_form.errors.items()]
+                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in model_form.errors.items()]
             )
             return HttpResponse(status=200)
         
