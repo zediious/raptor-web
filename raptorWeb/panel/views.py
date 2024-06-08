@@ -204,6 +204,13 @@ class SettingsPanel(PanelApiBaseView):
             for change in changed:
                 changed_string += f'{change}, '
             site_info.save()
+            
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'Site Settings - {changed_string[:-1]}'),
+                action='Changed'
+            )
+            
             messages.success(request,
                              ('Settings have been successfully updated for the following: '
                               f'{changed_string[:-1]}'))
@@ -277,6 +284,13 @@ class SettingsPanelFilePost(PanelApiBaseView):
                 return HttpResponse(status=200)
             
             site_info.save()
+            
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'Site Settings - {changed_string[:-1]}'),
+                action='Changed'
+            )
+            
             messages.success(request,
                              ('The following new files have been successfully uploaded: '
                               f'{changed_string[:-1]}'))
@@ -331,6 +345,13 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
                 return HttpResponse(status=200)
             
             default_pages.save()
+            
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'Site Settings - {changed_string[:-1]}'),
+                action='Changed'
+            )
+            
             messages.success(request,
                              ('The following Default Pages have had their state changed: '
                               f'{changed_string[:-1]}'))
