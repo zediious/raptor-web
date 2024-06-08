@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from celery.schedules import crontab
 
 from config.logging import LOGGING_DEFINITION
-from config.jazzmin import JAZZMIN_SETTINGS_ORIGINAL, JAZZMIN_UI_TWEAKS_ORIGINAL
 
 # Define project directories
 BASE_DIR: str = Path(__file__).resolve().parent.parent
@@ -68,7 +67,6 @@ CSRF_TRUSTED_ORIGINS: list[str] = [f'{WEB_PROTO}://{DOMAIN_NAME}',
 
 # Application/Middleware definitions
 INSTALLED_APPS: list[str] = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -283,11 +281,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/5'),
     }
 }
-
-# ** Settings for "django-jazzmin" app **
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS_ORIGINAL
-
-JAZZMIN_UI_TWEAKS = JAZZMIN_UI_TWEAKS_ORIGINAL
 
 # ** Settings for "django_bootstrap5" app **
 BOOTSTRAP5: dict = {
