@@ -438,6 +438,12 @@ class Server(models.Model):
     
 
     class Meta:
+        permissions = [
+            ("maintenance_server", "Can toggle a server's maintenance status."),
+            ("archive_server", "Can toggle a server's archive status."),
+            ("importexport_server", "Can access the Server Import/Export menu"),
+            ("list_archivedserver", "Can access the list of archived servers."),
+        ]
         verbose_name = "Server"
         verbose_name_plural = "Servers"
 

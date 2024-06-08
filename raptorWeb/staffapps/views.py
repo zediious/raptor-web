@@ -82,7 +82,7 @@ class AllAppsApproval(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.submittedstaffapplication_approval'):
+        if not request.user.has_perm('staffapps.approval_submittedstaffapplication'):
             messages.error(request, 'You do not have permission to change Submitted Application approval status.')
             return HttpResponse(status=200)
         
@@ -102,7 +102,7 @@ class SubmittedStaffApplicationDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.submittedstaffapplication_delete'):
+        if not request.user.has_perm('staffapps.delete_submittedstaffapplication'):
             messages.error(request, 'You do not have permission to delete Submitted Staff Applications.')
             return HttpResponse(status=200)
         
@@ -128,7 +128,7 @@ class CreatedStaffApplicationDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.createdstaffapplication_delete'):
+        if not request.user.has_perm('staffapps.delete_createdstaffapplication'):
             messages.error(request, 'You do not have permission to delete Created Staff Applications.')
             return HttpResponse(status=200)
         
@@ -154,7 +154,7 @@ class StaffApplicationFieldDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.staffapplicationfield_delete'):
+        if not request.user.has_perm('staffapps.delete_staffapplicationfield'):
             messages.error(request, 'You do not have permission to delete Staff Application Fields.')
             return HttpResponse(status=200)
         

@@ -34,7 +34,7 @@
                         </button>
                         <div id='content_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                             <div class='d-flex flex-column gap-2'>
-                                {% if perms.raptormc.navbarlinks_list %}
+                                {% if perms.raptormc.list_navbarlink %}
                                 <button class="nav-item btn btn-secondary text-white">
                                     <a class="nav-link"
                                     href="/panel/content/navbarlink/list"
@@ -48,7 +48,7 @@
                                     </a>
                                 </button>
                                 {% endif%}
-                                {% if perms.raptormc.navbardropdown_list %}
+                                {% if perms.raptormc.list_navbardropdown %}
                                 <button class="nav-item btn btn-secondary text-white">
                                     <a class="nav-link"
                                     href="/panel/content/navbardropdown/list"
@@ -62,7 +62,7 @@
                                     </a>
                                 </button>
                                 {% endif%}
-                                {% if perms.raptormc.navwidget_list %}
+                                {% if perms.raptormc.list_navwidget %}
                                 <button class="nav-item btn btn-secondary text-white">
                                     <a class="nav-link"
                                     href="/panel/content/navwidget/list"
@@ -76,7 +76,7 @@
                                     </a>
                                 </button>
                                 {% endif%}
-                                {% if perms.raptormc.navwidgetbar_list %}
+                                {% if perms.raptormc.list_navwidgetbar %}
                                 <button class="nav-item btn btn-secondary text-white">
                                     <a class="nav-link"
                                     href="/panel/content/navwidgetbar/list"
@@ -92,7 +92,7 @@
                                 {% endif%}
                             </div>
                         </div>
-                        {% if perms.raptormc.server_list %}
+                        {% if perms.raptormc.list_informativetext %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/content/informativetext/list"
@@ -106,7 +106,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.page_list %}
+                        {% if perms.raptormc.list_page %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/content/page/list"
@@ -120,7 +120,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.toast_list %}
+                        {% if perms.raptormc.list_notificationtoast %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/content/toast/list"
@@ -143,7 +143,7 @@
                 </button>
                 <div id='servers_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
-                        {% if perms.raptormc.server_list %}
+                        {% if perms.gameservers.list_server %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/server/list/"
@@ -157,7 +157,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.player_list %}
+                        {% if perms.gameservers.list_player %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/player/list/"
@@ -181,11 +181,11 @@
                             hx-indicator="#panelLoadingspinner,.loaded-content"
                             onclick='closeOffCanvas()'
                             >
-                                <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
+                                <p>Reporting</p>
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.server_import_export %}
+                        {% if perms.gameservers.importexport_server %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/server/importexport/"
@@ -199,7 +199,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.server_list %}
+                        {% if perms.servers.list_archivedserver %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/server/archivedlist"
@@ -216,7 +216,6 @@
                     </div>
                 </div>
                 </button>
-                {% if perms.raptormc.discord_bot %}
                 <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#discord_nav_collapse'
                         aria-expanded="false" aria-controls="discord_nav_collapse"
                 >
@@ -238,7 +237,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.globalannounce_list %}
+                        {% if perms.raptorbot.list_globalannouncement %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/bot/globalannouncement/list"
@@ -252,7 +251,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.serverannounce_list %}
+                        {% if perms.raptorbot.list_serverannouncement %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/bot/serverannouncement/list"
@@ -266,7 +265,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.sentembedmessage_list %}
+                        {% if perms.raptorbot.list_sentembedmessage %}
                         <button class="nav-item btn btn-secondary text-white">
                             <a class="nav-link"
                             href="/panel/bot/sentembedmessage/list"
@@ -282,8 +281,6 @@
                         {% endif%}
                     </div>
                 </div>
-                {% endif %}
-                {% if perms.raptormc.donations %}
                 <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#donation_nav_collapse'
                         aria-expanded="false" aria-controls="donation_nav_collapse"
                 >
@@ -291,7 +288,7 @@
                 </button>
                 <div id='donation_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
-                        {% if perms.raptormc.completeddonations_list %}
+                        {% if perms.donations.list_completeddonations %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/donations/completeddonation/list"
@@ -305,7 +302,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.donationpackage_list %}
+                        {% if perms.donations.list_donationpackage %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/donations/donationpackage/list"
@@ -319,7 +316,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.donationservercommand_list %}
+                        {% if perms.donations.list_donationservercommand %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/donations/donationservercommand/list"
@@ -333,7 +330,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.donationdiscordrole_list %}
+                        {% if perms.donations.list_donationdiscordrole %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/donations/donationdiscordrole/list"
@@ -349,7 +346,6 @@
                         {% endif%}
                     </div>
                 </div>
-                {% endif %}
                 <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#staffapps_nav_collapse'
                         aria-expanded="false" aria-controls="staffapps_nav_collapse"
                 >
@@ -357,7 +353,7 @@
                 </button>
                 <div id='staffapps_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
-                        {% if perms.raptormc.submittedstaffapplication_list %}
+                        {% if perms.staffapps.list_submittedstaffapplication %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/staffapps/submittedstaffapplication/list"
@@ -371,7 +367,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.createdstaffapplication_list %}
+                        {% if perms.staffapps.list_createdstaffapplication %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/staffapps/createdstaffapplication/list"
@@ -385,7 +381,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.staffapplicationfield_list %}
+                        {% if perms.staffapps.list_staffapplicationfield %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/staffapps/staffapplicationfield_/list"
@@ -408,7 +404,7 @@
                 </button>
                 <div id='users_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
                     <div class='d-flex flex-column gap-2'>
-                        {% if perms.raptormc.raptoruser_list %}
+                        {% if perms.authprofiles.list_raptoruser %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/users/raptoruser/list"
@@ -422,7 +418,7 @@
                             </a>
                         </button>
                         {% endif%}
-                        {% if perms.raptormc.raptorusergroup_list %}
+                        {% if perms.authprofiles.list_raptorusergroup %}
                         <button class="nav-item btn btn-secondary">
                             <a class="nav-link"
                             href="/panel/users/raptorusergroup/list"

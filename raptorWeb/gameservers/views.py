@@ -227,7 +227,7 @@ class SetMaintenanceMode(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.server_maintenance'):
+        if not request.user.has_perm('gameservers.maintenance_server'):
             messages.error(request, 'You do not have permission to change Maintenance status.')
             return HttpResponse(status=200)
         
@@ -254,7 +254,7 @@ class SetArchive(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.server_archive'):
+        if not request.user.has_perm('gameservers.archive_server'):
             messages.error(request, 'You do not have permission to change Archive status.')
             return HttpResponse(status=200)
         
@@ -281,7 +281,7 @@ class DeleteServer(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.server_delete'):
+        if not request.user.has_perm('gameservers.delete_server'):
             messages.error(request, 'You do not have permission to delete servers.')
             return HttpResponse(status=200)
         
@@ -315,8 +315,9 @@ class Import_Servers(TemplateView):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.server_actions'):
-            return HttpResponseRedirect('/')
+        if not request.user.has_perm('gameservers.importexport_server'):
+            messages.error(request, 'You do not have permission to import and export servers.')
+            return HttpResponse(status=200)
         
         if Server.objects.import_server_data() == False:
             messages.error(request, ("You attempted to import servers, but you did not place server_data_full.json "

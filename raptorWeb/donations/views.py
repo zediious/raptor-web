@@ -256,8 +256,9 @@ class DonationDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/404')
         
-        if not request.user.has_perm('raptormc.donations'):
-            return HttpResponseRedirect('/404')
+        if not request.user.has_perm('donations.delete_completeddonation'):
+            messages.error(request, 'You do not have permission to delete Completed Donations.')
+            return HttpResponse(status=200)
         
         try:
             deleted_donation = CompletedDonation.objects.get(
@@ -288,7 +289,7 @@ class DonationPackageDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.donationpackage_delete'):
+        if not request.user.has_perm('donations.delete_donationpackage'):
             messages.error(request, 'You do not have permission to delete Donation Packages.')
             return HttpResponse(status=200)
         
@@ -314,7 +315,7 @@ class DonationServerCommandDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.donationservercommand_delete'):
+        if not request.user.has_perm('donations.delete_donationservercommand'):
             messages.error(request, 'You do not have permission to delete Donation Server Commands.')
             return HttpResponse(status=200)
         
@@ -340,7 +341,7 @@ class DonationDiscordRoleDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.donationdiscordrole_delete'):
+        if not request.user.has_perm('donations.delete_donationdiscordrole'):
             messages.error(request, 'You do not have permission to delete Donation Discord Roles.')
             return HttpResponse(status=200)
         
@@ -370,7 +371,8 @@ class DonationBenefitResend(View):
             return HttpResponseRedirect('/404')
         
         if not request.user.has_perm('raptormc.donations'):
-            return HttpResponseRedirect('/404')
+            messages.error(request, 'You do not have permission to re-send Donation benefits.')
+            return HttpResponse(status=200)
         
         do_commands = request.GET.get('do_commands')
         do_roles = request.GET.get('do_roles')

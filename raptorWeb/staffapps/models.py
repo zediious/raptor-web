@@ -225,3 +225,8 @@ class SubmittedStaffApplication(models.Model):
     
     def __str__(self) -> str:
         return str(self.submitted_date)
+    
+    class Meta:
+        permissions = [
+            ("approval_submittedstaffapplication", "Can approve or deny Submitted Staff Applications"),
+        ]

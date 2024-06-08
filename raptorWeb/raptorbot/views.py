@@ -228,7 +228,7 @@ class GlobalAnnouncementDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.globalannounce_delete'):
+        if not request.user.has_perm('raptorbot.delete_globalannouncement'):
             messages.error(request, 'You do not have permission to delete Global Announcements.')
             return HttpResponse(status=200)
         
@@ -254,7 +254,7 @@ class ServerAnnouncementDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.serverannounce_delete'):
+        if not request.user.has_perm('raptorbot.delete_serverannouncement'):
             messages.error(request, 'You do not have permission to delete Server Announcements.')
             return HttpResponse(status=200)
         
@@ -280,7 +280,7 @@ class SentEmbedMessageDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.sentembedmessage_delete'):
+        if not request.user.has_perm('raptorbot.delete_sendembedmessage'):
             messages.error(request, 'You do not have permission to delete Sent Embed Messages.')
             return HttpResponse(status=200)
         

@@ -510,7 +510,7 @@ class PageDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.page_delete'):
+        if not request.user.has_perm('raptormc.delete_page'):
             messages.error(request, 'You do not have permission to delete pages.')
             return HttpResponse(status=200)
         
@@ -536,7 +536,7 @@ class NotificationToastDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.toast_delete'):
+        if not request.user.has_perm('raptormc.delete_notificationtoast'):
             messages.error(request, 'You do not have permission to delete Notification Toasts.')
             return HttpResponse(status=200)
         
@@ -562,7 +562,7 @@ class NavbarLinkDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.navbarlink_delete'):
+        if not request.user.has_perm('raptormc.delete_navbarlink'):
             messages.error(request, 'You do not have permission to delete Navbar Links.')
             return HttpResponse(status=200)
         
@@ -588,7 +588,7 @@ class NavbarDropdownDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.navbardropdown_delete'):
+        if not request.user.has_perm('raptormc.delete_navbardropdown'):
             messages.error(request, 'You do not have permission to delete Navbar Dropdowns.')
             return HttpResponse(status=200)
         
@@ -614,7 +614,7 @@ class NavWidgetDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.navwidget_delete'):
+        if not request.user.has_perm('raptormc.delete_navwidget'):
             messages.error(request, 'You do not have permission to delete Nav Widgets.')
             return HttpResponse(status=200)
         
@@ -640,7 +640,7 @@ class NavWidgetBarDelete(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
-        if not request.user.has_perm('raptormc.navwidgetbar_delete'):
+        if not request.user.has_perm('raptormc.delete_navwidgetbar'):
             messages.error(request, 'You do not have permission to delete Nav Widget Bars.')
             return HttpResponse(status=200)
         
