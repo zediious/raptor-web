@@ -1,6 +1,10 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Update Donation Discord Command: {{donationdiscordcommand.command}}</title>
+</head>
+
 <div class="m-2 mt-0 p-3">
     <div class="text-white">
         <header class="fs-3">Update details for the "{{donationservercommand.command}}" Server Command</header>

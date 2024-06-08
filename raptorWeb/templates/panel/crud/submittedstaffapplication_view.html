@@ -1,5 +1,9 @@
 {% load template_db %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Staff Application submitted on {{object.submitted_date}}</title>
+</head>
+
 <div id="panel_approval_button_replace_{{submittedstaffapplication.pk}}">
     {% include "panel/crud/panel_submittedstaffapplication_approval_button.html" %}
 </div>

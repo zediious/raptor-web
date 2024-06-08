@@ -3,6 +3,10 @@
 {% load markdownStrip %}
 {% load django_bootstrap5 %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Server Announcements</title>
+</head>
+
 <div id='data_wrapper'>
     <div id='announcement_table_wrapper'>
         <div class="m-2 mt-0 p-3">

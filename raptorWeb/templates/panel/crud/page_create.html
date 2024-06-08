@@ -1,6 +1,10 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Create Page</title>
+</head>
+
 {{ form.media }}
 
 <div class="m-2 mt-0 p-3">
