@@ -255,7 +255,7 @@ class DiscordUserInfo(models.Model):
         return self
 
     def __str__(self):
-        return f'DiscordUserInfo#{self.id}'
+        return f"{RaptorUser.objects.get(discord_user_info=self).username}'s Discord User Info"
 
     class Meta:
         verbose_name = "User - Discord Information"
@@ -376,7 +376,7 @@ class UserProfileInfo(models.Model):
         return f"profile_picture_{self.pk}_{ localtime(now()) }.png"
 
     def __str__(self):
-        return f'UserProfileInfo#{self.id}'
+        return f"{RaptorUser.objects.get(user_profile_info=self).username}'s Extra Profile Info"
 
     class Meta:
         verbose_name = "User - Extra Information"
@@ -510,7 +510,7 @@ class DeletionQueueForUser(models.Model):
         on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.user.username
+        return f'Deletion Request for {self.user.username}'
     
     class Meta:
         verbose_name = "Users Queued for Deletion"
