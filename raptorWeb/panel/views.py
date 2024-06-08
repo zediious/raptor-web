@@ -1341,6 +1341,7 @@ class PanelUserUpdate(PanelUpdateView):
         'id',
         'password',
         'totp_token',
+        'totp_qr_path',
         'user_slug',
         'date_joined',
         'last_login',
