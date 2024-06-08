@@ -6,7 +6,7 @@ from django.conf import settings
 
 from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
-from raptorWeb.authprofiles.models import RaptorUser
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, RaptorUserGroup
 from raptorWeb.gameservers.models import Server
 from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
@@ -23,7 +23,8 @@ class Route:
                  package=None, informativetext=None, toast=None, navbarlink=None, navbardropdown=None, navwidget=None,
                  navwidgetbar=None, globalannouncement=None, serverannouncement=None, donationservercommand=None,
                  donationdiscordrole=None, staffapplicationfield=None, submittedstaffapplication=None,
-                 createdstaffapplication=None) -> None:
+                 createdstaffapplication=None, useredit=None, userprofileinfo=None, discorduserinfo=None,
+                 raptorusergroup=None) -> None:
         
         self.name: str = name
         self.route_type: str = route_type
@@ -45,6 +46,10 @@ class Route:
         self.staffapplicationfield: StaffApplicationField = staffapplicationfield
         self.submittedstaffapplication: SubmittedStaffApplication = submittedstaffapplication
         self.createdstaffapplication: CreatedStaffApplication = createdstaffapplication
+        self.useredit: RaptorUser = useredit
+        self.userprofileinfo: UserProfileInfo = userprofileinfo
+        self.discorduserinfo: DiscordUserInfo = discorduserinfo
+        self.raptorusergroup: DiscordUserInfo = raptorusergroup
           
     def __str__(self) -> str:
         return self.name
