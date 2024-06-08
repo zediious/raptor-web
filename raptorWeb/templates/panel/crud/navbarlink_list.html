@@ -13,6 +13,7 @@
     </div>
     <hr class='text-white'>
 
+    {% if perms.raptormc.add_navbarlink %}
     <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/content/navbarlink/create'
@@ -24,6 +25,7 @@
             Add Navbar Link
         </a>
     </div>
+    {% endif %}
 
     <div class='table-responsive-xl'>
         <table class="table table-dark table-hover text-white border border-black border-2">
@@ -53,6 +55,7 @@
                 <td>{%if navlink.enabled%}<div class='badge bg-success'>Enabled</div>{%else%}<div class='badge bg-danger'>Disabled</div>{%endif%}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptormc.change_navbarlink %}
                         <a role='button' class='btn btn-primary'
                                 href='/panel/content/navbarlink/{{navbarlink.pk}}'
                                 hx-get="{% url 'panel:content/navbarlink/update_IR' pk=navlink.pk %}"
@@ -62,6 +65,8 @@
                         >
                             Edit
                         </a>
+                        {% endif %}
+                        {% if perms.raptormc.delete_navbarlink %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -72,6 +77,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

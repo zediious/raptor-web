@@ -13,6 +13,7 @@
     </div>
     <hr class='text-white'>
 
+    {% if perms.staffapps.add_staffapplicationfield %}
     <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/staffapps/staffapplicationfield/create'
@@ -24,6 +25,7 @@
             Add Form Field
         </a>
     </div>
+    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
@@ -47,6 +49,7 @@
                 <td>{{staffapplicationfield.priority}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.staffapps.change_staffapplicationfield %}
                         <a role='button' class='btn btn-primary'
                                 href='/panel/staffapps/staffapplicationfield/update/{{staffapplicationfield.pk}}'
                                 hx-get="{% url 'panel:staffapps/staffapplicationfield/update_IR' pk=staffapplicationfield.pk %}"
@@ -56,6 +59,8 @@
                         >
                             Edit
                         </a>
+                        {% endif %}
+                        {% if perms.staffapps.delete_staffapplicationfield %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -66,6 +71,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

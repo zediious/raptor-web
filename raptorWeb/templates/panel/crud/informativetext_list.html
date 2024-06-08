@@ -31,6 +31,7 @@
                 <td>{%if info_text.enabled%}<div class='badge bg-success'>Enabled</div>{%else%}<div class='badge bg-danger'>Disabled</div>{%endif%}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptormc.change_informativetext %}
                         <button id='panel_edit_button' class='btn btn-primary'
                                 href='/panel/content/informativetext/update/{{info_text.pk}}'
                                 hx-get="{% url 'panel:content/informativetext/update_IR' pk=info_text.pk %} "
@@ -40,6 +41,7 @@
                         >
                             Edit
                         </button>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

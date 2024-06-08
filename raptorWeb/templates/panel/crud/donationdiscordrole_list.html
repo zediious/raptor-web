@@ -13,6 +13,7 @@
     </div>
     <hr class='text-white'>
 
+    {% if perms.donations.add_donationdiscordrole %}
     <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/donations/donationdiscordrole/create'
@@ -24,6 +25,7 @@
             Add Discord Role
         </a>
     </div>
+    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
@@ -43,6 +45,7 @@
                 <td>{{donationdiscordrole.role_id}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.donations.change_donationdiscordrole %}
                         <a role='button' class='btn btn-primary'
                                 href='/panel/donations/donationdiscordrole/update/{{donationdiscordrole.pk}}'
                                 hx-get="{% url 'panel:donations/donationdiscordrole/update_IR' pk=donationdiscordrole.pk %}"
@@ -52,6 +55,8 @@
                         >
                             Edit
                         </a>
+                        {% endif %}
+                        {% if perms.donations.delete_donationdiscordrole %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -62,6 +67,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

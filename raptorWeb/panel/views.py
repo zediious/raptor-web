@@ -545,6 +545,12 @@ class PanelCreateView(CreateView):
     permission: str = ''
     redirect_url: str = ''
     
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if not request.user.has_perm(self.permission):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
+    
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         if not request.user.has_perm(self.permission):
             return HttpResponseRedirect('/')
@@ -594,7 +600,7 @@ class PanelLogEntryList(PanelListViewSearchable):
     """
     model: PanelLogEntry = PanelLogEntry
     paginate_by = 50
-    permission: str = 'panel.list_panellogentry'
+    permission: str = 'panel.view_panellogentry'
     model_name: str = "PanelLogEntry"
     default_ordering: str = '-date'
     
@@ -613,7 +619,7 @@ class PanelServerList(PanelListView):
     """
     model: Server = Server
     paginate_by = 10
-    permission: str = 'gameservers.list_server'
+    permission: str = 'gameservers.view_server'
     model_name: str = 'Server'
 
     def get_queryset(self) -> ServerManager:
@@ -631,7 +637,7 @@ class PanelServerCreate(PanelCreateView):
     form_class = PanelServerCreateForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'server_create.html'))
     redirect_url: str = '/panel/api/html/panel/server/list/'
-    permission: str = 'gameservers.create_server'
+    permission: str = 'gameservers.add_server'
         
 
 class PanelServerUpdate(PanelUpdateView):
@@ -640,7 +646,7 @@ class PanelServerUpdate(PanelUpdateView):
     """
     model: Server = Server
     form_class = PanelServerUpdateForm
-    permission: str = 'gameservers.update_server'
+    permission: str = 'gameservers.change_server'
     model_classpath: str = 'gameservers.Server'
     image_fields = ['modpack_picture']
     ignored_fields = [
@@ -660,7 +666,7 @@ class PanelPlayerList(PanelListViewSearchable):
     """
     model: Player = Player
     paginate_by = 50
-    permission: str = 'gameservers.list_player'
+    permission: str = 'gameservers.view_player'
     model_name: str = "Player"
     default_ordering: str = '-last_online'
     
@@ -691,7 +697,7 @@ class PanelInformativeTextList(PanelListView):
     Used by Panel to display list of Informative Text's for editing
     """
     model: InformativeText = InformativeText
-    permission: str = 'raptormc.list_informativetext'
+    permission: str = 'raptormc.view_informativetext'
     model_name: str = 'Informative Text'
     paginate_by = 50
     
@@ -702,7 +708,7 @@ class PanelInformativeTextUpdate(PanelUpdateView):
     """
     model: InformativeText = InformativeText
     form_class = PanelInformativeTextUpdateForm
-    permission: str = 'raptormc.update_informativetext'
+    permission: str = 'raptormc.change_informativetext'
     model_classpath: str = 'raptormc.InformativeText'
     ignored_fields = [
         'id',
@@ -715,7 +721,7 @@ class PanelPageList(PanelListView):
     """
     model: Page = Page
     paginate_by = 10
-    permission: str = 'raptormc.list_page'
+    permission: str = 'raptormc.view_page'
     model_name: str = 'Page'
 
     def get_queryset(self) -> PageManager:
@@ -728,7 +734,7 @@ class PanelPageUpdate(PanelUpdateView):
     """
     model: Page = Page
     form_class = PanelPageForm
-    permission: str = 'raptormc.update_page'
+    permission: str = 'raptormc.change_page'
     model_classpath: str = 'raptormc.Page'
     image_fields = [
         'page_css',
@@ -749,7 +755,7 @@ class PanelPageCreate(PanelCreateView):
     form_class = PanelPageForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'page_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/page/list'
-    permission: str = 'raptormc.create_page'
+    permission: str = 'raptormc.add_page'
     
 
 class PanelToastList(PanelListView):
@@ -758,7 +764,7 @@ class PanelToastList(PanelListView):
     """
     model: NotificationToast = NotificationToast
     paginate_by = 10
-    permission: str = 'raptormc.list_notificationtoast'
+    permission: str = 'raptormc.view_notificationtoast'
     model_name: str = 'Toast'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -771,7 +777,7 @@ class PanelToastUpdate(PanelUpdateView):
     """
     model: NotificationToast = NotificationToast
     form_class = PanelToastForm
-    permission: str = 'raptormc.update_notificationtoast'
+    permission: str = 'raptormc.change_notificationtoast'
     model_classpath: str = 'raptormc.NotificationToast'
     ignored_fields = [
         'id',
@@ -787,7 +793,7 @@ class PanelToastCreate(PanelCreateView):
     form_class = PanelToastForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'toast_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/toast/list'
-    permission: str = 'raptormc.create_notificationtoast'
+    permission: str = 'raptormc.add_notificationtoast'
     
     
 class PanelNavbarLinkList(PanelListView):
@@ -796,7 +802,7 @@ class PanelNavbarLinkList(PanelListView):
     """
     model: NavbarLink = NavbarLink
     paginate_by = 10
-    permission: str = 'raptormc.list_navbarlink'
+    permission: str = 'raptormc.view_navbarlink'
     model_name: str = 'NavbarLink'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -808,7 +814,7 @@ class PanelNarbarLinkUpdate(PanelUpdateView):
     Update changed information for a given Navbar Link
     """
     model: NavbarLink = NavbarLink
-    permission: str = 'raptormc.update_navbarlink'
+    permission: str = 'raptormc.change_navbarlink'
     model_classpath: str = 'raptormc.NavbarLink'
     ignored_fields = [
         'id'
@@ -831,7 +837,7 @@ class PanelNarbarLinkCreate(PanelCreateView):
     model: NavbarLink = NavbarLink
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navbarlink_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/navbarlink/list'
-    permission: str = 'raptormc.create_navbarlink'
+    permission: str = 'raptormc.add_navbarlink'
     fields = [
         'name',
         'url',
@@ -849,7 +855,7 @@ class PanelNavbarDropdownList(PanelListView):
     """
     model: NavbarDropdown = NavbarDropdown
     paginate_by = 10
-    permission: str = 'raptormc.list_navbardropdown'
+    permission: str = 'raptormc.view_navbardropdown'
     model_name: str = 'NavbarDropdown'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -861,7 +867,7 @@ class PanelNavbarDropdownUpdate(PanelUpdateView):
     Update changed information for a given Navbar Dropdowns
     """
     model: NavbarDropdown = NavbarDropdown
-    permission: str = 'raptormc.update_navbardropdown'
+    permission: str = 'raptormc.change_navbardropdown'
     model_classpath: str = 'raptormc.NavbarDropdown'
     ignored_fields = [
         'id'
@@ -880,7 +886,7 @@ class PanelNavbarDropdownCreate(PanelCreateView):
     model: NavbarDropdown = NavbarDropdown
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navbardropdown_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/navbardropdown/list'
-    permission: str = 'raptormc.create_navbardropdown'
+    permission: str = 'raptormc.add_navbardropdown'
     fields = [
         'name',
         'priority',
@@ -894,7 +900,7 @@ class PanelNavWidgetList(PanelListView):
     """
     model: NavWidget = NavWidget
     paginate_by = 10
-    permission: str = 'raptormc.list_navwidget'
+    permission: str = 'raptormc.view_navwidget'
     model_name: str = 'NavWidget'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -907,7 +913,7 @@ class PanelNavWidgetUpdate(PanelUpdateView):
     """
     model: NavWidget = NavWidget
     form_class: PanelNavWidgetUpdateForm = PanelNavWidgetUpdateForm
-    permission: str = 'raptormc.update_navwidget'
+    permission: str = 'raptormc.change_navwidget'
     model_classpath: str = 'raptormc.NavWidget'
     image_fields = [
         'nav_image'
@@ -925,7 +931,7 @@ class PanelNavWidgetCreate(PanelCreateView):
     form_class: PanelNavWidgetCreateForm = PanelNavWidgetCreateForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navwidget_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/navwidget/list'
-    permission: str = 'raptormc.create_navwidget'
+    permission: str = 'raptormc.add_navwidget'
     
     
 class PanelNavWidgetBarList(PanelListView):
@@ -934,7 +940,7 @@ class PanelNavWidgetBarList(PanelListView):
     """
     model: NavWidgetBar = NavWidgetBar
     paginate_by = 10
-    permission: str = 'raptormc.list_navwidgetbar'
+    permission: str = 'raptormc.view_navwidgetbar'
     model_name: str = 'NavWidgetBar'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -946,7 +952,7 @@ class PanelNavWidgetBarUpdate(PanelUpdateView):
     Update changed information for a given Nav Widget Bar
     """
     model: NavWidgetBar = NavWidgetBar
-    permission: str = 'raptormc.update_navwidgetbar'
+    permission: str = 'raptormc.change_navwidgetbar'
     model_classpath: str = 'raptormc.NavWidgetBar'
     ignored_fields = [
         'id'
@@ -965,7 +971,7 @@ class PanelNavWidgetBarCreate(PanelCreateView):
     model: NavWidgetBar = NavWidgetBar
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navwidgetbar_create.html'))
     redirect_url: str = '/panel/api/html/panel/content/navwidgetbar/list'
-    permission: str = 'raptormc.create_navwidgetbar'
+    permission: str = 'raptormc.add_navwidgetbar'
     fields = [
         'name',
         'priority',
@@ -979,7 +985,7 @@ class PanelGlobalAnnouncementList(PanelListViewSearchable):
     """
     model: GlobalAnnouncement = GlobalAnnouncement
     paginate_by = 10
-    permission: str = 'raptorbot.list_globalannouncement'
+    permission: str = 'raptorbot.view_globalannouncement'
     model_name: str = 'GlobalAnnouncement'
     default_ordering: str = 'date'
     
@@ -1005,7 +1011,7 @@ class PanelServerAnnouncementList(PanelListViewSearchable):
     """
     model: ServerAnnouncement = ServerAnnouncement
     paginate_by = 10
-    permission: str = 'raptorbot.list_serverannouncement'
+    permission: str = 'raptorbot.view_serverannouncement'
     model_name: str = 'ServerAnnouncement'
     default_ordering: str = 'date'
 
@@ -1031,7 +1037,7 @@ class PanelSentEmbedMessageList(PanelListView):
     """
     model: SentEmbedMessage = SentEmbedMessage
     paginate_by = 10
-    permission: str = 'raptorbot.list_sentembedmessage'
+    permission: str = 'raptorbot.view_sentembedmessage'
     model_name: str = 'SentEmbedMessage'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1044,7 +1050,7 @@ class PanelDonationPackageList(PanelListView):
     """
     model: DonationPackage = DonationPackage
     paginate_by = 10
-    permission: str = 'donations.list_donationpackage'
+    permission: str = 'donations.view_donationpackage'
     model_name: str = 'DonationPackage'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1057,7 +1063,7 @@ class PanelDonationPackageUpdate(PanelUpdateView):
     """
     model: DonationPackage = DonationPackage
     form_class = PanelDonationPackageUpdateForm
-    permission: str = 'donations.update_donationpackage'
+    permission: str = 'donations.change_donationpackage'
     model_classpath: str = 'donations.DonationPackage'
     image_fields = [
         'package_picture'
@@ -1075,7 +1081,7 @@ class PanelDonationPackageCreate(PanelCreateView):
     form_class = PanelDonationPackageCreateForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationpackage_create.html'))
     redirect_url: str = '/panel/api/html/panel/donations/donationpackage/list'
-    permission: str = 'donations.create_donationpackage'
+    permission: str = 'donations.add_donationpackage'
     
     
 class PanelDonationServerCommandList(PanelListView):
@@ -1084,7 +1090,7 @@ class PanelDonationServerCommandList(PanelListView):
     """
     model: DonationServerCommand = DonationServerCommand
     paginate_by = 10
-    permission: str = 'donations.list_donationservercommand'
+    permission: str = 'donations.view_donationservercommand'
     model_name: str = 'DonationServerCommand'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1096,7 +1102,7 @@ class PanelDonationServerCommandUpdate(PanelUpdateView):
     Update changed information for a given Donation Server Command
     """
     model: DonationServerCommand = DonationServerCommand
-    permission: str = 'donations.update_donationservercommand'
+    permission: str = 'donations.change_donationservercommand'
     model_classpath: str = 'donations.DonationServerCommand'
     ignored_fields = [
         'id'
@@ -1113,7 +1119,7 @@ class PanelDonationServerCommandCreate(PanelCreateView):
     model: DonationServerCommand = DonationServerCommand
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationservercommand_create.html'))
     redirect_url: str = '/panel/api/html/panel/donations/donationservercommand/list'
-    permission: str = 'donations.create_donationservercommand'
+    permission: str = 'donations.add_donationservercommand'
     fields = [
         'command'
     ]
@@ -1125,7 +1131,7 @@ class PanelDonationDiscordRoleList(PanelListView):
     """
     model: DonationDiscordRole = DonationDiscordRole
     paginate_by = 10
-    permission: str = 'donations.list_donationdiscordrole'
+    permission: str = 'donations.view_donationdiscordrole'
     model_name: str = 'DonationDiscordRole'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1137,7 +1143,7 @@ class PanelDonationDiscordRoleUpdate(PanelUpdateView):
     Update changed information for a given Donation Discord Role
     """
     model: DonationDiscordRole = DonationDiscordRole
-    permission: str = 'donations.update_donationdiscordrole'
+    permission: str = 'donations.change_donationdiscordrole'
     model_classpath: str = 'donations.DonationDiscordRole'
     ignored_fields = [
         'id'
@@ -1155,7 +1161,7 @@ class PanelDonationDiscordRoleCreate(PanelCreateView):
     model: DonationDiscordRole = DonationDiscordRole
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationdiscordrole_create.html'))
     redirect_url: str = '/panel/api/html/panel/donations/donationdiscordrole/list'
-    permission: str = 'donations.create_donationdiscordrole'
+    permission: str = 'donations.add_donationdiscordrole'
     fields = [
         'name',
         'role_id'
@@ -1168,7 +1174,7 @@ class PanelCompletedDonationList(PanelListViewSearchable):
     """
     model: CompletedDonation = CompletedDonation
     paginate_by = 15
-    permission: str = 'donations.list_completeddonation'
+    permission: str = 'donations.view_completeddonation'
     model_name: str = 'CompletedDonation'
     default_ordering: str = '-donation_datetime'
     
@@ -1186,7 +1192,7 @@ class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
     """
     model: SubmittedStaffApplication = SubmittedStaffApplication
     paginate_by = 15
-    permission: str = 'staffapps.list_submittedstaffapplication'
+    permission: str = 'staffapps.view_submittedstaffapplication'
     model_name: str = 'SubmittedStaffApplication'
     default_ordering: str = '-submitted_date'
     
@@ -1212,7 +1218,7 @@ class PanelCreatedStaffApplicationList(PanelListView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     paginate_by = 10
-    permission: str = 'staffapps.list_createdstaffapplication'
+    permission: str = 'staffapps.view_createdstaffapplication'
     model_name: str = 'CreatedStaffApplication'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1225,7 +1231,7 @@ class PanelCreatedStaffApplicationUpdate(PanelUpdateView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     form_class = PanelCreatedStaffApplicationForm
-    permission: str = 'staffapps.update_createdstaffapplication'
+    permission: str = 'staffapps.change_createdstaffapplication'
     model_classpath: str = 'staffapps.CreatedStaffApplication'
     ignored_fields = [
         'id'
@@ -1240,7 +1246,7 @@ class PanelCreatedStaffApplicationCreate(PanelCreateView):
     form_class = PanelCreatedStaffApplicationForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'createdstaffapplication_create.html'))
     redirect_url: str = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
-    permission: str = 'staffapps.create_createdstaffapplication'
+    permission: str = 'staffapps.add_createdstaffapplication'
     
     
 class PanelStaffApplicationFieldList(PanelListView):
@@ -1249,7 +1255,7 @@ class PanelStaffApplicationFieldList(PanelListView):
     """
     model: StaffApplicationField = StaffApplicationField
     paginate_by = 10
-    permission: str = 'staffapps.list_staffapplicationfield'
+    permission: str = 'staffapps.view_staffapplicationfield'
     model_name: str = 'StaffApplicationField'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1261,7 +1267,7 @@ class PanelStaffApplicationFieldUpdate(PanelUpdateView):
     Update changed information for a given Staff Application Field
     """
     model: StaffApplicationField = StaffApplicationField
-    permission: str = 'staffapps.update_staffapplicationfield'
+    permission: str = 'staffapps.change_staffapplicationfield'
     model_classpath: str = 'staffapps.StaffApplicationField'
     ignored_fields = [
         'id'
@@ -1281,7 +1287,7 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
     model: StaffApplicationField = StaffApplicationField
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'staffapplicationfield_create.html'))
     redirect_url: str = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
-    permission: str = 'staffapps.create_staffapplicationfield'
+    permission: str = 'staffapps.add_staffapplicationfield'
     fields = [
         'name',
         'help_text',
@@ -1297,7 +1303,7 @@ class PanelUserList(PanelListViewSearchable):
     """
     model: RaptorUser = RaptorUser
     paginate_by = 50
-    permission: str = 'authprofiles.list_raptoruser'
+    permission: str = 'authprofiles.view_raptoruser'
     model_name: str = "RaptorUser"
     default_ordering: str = '-date_joined'
     
@@ -1329,7 +1335,7 @@ class PanelUserUpdate(PanelUpdateView):
     """
     model: RaptorUser = RaptorUser
     form_class = PanelUserUpdateForm
-    permission: str = 'authprofiles.update_raptoruser'
+    permission: str = 'authprofiles.change_raptoruser'
     model_classpath: str = 'authprofiles.RaptorUser'
     ignored_fields = [
         'id',
@@ -1352,7 +1358,7 @@ class PanelUserProfileInfoUpdate(PanelUpdateView):
     """
     model: UserProfileInfo = UserProfileInfo
     form_class = PanelUserProfileInfoUpdateForm
-    permission: str = 'authprofiles.update_userprofileinfo'
+    permission: str = 'authprofiles.change_userprofileinfo'
     model_classpath: str = 'authprofiles.UserProfileInfo'
     image_fields = ['profile_picture']
     ignored_fields = [
@@ -1367,7 +1373,7 @@ class PanelDiscordUserInfoUpdate(PanelUpdateView):
     """
     model: DiscordUserInfo = DiscordUserInfo
     form_class = PanelDiscordUserInfoUpdateForm
-    permission: str = 'authprofiles.update_discorduserinfo'
+    permission: str = 'authprofiles.change_discorduserinfo'
     model_classpath: str = 'authprofiles.DiscordUserInfo'
     ignored_fields = [
         'id',
@@ -1384,7 +1390,7 @@ class PanelRaptorUserGroupList(PanelListView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     paginate_by = 10
-    permission: str = 'authprofiles.list_raptorusergroup'
+    permission: str = 'authprofiles.view_raptorusergroup'
     model_name: str = 'RaptorUserGroup'
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -1397,7 +1403,7 @@ class PanelRaptorUserGroupUpdate(PanelUpdateView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     form_class = PanelRaptorUserGroupForm
-    permission: str = 'authprofiles.update_raptorusergroup'
+    permission: str = 'authprofiles.change_raptorusergroup'
     model_classpath: str = 'staffapps.RaptorUserGroup'
     ignored_fields = [
         'id',
@@ -1416,7 +1422,7 @@ class PanelRaptorUserGroupCreate(PanelCreateView):
     form_class = PanelRaptorUserGroupForm
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'raptorusergroup_create.html'))
     redirect_url: str = '/panel/api/html/panel/users/raptorusergroup/list'
-    permission: str = 'authprofiles.create_raptorusergroup'
+    permission: str = 'authprofiles.add_raptorusergroup'
     
     
 class PanelDeletionQueueForUserList(PanelListView):
@@ -1425,7 +1431,7 @@ class PanelDeletionQueueForUserList(PanelListView):
     """
     model: DeletionQueueForUser = DeletionQueueForUser
     paginate_by = 10
-    permission: str = 'authprofiles.list_deletionqueueforuser'
+    permission: str = 'authprofiles.view_deletionqueueforuser'
     model_name: str = 'DeletionQueueForUser'
 
     def get_queryset(self) -> QuerySet[Any]:

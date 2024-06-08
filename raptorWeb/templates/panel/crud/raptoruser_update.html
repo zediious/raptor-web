@@ -99,20 +99,24 @@
     </div>
 </div>
 
-<div id='user_profile_info_box'
-    hx-get="{% url 'panel:users/userprofileinfo/update_IR' pk=raptoruser.user_profile_info.pk%}"
-    hx-target='#user_profile_info_box'
-    hx-swap='outerHTML'
-    hx-trigger='load'>
-</div>
-
-{% if raptoruser.is_discord_user %}
-    <div id='discord_user_info_box'
-         hx-get="{% url 'panel:users/discorduserinfo/update_IR' pk=raptoruser.discord_user_info.pk%}"
-         hx-target='#discord_user_info_box'
-         hx-swap='outerHTML'
-         hx-trigger='load'>
+{% if perms.authprofiles.change_userprofileinfo %}
+    <div id='user_profile_info_box'
+        hx-get="{% url 'panel:users/userprofileinfo/update_IR' pk=raptoruser.user_profile_info.pk%}"
+        hx-target='#user_profile_info_box'
+        hx-swap='outerHTML'
+        hx-trigger='load'>
     </div>
+{% endif %}
+
+{% if perms.authprofiles.change_discorduserinfo %}
+    {% if raptoruser.is_discord_user %}
+        <div id='discord_user_info_box'
+            hx-get="{% url 'panel:users/discorduserinfo/update_IR' pk=raptoruser.discord_user_info.pk%}"
+            hx-target='#discord_user_info_box'
+            hx-swap='outerHTML'
+            hx-trigger='load'>
+        </div>
+    {% endif %}
 {% endif %}
 
 <script src="{% static 'javascript/src/userSelectButton.js' %}"></script>

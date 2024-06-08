@@ -95,6 +95,7 @@
                     <td class='text-nowrap'>{{user.date_joined}}</td>
                     <td>
                         <div class='d-flex justify-content-evenly gap-1 w-100'>
+                            {% if perms.authprofiles.change_raptoruser %}
                             <a role='button' id='panel_edit_button' class='btn btn-primary'
                                     href='/panel/users/raptoruser/update/{{user.pk}}'
                                     hx-get="{% url 'panel:users/raptoruser/update_IR' pk=user.pk %} "
@@ -104,6 +105,7 @@
                             >
                                 Edit
                             </a>
+                            {% endif %}
                         </div>
                     </td>
                     </tr>

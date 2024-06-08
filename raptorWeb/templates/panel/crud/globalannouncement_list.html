@@ -57,7 +57,7 @@
                             >
                                 View
                             </a>
-    
+                            {% if perms.raptorbot.delete_globalannouncement %}
                             <form>
                                 {% csrf_token %}
                                 <button id='panel_archive_button' class='btn btn-danger'
@@ -68,6 +68,7 @@
                                     Permanently Delete
                                 </button>
                             </form>
+                            {% endif %}
                         </div>
                     </td>
                     </tr>

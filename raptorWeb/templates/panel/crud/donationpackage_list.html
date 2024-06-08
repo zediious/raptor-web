@@ -13,6 +13,7 @@
     </div>
     <hr class='text-white'>
 
+    {% if perms.donations.add_donationpackage%}
     <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/donations/donationpackage/create'
@@ -24,6 +25,7 @@
             Add Donation Package
         </a>
     </div>
+    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
@@ -49,6 +51,7 @@
                 <td>{{donationpackage.priority}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.donations.change_donationpackage %}
                         <a role='button' class='btn btn-primary'
                                 href='/panel/donations/donationpackage/update/{{donationpackage.pk}}'
                                 hx-get="{% url 'panel:donations/donationpackage/update_IR' pk=donationpackage.pk %}"
@@ -58,6 +61,8 @@
                         >
                             Edit
                         </a>
+                        {% endif %}
+                        {% if perms.donations.delete_donationpackage %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -68,6 +73,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

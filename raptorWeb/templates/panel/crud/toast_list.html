@@ -13,6 +13,7 @@
     </div>
     <hr class='text-white'>
 
+    {% if perms.raptormc.add_notificationtoast %}
     <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/content/toast/create'
@@ -24,6 +25,7 @@
             Add Notification Toast
         </a>
     </div>
+    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
@@ -47,6 +49,7 @@
                 <td class='text-nowrap'>{{toast.created}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptormc.change_notificationtoast %}
                         <a role='button' class='btn btn-primary'
                                 href='/panel/content/toast/update/{{toast.pk}}'
                                 hx-get="{% url 'panel:content/toast/update_IR' pk=toast.pk %}"
@@ -56,6 +59,8 @@
                         >
                             Edit
                         </a>
+                        {% endif %}
+                        {% if perms.raptormc.delete_notificationtoast %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -66,6 +71,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

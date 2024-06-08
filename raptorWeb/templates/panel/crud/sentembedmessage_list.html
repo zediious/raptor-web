@@ -37,6 +37,7 @@
                 <td class='text-nowrap'>{{sentembedmessage.modified}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptorbot.delete_sentembedmessage %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -47,6 +48,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>
