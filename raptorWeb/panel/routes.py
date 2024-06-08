@@ -7,6 +7,7 @@ from raptorWeb.raptormc.models import InformativeText, Page, NotificationToast, 
 from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
 from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser, RaptorUserGroup
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('raptormc.routes')
@@ -275,6 +276,66 @@ def check_route(request):
                     staffapplicationfield=form_field,
                 )
             )
+            
+    def _get_raptoruseredit_routes():
+        """
+        Iterate all Raptor Users and create an update Route for
+        each one.
+        """
+        all_raptorusers = RaptorUser.objects.all()
+        for raptoruser in all_raptorusers:
+            current_routes.append(
+                Route(
+                    name=f'panel/users/raptoruser/update/{raptoruser.pk}',
+                    route_type="useredit",
+                    useredit=raptoruser,
+                )
+            )
+            
+    def _get_userprofileinfo_routes():
+        """
+        Iterate all UserProfileInfo models and create an update Route for
+        each one.
+        """
+        all_userprofileinfos = UserProfileInfo.objects.all()
+        for profileinfo in all_userprofileinfos:
+            current_routes.append(
+                Route(
+                    name=f'panel/users/userprofileinfo/update/{profileinfo.pk}',
+                    route_type="userprofileinfo",
+                    userprofileinfo=profileinfo,
+                )
+            )
+            
+    def _get_discorduserinfo_routes():
+        """
+        Iterate all DiscordUserInfo models and create an update Route for
+        each one.
+        """
+        all_discorduserinfos = DiscordUserInfo.objects.all()
+        for discordinfo in all_discorduserinfos:
+            current_routes.append(
+                Route(
+                    name=f'panel/users/discorduserinfo/update/{discordinfo.pk}',
+                    route_type="discorduserinfo",
+                    discorduserinfo=discordinfo,
+                )
+            )
+            
+    def _get_raptorusergroup_routes():
+        """
+        Iterate all RaptorUser Groups and create an update Route for
+        each one.
+        """
+        all_raptorusergroups = RaptorUserGroup.objects.all()
+        for group in all_raptorusergroups:
+            current_routes.append(
+                Route(
+                    name=f'panel/users/raptorusergroup/update/{group.pk}',
+                    route_type="discorduserinfo",
+                    raptorusergroup=group,
+                )
+            )
     
     # If request is to root path, we do not need to check routes 
     if request.path == '/panel/':
@@ -299,6 +360,10 @@ def check_route(request):
     _get_submittedstaffapplication_routes()
     _get_createdstaffapplication_routes()
     _get_staffapplicationfield_routes()
+    _get_raptoruseredit_routes()
+    _get_userprofileinfo_routes()
+    _get_discorduserinfo_routes()
+    _get_raptorusergroup_routes()
     
     for route in current_routes:
         first_slash = request.path.index('/')

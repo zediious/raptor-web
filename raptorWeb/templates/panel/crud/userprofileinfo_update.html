@@ -1,0 +1,36 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+{{ form.media }}
+
+<div class="m-2 mt-4 p-3">
+    <div class="text-white">
+        <header class="fs-3">Extra Profile Info</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of the form
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:users/userprofileinfo/update_IR' pk=userprofileinfo.pk %}"
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>Picture Changed Manually: </span>{%if userprofileinfo.picture_changed_manually%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Whether this user changed their profile picture manually.
+                </p>
+            </div>
+            {% bootstrap_form form %}
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>

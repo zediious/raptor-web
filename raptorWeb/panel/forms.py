@@ -8,6 +8,7 @@ from tinymce.widgets import TinyMCE
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, NotificationToast, NavWidget
 from raptorWeb.donations.models import DonationPackage
 from raptorWeb.staffapps.models import CreatedStaffApplication
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, RaptorUserGroup
 from raptorWeb.gameservers.models import Server
 
 LOGGER = getLogger('panel.forms')
@@ -273,3 +274,80 @@ class PanelCreatedStaffApplicationForm(forms.ModelForm):
         widgets = {
             'form_fields': forms.CheckboxSelectMultiple
         }
+        
+        
+class PanelUserUpdateForm(forms.ModelForm): 
+    password = forms.CharField(
+        required=False
+    )
+    
+    user_slug = forms.CharField(
+        required=False
+    )
+    
+    date_joined = forms.CharField(
+        required=False
+    )
+    
+    last_login = forms.CharField(
+        required=False
+    )
+    
+    class Meta:
+        model = RaptorUser
+        exclude = (
+            'id',
+            'password',
+            'totp_token',
+            'totp_qr_path',
+            'user_slug',
+            'date_joined',
+            'last_login',
+            'is_discord_user',
+            'date_queued_for_delete',
+            'user_profile_info',
+            'discord_user_info',
+        )
+        widgets = {
+            'user_permissions': forms.CheckboxSelectMultiple,
+            'groups': forms.CheckboxSelectMultiple
+        }
+        
+        
+class PanelUserProfileInfoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = UserProfileInfo
+        fields = (
+        'hidden_from_public',
+        'minecraft_username',
+        'favorite_modpack',
+        'profile_picture',)
+        widgets = {
+            'profile_picture': PictureWidget
+        }
+
+
+class PanelDiscordUserInfoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = DiscordUserInfo
+        exclude = (
+            'id',
+            'tag',
+            'pub_flags',
+            'flags',
+            'locale',
+            'mfa_enabled',
+        )
+        
+        
+class PanelRaptorUserGroupForm(forms.ModelForm): 
+    class Meta:
+        model = RaptorUserGroup
+        fields = [
+            'name',
+            'permissions'
+        ]
+        widgets = {
+            'permissions': forms.CheckboxSelectMultiple
+        }
+        

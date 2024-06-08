@@ -17,11 +17,13 @@ from raptorWeb.panel.forms import (PanelSettingsInformation, PanelSettingsFiles,
                                    PanelPageForm, PanelToastForm, PanelNavWidgetUpdateForm,
                                    PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
                                    PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
-                                   )
+                                   PanelUserUpdateForm, PanelUserProfileInfoUpdateForm,
+                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,)
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, PageManager, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
 from raptorWeb.raptorbot.models import DiscordGuild, GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.donations.models import CompletedDonation, DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import SubmittedStaffApplication, CreatedStaffApplication, StaffApplicationField
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, DeletionQueueForUser, RaptorUserGroup
 from raptorWeb.gameservers.models import Server, ServerManager, Player
 from raptorWeb.panel.models import PanelLogEntry
 
@@ -1268,3 +1270,144 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
         'widget',
         'priority'
     ]
+    
+    
+class PanelUserList(PanelListViewSearchable):
+    """
+    Return a list of Users registered on the website for viewing and CRUD actions
+    Allow filtering by username alongside PanelListViewSearchable parameters
+    """
+    model: RaptorUser = RaptorUser
+    paginate_by = 50
+    permission: str = 'raptormc.raptoruser_list'
+    model_name: str = "RaptorUser"
+    default_ordering: str = '-date_joined'
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        if self.request.GET.get('username') != None:
+            queryset = queryset.filter(username__icontains=self.request.GET.get('username'))
+    
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+                'user_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
+                'total_user_count': RaptorUser.objects.count()
+            })
+        
+        if self.request.GET.get('username') != None:
+            context.update({
+                'form_data': self.request.GET
+            })
+            
+        return context
+    
+    
+class PanelUserUpdate(PanelUpdateView):
+    """
+    Return a list of User fields for editing.
+    """
+    model: RaptorUser = RaptorUser
+    form_class = PanelUserUpdateForm
+    permission: str = 'raptormc.raptoruser_update'
+    model_classpath: str = 'authprofiles.RaptorUser'
+    ignored_fields = [
+        'id',
+        'password',
+        'totp_token',
+        'user_slug',
+        'date_joined',
+        'last_login',
+        'is_discord_user',
+        'date_queued_for_delete',
+        'user_profile_info',
+        'discord_user_info'
+    ]
+    
+    
+class PanelUserProfileInfoUpdate(PanelUpdateView):
+    """
+    Return a list of UserProfileInfo fields for editing.
+    """
+    model: UserProfileInfo = UserProfileInfo
+    form_class = PanelUserProfileInfoUpdateForm
+    permission: str = 'raptormc.userprofileinfo_update'
+    model_classpath: str = 'authprofiles.UserProfileInfo'
+    image_fields = ['profile_picture']
+    ignored_fields = [
+        'id',
+        'picture_changed_manually'
+    ]
+    
+    
+class PanelDiscordUserInfoUpdate(PanelUpdateView):
+    """
+    Return a list of DiscordUserInfo fields for editing.
+    """
+    model: DiscordUserInfo = DiscordUserInfo
+    form_class = PanelDiscordUserInfoUpdateForm
+    permission: str = 'raptormc.discorduserinfoupdate'
+    model_classpath: str = 'authprofiles.DiscordUserInfo'
+    ignored_fields = [
+        'id',
+        'tag',
+        'pub_flags',
+        'flags',
+        'locale',
+        'mfa_enabled'
+    ]
+
+class PanelRaptorUserGroupList(PanelListView):
+    """
+    Return a list of RaptorUser Groups for viewing and accessing CRUD actions
+    """
+    model: RaptorUserGroup = RaptorUserGroup
+    paginate_by = 10
+    permission: str = 'raptormc.raptorusergroup_list'
+    model_name: str = 'RaptorUserGroup'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return RaptorUserGroup.objects.all()
+    
+    
+class PanelRaptorUserGroupUpdate(PanelUpdateView):
+    """
+    Update changed information for a given RaptorUser Group
+    """
+    model: RaptorUserGroup = RaptorUserGroup
+    form_class = PanelRaptorUserGroupForm
+    permission: str = 'raptormc.raptorusergroup_update'
+    model_classpath: str = 'staffapps.RaptorUserGroup'
+    ignored_fields = [
+        'id',
+        'auth.Group.id',
+        'auth.Group.name',
+        'auth.Group.permissions',
+        'authprofiles.RaptorUserGroup.group_ptr'
+    ]
+    
+
+class PanelRaptorUserGroupCreate(PanelCreateView):
+    """
+    Return a form to create/add a new RaptorUser Group
+    """
+    model: RaptorUserGroup = RaptorUserGroup
+    form_class = PanelRaptorUserGroupForm
+    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'raptorusergroup_create.html'))
+    redirect_url: str = '/panel/api/html/panel/users/raptorusergroup/list'
+    permission: str = 'raptormc.raptorusergroup_create'
+    
+    
+class PanelDeletionQueueForUserList(PanelListView):
+    """
+    Return a list of RaptorUser's that have requested deletion for viewing and accessing CRUD actions
+    """
+    model: DeletionQueueForUser = DeletionQueueForUser
+    paginate_by = 10
+    permission: str = 'authprofiles.list_deletionqueueforuser'
+    model_name: str = 'DeletionQueueForUser'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return DeletionQueueForUser.objects.all()

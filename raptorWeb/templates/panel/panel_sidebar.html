@@ -401,6 +401,57 @@
                         {% endif%}
                     </div>
                 </div>
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#users_nav_collapse'
+                        aria-expanded="false" aria-controls="users_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Users</p>
+                </button>
+                <div id='users_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.raptoruser_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/raptoruser/list"
+                            hx-get="{% url 'panel:users/raptoruser/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/raptoruser/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>User List</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.raptorusergroup_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/raptorusergroup/list"
+                            hx-get="{% url 'panel:users/raptorusergroup/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/raptorusergroup/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>User Groups</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.authprofiles.list_deletionqueueforuser %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/deletionqueue/list"
+                            hx-get="{% url 'panel:users/deletionqueue/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/deletionqueue/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Deletion Queue</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
                 {% if perms.raptormc.settings %}
                 <button class="nav-item btn btn-secondary">
                     <a class="nav-link"
