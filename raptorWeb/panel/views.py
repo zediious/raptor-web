@@ -226,7 +226,7 @@ class SettingsPanel(PanelApiBaseView):
         else:
             
             messages.error(
-                request, [str(message[1][0]) for message in settings_form.errors.items()]
+                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in settings_form.errors.items()]
             )
             return HttpResponse(status=200)
         
@@ -297,7 +297,10 @@ class SettingsPanelFilePost(PanelApiBaseView):
             return HttpResponse(status=200)
 
         else:
-            messages.error(request, [str(message[1][0]) for message in settings_files_form.errors.items()])
+            messages.error(
+                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in settings_files_form.errors.items()]
+            )
+            
             return HttpResponse(status=400)
         
         
