@@ -169,7 +169,7 @@ class ServerManager(models.Manager):
                 ServerStatistic.objects.get_or_create(name="gameservers-stat")[0]
             )
             
-    def get_servers(self, wait=True):
+    def get_servers(self, wait=True, get_archived=False):
         """
         Return a list of servers that are not archived. Will check if a query is running, and wait
         to return servers until the query is finished.
@@ -177,6 +177,9 @@ class ServerManager(models.Manager):
         if wait:
             while self._player_poller._is_running == True:
                 sleep(0.1)
+        
+        if get_archived == True:
+            return self.filter(archived=True).order_by('-pk')
         
         return self.filter(archived=False).order_by('-pk')
 
@@ -380,7 +383,9 @@ class Server(models.Model):
     modpack_url = models.URLField(
         max_length=200,
         verbose_name="Link to Modpack Page",
-        help_text="A URL to the website where this modpack can be downloaded from."
+        help_text="A URL to the website where this modpack can be downloaded from.",
+        blank=True,
+        null=True
     )
 
     discord_announcement_channel_id = models.CharField(
@@ -427,6 +432,10 @@ class Server(models.Model):
 
     def __str__(self) -> str:
         return self.modpack_name
+    
+    def get_absolute_url(self):
+        return f'/panel/server/update/{self.pk}'
+    
 
     class Meta:
         verbose_name = "Server"
@@ -447,6 +456,10 @@ class Player(models.Model):
     
     online = models.BooleanField(
         default=False)
+    
+    first_joined = models.DateTimeField(
+        verbose_name="First Joined Date",
+        auto_now_add=True)
      
     last_online = models.DateTimeField(
         verbose_name="Last Online",

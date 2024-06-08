@@ -2,13 +2,14 @@ from os.path import join
 from logging import getLogger
 from typing import Any
 
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView, View
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.utils.text import slugify
 from django.contrib import messages
 from django.conf import settings
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
 from raptorWeb.gameservers.forms import StatisticFilterForm, StatisticFilterFormFireFox
 from raptorWeb.raptormc.models import SiteInformation
@@ -17,6 +18,7 @@ import plotly.express as plot_express
 
 LOGGER = getLogger('gameservers.views')
 GAMESERVERS_TEMPLATE_DIR: str = getattr(settings, 'GAMESERVERS_TEMPLATE_DIR')
+PANEL_TEMPLATE_DIR: str = getattr(settings, 'PANEL_TEMPLATE_DIR')
 
 
 class Server_List_Base(ListView):
@@ -215,6 +217,91 @@ class Player_Count_Statistics(TemplateView):
         
         return render(request, template_name=join(GAMESERVERS_TEMPLATE_DIR, 'player_statistics_chart.html'), context={
             "chart": chart})
+        
+        
+class SetMaintenanceMode(View):
+    """
+    Toggle maintenance mode for a given server
+    """
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.server_maintenance'):
+            messages.error(request, 'You do not have permission to change Maintenance status.')
+            return HttpResponse(status=200)
+        
+        changing_server = Server.objects.get(pk=self.kwargs['pk'])
+        if changing_server.in_maintenance:
+            changing_server.in_maintenance = False
+            
+        else:
+            changing_server.in_maintenance = True
+        
+        changing_server.save()
+        messages.success(request, f'Maintenance status set to {changing_server.in_maintenance} for {changing_server}.')
+        return render(request, template_name=join(PANEL_TEMPLATE_DIR, 'crud/panel_maintenance_button.html'), context={
+            'maintenance_status': changing_server.in_maintenance,
+            'server': changing_server
+        })
+        
+        
+class SetArchive(View):
+    """
+    Toggle archive for a given server
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.server_archive'):
+            messages.error(request, 'You do not have permission to change Archive status.')
+            return HttpResponse(status=200)
+        
+        changing_server = Server.objects.get(pk=self.kwargs['pk'])
+        if changing_server.archived:
+            changing_server.archived = False
+            
+        else:
+            changing_server.archived = True
+        
+        changing_server.save()
+        messages.success(request, f'Archive status set to {changing_server.archived} for {changing_server}.')
+        if 'archivedlist' in request.META['HTTP_REFERER']:
+            return HttpResponseRedirect('/panel/api/html/panel/server/archivedlist')
+        
+        return HttpResponseRedirect('/panel/api/html/panel/server/list/')
+    
+    
+class DeleteServer(View):
+    """
+    Permanently delete a given server
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.server_delete'):
+            messages.error(request, 'You do not have permission to delete servers.')
+            return HttpResponse(status=200)
+        
+        changing_server = Server.objects.get(pk=self.kwargs['pk'])
+        if changing_server.archived:
+            messages.success(request, f'{changing_server} has been permanently deleted!')
+            changing_server.delete()
+            
+            model_string = str(Server).split('.')[3].replace("'", "").replace('>', '')
+            PanelLogEntry.objects.create(
+                changing_user=request.user,
+                changed_model=str(f'{model_string} - {changing_server}'),
+                action='Deleted'
+            )
+            
+            return HttpResponseRedirect('/panel/api/html/panel/server/archivedlist')
+            
+        else:
+            messages.error(request, f'There was an error attempting to delete {changing_server}!')
+            return HttpResponse(status=200)
 
 
 class Import_Servers(TemplateView):

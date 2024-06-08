@@ -1,47 +1,70 @@
 {% load django_bootstrap5 %}
+{% load template_db %}
 
-<section class="container">
-    <div class="row m-4">
-
-        <div class="col-12 col-lg-6 mt-2 mb-2">
-            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#mod_app_modal">Moderator Application</button>
+<section class="container mt-3">
+    <div class="d-flex flex-wrap justify-content-evenly gap-1">
+        {% for application in created_applications %}
+        <div class="mt-2 mb-2">
+            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#{{application.name|add_underscore}}_app_modal">{{application.name}}</button>
         </div>
-  
-        <div class="col-12 col-lg-6 m-0 mt-2">
-            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#admin_app_modal">Admin Application</button>
-        </div>
+        {% endfor %}
 
     </div>
 </section>
 
-<div class="modal fade" id="mod_app_modal" tabindex="-1" aria-labelledby="Moderator Application" aria-hidden="true">
+{% for application in created_applications %}
+<div class="modal fade" id="{{application.name|add_underscore}}_app_modal" tabindex="-1" aria-labelledby="{{application.name}}" aria-hidden="true">
   <div class="modal-dialog modal-lg">
       <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-header">
-              Moderator Application
+            {{application.name}}
           </div>
-          <div class="modal-body" id="mod_app_modal_body">
+          <div class="modal-body" id="{{application.name}}_app_modal_body">
           
-              <div id="mod_form_replace" hx-get="{% url 'staffapps:mod_app' %}" hx-trigger="load" hx-target="#mod_form_replace" hx-swap="innerHTML"></div>
+            <div id="{{application.name}}_form_wrapper"> 
+                <form
+                    hx-post="{% url 'staffapps:all_apps_submit' %}"
+                    hx-push-url='/applications'
+                    hx-target='#{{application.name}}_form_wrapper'
+                    hx-swap="innerHTML"
+                >
+                    {% csrf_token %}
+                    <input hidden name='Application_Position' value={{application.name|add_underscore}} type="text">
+                    <div class='p-2'>
+                        {% for form_field in application.form_fields.all|filter_in_template:'priority' %}
+                            <div class='m-2 mb-4 mt-4'>
+                            {% if form_field.widget == 'text' %}
+                                <label class="form-label" for="{{form_field.name|add_underscore}}">{{form_field.name}}</label>
+                                <input class="form-control" name={{form_field.name|add_underscore}} type="text" required>
+                                <div class="form-text text-white">{{form_field.help_text}}</div>
+                            {% endif %}
+                            {% if form_field.widget == 'int' %}
+                                <label class="form-label" for="{{form_field.name|add_underscore}}">{{form_field.name}}</label>
+                                <input class="form-control" name={{form_field.name|add_underscore}} type="number" required>
+                                <div class="form-text text-white">{{form_field.help_text}}</div>
+                            {% endif %}
+                            {% if form_field.widget == 'bool' %}
+                                <label class="form-check-label mb-2" for="{{form_field.name|add_underscore}}">{{form_field.name}}</label>
+                                <select class="form-select form-select" name={{form_field.name|add_underscore}} required>
+                                    <option disabled selected value>Select an Option</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                                <div class="form-text text-white">{{form_field.help_text}}</div>
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+                        <input hidden name='99342193074109' type="text">
+                        <button class='btn btn-success' type='submit'>
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div> 
           
           </div>
       </div>
   </div>
 </div>
-
-<div class="modal fade" id="admin_app_modal" tabindex="-1" aria-labelledby="Admin Application" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content bg-dark text-white">
-          <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="modal-header">
-              Admin Application
-          </div>
-          <div class="modal-body" id="admin_app_modal_body">
-          
-              <div id="admin_form_replace" hx-get="{% url 'staffapps:admin_app' %}" hx-trigger="load" hx-target="#admin_form_replace" hx-swap="innerHTML"></div>
-          
-          </div>
-      </div>
-  </div>
-</div>
+{% endfor %}

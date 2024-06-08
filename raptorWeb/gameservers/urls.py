@@ -18,6 +18,9 @@ urlpatterns: list[URLPattern] = [
     path('html/server_announcements_poll/', views.Server_List_Base.as_view(template_name='gameservers/server_list_announcements.html'), name="server_announcements_poll"),
     # Individual server info endpoints
     path('html/server/server_description', views.Server_Description.as_view(), name="server_description"),
+    path('html/server/maintenance/update/<int:pk>', views.SetMaintenanceMode.as_view(), name="update_maintenance"),
+    path('html/server/archive/update/<int:pk>', views.SetArchive.as_view(), name="update_archive"),
+    path('html/server/archive/delete/<int:pk>', views.DeleteServer.as_view(), name="delete"),
     # Onboarding
     path('html/onboarding/<str:modpack_name>', views.Server_Onboarding.as_view(), name="server_onboarding"),
     # Forms

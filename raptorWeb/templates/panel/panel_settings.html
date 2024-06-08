@@ -22,7 +22,7 @@
                             <header class="fs-5">General Settings</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% csrf_token %} 
                             {% bootstrap_field SettingsInformation.brand_name %}
@@ -45,7 +45,7 @@
                             <header class="fs-5">SEO</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.meta_description %}
                             {% bootstrap_field SettingsInformation.meta_keywords %}
@@ -63,7 +63,7 @@
                             <header class="fs-5">Auth</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.require_login_for_user_list %}
                             {% bootstrap_button button_type="submit" content="Update" %}
@@ -80,7 +80,7 @@
                             <header class="fs-5">Game Servers</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">  
                                 {% bootstrap_field SettingsInformation.enable_server_query %}
                                 {% bootstrap_field SettingsInformation.query_delay %}
@@ -103,7 +103,7 @@
                             <header class="fs-5">Discord Bot</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.discord_guild %}
                             {% bootstrap_field SettingsInformation.discord_global_announcement_channel %}
@@ -122,7 +122,7 @@
                             <header class="fs-5">Donations</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.stripe_enabled %}
                             {% bootstrap_field SettingsInformation.paypal_enabled %}
@@ -145,7 +145,7 @@
                             <header class="fs-5">Colors</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.main_color %}
                             {% bootstrap_field SettingsInformation.use_main_color %}
@@ -165,10 +165,10 @@
                             <header class="fs-5">Image Configuration</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             <div class="mb-3">
-                                <div class="form-check">
+                                <div class="form-check form-switch">
                                     <input type="checkbox" type="submit" name="use_svg_brand"
                                            {%if site_information.use_svg_brand%}checked=""{%endif%}
                                            class="form-check-input is-valid" id="id_use_svg_brand" onclick='switchBrandField()'>
@@ -191,7 +191,7 @@
                         <header class="fs-5">Images</header>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center text-white">
                     <div class="w-50">
                         <form class="form"
                             enctype="multipart/form-data" 
@@ -214,7 +214,7 @@
                         <p class="fs-5 text-center">
                             Current Files
                         </p>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center text-white">
                             {% if site_information.use_svg_brand %}
                             <img class="m-3 w-25"
                                  src="{% if site_information.branding_image_svg %}{{ site_information.branding_image_svg.url }}{% endif %}"
@@ -258,7 +258,7 @@
                         <header class="fs-5">Default Pages</header>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center text-white">
                     <div class="w-50">
                         <form class="form"
                             enctype="multipart/form-data" 

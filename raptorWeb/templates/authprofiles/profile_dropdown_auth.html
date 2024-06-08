@@ -34,6 +34,8 @@
             <p class="text-white m-1">Welcome, {{user}}</p>
         </span></div>
         <hr style="color: white">
+        {% if 'panel/' in request.META.HTTP_REFERER %}
+        {% else %}
         <div>
             <a class="dropdown-item text-white mt-0 pt-0 htmxLink"
                href="/{{user_path}}/{{user.get_username|slugify}}"
@@ -44,10 +46,17 @@
                Profile
             </a>
         </div>
-        {% if user.is_staff %}
-        <div><a class="dropdown-item text-white" href="{% url 'admin:index' %}">
-            Admin
-        </a></div>
+        {% endif %}
+        {% if user.is_staff %}  
+            {% if 'panel/' in request.META.HTTP_REFERER %}
+                <div><a class="dropdown-item text-white" href="/">
+                    Return to Site
+                </a></div>
+            {% else %}
+                <div><a class="dropdown-item text-white" href="/panel/home/">
+                    Panel
+                </a></div>
+            {% endif %}
         {% endif %}
         <div><a class="dropdown-item text-white" href="{% url 'authprofiles:logout' %}">
             Logout

@@ -1,102 +1,473 @@
 {% load static %}
 
-<aside class="main-sidebar elevation-4 {{ jazzmin_ui.sidebar_classes }}" id="jazzy-sidebar">
-    <a href="{% url 'admin:index' %}" class="brand-link {{ jazzmin_ui.brand_classes }}" id="jazzy-logo">
-        <img src="{% static jazzmin_settings.site_logo %}" alt="{{ jazzmin_settings.site_header }} Logo" class="{{ jazzmin_settings.site_logo_classes }} brand-image elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">{{ jazzmin_settings.site_brand }}</span>
-    </a>
-
-    <div class="sidebar">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        </div>
-
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column {{ jazzmin_ui.sidebar_list_classes }}" data-widget="treeview" role="menu" data-collapsible="false">
-
-                <li class="nav-item">
-                    <a href="{% url 'admin:index' %}" class="nav-link">
-                        <i class="nav-icon fas fa-th-large"></i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li class="nav-item">
+<div class="offcanvas panelOffcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
+    <div class="offcanvas-header text-white">
+        <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Panel Navigation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <nav class="offcanvas-body text-white">
+        <div class='navbar-collapse text-center'> 
+            <ul class="navbar-nav me-auto mt-2 mb-2 mb-lg-0 d-flex flex-column gap-2 flex-wrap justify-content-center gap-0">
+                <button class="nav-item btn btn-secondary">
                     <a class="nav-link"
-                       href="/panel/"
-                       hx-get="{% url 'panel:home' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/home/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
+                    href="/panel/"
+                    hx-get="{% url 'panel:home' %}"
+                    hx-target='#panel_main'
+                    hx-push-url="/panel/home/"
+                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                    onclick='closeOffCanvas()'
                     >
                         <i class="nav-icon fas fa-map-marker"></i> <p>Home</p>
                     </a>
-                </li>
+                </button>
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#content_collapse'
+                aria-expanded="false" aria-controls="content_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Content Management</p>
+                </button>
+                <div id='content_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#content_nav_collapse'
+                        aria-expanded="false" aria-controls="content_nav_collapse"
+                        >
+                        <i class='nav-icon fas fa-gamepad'></i> <p>Navigation</p>
+                        </button>
+                        <div id='content_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                            <div class='d-flex flex-column gap-2'>
+                                {% if perms.raptormc.navbarlinks_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navbarlink/list"
+                                    hx-get="{% url 'panel:content/navbarlink/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navbarlink/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Navigation Links</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navbardropdown_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navbardropdown/list"
+                                    hx-get="{% url 'panel:content/navbardropdown/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navbardropdown/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Navigation Dropdowns</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navwidget_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navwidget/list"
+                                    hx-get="{% url 'panel:content/navwidget/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navwidget/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Nav Widgets</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                                {% if perms.raptormc.navwidgetbar_list %}
+                                <button class="nav-item btn btn-secondary text-white">
+                                    <a class="nav-link"
+                                    href="/panel/content/navwidgetbar/list"
+                                    hx-get="{% url 'panel:content/navwidgetbar/list' %}"
+                                    hx-target='#panel_main'
+                                    hx-push-url="/panel/content/navwidgetbar/list"
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                                    onclick='closeOffCanvas()'
+                                    >
+                                        <p>Nav Widget Bars</p>
+                                    </a>
+                                </button>
+                                {% endif%}
+                            </div>
+                        </div>
+                        {% if perms.raptormc.server_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/content/informativetext/list"
+                            hx-get="{% url 'panel:content/informativetext/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/content/informativetext/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Informative Texts</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.page_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/content/page/list"
+                            hx-get="{% url 'panel:content/page/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/content/page/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Pages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.toast_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/content/toast/list"
+                            hx-get="{% url 'panel:content/toast/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/content/toast/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Notification Toasts</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#servers_collapse'
+                aria-expanded="false" aria-controls="servers_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Servers</p>
+                </button>
+                <div id='servers_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.server_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/server/list/"
+                            hx-get="{% url 'panel:server/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/server/list/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Server List</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.player_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/player/list/"
+                            hx-get="{% url 'panel:player/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/player/list/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Player List</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.reporting %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/reporting"
+                            hx-get="{% url 'panel:reporting' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/reporting/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.server_import_export %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/server/importexport/"
+                            hx-get="{% url 'panel:server/importexport' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/server/importexport/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Server Import and Export</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.server_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/server/archivedlist"
+                            hx-get="{% url 'panel:server/archivedlist' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/server/archivedlist"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Archived Servers</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                </button>
                 {% if perms.raptormc.discord_bot %}
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="/panel/discordbot"
-                       hx-get="{% url 'panel:discordbot' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/discordbot/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
-                    >
-                        <i class="nav-icon fas fa-robot"></i> <p>Discord Bot</p>
-                    </a>
-                </li>
-                {% endif%}
-                {% if perms.raptormc.server_actions %}
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="/panel/serveractions"
-                       hx-get="{% url 'panel:serveractions' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/serveractions/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
-                    >
-                        <i class="nav-icon fas fa-gamepad"></i> <p>Server Actions</p>
-                    </a>
-                </li>
-                {% endif%}
-                {% if perms.raptormc.reporting %}
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="/panel/reporting"
-                       hx-get="{% url 'panel:reporting' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/reporting/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
-                    >
-                        <i class="nav-icon fas fa-clipboard-list"></i> <p>Reporting</p>
-                    </a>
-                </li>
-                {% endif%}
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#discord_nav_collapse'
+                        aria-expanded="false" aria-controls="discord_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Discord Bot</p>
+                </button>
+                <div id='discord_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.discord_bot_panel %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/discordbot"
+                            hx-get="{% url 'panel:discordbot' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/discordbot/"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fas fa-robot"></i> <p>Discord Bot Panel</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.globalannounce_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/globalannouncement/list"
+                            hx-get="{% url 'panel:bot/globalannouncement/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/globalannouncement/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Global Announcements</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.serverannounce_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/serverannouncement/list"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/serverannouncement/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Server Announcements</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.sentembedmessage_list %}
+                        <button class="nav-item btn btn-secondary text-white">
+                            <a class="nav-link"
+                            href="/panel/bot/sentembedmessage/list"
+                            hx-get="{% url 'panel:bot/sentembedmessage/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/bot/sentembedmessage/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <p>Sent Embed Messages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                {% endif %}
                 {% if perms.raptormc.donations %}
-                <li class="nav-item">
-                    <a class="nav-link"
-                       href="/panel/donations"
-                       hx-get="{% url 'panel:donations' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/donations/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
-                    >
-                        <i class="nav-icon fa fa-check-double"></i> <p>Donations</p>
-                    </a>
-                </li>
-                {% endif%}
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#donation_nav_collapse'
+                        aria-expanded="false" aria-controls="donation_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Donations</p>
+                </button>
+                <div id='donation_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.completeddonations_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/completeddonation/list"
+                            hx-get="{% url 'panel:donations/completeddonation/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/completeddonation/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Completed Donations</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationpackage_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationpackage/list"
+                            hx-get="{% url 'panel:donations/donationpackage/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationpackage/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Donation Packages</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationservercommand_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationservercommand/list"
+                            hx-get="{% url 'panel:donations/donationservercommand/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationservercommand/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Server Commands</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.donationdiscordrole_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/donations/donationdiscordrole/list"
+                            hx-get="{% url 'panel:donations/donationdiscordrole/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/donations/donationdiscordrole/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Discord Roles</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                {% endif %}
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#staffapps_nav_collapse'
+                        aria-expanded="false" aria-controls="staffapps_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Staff Applications</p>
+                </button>
+                <div id='staffapps_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.submittedstaffapplication_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/staffapps/submittedstaffapplication/list"
+                            hx-get="{% url 'panel:staffapps/submittedstaffapplication/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/staffapps/submittedstaffapplication/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Submitted Applications</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.createdstaffapplication_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/staffapps/createdstaffapplication/list"
+                            hx-get="{% url 'panel:staffapps/createdstaffapplication/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/staffapps/createdstaffapplication/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Created Applications</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.staffapplicationfield_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/staffapps/staffapplicationfield_/list"
+                            hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/staffapps/staffapplicationfield/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Form Fields</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
+                <button class="btn btn-secondary dropdown-toggle" type='button' data-bs-toggle="collapse" data-bs-target='#users_nav_collapse'
+                        aria-expanded="false" aria-controls="users_nav_collapse"
+                >
+                <i class='nav-icon fas fa-gamepad'></i> <p>Users</p>
+                </button>
+                <div id='users_nav_collapse' class="bg-dark text-center border border-primary border-2 border-top-0 p-3 collapse">
+                    <div class='d-flex flex-column gap-2'>
+                        {% if perms.raptormc.raptoruser_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/raptoruser/list"
+                            hx-get="{% url 'panel:users/raptoruser/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/raptoruser/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>User List</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.raptormc.raptorusergroup_list %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/raptorusergroup/list"
+                            hx-get="{% url 'panel:users/raptorusergroup/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/raptorusergroup/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>User Groups</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                        {% if perms.authprofiles.list_deletionqueueforuser %}
+                        <button class="nav-item btn btn-secondary">
+                            <a class="nav-link"
+                            href="/panel/users/deletionqueue/list"
+                            hx-get="{% url 'panel:users/deletionqueue/list' %}"
+                            hx-target='#panel_main'
+                            hx-push-url="/panel/users/deletionqueue/list"
+                            hx-indicator="#panelLoadingspinner,.loaded-content"
+                            onclick='closeOffCanvas()'
+                            >
+                                <i class="nav-icon fa fa-check-double"></i> <p>Deletion Queue</p>
+                            </a>
+                        </button>
+                        {% endif%}
+                    </div>
+                </div>
                 {% if perms.raptormc.settings %}
-                <li class="nav-item">
+                <button class="nav-item btn btn-secondary">
                     <a class="nav-link"
-                       href="/panel/settings"
-                       hx-get="{% url 'panel:settings' %}"
-                       hx-target='#panel_main'
-                       hx-push-url="/panel/settings/"
-                       hx-indicator="#panelLoadingspinner,.loaded-content"
+                    href="/panel/settings"
+                    hx-get="{% url 'panel:settings' %}"
+                    hx-target='#panel_main'
+                    hx-push-url="/panel/settings/"
+                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                    onclick='closeOffCanvas()'
                     >
                         <i class="nav-icon fas fa-cog"></i> <p>Settings</p>
                     </a>
-                </li>
+                </button>
                 {% endif%}
 
             </ul>
-        </nav>
-    </div>
-</aside>
+        </div>
+    </nav>
+</div>

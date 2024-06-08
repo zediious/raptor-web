@@ -37,8 +37,9 @@ class PageManager(models.Manager):
 
 class Page(models.Model):
     """
-    A new webpage with a Title and Content. This page will extend to entire
-    base website, but you can choose whether to include Server buttons or not.
+    A new webpage with a Title and Content. This page will extend the entire
+    base website, but you can provide custom CSS and JS as well as SEO
+    attributes to apply to a created page.
     """
     objects = PageManager()
 
@@ -51,6 +52,7 @@ class Page(models.Model):
     content = models.TextField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Content",
         help_text="The content of this page."
     )
@@ -88,14 +90,16 @@ class Page(models.Model):
         verbose_name="Page CSS",
         help_text=("Custom style sheet that will only apply on this page. "
                     "This will apply only to this page, overriding any defaults."),
-        blank=True
+        blank=True,
+        null=True
     )
     
     page_js = models.FileField(
         upload_to='page_js',
         verbose_name="Page JavaScript",
         help_text=("Custom Javascript that will only apply on this page."),
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __str__(self):
@@ -112,7 +116,9 @@ class Page(models.Model):
 class NotificationToast(models.Model):
     """
     A Notification/Toast that will appear on the bottom right of the website.
-    Users will only see these messages once, until their session expires.
+    Non logged in users will only see these messages once, until their session expires.
+    If a user is logged in, they will not see a toast again unless they reset their seen
+    notifications from their profile.
     """
     enabled = models.BooleanField(
         default=True,
@@ -129,6 +135,7 @@ class NotificationToast(models.Model):
     message = models.CharField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Message",
         help_text="The message for this notification"
     )
@@ -139,6 +146,9 @@ class NotificationToast(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    def get_absolute_url(self):
+        return f'/panel/content/toast/update/{self.pk}'
 
     class Meta:
         verbose_name = "Notification Toast",
@@ -174,6 +184,9 @@ class NavWidgetBar(models.Model):
 
     def enabled_links_in_widgetbar(self):
         return self.nestednavwidget.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navwidgetbar/update/{self.pk}'
 
     class Meta:
         verbose_name = "Nav Widget Bar",
@@ -296,6 +309,9 @@ class NavbarDropdown(models.Model):
 
     def enabled_links_in_dropdown(self):
         return self.nestedlink.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navbardropdown/update/{self.pk}'
 
     class Meta:
         verbose_name = "Navigation Drodown",
@@ -304,7 +320,7 @@ class NavbarDropdown(models.Model):
 
 class NavbarLink(models.Model):
     """
-    A Navigation Link which will be added to the Navigation sidebar. Can be placed inside
+    A Navigation Link which will be added to the site Navigation menu. Can be placed inside
     of a created Dropdown Menu.
     """
     name = models.CharField(
@@ -692,7 +708,63 @@ class SiteInformation(models.Model):
         permissions = [
             ("panel", "Can access the Control Panel Homepage"),
             ("discord_bot", "Can access the Discord Bot control panel"),
-            ("server_actions", "Can access the Server Actions menu"),
+            ("discord_bot_panel", "Can access the Discord Bot control panel"),
+            ("server_import_export", "Can access the Server Import/Export menu"),
+            ("server_list", "Can access the list of created servers"),
+            ("server_create", "Can add new Servers."),
+            ("server_update", "Can edit the list of created servers"),
+            ("server_maintenance", "Can toggle a server's maintenance status."),
+            ("server_archive", "Can toggle a server's archive status."),
+            ("server_delete", "Can permanently delete a server."),
+            ("player_list", "Can access the list of Players."),
+            ("informativetext_view", "Can view the list of Informative Texts"),
+            ("informativetext_update", "Can update Informative Texts"),
+            ("page_list", "Can list Pages"),
+            ("page_update", "Can update Pages"),
+            ("page_add", "Can add Pages"),
+            ("page_delete", "Can delete Pages"),
+            ("toast_list", "Can list Toasts"),
+            ("toast_create", "Can create Toasts"),
+            ("toast_update", "Can update Toasts"),
+            ("toast_delete", "Can delete Toasts"),
+            ("navbarlinks_list", "Can list Navbar Links"),
+            ("navbarlinks_create", "Can create Navbar Links"),
+            ("navbarlinks_update", "Can update Navbar Links"),
+            ("navbarlinks_delete", "Can delete Navbar Links"),
+            ("globalannounce_list", "Can list Global Announcements"),
+            ("globalannounce_view", "Can view Global Announcements"),
+            ("globalannounce_update", "Can update Global Announcements"),
+            ("globalannounce_delete", "Can delete Global Announcements"),
+            ("serverannounce_list", "Can list Server Announcements"),
+            ("serverannounce_view", "Can view Server Announcements"),
+            ("serverannounce_update", "Can update Server Announcements"),
+            ("serverannounce_delete", "Can delete Server Announcements"),
+            ("donationpackage_list", "Can list Donation Packages"),
+            ("donationpackage_create", "Can create Donation Packages"),
+            ("donationpackage_update", "Can update Donation Packages"),
+            ("donationpackage_delete", "Can delete Donation Packages"),
+            ("donationservercommand_list", "Can list Donation Server Commands"),
+            ("donationservercommand_create", "Can create Donation Server Commands"),
+            ("donationservercommand_update", "Can update Donation Server Commands"),
+            ("donationservercommand_delete", "Can delete Donation Server Commands"),
+            ("donationdiscordrole_list", "Can list Donation Discord Roles"),
+            ("donationdiscordrole_create", "Can create Donation Discord Roles"),
+            ("donationdiscordrole_update", "Can update Donation Discord Roles"),
+            ("donationdiscordrole_delete", "Can delete Donation Discord Roles"),
+            ("completeddonation_list", "Can list Completed Donations"),
+            ("completeddonation_delete", "Can delete Completed Donations"),
+            ("submittedstaffapplication_list", "Can list Submitted Staff Applications"),
+            ("submittedstaffapplication_view", "Can view Submitted Staff Applications"),
+            ("submittedstaffapplication_delete", "Can view Submitted Staff Applications"),
+            ("submittedstaffapplication_approval", "Can approve or deny Submitted Staff Applications"),
+            ("createdstaffapplication_list", "Can list Created Staff Applications"),
+            ("createdstaffapplication_create", "Can create Created Staff Applications"),
+            ("createdstaffapplication_update", "Can update Created Staff Applications"),
+            ("createdstaffapplication_delete", "Can delete Created Staff Applications"),
+            ("staffapplicationfield_list", "Can list Staff Application Fields"),
+            ("staffapplicationfield_create", "Can create Staff Application Fields"),
+            ("staffapplicationfield_update", "Can update Staff Application Fields"),
+            ("staffapplicationfield_delete", "Can delete Staff Application Fields"),
             ("reporting", "Can access Reporting"),
             ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
@@ -743,6 +815,9 @@ class InformativeText(models.Model):
     )
 
     def __str__(self):
+        return str(self.name)
+    
+    def __repr__(self) -> str:
         return str(self.name)
 
     class Meta:

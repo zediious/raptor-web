@@ -1,0 +1,58 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Update details for the "{{donationpackage.name}}" Package</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of
+            the page.
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+    <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
+        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+            Package Information
+        </button>
+        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+            Pricing
+        </button>
+        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+            Benefits
+        </button>
+    </div>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:donations/donationpackage/update_IR' pk=donationpackage.pk %}"
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            <div id='donationpackage_information' style='display: block;'>
+                {% bootstrap_field form.name %}
+                {% bootstrap_field form.priority %}
+                {% bootstrap_field form.package_description %}
+                {% bootstrap_field form.package_picture %}
+            </div>
+            <div id='donationpackage_pricing' style='display: none;'>
+                {% bootstrap_field form.price %}
+                {% bootstrap_field form.variable_price %}
+                {% bootstrap_field form.allow_repeat %}
+            </div>
+            <div id='donationpackage_benefits' style='display: none;'>
+                {% bootstrap_field form.servers %}
+                {% bootstrap_field form.commands %}
+                {% bootstrap_field form.discord_roles %}
+            </div>
+            {{ form.media }}
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'javascript/src/donationPackageSelectButton.js' %}"></script>
