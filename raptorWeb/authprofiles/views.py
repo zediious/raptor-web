@@ -383,7 +383,11 @@ class User_Login_Form(TemplateView):
                 login(request, user)
                 if user.date_queued_for_delete != None:
                     user.date_queued_for_delete = None
-                    DeletionQueueForUser.objects.get(user=user).delete()
+                    try:
+                        DeletionQueueForUser.objects.get(user=user).delete()
+                    except DeletionQueueForUser.DoesNotExist:
+                        pass
+                    
                     user.save()
 
                 return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
