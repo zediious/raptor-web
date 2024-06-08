@@ -5,8 +5,6 @@
     <title>{{ site_info_model.brand_name }} | Update Notification Toast: {{notificationtoast.name}}</title>
 </head>
 
-{{ form.media }}
-
 <div class="m-2 mt-0 p-3">
     <div class="text-white">
         <header class="fs-3">Update details for the "{{notificationtoast.name}}" Toast</header>
@@ -27,6 +25,7 @@
         >
             {% csrf_token %}
             {% bootstrap_form form %}
+            {{ form.media }}
             <button class='btn btn-success' type='submit'>
                 Save Changes
             </button>

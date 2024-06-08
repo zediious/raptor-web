@@ -5,8 +5,6 @@
     <title>{{ site_info_model.brand_name }} | Update Server: {{server.modpack_name}}</title>
 </head>
 
-{{ form.media }}
-
 <div class="m-2 mt-0 p-3">
     <div class="text-white">
         <header class="fs-3">Update existing information for {{server.modpack_name}}</header>
@@ -71,6 +69,7 @@
                 {% bootstrap_field form.rcon_port %}
                 {% bootstrap_field form.rcon_password %}
             </div>
+            {{ form.media }}
             <button class='btn btn-success' type='submit'>
                 Save Changes
             </button>

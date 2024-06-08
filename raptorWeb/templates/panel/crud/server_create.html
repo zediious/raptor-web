@@ -5,8 +5,6 @@
     <title>{{ site_info_model.brand_name }} | Create Server</title>
 </head>
 
-{{ form.media }}
-
 <div class="m-2 mt-0 p-3">
     <div class="text-white">
         <header class="fs-3">Add a new Server</header>
@@ -28,6 +26,7 @@
     >
         {% csrf_token %}
         {% bootstrap_form form %}
+        {{ form.media }}
         <button class='btn btn-success' type='submit'>
             Add
         </button>
