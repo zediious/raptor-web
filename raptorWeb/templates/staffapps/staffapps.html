@@ -5,7 +5,7 @@
     <div class="d-flex flex-wrap justify-content-evenly gap-1">
         {% for application in created_applications %}
         <div class="mt-2 mb-2">
-            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#{{application.name}}_app_modal">{{application.name}}</button>
+            <button class="display-5 text-black text-center btn btn-lg btn-primary w-100" data-bs-toggle="modal" data-bs-target="#{{application.name|add_underscore}}_app_modal">{{application.name}}</button>
         </div>
         {% endfor %}
 
@@ -13,7 +13,7 @@
 </section>
 
 {% for application in created_applications %}
-<div class="modal fade" id="{{application.name}}_app_modal" tabindex="-1" aria-labelledby="{{application.name}}" aria-hidden="true">
+<div class="modal fade" id="{{application.name|add_underscore}}_app_modal" tabindex="-1" aria-labelledby="{{application.name}}" aria-hidden="true">
   <div class="modal-dialog modal-lg">
       <div class="modal-content bg-dark text-white">
           <button type="button" class="btn-close btn-close-white m-3" data-bs-dismiss="modal" aria-label="Close"></button>
