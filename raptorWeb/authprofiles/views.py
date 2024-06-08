@@ -2,26 +2,24 @@ from os.path import join
 from os import remove
 from datetime import datetime
 from logging import Logger, getLogger
-from pytz import timezone
 from typing import Any
 
-from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.utils.text import slugify
-from django.utils.timezone import localtime
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm, MFARequestQR, MFATotpCodeSubmit
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser, RaptorUserGroup
 from raptorWeb.authprofiles.tasks import send_delete_request_email
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator, generate_totp_token, check_totp_token
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
+from raptorWeb.panel.models import PanelLogEntry
 
 try:
     from raptorWeb.raptormc.models import DefaultPages
