@@ -354,6 +354,12 @@ class PanelUpdateView(UpdateView):
     model_classpath: str = ''
     image_fields: list = []
     ignored_fields: list = []
+    
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if not request.user.has_perm(self.permission):
+            return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        return super().get(request, *args, **kwargs)
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         if request.headers.get('HX-Request') != "true":
