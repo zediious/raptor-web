@@ -173,7 +173,6 @@ class SettingsPanel(PanelApiBaseView):
             return HttpResponseRedirect('/')
         
         settings_form: PanelSettingsInformation = PanelSettingsInformation(request.POST)
-        dictionary: dict = {"SettingsInformation": settings_form}
 
         if settings_form.is_valid():
             changed: list = []
