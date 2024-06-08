@@ -48,31 +48,31 @@
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
                         <form>
                             {% csrf_token %}
-                            <button class='btn btn-success'
+                            <a role='button' class='btn btn-success'
                                     hx-post="{% url 'donations:resend' %}?pk={{completeddonation.pk}}&do_commands=true&do_roles=false"
                                     hx-swap='none'
                             >
                                 Re-send Commands
-                            </button>
+                            </a>
                         </form>
                         <form>
                             {% csrf_token %}
-                            <button class='btn btn-success'
+                            <a role='button' class='btn btn-success'
                                     hx-post="{% url 'donations:resend' %}?pk={{completeddonation.pk}}&do_commands=false&do_roles=true"
                                     hx-swap='none'
                             >
                                 Re-give Roles
-                            </button>
+                            </a>
                         </form>
                         <form>
                             {% csrf_token %}
-                            <button class='btn btn-danger'
+                            <a role='button' class='btn btn-danger'
                                     hx-post="{% url 'donations:donation_delete' %}?pk={{completeddonation.pk}}"
                                     hx-target='#content_table_wrapper'
                                     hx-swap'outerHTML'
                             >
                                 Delete Donation
-                            </button>    
+                            </a>    
                         </form>
                     </div>
                 </td>
