@@ -80,6 +80,7 @@
                                 Unarchive
                             </button>
                         </form>
+                        {% if perms.gameservers.delete_server %}
                         <form>
                             {% csrf_token %}
                             <button id='panel_delete_button' class='btn btn-danger'
@@ -90,6 +91,7 @@
                                 Permanently Delete
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>
