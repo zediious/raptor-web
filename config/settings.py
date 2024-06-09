@@ -257,7 +257,7 @@ DISCORD_AUTH_URL: str = ("https://discord.com/api/oauth2/authorize?"
 # ** Settings for "raptorbot" app **
 DISCORD_BOT_TOKEN: str = getenv('DISCORD_BOT_TOKEN')
 DISCORD_BOT_DESCRIPTION: str = getenv('DISCORD_BOT_DESCRIPTION')
-RUN_BOT: bool = True if getenv('RUN_BOT') == 'True' or 'true' else False
+RUN_BOT: bool = True if getenv('RUN_BOT') == 'True' else False
 
 # ** Celery Settings **
 CELERY_BEAT_SCHEDULE = {
