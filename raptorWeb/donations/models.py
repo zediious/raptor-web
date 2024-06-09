@@ -272,4 +272,10 @@ class CompletedDonation(models.Model):
                     
         self.gave_roles_count += 1
         self.save()
+        
+    class Meta:
+        permissions = [
+            ("resendbenefits_completeddonation", "Can re-send benefits for Completed Donations"),
+        ]
+        
     
