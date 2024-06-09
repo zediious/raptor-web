@@ -45,14 +45,19 @@ def is_safe_to_start():
     Return true if it has been one minute since the bot last stopped.
     """
     bot_stats = DiscordBotInternal.objects.get_or_create(name="botinternal-stat")[0]
-    minutes_since_stop = int(str(
-        (localtime() - bot_stats.time_last_stopped.astimezone())
-        ).split(":")[1])
+    try:
+        minutes_since_stop = int(str(
+            (localtime() - bot_stats.time_last_stopped.astimezone())
+            ).split(":")[1])
 
-    if minutes_since_stop > 1:
+        if minutes_since_stop > 1:
+            return True
+        
+        return False
+        
+    except AttributeError:
         return True
 
-    return False
 
 def start_bot_process():
     """
