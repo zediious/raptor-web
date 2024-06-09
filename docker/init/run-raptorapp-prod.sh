@@ -3,6 +3,9 @@
 # Move to app directory
 cd raptorWebApp
 
+# Wait for 15 seconds to allow database to start completely
+sleep 15
+
 # Migrate database
 python manage.py migrate
 
