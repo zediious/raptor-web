@@ -52,6 +52,7 @@
                             View
                         </a>
 
+                        {% if perms.staffapps.delete_submittedstaffapplication %}
                         <form>
                             {% csrf_token %}
                             <button class='btn btn-danger'
@@ -62,6 +63,7 @@
                                 Permanently Delete
                             </button>    
                         </form>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>
