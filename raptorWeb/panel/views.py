@@ -379,6 +379,9 @@ class PanelUpdateView(UpdateView):
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
+        
         return super().get(request, *args, **kwargs)
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
@@ -568,6 +571,9 @@ class PanelCreateView(CreateView):
     def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
+        
+        if request.headers.get('HX-Request') != "true":
+            return HttpResponseRedirect('/')
         
         return super().get(request, *args, **kwargs)
     
