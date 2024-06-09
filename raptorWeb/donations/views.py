@@ -370,7 +370,7 @@ class DonationBenefitResend(View):
         if not request.user.is_staff:
             return HttpResponseRedirect('/404')
         
-        if not request.user.has_perm('raptormc.donations'):
+        if not request.user.has_perm('donations.resendbenefits_completeddonation'):
             messages.error(request, 'You do not have permission to re-send Donation benefits.')
             return HttpResponse(status=200)
         
