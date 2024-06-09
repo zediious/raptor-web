@@ -74,6 +74,7 @@
                 <td>{{server.modpack_name}}</td>
                 <td>
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.gameservers.archive_server %}
                         <form>
                             {% csrf_token %}
                             <button id='panel_unarchive_button' class='btn btn-success'
@@ -84,6 +85,7 @@
                                 Unarchive
                             </button>
                         </form>
+                        {% endif %}
                         {% if perms.gameservers.delete_server %}
                         <form>
                             {% csrf_token %}
