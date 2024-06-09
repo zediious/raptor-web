@@ -4,9 +4,11 @@
     <title>{{ site_info_model.brand_name }} | Staff Application submitted on {{object.submitted_date}}</title>
 </head>
 
+{% if perms.staffapps.approval_submittedstaffapplication %}
 <div id="panel_approval_button_replace_{{submittedstaffapplication.pk}}">
     {% include "panel/crud/panel_submittedstaffapplication_approval_button.html" %}
 </div>
+{% endif %}
 
 <div class='card bg-dark text-white p-3'>
     <div class='d-flex flex-wrap justify-content-evenly m-3 text-center'>
