@@ -30,6 +30,7 @@ DEFAULT_SUPERUSER_EMAIL=''
 
 DISCORD_BOT_TOKEN=''
 DISCORD_BOT_DESCRIPTION=''
+RUN_BOT='True'
 
 STRIPE_PUBLISHABLE_KEY=''
 STRIPE_SECRET_KEY=''
@@ -98,6 +99,9 @@ The Bot Token for the Discord Application Bot you will use for the Discord Bot
 
 ### **DISCORD_BOT_DESCRIPTION**
 A description for the Discord Bot, used when creating the Bot
+
+### **RUN_BOT**
+Whether the Discord Bot will run on application startup. This may need to be set to false when updating the application. The bot can always be started after the application starts from the Discord Bot Panel.
 
 # *Stripe Payments*
 

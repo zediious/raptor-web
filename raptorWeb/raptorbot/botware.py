@@ -7,6 +7,7 @@ from raptorWeb.raptorbot.discordbot.bot import BotProcessManager
 from raptorWeb.raptorbot.models import DiscordBotTasks, DiscordBotInternal
 
 DISCORD_BOT_TOKEN: str = getattr(settings, 'DISCORD_BOT_TOKEN')
+RUN_BOT: bool = getattr(settings, 'RUN_BOT')
 LOGGER: Logger = getLogger('raptorbot.botware')
 
 bot_process_manager: BotProcessManager = BotProcessManager(bot_token=DISCORD_BOT_TOKEN)
@@ -21,7 +22,8 @@ class RaptorBotWare:
         One-time configuration and initialization.
         """
         self.get_response = get_response
-        start_bot_process()
+        if RUN_BOT:
+            start_bot_process()
 
     def __call__(self, request):
         """
