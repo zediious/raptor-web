@@ -26,16 +26,16 @@
 
     {% else %}
 
-        <main class="row" id="signin_mfa_form_replace">
-            <div class="container col-12">
+        <main class="d-flex flex-column justify-content-center" id="signin_mfa_form_replace">
+            <div class="">
                 <header class="text-white p-4 mt-4">
-                    <h3 class="pageHeader fw-bold text-center">
+                    <h3 class="pageContent fw-bold text-center">
                         Please enter your MFA code below.
                     </h3>
                 </header>
             </div>
 
-            <div class='container col-12'>
+            <div class='d-flex justify-content-center'>
                 {% if messages %}
                 <ul class="messages alert alert-warning m-3 p-3">
                 {% for message in messages %}
@@ -46,15 +46,17 @@
                 <form id="signin_mfa_form_alone" class="form p-3 text-white"
                     hx-post="{% url 'authprofiles:mfa_login' %}"
                     hx-swap="outerHTML"
-                    hx-target="#signin_mfa_form_replace">
-                        
-                    {% csrf_token %}
-                    {{ form.captcha }} 
-                    <span class="text-white">{% bootstrap_field signin_mfa_form.totp %}</span>
-                    <input name='username' type="hidden" value="{{otp_username}}">
-                    <button class="btn btn-success" type="submit">
-                        Submit Code
-                    </button>
+                    hx-target="#signin_mfa_form_replace"
+                >
+                    <div class='d-flex flex-column justify-content-center'>
+                        {% csrf_token %}
+                        {{ form.captcha }} 
+                        <div class="text-white">{% bootstrap_field signin_mfa_form.totp %}</div>
+                        <input name='username' type="hidden" value="{{otp_username}}">
+                        <button class="btn btn-success" type="submit">
+                            Submit Code
+                        </button>
+                    </div>
 
                 </form>
             </div>
