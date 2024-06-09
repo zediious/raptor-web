@@ -1,0 +1,93 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | User Deletion Queue</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">User Deletion Queue</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Deleting User</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for userpendingdeletion in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{userpendingdeletion.pk}}</th>
+                <td><a href="{{userpendingdeletion.user.get_absolute_url}}">{{userpendingdeletion.user.username}}</a></td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.authprofiles.delete_deletionqueueforuser %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'authprofiles:deletionqueueforuser_delete' userpendingdeletion.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Remove from Queue
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:users/deletionqueue/list' %}?page=1"
+                        hx-target="#server_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:users/deletionqueue/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:users/deletionqueue/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:users/deletionqueue/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

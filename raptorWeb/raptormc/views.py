@@ -4,13 +4,15 @@ from typing import Any
 
 from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 
+from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
-from raptorWeb.raptormc.models import Page, DefaultPages, SiteInformation
+from raptorWeb.raptormc.models import Page, DefaultPages, SiteInformation, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
 from raptorWeb.raptormc.routes import check_route
 
 LOGGER = getLogger('raptormc.views')
@@ -498,6 +500,162 @@ class Update_Headerbox_State(View):
         except KeyError:
             request.session['headerbox_expanded'] = 'false'
             return HttpResponse(" ")
+        
+        
+class PageDelete(View):
+    """
+    Permanently delete a given page
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_page'):
+            messages.error(request, 'You do not have permission to delete pages.')
+            return HttpResponse(status=200)
+        
+        changing_page = Page.objects.get(pk=self.kwargs['pk'])
+        changing_page.delete()
+        
+        model_string = str(Page).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_page}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_page} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/page/list')
+    
+
+class NotificationToastDelete(View):
+    """
+    Permanently delete a given Notification Toast
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_notificationtoast'):
+            messages.error(request, 'You do not have permission to delete Notification Toasts.')
+            return HttpResponse(status=200)
+        
+        changing_toast = NotificationToast.objects.get(pk=self.kwargs['pk'])
+        changing_toast.delete()
+        
+        model_string = str(NotificationToast).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_toast}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_toast} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/toast/list')
+    
+    
+class NavbarLinkDelete(View):
+    """
+    Permanently delete a given Navbar Link
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_navbarlink'):
+            messages.error(request, 'You do not have permission to delete Navbar Links.')
+            return HttpResponse(status=200)
+        
+        changing_navbarlink = NavbarLink.objects.get(pk=self.kwargs['pk'])
+        changing_navbarlink.delete()
+        
+        model_string = str(NavbarLink).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navbarlink}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_navbarlink} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/navbarlink/list')
+    
+    
+class NavbarDropdownDelete(View):
+    """
+    Permanently delete a given Navbar Dropdown
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_navbardropdown'):
+            messages.error(request, 'You do not have permission to delete Navbar Dropdowns.')
+            return HttpResponse(status=200)
+        
+        changing_navbardropdown = NavbarDropdown.objects.get(pk=self.kwargs['pk'])
+        changing_navbardropdown.delete()
+        
+        model_string = str(NavbarDropdown).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navbardropdown}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_navbardropdown} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/navbardropdown/list')
+    
+    
+class NavWidgetDelete(View):
+    """
+    Permanently delete a given Nav Widget
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_navwidget'):
+            messages.error(request, 'You do not have permission to delete Nav Widgets.')
+            return HttpResponse(status=200)
+        
+        changing_navwidget = NavWidget.objects.get(pk=self.kwargs['pk'])
+        changing_navwidget.delete()
+        
+        model_string = str(NavWidget).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navwidget}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_navwidget} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/navwidget/list')
+    
+    
+class NavWidgetBarDelete(View):
+    """
+    Permanently delete a given Nav Widget Bar
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('raptormc.delete_navwidgetbar'):
+            messages.error(request, 'You do not have permission to delete Nav Widget Bars.')
+            return HttpResponse(status=200)
+        
+        changing_navwidgetbar = NavWidgetBar.objects.get(pk=self.kwargs['pk'])
+        changing_navwidgetbar.delete()
+        
+        model_string = str(NavWidgetBar).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_navwidgetbar}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_navwidgetbar} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/content/navwidgetbar/list')
 
 
 def handler404(request, *args, **argv):

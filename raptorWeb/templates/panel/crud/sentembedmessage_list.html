@@ -1,0 +1,101 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Sent Embed Messages</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Sent Embed Messages</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    <div class='table-responsive-xxl'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Server</th>
+                <th class='text-white' scope="col">Message ID</th>
+                <th class='text-white' scope="col">Channel ID</th>
+                <th class='text-white' scope="col">Originally Sent</th>
+                <th class='text-white' scope="col">Last Modified</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for sentembedmessage in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{sentembedmessage.pk}}</th>
+                <td><a href="{{sentembedmessage.server.get_absolute_url}}">{{sentembedmessage.server}}</a></td>
+                <td>{{sentembedmessage.message_id}}</td>
+                <td>{{sentembedmessage.channel_id}}</td>
+                <td class='text-nowrap'>{{sentembedmessage.sent}}</td>
+                <td class='text-nowrap'>{{sentembedmessage.modified}}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptorbot.delete_sentembedmessage %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'raptorbot:sentembedmessage_delete' sentembedmessage.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Permanently Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:bot/sentembedmessage/list' %}?page=1"
+                        hx-target="#server_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:bot/sentembedmessage/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:bot/sentembedmessage/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:bot/sentembedmessage/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

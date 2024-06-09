@@ -1,0 +1,149 @@
+{% load static %}
+{% load adminDoc %}
+{% load markdownStrip %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Server Announcements</title>
+</head>
+
+<div id='data_wrapper'>
+    <div id='announcement_table_wrapper'>
+        <div class="m-2 mt-0 p-3">
+            <div class="text-white">
+                <header class="fs-3">Server Announcement List</header>
+                <p class="fs-5">
+                    {% get_admin_documentation model %}
+                </p>
+            </div>
+        </div>
+        <hr class='text-white'>
+
+        <div class='table-responsive-xl'>
+            <table class="table table-dark table-hover text-white border border-black border-2">
+                <thead>
+                    <tr>
+                    <form>
+                        <th class='text-white htmxLink' scope="col"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?paginate_by={{paginate_by}}&order_by=author&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                            hx-target='#announcement_table_wrapper'
+                            hx-swap='innerHTML'
+                            hx-trigger='click'
+                        >
+                            Author<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                        </th>
+                        <th class='text-white htmxLink' scope="col"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?paginate_by={{paginate_by}}&order_by=date&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                            hx-target='#announcement_table_wrapper'
+                            hx-swap='innerHTML'
+                            hx-trigger='click'
+                        >
+                            Date<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                        </th>
+                        <th class='text-white htmxLink' scope="col"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?paginate_by={{paginate_by}}&order_by=server&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                            hx-target='#announcement_table_wrapper'
+                            hx-swap='innerHTML'
+                            hx-trigger='click'
+                        >
+                            Server<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                        </th>
+                        <th class='text-white' scope="col">Message</th>
+                        <th class='text-white' scope="col">Actions</th>
+                    </form>
+                    </tr>
+                </thead>
+                {% for serverannouncement in page_obj %}
+                <tbody class="item">
+                    <tr>
+                    <td>{{serverannouncement.author}}</td>
+                    <td class='text-nowrap'>{{serverannouncement.date}}</td>
+                    <td><a href="{{serverannouncement.server.get_absolute_url}}">{{serverannouncement.server}}</a></td>
+                    <td>{{serverannouncement.message|strip_markdown|strip_tags|https_to_discord|linebreaksbr|truncatechars:50}}</td>
+                    <td>
+                        <div class='d-flex justify-content-evenly gap-1 w-100'>
+                            <a role='button' id='panel_edit_button' class='btn btn-primary'
+                                    href='/panel/bot/serverannouncement/view/{{serverannouncement.pk}}'
+                                    hx-get="{% url 'panel:bot/serverannouncement/view_IR' pk=serverannouncement.pk %} "
+                                    hx-push-url='/panel/bot/serverannouncement/view/{{serverannouncement.pk}}'
+                                    hx-target='#panel_main'
+                                    hx-indicator="#panelLoadingspinner,.loaded-content"
+                            >
+                                View
+                            </a>
+                            {% if perms.raptorbot.delete_serverannouncement %}
+                            <form>
+                                {% csrf_token %}
+                                <button id='panel_archive_button' class='btn btn-danger'
+                                        hx-get="{% url 'raptorbot:serverannouncement_delete' serverannouncement.pk%}"
+                                        hx-target='#announcement_table_wrapper'
+                                        hx-swap'outerHTML'
+                                >
+                                    Permanently Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        {% if page_obj.has_next or page_obj.has_previous%}
+            <div class="pagination d-flex align-items-center justify-content-center m-3">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a role="button" class="btn btn-dark opacity-75"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?page=1&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-target="#announcement_table_wrapper"
+                        >
+                            &laquo; First
+                        </a>
+                        <a role="button" class="btn btn-dark opacity-75"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?page={{ page_obj.previous_page_number }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-target="#announcement_table_wrapper"
+                        >
+                            Previous
+                        </a>
+                    {% endif %}
+
+                    <span class="current text-white">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a role="button" class="btn btn-dark opacity-75"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?page={{ page_obj.next_page_number }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-target="#announcement_table_wrapper"
+                        >
+                            Next
+                        </a>
+                        <a role="button" class="btn btn-dark opacity-75"
+                            hx-get="{% url 'panel:bot/serverannouncement/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-target="#announcement_table_wrapper"
+                        >
+                            Last &raquo;
+                        </a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+        <div class='d-flex justify-content-around'>
+            <div class='m-2 text-white'>
+                {{total_serverannouncement_count}} Total Server Announcements
+            </div>
+            <div class='m-2 text-white'>
+                <form class='form'
+                    hx-get="{% url 'panel:bot/serverannouncement/list' %}?{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                    hx-target='#announcement_table_wrapper'
+                    hx-swap='innerHTML'
+                    hx-trigger='keyup delay:1s'
+                >
+                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+                    {% bootstrap_field paginate_form.paginate_by %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

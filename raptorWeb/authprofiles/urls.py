@@ -24,6 +24,9 @@ urlpatterns: list[URLPattern] = [
     path('html/profile/<slug:user_slug>/', views.User_Profile.as_view(), name="user_profile"),
     path('html/profile/<str:profile_name>/edit/', views.User_Profile_Edit.as_view(), name="user_profile_edit"),
     path('html/profile/', views.All_User_Profile.as_view(), name="all_user_profile"),
-    path('html/profile_dropdown/', views.User_Dropdown.as_view(), name="user_dropdown")
+    path('html/profile_dropdown/', views.User_Dropdown.as_view(), name="user_dropdown"),
+    # Model Deletion
+    path('crud/raptorusergroup/delete/<int:pk>', views.RaptorUserGroupDelete.as_view(), name="raptorusergroup_delete"),
+    path('crud/deletionqueueforuser/delete/<int:pk>', views.DeletionQueueForUserDelete.as_view(), name="deletionqueueforuser_delete")
 
 ]

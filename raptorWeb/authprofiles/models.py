@@ -4,9 +4,8 @@ from logging import Logger, getLogger
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
-from django.http import HttpRequest
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.db.models.signals import post_delete
 from django.utils.text import slugify
 from django.utils.timezone import localtime, now
 from django.forms import ModelForm
@@ -256,7 +255,7 @@ class DiscordUserInfo(models.Model):
         return self
 
     def __str__(self):
-        return f'DiscordUserInfo#{self.id}'
+        return f"{RaptorUser.objects.get(discord_user_info=self).username}'s Discord User Info"
 
     class Meta:
         verbose_name = "User - Discord Information"
@@ -377,7 +376,7 @@ class UserProfileInfo(models.Model):
         return f"profile_picture_{self.pk}_{ localtime(now()) }.png"
 
     def __str__(self):
-        return f'UserProfileInfo#{self.id}'
+        return f"{RaptorUser.objects.get(user_profile_info=self).username}'s Extra Profile Info"
 
     class Meta:
         verbose_name = "User - Extra Information"
@@ -511,8 +510,18 @@ class DeletionQueueForUser(models.Model):
         on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.user.username
+        return f'Deletion Request for {self.user.username}'
     
     class Meta:
         verbose_name = "Users Queued for Deletion"
         verbose_name_plural = "Users Queued for Deletion"
+        
+@receiver(pre_save, sender=RaptorUser)
+def pre_save_raptor_user(sender, instance, *args, **kwargs):
+    """
+    If a Raptoruser's Username is changed, update their User Slug to a slufigied
+    version of the new username
+    """
+    if instance.username != RaptorUser.objects.get(pk=instance.pk).username:
+        instance.user_slug = slugify(instance.username)
+        

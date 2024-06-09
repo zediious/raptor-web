@@ -93,6 +93,16 @@ body {
     opacity: 1.00;
 }
 
+.navwidgetbar {
+    width: 35%;
+}
+
+.panelOffcanvas {
+    @extend .offcanvas;
+    --bs-offcanvas-width: 300px;
+
+}
+
 .btn-dark {
     opacity: 0.75;
 }
@@ -134,6 +144,11 @@ body {
 }
 
 .serverBoxCollapseImage {
+    width: 25px;
+    height: 25px
+}
+
+.sortIcon {
     width: 25px;
     height: 25px
 }
@@ -235,6 +250,10 @@ a:hover .picture_transition {
 
 @media (min-width: 768px) {
 
+    .panel-modpack-image {
+        width: 40%;
+    }
+
     #navImage {
         width: 75%;
         height: 100%;
@@ -279,6 +298,9 @@ a:hover .picture_transition {
 }
 
 @media (max-width: 767px) {
+    .panel-modpack-image {
+        width: 75%;
+    }
 
     #navImage {
         width: 100%;

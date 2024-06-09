@@ -115,7 +115,17 @@ LOGGING_DEFINITION = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'panel.forms': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'staffapps.views': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'staffapps.template_db': {
             'handlers': ['console', 'log_file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,

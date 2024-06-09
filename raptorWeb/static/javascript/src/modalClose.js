@@ -8,7 +8,6 @@ function closeOffCanvas() {
 function closeModal() {
 
   $('.modal').modal('hide');
-  console.log("did run closeModal")
 
 }
   

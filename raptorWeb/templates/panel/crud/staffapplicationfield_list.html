@@ -1,0 +1,124 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Form Fields</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Form Fields</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    {% if perms.staffapps.add_staffapplicationfield %}
+    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+        <a role='button' id='add_page_button' class='btn btn-primary'
+                href='/panel/staffapps/staffapplicationfield/create'
+                hx-get="{% url 'panel:staffapps/staffapplicationfield/create'%} "
+                hx-push-url='/panel/staffapps/staffapplicationfield/create'
+                hx-target='#panel_main'
+                hx-indicator="#panelLoadingspinner,.loaded-content"
+        >
+            Add Form Field
+        </a>
+    </div>
+    {% endif %}
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Name</th>
+                <th class='text-white' scope="col">Help Text</th>
+                <th class='text-white' scope="col">Widget</th>
+                <th class='text-white' scope="col">Priority</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for staffapplicationfield in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{staffapplicationfield.pk}}</th>
+                <td>{{staffapplicationfield.name}}</td>
+                <td>{{staffapplicationfield.help_text|truncatechars:25}}</td>
+                <td>{{staffapplicationfield.widget}}</td>
+                <td>{{staffapplicationfield.priority}}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.staffapps.change_staffapplicationfield %}
+                        <a role='button' class='btn btn-primary'
+                                href='/panel/staffapps/staffapplicationfield/update/{{staffapplicationfield.pk}}'
+                                hx-get="{% url 'panel:staffapps/staffapplicationfield/update_IR' pk=staffapplicationfield.pk %}"
+                                hx-push-url='/panel/staffapps/staffapplicationfield/update/{{staffapplicationfield.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            Edit
+                        </a>
+                        {% endif %}
+                        {% if perms.staffapps.delete_staffapplicationfield %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'staffapps:staffapplicationfield_delete' staffapplicationfield.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Permanently Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}?page=1"
+                        hx-target="#content_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:staffapps/staffapplicationfield/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

@@ -1,0 +1,126 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Update User: {{raptoruser.username}}</title>
+</head>
+
+{{ form.media }}
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Update details for the user: "{{raptoruser.username}}".</header>
+        <p class="fs-5">
+             Change any details desired, and use the "Save Changes" button at the bottom of the form
+         </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+    <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
+        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+            General
+        </button>
+        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+            Permissions
+        </button>
+        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+            Sensitive
+        </button>
+    </div>
+
+    <hr class='text-white mt-0 mb-4'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:users/raptoruser/update_IR' pk=raptoruser.pk %}"
+            hx-swap="none"
+        >
+            {% csrf_token %}
+
+            <div id='user_general' style='display: block'>
+                {% bootstrap_field form.username %}
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>User Slug: </span>{{raptoruser.user_slug}}
+                    <p class='mt-2 ms-0 form-text text-white'>
+                        This cannot be changed directly. It will automatically update
+                        if the username is changed.
+                    </p>
+                </div>
+                {% bootstrap_field form.email %}
+                {% bootstrap_field form.first_name %}
+                {% bootstrap_field form.last_name %}
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>Date Joined: </span>{{raptoruser.date_joined}}
+                    <p class='mt-2 ms-0 form-text text-white'>
+                        The date and time this user registered their account.
+                    </p>
+                </div>
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>Last Login: </span>{{raptoruser.last_login}}
+                    <p class='mt-2 ms-0 form-text text-white'>
+                        The date and time this user last logged in
+                    </p>
+                </div>
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>Is Discord User: </span>{%if raptoruser.is_discord_user%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}
+                    <p class='mt-2 ms-0 form-text text-white'>
+                        Whether this user registered their account using Discord.
+                    </p>
+                </div>
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>Date Account Deletion Requested: </span>{{raptoruser.date_queued_for_delete}}
+                    <p class='mt-2 ms-0 form-text text-white'>
+                        The date and time this user requested account deletion, if they did.
+                    </p>
+                </div>
+                {% bootstrap_field form.is_active %}
+                {% bootstrap_field form.toasts_seen %}
+            </div>
+
+            <div id='user_permissions' style='display: none'>
+                {% bootstrap_field form.groups %}
+                <hr class='text-white mt-0 mb-4'>
+                {% bootstrap_field form.user_permissions %}
+            </div>
+
+            <div id='user_sensitive' style='display: none'>
+                {% bootstrap_field form.is_superuser %}
+                {% bootstrap_field form.is_staff %}
+                {% bootstrap_field form.mfa_enabled %}
+                <div class='m-4 ms-0'>
+                    <span class='fs-5'>Password: </span>{% if raptoruser.password|slice:"1" == '!' %}No Password Set{%else%}{{raptoruser.password|truncatechars:34}}{%endif%}
+                    <p class='mt-2 ms-4 form-text text-white'>Passwords are not stored directly, and cannot be changed here.</p>
+                </div>
+                {% bootstrap_field form.password_reset_token %}
+            </div>
+
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+{% if perms.authprofiles.change_userprofileinfo %}
+    <div id='user_profile_info_box'
+        hx-get="{% url 'panel:users/userprofileinfo/update_IR' pk=raptoruser.user_profile_info.pk%}"
+        hx-target='#user_profile_info_box'
+        hx-swap='outerHTML'
+        hx-trigger='load'>
+    </div>
+{% endif %}
+
+{% if perms.authprofiles.change_discorduserinfo %}
+    {% if raptoruser.is_discord_user %}
+        <div id='discord_user_info_box'
+            hx-get="{% url 'panel:users/discorduserinfo/update_IR' pk=raptoruser.discord_user_info.pk%}"
+            hx-target='#discord_user_info_box'
+            hx-swap='outerHTML'
+            hx-trigger='load'>
+        </div>
+    {% endif %}
+{% endif %}
+
+<script src="{% static 'javascript/src/userSelectButton.js' %}"></script>

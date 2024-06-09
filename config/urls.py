@@ -39,7 +39,6 @@ urlpatterns: list[URLResolver] = [
     path('robots.txt', TemplateView.as_view(template_name=join(RAPTORMC_TEMPLATE_DIR, 'robots.txt'), content_type="text/plain")),
     path('tinymce/', include('tinymce.urls')),
     path('captcha/', include('captcha.urls')),
-    path('admin/', admin.site.urls, name="admin"),
     path('panel/', include(panel_urls), name='panel'),
     path('api/servers/', include(server_urls), name="gameservers"),
     path('api/donations/', include(donation_urls), name="donations"),

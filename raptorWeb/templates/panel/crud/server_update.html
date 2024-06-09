@@ -1,0 +1,80 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Update Server: {{server.modpack_name}}</title>
+</head>
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Update existing information for {{server.modpack_name}}</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of
+            the page.
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+    <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
+        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+            General
+        </button>
+        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+            Information
+        </button>
+        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+            Querying
+        </button>
+        <button id='select-button-4' class='btn btn-sm btn-secondary selection-button'>
+            Discord Announcements
+        </button>
+        <button id='select-button-5' class='btn btn-sm btn-secondary selection-button'>
+            Donations
+        </button>
+    </div>
+
+    <hr class='text-white mt-0 mb-4'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:server/update_IR' pk=server.pk %} "
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            <div id='server_general' style='display: block'>
+                {% bootstrap_field form.modpack_name %}
+                {% bootstrap_field form.modpack_version %}
+                {% bootstrap_field form.modpack_url %}
+                {% bootstrap_field form.modpack_picture %}
+            </div>
+            <div id='server_information' style='display: none'>
+                {% bootstrap_field form.modpack_description %}
+                {% bootstrap_field form.server_description %}
+                {% bootstrap_field form.server_rules %}
+                {% bootstrap_field form.server_banned_items %}
+                {% bootstrap_field form.server_vote_links %}
+            </div>
+            <div id='server_querying' style='display: none'>
+                {% bootstrap_field form.server_address %}
+                {% bootstrap_field form.server_port %}
+            </div>
+            <div id='server_discord_announcements' style='display: none'>
+                {% bootstrap_field form.discord_announcement_channel_id %}
+                {% bootstrap_field form.discord_modpack_role_id %}
+            </div>
+            <div id='server_donations' style='display: none'>
+                {% bootstrap_field form.rcon_address %}
+                {% bootstrap_field form.rcon_port %}
+                {% bootstrap_field form.rcon_password %}
+            </div>
+            {{ form.media }}
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'javascript/src/serverSelectButton.js' %}"></script>

@@ -4,10 +4,12 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django.conf import settings
 
-from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText
-from raptorWeb.authprofiles.models import RaptorUser
+from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
+from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
+from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, RaptorUserGroup
 from raptorWeb.gameservers.models import Server
-from raptorWeb.donations.models import DonationPackage
+from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
+from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
 
 LOGGER = getLogger('raptormc.routes')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
@@ -17,7 +19,13 @@ CURRENT_URLPATTERNS = []
 
 class Route:
     
-    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None, package=None) -> None:
+    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None,
+                 package=None, informativetext=None, toast=None, navbarlink=None, navbardropdown=None, navwidget=None,
+                 navwidgetbar=None, globalannouncement=None, serverannouncement=None, donationservercommand=None,
+                 donationdiscordrole=None, staffapplicationfield=None, submittedstaffapplication=None,
+                 createdstaffapplication=None, useredit=None, userprofileinfo=None, discorduserinfo=None,
+                 raptorusergroup=None) -> None:
+        
         self.name: str = name
         self.route_type: str = route_type
         self.informative_text = informative_text
@@ -25,6 +33,23 @@ class Route:
         self.page: Page = page
         self.server: Server = server
         self.package: DonationPackage = package
+        self.informativetext: InformativeText = informativetext
+        self.toast: NotificationToast = toast
+        self.navbarlink: NavbarLink = navbarlink
+        self.navbardropdown: NavbarDropdown = navbardropdown
+        self.navwidget: NavWidget = navwidget
+        self.navwidgetbar: NavWidgetBar = navwidgetbar
+        self.globalannouncement: GlobalAnnouncement = globalannouncement
+        self.serverannouncement: ServerAnnouncement = serverannouncement
+        self.donationservercommand: DonationServerCommand = donationservercommand
+        self.donationdiscordrole: DonationDiscordRole = donationdiscordrole
+        self.staffapplicationfield: StaffApplicationField = staffapplicationfield
+        self.submittedstaffapplication: SubmittedStaffApplication = submittedstaffapplication
+        self.createdstaffapplication: CreatedStaffApplication = createdstaffapplication
+        self.useredit: RaptorUser = useredit
+        self.userprofileinfo: UserProfileInfo = userprofileinfo
+        self.discorduserinfo: DiscordUserInfo = discorduserinfo
+        self.raptorusergroup: DiscordUserInfo = raptorusergroup
           
     def __str__(self) -> str:
         return self.name

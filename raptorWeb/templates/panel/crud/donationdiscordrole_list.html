@@ -1,0 +1,120 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Donation Discord Roles</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Discord Roles</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    {% if perms.donations.add_donationdiscordrole %}
+    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+        <a role='button' id='add_page_button' class='btn btn-primary'
+                href='/panel/donations/donationdiscordrole/create'
+                hx-get="{% url 'panel:donations/donationdiscordrole/create'%} "
+                hx-push-url='/panel/donations/donationdiscordrole/create'
+                hx-target='#panel_main'
+                hx-indicator="#panelLoadingspinner,.loaded-content"
+        >
+            Add Discord Role
+        </a>
+    </div>
+    {% endif %}
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Name</th>
+                <th class='text-white text-center' scope="col">Role ID</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for donationdiscordrole in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{donationdiscordrole.pk}}</th>
+                <td>{{donationdiscordrole.name}}</td>
+                <td>{{donationdiscordrole.role_id}}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.donations.change_donationdiscordrole %}
+                        <a role='button' class='btn btn-primary'
+                                href='/panel/donations/donationdiscordrole/update/{{donationdiscordrole.pk}}'
+                                hx-get="{% url 'panel:donations/donationdiscordrole/update_IR' pk=donationdiscordrole.pk %}"
+                                hx-push-url='/panel/donations/donationdiscordrole/update/{{donationdiscordrole.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            Edit
+                        </a>
+                        {% endif %}
+                        {% if perms.donations.delete_donationdiscordrole %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'donations:donationdiscordrole_delete' donationdiscordrole.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Permanently Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:donations/donationdiscordrole/list' %}?page=1"
+                        hx-target="#content_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:donations/donationdiscordrole/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:donations/donationdiscordrole/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:donations/donationdiscordrole/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#content_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

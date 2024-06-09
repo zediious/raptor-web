@@ -1,0 +1,47 @@
+{% load static %}
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-flex w-100">
+        <div class="row w-100">
+            <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
+                <div class="navbar-header d-flex">
+                    <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 ms-3 border-2"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNav"
+                            aria-controls="offcanvasNav"
+                    >
+                        <span class="navbar-toggler-icon" ></span>
+                    </button>
+                    <a id="navBrand" class="navbar-brand m-0 ms-3 htmxLink"
+                       href="/panel/home/"
+                       hx-get={% url 'panel:home'%}
+                       hx-target='#panel_main'
+                       hx-push-url="/panel/home"
+                       hx-indicator="#panelLoadingspinner,.loaded-content"
+                    >
+                        {% if site_info_model.use_svg_brand %}
+                            <img class='w-100' id="navImageSvg"
+                                src="{% if site_info_model.branding_image_svg %}{{site_info_model.branding_image_svg.url}}{% endif %}"
+                                alt="{{ site_info_model.brand_name}}">
+                        {% else %}
+                            <img id="navImage"
+                                src="{% if site_info_model.branding_image %}{{site_info_model.branding_image.url}}{% endif %}"
+                                alt="{{ site_info_model.brand_name}}">
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-4 d-flex align-items-end justify-content-end align-items-center">
+                <div class="navbar-header d-flex align-items-end justify-content-end align-items-center">
+                    <div id="profile_dropdown"
+                         hx-get="{% url 'authprofiles:user_dropdown' %}"
+                         hx-trigger="load"
+                         hx-target="#profile_dropdown"
+                         hx-swap="innerHTML">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

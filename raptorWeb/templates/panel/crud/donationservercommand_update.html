@@ -1,0 +1,34 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Update Donation Discord Command: {{donationdiscordcommand.command}}</title>
+</head>
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">Update details for the "{{donationservercommand.command}}" Server Command</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of
+            the page.
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:donations/donationservercommand/update_IR' pk=donationservercommand.pk %}"
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {{ form.media }}
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>

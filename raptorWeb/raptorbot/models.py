@@ -57,7 +57,7 @@ class ServerAnnouncement(Announcement):
         on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f'Announcement by {self.author} for {self.server} made on {self.date}'
+        return f'Announcement by {self.author} for {self.server} made on {self.date.fromisoformat("2021-01-24 05:12:21.517854+00:00").strftime("%I:%M%p %d%b%Y")}'
 
     def get_server(self):
         return self.server
@@ -180,7 +180,8 @@ class DiscordBotInternal(models.Model):
 class SentEmbedMessage(models.Model):
         """
         An embed message that has been sent by the Discord Bot
-        via command from a Discord server/channel.
+        via command from a Discord server/channel. If one of these messages
+        is deleted here or in Discord, it will be deleted in the other place.
         """
         server = models.ForeignKey(
             'gameservers.Server', 

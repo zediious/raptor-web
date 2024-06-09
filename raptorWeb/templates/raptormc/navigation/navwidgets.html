@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-dark bg-dark m-0 p-1 opacity-100">
     <div class="container">
-      <div class="navbar-header m-0 p-0">
+      <div class="navbar-header m-0 p-0 w-50">
         <div class="row p-2 pt-1 pb-1 gap-2">
           {% if discord_guild %}
           <a class="col-2 col-xxl-2 p-1 btn btn-outline-secondary" role="button"
@@ -52,7 +52,7 @@
   {% for widget_bar in nav_widget_bars %}
   <nav id="widgetbar_{{widget_bar.pk}}" class="navbar navbar-dark bg-dark">
     <div class="container">
-      <div class="navbar-header">
+      <div class="navbar-header w-50">
         <div class="row p-2 pt-1 pb-1 gap-2">
           {% for widget in nav_widgets %}
           {% if widget.parent_bar %}

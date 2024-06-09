@@ -1,0 +1,42 @@
+{% load template_db %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Staff Application submitted on {{object.submitted_date}}</title>
+</head>
+
+{% if perms.staffapps.approval_submittedstaffapplication %}
+<div id="panel_approval_button_replace_{{submittedstaffapplication.pk}}">
+    {% include "panel/crud/panel_submittedstaffapplication_approval_button.html" %}
+</div>
+{% endif %}
+
+<div class='card bg-dark text-white p-3'>
+    <div class='d-flex flex-wrap justify-content-evenly m-3 text-center'>
+        <p class='fs-5'>
+            Submitted: {{ object.submitted_date }}
+        </p>
+        <p class='fs-5'>
+            {%if object.approved == 'A'%}
+                <div class='fs-5'>Approved</div>
+            {%elif object.approved == 'D'%}
+                <div class='fs-5'>Denied</div>
+            {%else%}
+                <div class='fs-5'>Pending</div>
+            {%endif%}
+        </p>
+    </div>
+    <hr>
+    <div class='m-3'>
+        {% for key in object.submitted_data|json_to_dict %}
+            {% if key != '99342193074109' and key != 'csrfmiddlewaretoken' %}
+                <p class="fs-5">
+                    {{key|remove_underscore}}:
+                </p>
+                <p class='fs-6'>
+                    {{object.submitted_data|json_to_dict|get_dict_value:key}}
+                </p>
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

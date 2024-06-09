@@ -1,0 +1,66 @@
+{% load static %}
+{% load django_bootstrap5 %}
+
+{{ form.media }}
+
+<div class="m-2 mt-4 p-3">
+    <div class="text-white">
+        <header class="fs-3">Discord User Info</header>
+        <p class="fs-5">
+            Change any details desired, and use the "Save Changes" button at the bottom of the form
+        </p>
+    </div>
+</div>
+
+<div class='card bg-dark m-0 p-3'>
+
+    <div id='update_form_wrapper' class='container-flex'>
+        <form id="update_form_alone" class="form text-white"
+            enctype="multipart/form-data" 
+            hx-post="{% url 'panel:users/discorduserinfo/update_IR' pk=discorduserinfo.pk %}"
+            hx-swap="none"
+        >
+            {% csrf_token %}
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>ID: </span>{{discorduserinfo.id}}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Discord user's ID returned from Discord.
+                </p>
+            </div>
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>Discord Tag: </span>{{discorduserinfo.tag}}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    This user's Discord tag.
+                </p>
+            </div>
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>Public Flags: </span>{{discorduserinfo.pub_flags}}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Public flags on Discord Account.
+                </p>
+            </div>
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>Flags: </span>{{discorduserinfo.flags}}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Flags on Discord Account.
+                </p>
+            </div>
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>Locale: </span>{{discorduserinfo.locale}}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Locale of Discord Account
+                </p>
+            </div>
+            <div class='m-4 ms-0'>
+                <span class='fs-5'>MFA Enabled: </span>{%if discorduserinfo.mfa_enabled%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}
+                <p class='mt-2 ms-0 form-text text-white'>
+                    Whether this user's Discord account has MFA enabled.
+                </p>
+            </div>
+            {% bootstrap_form form %}
+            <button class='btn btn-success' type='submit'>
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>

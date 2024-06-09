@@ -1,0 +1,130 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Navigation Links</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Navigation Links</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    {% if perms.raptormc.add_navbarlink %}
+    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+        <a role='button' id='add_page_button' class='btn btn-primary'
+                href='/panel/content/navbarlink/create'
+                hx-get="{% url 'panel:content/navbarlink/create'%} "
+                hx-push-url='/panel/content/navbarlink/create'
+                hx-target='#panel_main'
+                hx-indicator="#panelLoadingspinner,.loaded-content"
+        >
+            Add Navbar Link
+        </a>
+    </div>
+    {% endif %}
+
+    <div class='table-responsive-xl'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Name</th>
+                <th class='text-white' scope="col">URL</th>
+                <th class='text-white' scope="col">Linked Page</th>
+                <th class='text-white' scope="col">Dropdown Menu</th>
+                <th class='text-white' scope="col">Priority</th>
+                <th class='text-white' scope="col">New Tab</th>
+                <th class='text-white' scope="col">Enabled</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for navlink in page_obj %}
+            <tbody>
+                <tr>
+                <th scope="row">{{navlink.pk}}</th>
+                <td>{{navlink.name}}</td>
+                <td><a href="{{navlink.url}}" target='_blank'>{{navlink.url}}<img class="new_tab_icon filter-white ms-2" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></td>
+                <td>{%if navlink.linked_page%}<a href="{{navlink.linked_page.get_absolute_url}}">{{navlink.linked_page}}</a>{%else%}None{%endif%}</td>
+                <td>{%if navlink.parent_dropdown%}<a href="{{navlink.parent_dropdown.get_absolute_url}}">{{navlink.parent_dropdown}}</a>{%else%}None{%endif%}</td>
+                <td>{{navlink.priority}}</td>
+                <td>{%if navlink.new_tab%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}</td>
+                <td>{%if navlink.enabled%}<div class='badge bg-success'>Enabled</div>{%else%}<div class='badge bg-danger'>Disabled</div>{%endif%}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptormc.change_navbarlink %}
+                        <a role='button' class='btn btn-primary'
+                                href='/panel/content/navbarlink/{{navbarlink.pk}}'
+                                hx-get="{% url 'panel:content/navbarlink/update_IR' pk=navlink.pk %}"
+                                hx-push-url='/panel/content/navbarlink/update/{{toast.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            Edit
+                        </a>
+                        {% endif %}
+                        {% if perms.raptormc.delete_navbarlink %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'raptormc:navbarlink_delete' navlink.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Permanently Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navbarlink/list' %}?page=1"
+                        hx-target="#server_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navbarlink/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navbarlink/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navbarlink/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

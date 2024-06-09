@@ -1,9 +1,13 @@
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Server Import/Export</title>
+</head>
+
 <div class="container">
     <div class="m-2 mt-3 p-3">
         <div class="text-white">
-            <header class="fs-3">Server Actions</header>
+            <header class="fs-3">Server Import and Export</header>
             <p class="fs-5">
-                Here you can execute certain actions pertaining to the Servers you have in the application.
+                Here you can import and export servers to and from the application.
             </p>
         </div>
     </div>
@@ -11,9 +15,10 @@
         <div class="card-body">
             <div class="m-3 mt-1 p-1">
                 <div class="text-white">
-                    <header class="fs-5">Import/Export Servers</header>
+                    <header class="fs-5">Server filesystem JSON Import and Export</header>
                     <p class="fs-7">
-                        Export or import servers from or to the database.
+                        Export or import servers from or to the database directly to a JSON file
+                        stored on the server.
                     </p>
                 </div>
             </div>
@@ -50,29 +55,6 @@
             </div>
         </div>
     </div>
-    <div class="card bg-dark p-2">
-        <div class="card-body">
-            <div class="m-3 mt-1 p-1">
-                <div class="text-white">
-                    <header class="fs-5">Server Onboarding Links</header>
-                    <p class="fs-7">
-                        Get the links for each server's Onboarding page.
-                    </p>
-                </div>
-            </div>
-            <div id="onboardingCopy" class="m-3 d-flex flex-wrap justify-content-evenly gap-2">
-                {% for server in current_enabled_servers %}
-                    <button class="copy{{server.pk}}OnboardingAddress btn btn-success text-break"
-                            data-clipboard-text="{{web_proto}}://{{pub_domain}}/onboarding/{{server.modpack_name|slugify}}"
-                            data-bs-toggle="tooltip"
-                            data-bs-title="Click to copy {{server.modpack_name}}'s' Onboarding Page address!"
-                    >
-                        {{server.modpack_name}}
-                    </button>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -82,14 +64,4 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
-</script>
-
-<script>
-    $( document ).ready(function() {
-        {% for server in current_enabled_servers %}
-        new ClipboardJS('.copy{{ server.pk}}OnboardingAddress', {
-            container: document.getElementById('onboardingCopy')
-        });
-        {% endfor %}
-    });
 </script>

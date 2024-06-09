@@ -2,26 +2,24 @@ from os.path import join
 from os import remove
 from datetime import datetime
 from logging import Logger, getLogger
-from pytz import timezone
 from typing import Any
 
-from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.utils.text import slugify
-from django.utils.timezone import localtime
 from django.conf import settings
 
 from raptorWeb.authprofiles.forms import UserRegisterForm, UserPasswordResetEmailForm, UserPasswordResetForm, UserProfileEditForm, UserLoginForm, UserListFilter, UserDeleteForm, MFARequestQR, MFATotpCodeSubmit
-from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser
+from raptorWeb.authprofiles.models import RaptorUserManager, RaptorUser, DeletionQueueForUser, RaptorUserGroup
 from raptorWeb.authprofiles.tasks import send_delete_request_email
 from raptorWeb.authprofiles.tokens import RaptorUserTokenGenerator, generate_totp_token, check_totp_token
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
+from raptorWeb.panel.models import PanelLogEntry
 
 try:
     from raptorWeb.raptormc.models import DefaultPages
@@ -385,7 +383,11 @@ class User_Login_Form(TemplateView):
                 login(request, user)
                 if user.date_queued_for_delete != None:
                     user.date_queued_for_delete = None
-                    DeletionQueueForUser.objects.get(user=user).delete()
+                    try:
+                        DeletionQueueForUser.objects.get(user=user).delete()
+                    except DeletionQueueForUser.DoesNotExist:
+                        pass
+                    
                     user.save()
 
                 return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
@@ -630,3 +632,55 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
 
         else:
             return render(request, self.template_name, context=instance_dict)
+
+
+class RaptorUserGroupDelete(View):
+    """
+    Permanently delete a given RaptorUser Group
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('authprofiles.delete_raptorusergroup'):
+            messages.error(request, 'You do not have permission to delete Raptor User Groups.')
+            return HttpResponse(status=200)
+        
+        changing_raptorusergroup = RaptorUserGroup.objects.get(pk=self.kwargs['pk'])
+        changing_raptorusergroup.delete()
+        
+        model_string = str(RaptorUserGroup).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_raptorusergroup}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_raptorusergroup} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/users/raptorusergroup/list')
+    
+    
+class DeletionQueueForUserDelete(View):
+    """
+    Permanently delete a user from the deletion queue
+    """
+    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        if not request.user.has_perm('authprofiles.delete_deletionqueueforuser'):
+            messages.error(request, 'You do not have permission to remove users from the Deletion Queue.')
+            return HttpResponse(status=200)
+        
+        changing_deletionqueueforuser = DeletionQueueForUser.objects.get(pk=self.kwargs['pk'])
+        changing_deletionqueueforuser.delete()
+        
+        model_string = str(DeletionQueueForUser).split('.')[3].replace("'", "").replace('>', '')
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changing_deletionqueueforuser}'),
+            action='Deleted'
+        )
+            
+        messages.success(request, f'{changing_deletionqueueforuser} has been permanently deleted!')
+        return HttpResponseRedirect('/panel/api/html/panel/users/deletionqueue/list')

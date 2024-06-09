@@ -17,6 +17,10 @@ urlpatterns: list[URLPattern] = [
     # Command API
     path('action/command/refresh_global_announcements/', views.Update_Global_Announcement.as_view(), name="command_update_global_announcements"),
     path('action/command/refresh_all_server_announcements/', views.Update_Server_Announcement.as_view(), name="command_update_all_server_announcements"),
-    path('action/command/update_members/', views.Update_Members.as_view(), name="command_update_members")
+    path('action/command/update_members/', views.Update_Members.as_view(), name="command_update_members"),
+    # Model Deletion
+    path('crud/globalannouncement/delete/<int:pk>/', views.GlobalAnnouncementDelete.as_view(), name="globalannouncement_delete"),
+    path('crud/serverannouncement/delete/<int:pk>/', views.ServerAnnouncementDelete.as_view(), name="serverannouncement_delete"),
+    path('crud/sentembedmessage/delete/<int:pk>/', views.SentEmbedMessageDelete.as_view(), name="sentembedmessage_delete")
 
 ]

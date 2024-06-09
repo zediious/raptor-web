@@ -18,6 +18,7 @@ class DonationCurrencyChoices(models.TextChoices):
         MXN = 'mxn', _('Mexican Peso')
         GBP = 'gbp', _('Pound')
         EUR = 'eur', _('Euro')
+        
 
 class PageManager(models.Manager):
     """
@@ -36,8 +37,9 @@ class PageManager(models.Manager):
 
 class Page(models.Model):
     """
-    A new webpage with a Title and Content. This page will extend to entire
-    base website, but you can choose whether to include Server buttons or not.
+    A new webpage with a Title and Content. This page will extend the entire
+    base website, but you can provide custom CSS and JS as well as SEO
+    attributes to apply to a created page.
     """
     objects = PageManager()
 
@@ -50,6 +52,7 @@ class Page(models.Model):
     content = models.TextField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Content",
         help_text="The content of this page."
     )
@@ -87,14 +90,16 @@ class Page(models.Model):
         verbose_name="Page CSS",
         help_text=("Custom style sheet that will only apply on this page. "
                     "This will apply only to this page, overriding any defaults."),
-        blank=True
+        blank=True,
+        null=True
     )
     
     page_js = models.FileField(
         upload_to='page_js',
         verbose_name="Page JavaScript",
         help_text=("Custom Javascript that will only apply on this page."),
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __str__(self):
@@ -111,7 +116,9 @@ class Page(models.Model):
 class NotificationToast(models.Model):
     """
     A Notification/Toast that will appear on the bottom right of the website.
-    Users will only see these messages once, until their session expires.
+    Non logged in users will only see these messages once, until their session expires.
+    If a user is logged in, they will not see a toast again unless they reset their seen
+    notifications from their profile.
     """
     enabled = models.BooleanField(
         default=True,
@@ -128,6 +135,7 @@ class NotificationToast(models.Model):
     message = models.CharField(
         max_length=15000,
         default = "",
+        blank=True,
         verbose_name="Message",
         help_text="The message for this notification"
     )
@@ -138,6 +146,9 @@ class NotificationToast(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    def get_absolute_url(self):
+        return f'/panel/content/toast/update/{self.pk}'
 
     class Meta:
         verbose_name = "Notification Toast",
@@ -173,6 +184,9 @@ class NavWidgetBar(models.Model):
 
     def enabled_links_in_widgetbar(self):
         return self.nestednavwidget.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navwidgetbar/update/{self.pk}'
 
     class Meta:
         verbose_name = "Nav Widget Bar",
@@ -295,6 +309,9 @@ class NavbarDropdown(models.Model):
 
     def enabled_links_in_dropdown(self):
         return self.nestedlink.filter(enabled=True).order_by('priority')
+    
+    def get_absolute_url(self):
+        return f'/panel/content/navbardropdown/update/{self.pk}'
 
     class Meta:
         verbose_name = "Navigation Drodown",
@@ -303,7 +320,7 @@ class NavbarDropdown(models.Model):
 
 class NavbarLink(models.Model):
     """
-    A Navigation Link which will be added to the Navigation sidebar. Can be placed inside
+    A Navigation Link which will be added to the site Navigation menu. Can be placed inside
     of a created Dropdown Menu.
     """
     name = models.CharField(
@@ -404,6 +421,22 @@ class SiteInformation(models.Model):
                     "underneath server buttons. If using a Background Image, that will "
                     "always override this color."),
         default="#00233c"
+    )
+    
+    use_svg_brand = models.BooleanField(
+        verbose_name="Use SVG Branding Image",
+        help_text=("If this is checked, the SVG Branding Image will be used instead of the "
+                   "uploaded raster Branding Image."),
+        default=False
+    )
+    
+    branding_image_svg = models.FileField(
+        upload_to='branding_svg',
+        verbose_name="Branding Image - SVG",
+        help_text=("The image displayed in the website Navigation Bar as a link to the "
+                    "homepage. This must be an SVG, and will override the webp Branding Image."),
+        blank=True,
+        null=True
     )
 
     branding_image = ResizedImageField(
@@ -674,10 +707,8 @@ class SiteInformation(models.Model):
         verbose_name_plural = "Site Settings"
         permissions = [
             ("panel", "Can access the Control Panel Homepage"),
-            ("discord_bot", "Can access the Discord Bot control panel"),
-            ("server_actions", "Can access the Server Actions menu"),
+            ("discord_bot_panel", "Can access the Discord Bot control panel"),
             ("reporting", "Can access Reporting"),
-            ("donations", "Can access Donations"),
             ("settings", "Can access settings (DANGEROUS!)"),
         ]
         
@@ -726,6 +757,9 @@ class InformativeText(models.Model):
     )
 
     def __str__(self):
+        return str(self.name)
+    
+    def __repr__(self) -> str:
         return str(self.name)
 
     class Meta:

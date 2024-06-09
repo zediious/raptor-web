@@ -1,0 +1,21 @@
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Server Announcement from {{object.author}} for {{object.server.modpack_name}} on {{object.date}}</title>
+</head>
+
+<div class='card bg-dark text-white p-3'>
+    <div class='d-flex flex-wrap justify-content-evenly m-3 text-center'>
+        <p class='fs-5'>
+            Author: {{ object.author }}
+        </p>
+        <p class='fs-5'>
+            Server: {{ object.server }}
+        </p>
+        <p class='fs-5'>
+            Published: {{ object.date|date }}
+        </p>
+    </div>
+    <hr>
+    <div class='m-3'>
+        <p class='fs-6'>{{ object.message }}</p>
+    </div>
+</div>

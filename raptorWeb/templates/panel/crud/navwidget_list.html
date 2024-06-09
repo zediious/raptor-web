@@ -1,0 +1,134 @@
+{% load static %}
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Nav Widgets</title>
+</head>
+
+<div id='content_table_wrapper'>
+    <div class="m-2 mt-0 p-3">
+        <div class="text-white">
+            <header class="fs-3">Navigation Widgets</header>
+            <p class="fs-5">
+                {% get_admin_documentation model %}
+            </p>
+        </div>
+    </div>
+    <hr class='text-white'>
+
+    {% if perms.raptormc.add_navwidget %}
+    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+        <a role='button' id='add_page_button' class='btn btn-primary'
+                href='/panel/content/navwidget/create'
+                hx-get="{% url 'panel:content/navwidget/create'%} "
+                hx-push-url='/panel/content/navwidget/create'
+                hx-target='#panel_main'
+                hx-indicator="#panelLoadingspinner,.loaded-content"
+        >
+            Add Navigation Widget
+        </a>
+    </div>
+    {% endif %}
+
+    <div class='table-responsive-xxl'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                    <th class='text-white' scope="col">#</th>
+                    <th class='text-white' scope="col">Name</th>
+                    <th class='text-white' scope="col">URL</th>
+                    <th class='text-white' scope="col">Linked Page</th>
+                    <th class='text-white' scope="col">Parent Bar</th>
+                    <th class='text-white' scope="col">Widget Image</th>
+                    <th class='text-white' scope="col">Tooltip</th>
+                    <th class='text-white' scope="col">Priority</th>
+                    <th class='text-white' scope="col">New Tab</th>
+                    <th class='text-white' scope="col">Enabled</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for navwidget in page_obj %}
+            <tbody>
+                <tr>
+                    <th scope="row">{{navwidget.pk}}</th>
+                    <td>{{navwidget.name}}</td>
+                    <td><a href="{{navwidget.url}}" target='_blank'>{{navwidget.url}}<img class="new_tab_icon filter-white ms-2" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></td>
+                    <td>{%if navwidget.linked_page%}<a href="{{navwidget.linked_page.get_absolute_url}}">{{navwidget.linked_page}}</a>{%else%}None{%endif%}</td>
+                    <td>{%if navwidget.parent_bar%}<a href="{{navwidget.parent_bar.get_absolute_url}}">{{navwidget.parent_bar}}</a>{%else%}None{%endif%}</td>
+                    <td>{%if navwidget.nav_image%}<img src={{navwidget.nav_image.url}} alt="Has Image">{%else%}None{%endif%}</td>
+                    <td>{{navwidget.tooltip|truncatechars:30}}</td>
+                    <td>{{navwidget.priority}}</td>
+                    <td>{%if navwidget.new_tab%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}</td>
+                    <td>{%if navwidget.enabled%}<div class='badge bg-success'>Enabled</div>{%else%}<div class='badge bg-danger'>Disabled</div>{%endif%}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.raptormc.change_navwidget %}
+                        <a role='button' class='btn btn-primary'
+                                href='/panel/content/navwidget/update/{{navwidget.pk}}'
+                                hx-get="{% url 'panel:content/navwidget/update_IR' pk=navwidget.pk %}"
+                                hx-push-url='/panel/content/navwidget/update/{{navwidget.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            Edit
+                        </a>
+                        {% endif %}
+                        {% if perms.raptormc.delete_navwidget %}
+                        <form>
+                            {% csrf_token %}
+                            <button class='btn btn-danger'
+                                    hx-get="{% url 'raptormc:navwidget_delete' navwidget.pk%}"
+                                    hx-target='#content_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Permanently Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% if page_obj.has_next or page_obj.has_previous%}
+        <div class="pagination d-flex align-items-center justify-content-center m-3">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navwidget/list' %}?page=1"
+                        hx-target="#server_table_wrapper"
+                    >
+                        &laquo; First
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navwidget/list' %}?page={{ page_obj.previous_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Previous
+                    </a>
+                {% endif %}
+
+                <span class="current text-white">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navwidget/list' %}?page={{ page_obj.next_page_number }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Next
+                    </a>
+                    <a role="button" class="btn btn-dark opacity-75"
+                        hx-get="{% url 'panel:content/navwidget/list' %}?page={{ page_obj.paginator.num_pages }}"
+                        hx-target="#server_table_wrapper"
+                    >
+                        Last &raquo;
+                    </a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+    </div>

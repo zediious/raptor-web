@@ -1,14 +1,19 @@
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Bot Control Panel</title>
+</head>
+  
+
 <div class="container">
     <div class="m-2 mt-3 p-3">
         <div class="text-white">
-            <header class="fs-3">Discord Bot</header>
+            <header class="fs-3">Discord Bot Panel</header>
             <p class="fs-5">
                 Here you can execute certain actions pertaining to the Discord Bot.
             </p>
         </div>
     </div>
     <div>
-        <div class="card bg-dark p-2">
+        <div class="card bg-dark p-2 mt-2">
             <div class="card-body">
                 <div class="m-3 mt-1 p-1">
                     <div class="row text-white">
@@ -57,7 +62,7 @@
             </div>
         </div>
 
-        <div class="card bg-dark p-2">
+        <div class="card bg-dark p-2 mt-2">
             <div class="card-body">
                 <div class="m-3 mt-1 p-1">
                     <div class="text-white">
@@ -110,18 +115,17 @@
             </div>
         </div>
 
-        <div class="card bg-dark p-2">
+        <div class="card bg-dark p-2 mt-2">
             <div class="card-body">
                 <div class="m-3 mt-1 p-1">
                     <div class="text-white">
                         <header class="fs-5">Discord Guild</header>
                         <p class="fs-7 mt-2">
                             Information about the Discord Guild that the Discord Bot is linked to.
-                            Change this within the project environment file.
                         </p>
                     </div>
                 </div>
-                <div class="m-3">
+                <div class="m-3 text-white">
                     <p>
                         <strong>Guild Name: </strong>{{ discord_guild.guild_name }}
                     </p>

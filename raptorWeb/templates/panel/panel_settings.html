@@ -1,5 +1,9 @@
 {% load django_bootstrap5 %}
 
+<head hx-head="merge">
+    <title>{{ site_info_model.brand_name }} | Settings</title>
+</head>
+
 <div class="container">
     <div class="m-2 mt-3 p-3">
         <div class="text-white">
@@ -22,7 +26,7 @@
                             <header class="fs-5">General Settings</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% csrf_token %} 
                             {% bootstrap_field SettingsInformation.brand_name %}
@@ -45,7 +49,7 @@
                             <header class="fs-5">SEO</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.meta_description %}
                             {% bootstrap_field SettingsInformation.meta_keywords %}
@@ -63,7 +67,7 @@
                             <header class="fs-5">Auth</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.require_login_for_user_list %}
                             {% bootstrap_button button_type="submit" content="Update" %}
@@ -80,7 +84,7 @@
                             <header class="fs-5">Game Servers</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">  
                                 {% bootstrap_field SettingsInformation.enable_server_query %}
                                 {% bootstrap_field SettingsInformation.query_delay %}
@@ -103,7 +107,7 @@
                             <header class="fs-5">Discord Bot</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.discord_guild %}
                             {% bootstrap_field SettingsInformation.discord_global_announcement_channel %}
@@ -122,7 +126,7 @@
                             <header class="fs-5">Donations</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.stripe_enabled %}
                             {% bootstrap_field SettingsInformation.paypal_enabled %}
@@ -145,12 +149,37 @@
                             <header class="fs-5">Colors</header>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center text-white">
                         <div class="w-50">
                             {% bootstrap_field SettingsInformation.main_color %}
                             {% bootstrap_field SettingsInformation.use_main_color %}
                             {% bootstrap_field SettingsInformation.secondary_color %}
                             {% bootstrap_field SettingsInformation.use_secondary_color %}
+                            {% bootstrap_button button_type="submit" content="Update" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3">
+            <div class="card bg-dark p-2">
+                <div class="card-body">
+                    <div class="m-3 mt-1 p-1">
+                        <div class="text-white">
+                            <header class="fs-5">Image Configuration</header>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center text-white">
+                        <div class="w-50">
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" type="submit" name="use_svg_brand"
+                                           {%if site_information.use_svg_brand%}checked=""{%endif%}
+                                           class="form-check-input is-valid" id="id_use_svg_brand" onclick='switchBrandField()'>
+                                    <label class="form-check-label" for="id_use_svg_brand">Use SVG Branding Image</label>
+                                    <div class="form-text text-white">If this is checked, the SVG Branding Image will be used instead of the uploaded raster Branding Image.</div>
+                                </div>
+                            </div>
                             {% bootstrap_button button_type="submit" content="Update" %}
                         </div>
                     </div>
@@ -166,15 +195,22 @@
                         <header class="fs-5">Images</header>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center text-white">
                     <div class="w-50">
                         <form class="form"
                             enctype="multipart/form-data" 
                             hx-post="{% url 'panel:settings_files_update'%}"
                             hx-swap='none'
                         > 
-                            {% csrf_token %}  
-                            {% bootstrap_form SettingsInformationFiles %}
+                            {% csrf_token %}
+                            <div id='branding_image_field_box'>
+                                {% bootstrap_field SettingsInformationFiles.branding_image %}
+                            </div>
+                            <div id='branding_image_svg_field_box' style='display: none'>
+                                {% bootstrap_field SettingsInformationFiles.branding_image_svg %}
+                            </div>
+                            {% bootstrap_field SettingsInformationFiles.background_image %}
+                            {% bootstrap_field SettingsInformationFiles.avatar_image %}
                             {% bootstrap_button button_type="submit" content="Update" %}
 
                         </form>
@@ -182,13 +218,22 @@
                         <p class="fs-5 text-center">
                             Current Files
                         </p>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center text-white">
+                            {% if site_information.use_svg_brand %}
+                            <img class="m-3 w-25"
+                                 src="{% if site_information.branding_image_svg %}{{ site_information.branding_image_svg.url }}{% endif %}"
+                                 alt="No Brand Image - SVG"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-html="true"
+                                 data-bs-title="Brand Image - SVG">
+                            {% else %}
                             <img class="m-3 w-25"
                                  src="{% if site_information.branding_image %}{{ site_information.branding_image.url }}{% endif %}"
                                  alt="No Brand Image"
                                  data-bs-toggle="tooltip"
                                  data-bs-html="true"
                                  data-bs-title="Brand Image">
+                            {% endif %}
 
                             <img class="m-3 w-25"
                                  src="{% if site_information.background_image %}{{ site_information.background_image.url }}{% endif %}"
@@ -217,7 +262,7 @@
                         <header class="fs-5">Default Pages</header>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center text-white">
                     <div class="w-50">
                         <form class="form"
                             enctype="multipart/form-data" 
@@ -243,4 +288,26 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     }
+</script>
+
+<script>
+    $(document).ready(function () {
+        {% if site_information.use_svg_brand %}
+            document.getElementById('branding_image_field_box').style.display = 'none'
+            document.getElementById('branding_image_svg_field_box').style.display = 'block'
+        {% endif %}
+    });
+    
+    function switchBrandField() {
+        if (document.getElementById('branding_image_svg_field_box').style.display === 'none') {
+            document.getElementById('branding_image_field_box').style.display = 'none'
+            document.getElementById('branding_image_svg_field_box').style.display = 'block'
+        }
+
+        else {
+            document.getElementById('branding_image_field_box').style.display = 'block'
+            document.getElementById('branding_image_svg_field_box').style.display = 'none'
+        }
+      
+      }
 </script>
