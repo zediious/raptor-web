@@ -599,7 +599,7 @@ class PanelCreateView(CreateView):
             return HttpResponseRedirect(self.redirect_url)
         
         messages.error(
-            request, [str(message[1][0]) for message in model_form.errors.items()]
+            request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in model_form.errors.items()]
         )
         return HttpResponse(status=200)
 
