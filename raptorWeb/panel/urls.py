@@ -65,7 +65,7 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/staffapps/staffapplicationfield/list', views.PanelStaffApplicationFieldList.as_view(template_name='panel/crud/staffapplicationfield_list.html'), name="staffapps/staffapplicationfield/list"),
     path('api/html/panel/staffapps/staffapplicationfield/update/<int:pk>', views.PanelStaffApplicationFieldUpdate.as_view(template_name='panel/crud/staffapplicationfield_update.html'), name="staffapps/staffapplicationfield/update_IR"),
     path('api/html/panel/staffapps/staffapplicationfield/create', views.PanelStaffApplicationFieldCreate.as_view(template_name='panel/crud/staffapplicationfield_create.html'), name="staffapps/staffapplicationfield/create"),
-    path('api/html/panel/staffapps/staffapplicationfield/delete', views.PanelSubmittedStaffApplicationDelete.as_view(), name="staffapps/staffapplicationfield/delete"),
+    path('api/html/panel/staffapps/staffapplicationfield/delete', views.PanelStaffApplicationFieldDelete.as_view(), name="staffapps/staffapplicationfield/delete"),
     path('api/html/panel/users/raptoruser/list', views.PanelUserList.as_view(template_name='panel/crud/raptoruser_list.html'), name="users/raptoruser/list"),
     path('api/html/panel/users/raptoruser/update/<int:pk>', views.PanelUserUpdate.as_view(template_name='panel/crud/raptoruser_update.html'), name="users/raptoruser/update_IR"),
     path('api/html/panel/users/userprofileinfo/update/<int:pk>', views.PanelUserProfileInfoUpdate.as_view(template_name='panel/crud/userprofileinfo_update.html'), name="users/userprofileinfo/update_IR"),
