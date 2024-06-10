@@ -478,7 +478,7 @@ class PanelUpdateView(UpdateView):
                 request,
                 [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
             )
-            return HttpResponse(status=200)
+            return HttpResponse(status=400)
         
         
 class PanelListView(ListView):
@@ -606,7 +606,7 @@ class PanelCreateView(CreateView):
             request,
             [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
         )
-        return HttpResponse(status=200)
+        return HttpResponse(status=400)
     
 
 class PanelDeleteView(View):
