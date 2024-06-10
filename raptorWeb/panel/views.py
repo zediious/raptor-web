@@ -3,7 +3,8 @@ from logging import getLogger
 from typing import Any
 
 from django.db.models.query import QuerySet
-from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DetailView
+from django.db.models import Model
+from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DetailView, View
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
@@ -606,6 +607,44 @@ class PanelCreateView(CreateView):
             [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
         )
         return HttpResponse(status=200)
+    
+
+class PanelDeleteView(View):
+    """
+    Permanently delete a given list of objects
+    """
+    model: Model
+    permission: str
+    redirect_url: str
+
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        model_string = str(CreatedStaffApplication).split('.')[3].replace("'", "").replace('>', '')
+        
+        if not request.user.has_perm(self.permission):
+            messages.error(request, f'You do not have permission to delete {model_string}s.')
+            return HttpResponse(status=200)
+        
+        form_data = request.POST.dict()
+        form_data.pop('csrfmiddlewaretoken')
+        deleting_objects = self.model.objects.filter(pk__in=form_data.keys())
+
+        changed_string: str = ''
+        for model in deleting_objects:
+            changed_string += f'{model}, '
+
+        deleting_objects.delete()
+
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changed_string}'),
+            action='Deleted'
+        )
+        
+        messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        return HttpResponseRedirect(self.redirect_url)
 
     
 class PanelDetailView(DetailView):
@@ -1240,6 +1279,15 @@ class PanelSubmittedStaffApplicationView(PanelDetailView):
     """
     model: SubmittedStaffApplication = SubmittedStaffApplication
     permission: str = 'staffapps.view_submittedstaffapplication'
+
+
+class PanelSubmittedStaffApplicationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Submitted Staff Applications
+    """
+    model = SubmittedStaffApplication
+    permission = 'staffapps.delete_submittedstaffapplication'
+    redirect_url = '/panel/api/html/panel/staffapps/submittedstaffapplication/list'
     
     
 class PanelCreatedStaffApplicationList(PanelListView):
@@ -1277,6 +1325,15 @@ class PanelCreatedStaffApplicationCreate(PanelCreateView):
     template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'createdstaffapplication_create.html'))
     redirect_url: str = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
     permission: str = 'staffapps.add_createdstaffapplication'
+
+
+class PanelCreatedStaffApplicationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Created Staff Applications
+    """
+    model = CreatedStaffApplication
+    permission = 'staffapps.delete_createdstaffapplication'
+    redirect_url = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
     
     
 class PanelStaffApplicationFieldList(PanelListView):
@@ -1324,6 +1381,15 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
         'widget',
         'priority'
     ]
+
+
+class PanelStaffApplicationFieldDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Staff Application Fields
+    """
+    model = StaffApplicationField
+    permission = 'staffapps.delete_staffapplicationfield'
+    redirect_url = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
     
     
 class PanelUserList(PanelListViewSearchable):
