@@ -1,5 +1,5 @@
 {% for server in object_list %}
-<div class="accordion-item">
+<div id="serverAccordion{{server.pk}}" class="accordion-item">
     <h2 class="accordion-header" id="{{ server.pk }}BannedItems">
         <a id="{{ server.pk }}"></a>
         <button class="accordion-button collapsed pageHeader text-center"

@@ -49,6 +49,7 @@
            href="/announcements?server={{server.pk}}"
            hx-get="{% url 'raptormc:announcements' %}?server={{server.pk}}"
            hx-target='#home'
+           hx-swap = "innerHTML show:body:bottom settle:50ms"
            hx-push-url="/announcements"
            hx-indicator="#mainLoadingspinner,.loaded-content"
            onclick='closeModal()'
@@ -62,6 +63,7 @@
              href="/rules?server={{server.pk}}"
              hx-get="{% url 'raptormc:rules' %}?server={{server.pk}}"
              hx-target='#home'
+             hx-swap = "innerHTML show:body:bottom settle:50ms"
              hx-push-url="/rules"
              hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
@@ -75,6 +77,7 @@
              href="/banneditems?server={{server.pk}}"
              hx-get="{% url 'raptormc:banneditems' %}?server={{server.pk}}"
              hx-target='#home'
+             hx-swap = "innerHTML show:body:bottom settle:50ms"
              hx-push-url="/banneditems"
              hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
@@ -88,6 +91,7 @@
              href='/voting?server={{server.pk}}'
              hx-get="{% url 'raptormc:voting' %}?server={{server.pk}}"
              hx-target='#home'
+             hx-swap = "innerHTML show:body:bottom settle:50ms"
              hx-push-url="/voting"
              hx-indicator="#mainLoadingspinner,.loaded-content"
              onclick='closeModal()'
