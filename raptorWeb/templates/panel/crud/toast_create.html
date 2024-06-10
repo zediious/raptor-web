@@ -19,7 +19,6 @@
     <form id="create_form_alone" class="form text-white"
         enctype="multipart/form-data" 
         hx-post="{% url 'panel:content/toast/create' %} "
-        hx-push-url='/panel/content/toast/list'
         hx-swap="none"
     >
         {% csrf_token %}
