@@ -220,7 +220,8 @@ class SettingsPanel(PanelApiBaseView):
         else:
             
             messages.error(
-                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in settings_form.errors.items()]
+                request,
+                [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in settings_form.errors.items()]
             )
             return HttpResponse(status=200)
         
@@ -299,7 +300,8 @@ class SettingsPanelFilePost(PanelApiBaseView):
 
         else:
             messages.error(
-                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in settings_files_form.errors.items()]
+                request,
+                [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in settings_files_form.errors.items()]
             )
             
             return HttpResponse(status=400)
@@ -472,7 +474,8 @@ class PanelUpdateView(UpdateView):
 
         else:
             messages.error(
-                request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in model_form.errors.items()]
+                request,
+                [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
             )
             return HttpResponse(status=200)
         
@@ -599,7 +602,8 @@ class PanelCreateView(CreateView):
             return HttpResponseRedirect(self.redirect_url)
         
         messages.error(
-            request, [str(f'{str(message[0]).title()}: {message[1][0]}') for message in model_form.errors.items()]
+            request,
+            [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
         )
         return HttpResponse(status=200)
 
