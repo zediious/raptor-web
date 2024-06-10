@@ -22,8 +22,7 @@
         enctype="multipart/form-data" 
         hx-post="{% url 'panel:donations/donationservercommand/create' %} "
         hx-push-url='/panel/donations/donationservercommand/list'
-        hx-target='#panel_main'
-        hx-swap="innerHTML"
+        hx-swap="none"
     >
         {% csrf_token %}
         {% bootstrap_form form %}

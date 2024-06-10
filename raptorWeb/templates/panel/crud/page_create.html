@@ -20,8 +20,7 @@
         enctype="multipart/form-data" 
         hx-post="{% url 'panel:content/page/create' %} "
         hx-push-url='/panel/content/page/list'
-        hx-target='#panel_main'
-        hx-swap="innerHTML"
+        hx-swap="none"
     >
         {% csrf_token %}
         {% bootstrap_form form %}
