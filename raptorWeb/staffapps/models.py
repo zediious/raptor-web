@@ -224,7 +224,7 @@ class SubmittedStaffApplication(models.Model):
     )
     
     def __str__(self) -> str:
-        return str(self.submitted_date)
+        return f'Submitted: {self.submitted_date.strftime("%B %d %Y")} at {self.submitted_date.strftime("%H:%M")}'
     
     class Meta:
         permissions = [
