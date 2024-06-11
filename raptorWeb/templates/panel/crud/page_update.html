@@ -15,15 +15,21 @@
     </div>
 </div>
 
-<div class='card bg-dark m-0 p-3'>
+<div class='card bg-dark m-0 p-3' x-data='{selected: 1}'>
     <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
-        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 1'
+                :class="{'btn-primary': selected == 1, 'btn-secondary': selected != 1}"
+        >
             Page Content
         </button>
-        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 2'
+                :class="{'btn-primary': selected == 2, 'btn-secondary': selected != 2}"
+        >
             CSS/JS
         </button>
-        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 3'
+                :class="{'btn-primary': selected == 3, 'btn-secondary': selected != 3}"
+        >
             SEO
         </button>
     </div>
@@ -37,15 +43,15 @@
             hx-swap="none"
         >
             {% csrf_token %}
-            <div id="page_content" style='display: block'>
+            <div x-show='selected == 1'>
                 {% bootstrap_field form.name %}
                 {% bootstrap_field form.content %}
             </div>
-            <div id="page_cssjs" style='display: none'>
+            <div x-show='selected == 2'>
                 {% bootstrap_field form.page_css %}
                 {% bootstrap_field form.page_js %}
             </div>
-            <div id="page_seo" style='display: none'>
+            <div x-show='selected == 3'>
                 {% bootstrap_field form.meta_description %}
                 {% bootstrap_field form.meta_keywords %}
             </div>
@@ -56,5 +62,3 @@
         </form>
     </div>
 </div>
-
-<script src="{% static 'javascript/src/pageSelectButton.js' %}"></script>
