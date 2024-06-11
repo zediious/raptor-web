@@ -88,7 +88,7 @@
         </table>
         <div>
             <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
-                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}"
+                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
             >
             <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
         </div>
