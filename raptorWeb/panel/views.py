@@ -648,9 +648,12 @@ class PanelDeleteView(View):
         changed_string: str = ''
         for model in deleting_objects:
             changed_string += f'{model}, '
+            
+        if changed_string == '':
+            messages.error(request, 'There were no objects to delete!')
+            return HttpResponse(status=400)
 
         deleting_objects.delete()
-
         PanelLogEntry.objects.create(
             changing_user=request.user,
             changed_model=str(f'{model_string} - {changed_string}'),
