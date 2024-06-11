@@ -730,6 +730,16 @@ class PanelServerUpdate(PanelUpdateView):
         'archived'
     ]
     
+
+class PanelServerDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Servers
+    """
+    model = Server
+    permission = 'gameservers.delete_server'
+    redirect_url = '/panel/api/html/panel/server/archivedlist'
+    
+# Player
     
 class PanelPlayerList(PanelListViewSearchable):
     """
@@ -829,6 +839,16 @@ class PanelPageCreate(PanelCreateView):
     redirect_url: str = '/panel/api/html/panel/content/page/list'
     permission: str = 'raptormc.add_page'
     
+    
+class PanelPageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Pages
+    """
+    model = Page
+    permission = 'raptormc.delete_page'
+    redirect_url = '/panel/api/html/panel/content/page/list'
+    
+# Notification Toast
 
 class PanelToastList(PanelListView):
     """
@@ -867,6 +887,16 @@ class PanelToastCreate(PanelCreateView):
     redirect_url: str = '/panel/api/html/panel/content/toast/list'
     permission: str = 'raptormc.add_notificationtoast'
     
+    
+class PanelToastDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Notification Toasts
+    """
+    model = NotificationToast
+    permission = 'raptormc.delete_notificationtoast'
+    redirect_url = '/panel/api/html/panel/content/toast/list'
+    
+# Navbar Link
     
 class PanelNavbarLinkList(PanelListView):
     """
@@ -921,6 +951,16 @@ class PanelNarbarLinkCreate(PanelCreateView):
     ]
     
     
+class PanelNavbarLinkDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Navbar Links
+    """
+    model = NavbarLink
+    permission = 'raptormc.delete_navbarlink'
+    redirect_url = '/panel/api/html/panel/content/navbarlink/list'
+    
+# Navbar Dropdown
+    
 class PanelNavbarDropdownList(PanelListView):
     """
     Return a list of Navbar Dropdowns for viewing and accessing CRUD actions
@@ -966,6 +1006,13 @@ class PanelNavbarDropdownCreate(PanelCreateView):
     ]
     
     
+class PanelNavbarDropdownDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Navbar Dropdowns
+    """
+    model = NavbarDropdown
+    permission = 'raptormc.delete_navbardropdown'
+    redirect_url = '/panel/api/html/panel/content/navbardropdown/list'
 class PanelNavWidgetList(PanelListView):
     """
     Return a list of Nav Widgets for viewing and accessing CRUD actions
@@ -1005,6 +1052,16 @@ class PanelNavWidgetCreate(PanelCreateView):
     redirect_url: str = '/panel/api/html/panel/content/navwidget/list'
     permission: str = 'raptormc.add_navwidget'
     
+    
+class PanelNavWidgetDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Nav Widgets
+    """
+    model = NavWidget
+    permission = 'raptormc.delete_navwidget'
+    redirect_url = '/panel/api/html/panel/content/navwidget/list'
+    
+# Nav Widget Bar
     
 class PanelNavWidgetBarList(PanelListView):
     """
@@ -1051,6 +1108,16 @@ class PanelNavWidgetBarCreate(PanelCreateView):
     ]
     
     
+class PanelNavWidgetBarDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Nav Widget Bars
+    """
+    model = NavWidgetBar
+    permission = 'raptormc.delete_navwidgetbar'
+    redirect_url = '/panel/api/html/panel/content/navwidgetbar/list'
+    
+# Global Announcement
+    
 class PanelGlobalAnnouncementList(PanelListViewSearchable):
     """
     Return a list of Global Announcements for viewing and accessing CRUD actions
@@ -1076,6 +1143,16 @@ class PanelGlobalAnnouncementView(PanelDetailView):
     model: GlobalAnnouncement = GlobalAnnouncement
     permission: str = 'raptorbot.view_globalannouncement'
     
+
+class PanelGlobalAnnouncementDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Global Announcements
+    """
+    model = GlobalAnnouncement
+    permission = 'raptorbot.delete_globalannouncement'
+    redirect_url = '/panel/api/html/panel/bot/globalannouncement/list'
+    
+# Server Announcement
     
 class PanelServerAnnouncementList(PanelListViewSearchable):
     """
@@ -1103,6 +1180,16 @@ class PanelServerAnnouncementView(PanelDetailView):
     permission: str = 'raptorbot.view_serverannouncement'
     
     
+class PanelServerAnnouncementDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Server Announcements
+    """
+    model = ServerAnnouncement
+    permission = 'raptorbot.delete_serverannouncement'
+    redirect_url = '/panel/api/html/panel/bot/serverannouncement/list'
+    
+# Sent Embed Message
+    
 class PanelSentEmbedMessageList(PanelListView):
     """
     Return a list of Sent Embed Messages for viewing and accessing CRUD actions
@@ -1115,6 +1202,16 @@ class PanelSentEmbedMessageList(PanelListView):
     def get_queryset(self) -> QuerySet[Any]:
         return SentEmbedMessage.objects.all()
     
+    
+class PanelSentEmbedMessageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Sent Embed Messages
+    """
+    model = SentEmbedMessage
+    permission = 'raptorbot.delete_sentembedmessage'
+    redirect_url = '/panel/api/html/panel/bot/sentembedmessage/list'
+    
+# Donation Package
     
 class PanelDonationPackageList(PanelListView):
     """
@@ -1155,6 +1252,16 @@ class PanelDonationPackageCreate(PanelCreateView):
     redirect_url: str = '/panel/api/html/panel/donations/donationpackage/list'
     permission: str = 'donations.add_donationpackage'
     
+    
+class PanelDonationPackageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Packages
+    """
+    model = DonationPackage
+    permission = 'donations.delete_donationpackage'
+    redirect_url = '/panel/api/html/panel/donations/donationpackage/list'
+    
+# Donation Server Command
     
 class PanelDonationServerCommandList(PanelListView):
     """
@@ -1197,6 +1304,16 @@ class PanelDonationServerCommandCreate(PanelCreateView):
     ]
     
     
+class PanelDonationServerCommandDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Server Commands
+    """
+    model = DonationServerCommand
+    permission = 'donations.delete_donationservercommand'
+    redirect_url = '/panel/api/html/panel/donations/donationservercommand/list'
+    
+# Donation Discord Role
+
 class PanelDonationDiscordRoleList(PanelListView):
     """
     Return a list of Donation Discord Roles for viewing and accessing CRUD actions
@@ -1240,6 +1357,16 @@ class PanelDonationDiscordRoleCreate(PanelCreateView):
     ]
     
     
+class PanelDonationDiscordRoleDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Discord Roles
+    """
+    model = DonationDiscordRole
+    permission = 'donations.delete_donationdiscordrole'
+    redirect_url = '/panel/api/html/panel/donations/donationdiscordrole/list'
+    
+# Completed Donation
+    
 class PanelCompletedDonationList(PanelListViewSearchable):
     """
     Return a list of Completed Donations for viewing and accessing CRUD actions
@@ -1257,6 +1384,16 @@ class PanelCompletedDonationList(PanelListViewSearchable):
         })
         return context
     
+    
+class PanelCompletedDonationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Completed Donations
+    """
+    model = CompletedDonation
+    permission = 'donations.delete_completeddonation'
+    redirect_url = '/panel/api/html/panel/donations/completeddonation/list'
+    
+# Submitted Staff Application
     
 class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
     """
@@ -1482,6 +1619,17 @@ class PanelDiscordUserInfoUpdate(PanelUpdateView):
         'locale',
         'mfa_enabled'
     ]
+    
+    
+class PanelUserDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Raptor Users
+    """
+    model = RaptorUser
+    permission = 'authprofiles.delete_raptoruser'
+    redirect_url = '/panel/api/html/panel/users/raptoruser/list'
+    
+# Raptor User Group
 
 class PanelRaptorUserGroupList(PanelListView):
     """
@@ -1524,6 +1672,16 @@ class PanelRaptorUserGroupCreate(PanelCreateView):
     permission: str = 'authprofiles.add_raptorusergroup'
     
     
+class PanelRaptorUserGroupDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Raptor User Groups
+    """
+    model = RaptorUserGroup
+    permission = 'authprofiles.delete_raptorusergroup'
+    redirect_url = '/panel/api/html/panel/users/raptorusergroup/list'
+    
+# Deletion Queue For User
+    
 class PanelDeletionQueueForUserList(PanelListView):
     """
     Return a list of RaptorUser's that have requested deletion for viewing and accessing CRUD actions
@@ -1535,3 +1693,12 @@ class PanelDeletionQueueForUserList(PanelListView):
 
     def get_queryset(self) -> QuerySet[Any]:
         return DeletionQueueForUser.objects.all()
+    
+    
+class PanelDeletionQueueForUserDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Queue users
+    """
+    model = DeletionQueueForUser
+    permission = 'authprofiles.delete_deletionqueueforuser'
+    redirect_url = '/panel/api/html/panel/users/deletionqueue/list'
