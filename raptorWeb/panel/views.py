@@ -19,8 +19,11 @@ from raptorWeb.panel.forms import (PanelSettingsInformation, PanelSettingsFiles,
                                    PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
                                    PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
                                    PanelUserUpdateForm, PanelUserProfileInfoUpdateForm,
-                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,)
-from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, PageManager, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
+                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,
+                                   )
+from raptorWeb.raptormc.models import (SiteInformation, DefaultPages, InformativeText, Page, PageManager,
+                                       NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar,
+                                       )
 from raptorWeb.raptorbot.models import DiscordGuild, GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.donations.models import CompletedDonation, DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import SubmittedStaffApplication, CreatedStaffApplication, StaffApplicationField
