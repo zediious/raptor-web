@@ -84,5 +84,18 @@
                 {% endif %}
             </span>
         </div>
-    {% endif %}
+        {% endif %}
+        <div class='d-flex justify-content-end'>
+            <div class='m-2 text-white'>
+                <form class='form'
+                    hx-get="{% url 'panel:logentry/list' %}?{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                    hx-target='#content_table_wrapper'
+                    hx-swap='innerHTML'
+                    hx-trigger='keyup delay:1s'
+                >
+                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+                    {% bootstrap_field paginate_form.paginate_by %}
+                </form>
+            </div>
+        </div>
     </div>

@@ -17,8 +17,18 @@
     </div>
     <hr class='text-white'>
 
-    {% if perms.raptormc.add_navbarlink %}
-    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+        {% if perms.raptormc.delete_navbarlink %}
+        <a role='button' id='delete_bulk' class='btn btn-danger'
+                hx-post="{% url 'panel:content/navbarlink/delete'%}"
+                hx-include='next .table'
+                hx-target='#content_table_wrapper'
+                hx-swap'outerHTML'
+        >
+            Delete Selected
+        </a>
+        {% endif %}
+        {% if perms.raptormc.add_navbarlink %}
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/content/navbarlink/create'
                 hx-get="{% url 'panel:content/navbarlink/create'%} "
@@ -28,13 +38,15 @@
         >
             Add Navbar Link
         </a>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class='table-responsive-xl'>
         <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
             <thead>
                 <tr>
+                <th class='text-white' scope="col"></th>
                 <th class='text-white' scope="col">#</th>
                 <th class='text-white' scope="col">Name</th>
                 <th class='text-white' scope="col">URL</th>
@@ -49,6 +61,9 @@
             {% for navlink in page_obj %}
             <tbody>
                 <tr>
+                <th>
+                    <input name="{{navlink.pk}}" class='form-check-input' type='checkbox'></input>
+                </th>
                 <th scope="row">{{navlink.pk}}</th>
                 <td>{{navlink.name}}</td>
                 <td><a href="{{navlink.url}}" target='_blank'>{{navlink.url}}<img class="new_tab_icon filter-white ms-2" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></td>
@@ -69,18 +84,6 @@
                         >
                             Edit
                         </a>
-                        {% endif %}
-                        {% if perms.raptormc.delete_navbarlink %}
-                        <form>
-                            {% csrf_token %}
-                            <button class='btn btn-danger'
-                                    hx-get="{% url 'raptormc:navbarlink_delete' navlink.pk%}"
-                                    hx-target='#content_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Permanently Delete
-                            </button>
-                        </form>
                         {% endif %}
                     </div>
                 </td>

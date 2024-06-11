@@ -17,10 +17,10 @@
     </div>
     <hr class='text-white'>
 
-    <div class='d-flex justify-content-between gap-2 w-100 mb-5'>
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
         {% if perms.staffapps.delete_staffapplicationfield %}
         <a role='button' id='delete_bulk' class='btn btn-danger'
-                hx-post="{% url 'staffapps:staffapplicationfield_delete'%}"
+                hx-post="{% url 'panel:staffapps/staffapplicationfield/delete'%}"
                 hx-include='next .table'
                 hx-target='#content_table_wrapper'
                 hx-swap'outerHTML'

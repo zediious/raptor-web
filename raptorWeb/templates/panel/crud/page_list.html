@@ -17,8 +17,18 @@
     </div>
     <hr class='text-white'>
 
-    {% if perms.raptormc.add_page %}
-    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+        {% if perms.raptormc.delete_page %}
+        <a role='button' id='delete_bulk' class='btn btn-danger'
+                hx-post="{% url 'panel:content/page/delete'%}"
+                hx-include='next .table'
+                hx-target='#content_table_wrapper'
+                hx-swap'outerHTML'
+        >
+            Delete Selected
+        </a>
+        {% endif %}
+        {% if perms.raptormc.add_page %}
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/content/page/create'
                 hx-get="{% url 'panel:content/page/create'%} "
@@ -28,13 +38,15 @@
         >
             Add Page
         </a>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
             <thead>
                 <tr>
+                <th class='text-white' scope="col"></th>
                 <th class='text-white' scope="col">#</th>
                 <th class='text-white' scope="col">Name</th>
                 <th class='text-white' scope="col">Created</th>
@@ -44,6 +56,9 @@
             {% for page in page_obj %}
             <tbody>
                 <tr>
+                <th>
+                    <input name="{{page.pk}}" class='form-check-input' type='checkbox'></input>
+                </th>
                 <th scope="row">{{page.pk}}</th>
                 <td>{{page.name}}</td>
                 <td class='text-nowrap'>{{page.created}}</td>
@@ -66,18 +81,6 @@
                         >
                             Visit Page<img class="new_tab_icon filter-white ms-2" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab">
                         </a>
-                        {% if perms.raptormc.delete_page %}
-                        <form>
-                            {% csrf_token %}
-                            <button class='btn btn-danger'
-                                    hx-get="{% url 'raptormc:page_delete' page.pk%}"
-                                    hx-target='#content_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Permanently Delete
-                            </button>
-                        </form>
-                        {% endif %}
                     </div>
                 </td>
                 </tr>

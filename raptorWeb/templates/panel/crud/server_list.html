@@ -16,7 +16,7 @@
     <hr class='text-white'>
 
     {% if perms.gameservers.add_server %}
-    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+    <div class='d-flex justify-content-end gap-1 w-100 mb-3'>
         <a role='button' id='add_server_button' class='btn btn-primary'
                 href='/panel/server/create/'
                 hx-get="{% url 'panel:server/create'%} "
