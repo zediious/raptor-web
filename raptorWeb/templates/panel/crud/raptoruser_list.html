@@ -164,7 +164,7 @@
                             Next
                         </a>
                         <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:users/raptoruser/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-get="{% url 'panel:users/raptoruser/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
                             hx-target="#user_table_wrapper"
                         >
                             Last &raquo;
