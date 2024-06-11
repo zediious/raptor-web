@@ -4,11 +4,13 @@
     <div class="container-flex w-100">
         <div class="row w-100">
             <div class=" col-lg-6 col-8 d-flex align-items-start justify-content-start">
-                <div class="navbar-header d-flex">
+                <div class="navbar-header d-flex" x-data="{offcanvasElt: false}">
                     <button id="navToggle" class="navbar-toggler m-0 mt-3 mb-3 mt-0 mb-0 ms-3 border-2"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasNav"
                             aria-controls="offcanvasNav"
+                            x-init="offcanvasElt = new bootstrap.Offcanvas(htmx.find('#offcanvasNav'))"
+                            @keyup.alt.a.document="offcanvasElt.toggle()"
                     >
                         <span class="navbar-toggler-icon" ></span>
                     </button>
