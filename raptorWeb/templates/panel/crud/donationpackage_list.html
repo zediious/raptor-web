@@ -63,6 +63,7 @@
                     <input id="select_{{donationpackage.pk}}" class='form-check-input'
                            name="{{donationpackage.pk}}" value="{{donationpackage.pk}}" type='checkbox'
                            x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
                     >
                     </input>
                 </th>
@@ -136,4 +137,10 @@
             </span>
         </div>
     {% endif %}
-    </div>
+</div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>

@@ -73,6 +73,7 @@
                         <input id="select_{{serverannouncement.pk}}" class='form-check-input'
                            name="{{serverannouncement.pk}}" value="{{serverannouncement.pk}}" type='checkbox'
                            x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
                     >
                     </input>
                     </th>
@@ -161,3 +162,9 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>

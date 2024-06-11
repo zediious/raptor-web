@@ -50,6 +50,7 @@
                     <input id="select_{{server.pk}}" class='form-check-input'
                            name="{{server.pk}}" value="{{server.pk}}" type='checkbox'
                            x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
                     >
                     </input>
                 </th>
@@ -122,6 +123,12 @@
     {% endif %}
     </div>
 </div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>
 
 <script>
     try {
