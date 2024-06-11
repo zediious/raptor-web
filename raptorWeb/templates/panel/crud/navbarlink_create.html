@@ -21,7 +21,9 @@
     <form id="create_form_alone" class="form text-white"
         enctype="multipart/form-data" 
         hx-post="{% url 'panel:content/navbarlink/create' %} "
-        hx-swap="none"
+        hx-push-url='/panel/content/navbarlink/list'
+        hx-target='#panel_main'
+        hx-swap="innerHTML"
     >
         {% csrf_token %}
         {% bootstrap_form form %}

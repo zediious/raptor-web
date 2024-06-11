@@ -8,8 +8,7 @@ from django.views.generic import TemplateView, View
 from django.contrib import messages
 from django.conf import settings
 
-from raptorWeb.panel.models import PanelLogEntry
-from raptorWeb.staffapps.models import CreatedStaffApplication, SubmittedStaffApplication, StaffApplicationField
+from raptorWeb.staffapps.models import CreatedStaffApplication, SubmittedStaffApplication
 
 LOGGER: Logger = getLogger('staffapps.views')
 STAFFAPPS_TEMPLATE_DIR: str = getattr(settings, 'STAFFAPPS_TEMPLATE_DIR')
@@ -92,81 +91,3 @@ class AllAppsApproval(View):
         changing_submittedstaffapplication.save()
         
         return HttpResponseRedirect(f'/panel/staffapps/submittedstaffapplication/view/{changing_submittedstaffapplication.pk}')
-    
-    
-class SubmittedStaffApplicationDelete(View):
-    """
-    Permanently delete a given Submitted Staff Application
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('staffapps.delete_submittedstaffapplication'):
-            messages.error(request, 'You do not have permission to delete Submitted Staff Applications.')
-            return HttpResponse(status=200)
-        
-        changing_submittedstaffapplication = SubmittedStaffApplication.objects.get(pk=self.kwargs['pk'])
-        
-        model_string = str(SubmittedStaffApplication).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_submittedstaffapplication}'),
-            action='Deleted'
-        )
-
-        messages.success(request, f'Submitted Application has been permanently deleted!')
-        changing_submittedstaffapplication.delete()
-        return HttpResponseRedirect('/panel/api/html/panel/staffapps/submittedstaffapplication/list')
-    
-    
-class CreatedStaffApplicationDelete(View):
-    """
-    Permanently delete a given Created Staff Application
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('staffapps.delete_createdstaffapplication'):
-            messages.error(request, 'You do not have permission to delete Created Staff Applications.')
-            return HttpResponse(status=200)
-        
-        changing_createdstaffapplication = CreatedStaffApplication.objects.get(pk=self.kwargs['pk'])
-        
-        model_string = str(CreatedStaffApplication).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_createdstaffapplication}'),
-            action='Deleted'
-        )
-
-        messages.success(request, f'Created Staff Application: {changing_createdstaffapplication.name} has been permanently deleted!')
-        changing_createdstaffapplication.delete()
-        return HttpResponseRedirect('/panel/api/html/panel/staffapps/createdstaffapplication/list')
-    
-    
-class StaffApplicationFieldDelete(View):
-    """
-    Permanently delete a given Staff Application Field
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('staffapps.delete_staffapplicationfield'):
-            messages.error(request, 'You do not have permission to delete Staff Application Fields.')
-            return HttpResponse(status=200)
-        
-        changing_staffapplicationfield = StaffApplicationField.objects.get(pk=self.kwargs['pk'])
-        
-        model_string = str(StaffApplicationField).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_staffapplicationfield}'),
-            action='Deleted'
-        )
-
-        messages.success(request, f'Staff Application Field: {changing_staffapplicationfield.name} has been permanently deleted!')
-        changing_staffapplicationfield.delete()
-        return HttpResponseRedirect('/panel/api/html/panel/staffapps/staffapplicationfield/list')

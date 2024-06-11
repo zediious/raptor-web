@@ -3,7 +3,8 @@ from logging import getLogger
 from typing import Any
 
 from django.db.models.query import QuerySet
-from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DetailView
+from django.db.models import Model
+from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DetailView, View
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
@@ -18,8 +19,11 @@ from raptorWeb.panel.forms import (PanelSettingsInformation, PanelSettingsFiles,
                                    PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
                                    PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
                                    PanelUserUpdateForm, PanelUserProfileInfoUpdateForm,
-                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,)
-from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, PageManager, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
+                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,
+                                   )
+from raptorWeb.raptormc.models import (SiteInformation, DefaultPages, InformativeText, Page, PageManager,
+                                       NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar,
+                                       )
 from raptorWeb.raptorbot.models import DiscordGuild, GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.donations.models import CompletedDonation, DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import SubmittedStaffApplication, CreatedStaffApplication, StaffApplicationField
@@ -29,6 +33,7 @@ from raptorWeb.panel.models import PanelLogEntry
 
 LOGGER = getLogger('panel.views')
 TEMPLATE_DIR_PANEL = getattr(settings, 'PANEL_TEMPLATE_DIR')
+TEMPLATE_DIR_PANEL_CRUD = join(TEMPLATE_DIR_PANEL, 'crud')
 SETTINGS_FIELDS_TO_IGNORE = [
     'id',
     'branding_image',
@@ -126,7 +131,8 @@ class ReportingPanel(PanelApiBaseView):
     
 class SettingsPanel(PanelApiBaseView):
     """
-    Page with site settings
+    Page with site settings. Forms are returned to update all settings in Site Information.
+    SettingsPanelFilePost and SettingsPanelDefaultPagesPost also accept POSTs from this View.
     """
     template_name: str = join(TEMPLATE_DIR_PANEL, 'panel_settings.html')
     
@@ -363,6 +369,15 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
         else:
             return HttpResponse(status=400)
         
+"""
+CRUD VIEWS
+
+All below views are CRUD views for models in the application, used in the Control Panel
+
+Generic Update, List, Create, Delete and Detail Views exist which are used by all model views.
+"""
+
+# Abstract Views
         
 class PanelUpdateView(UpdateView):
     """
@@ -477,7 +492,7 @@ class PanelUpdateView(UpdateView):
                 request,
                 [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
             )
-            return HttpResponse(status=200)
+            return HttpResponse(status=400)
         
         
 class PanelListView(ListView):
@@ -605,7 +620,45 @@ class PanelCreateView(CreateView):
             request,
             [f'{message[0].title().replace("_", " ")}: {message[1][0]}' for message in model_form.errors.items()]
         )
-        return HttpResponse(status=200)
+        return HttpResponse(status=400)
+    
+
+class PanelDeleteView(View):
+    """
+    Permanently delete a given list of objects
+    """
+    model: Model
+    permission: str
+    redirect_url: str
+
+    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
+        if not request.user.is_staff:
+            return HttpResponseRedirect('/')
+        
+        model_string = str(self.model).split('.')[3].replace("'", "").replace('>', '')
+        
+        if not request.user.has_perm(self.permission):
+            messages.error(request, f'You do not have permission to delete {model_string}s.')
+            return HttpResponse(status=200)
+        
+        form_data = request.POST.dict()
+        form_data.pop('csrfmiddlewaretoken')
+        deleting_objects = self.model.objects.filter(pk__in=form_data.keys())
+
+        changed_string: str = ''
+        for model in deleting_objects:
+            changed_string += f'{model}, '
+
+        deleting_objects.delete()
+
+        PanelLogEntry.objects.create(
+            changing_user=request.user,
+            changed_model=str(f'{model_string} - {changed_string}'),
+            action='Deleted'
+        )
+        
+        messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        return HttpResponseRedirect(self.redirect_url)
 
     
 class PanelDetailView(DetailView):
@@ -623,6 +676,7 @@ class PanelDetailView(DetailView):
         
         return super().get(request, *args, **kwargs)
     
+# Panel Log Entry
     
 class PanelLogEntryList(PanelListViewSearchable):
     """
@@ -630,6 +684,7 @@ class PanelLogEntryList(PanelListViewSearchable):
     """
     model: PanelLogEntry = PanelLogEntry
     paginate_by = 50
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'logentry_list.html')
     permission: str = 'panel.view_panellogentry'
     model_name: str = "PanelLogEntry"
     default_ordering: str = '-date'
@@ -641,7 +696,8 @@ class PanelLogEntryList(PanelListViewSearchable):
             })
 
         return context
-
+    
+# Server
 
 class PanelServerList(PanelListView):
     """
@@ -649,6 +705,7 @@ class PanelServerList(PanelListView):
     """
     model: Server = Server
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'server_list.html')
     permission: str = 'gameservers.view_server'
     model_name: str = 'Server'
 
@@ -665,7 +722,7 @@ class PanelServerCreate(PanelCreateView):
     """
     model: Server = Server
     form_class = PanelServerCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'server_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'server_create.html')
     redirect_url: str = '/panel/api/html/panel/server/list/'
     permission: str = 'gameservers.add_server'
         
@@ -676,6 +733,7 @@ class PanelServerUpdate(PanelUpdateView):
     """
     model: Server = Server
     form_class = PanelServerUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'server_update.html')
     permission: str = 'gameservers.change_server'
     model_classpath: str = 'gameservers.Server'
     image_fields = ['modpack_picture']
@@ -688,6 +746,16 @@ class PanelServerUpdate(PanelUpdateView):
         'archived'
     ]
     
+
+class PanelServerDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Servers
+    """
+    model = Server
+    permission = 'gameservers.delete_server'
+    redirect_url = '/panel/api/html/panel/server/archivedlist'
+    
+# Player
     
 class PanelPlayerList(PanelListViewSearchable):
     """
@@ -696,6 +764,7 @@ class PanelPlayerList(PanelListViewSearchable):
     """
     model: Player = Player
     paginate_by = 50
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'player_list.html')
     permission: str = 'gameservers.view_player'
     model_name: str = "Player"
     default_ordering: str = '-last_online'
@@ -721,6 +790,7 @@ class PanelPlayerList(PanelListViewSearchable):
             
         return context
     
+# Informative Text
     
 class PanelInformativeTextList(PanelListView):
     """
@@ -728,6 +798,7 @@ class PanelInformativeTextList(PanelListView):
     """
     model: InformativeText = InformativeText
     permission: str = 'raptormc.view_informativetext'
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'informativetext_list.html')
     model_name: str = 'Informative Text'
     paginate_by = 50
     
@@ -738,6 +809,7 @@ class PanelInformativeTextUpdate(PanelUpdateView):
     """
     model: InformativeText = InformativeText
     form_class = PanelInformativeTextUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'informativetext_update.html')
     permission: str = 'raptormc.change_informativetext'
     model_classpath: str = 'raptormc.InformativeText'
     ignored_fields = [
@@ -745,12 +817,15 @@ class PanelInformativeTextUpdate(PanelUpdateView):
         'name'
     ]
     
+# Page
+    
 class PanelPageList(PanelListView):
     """
     Return a list of pages for viewing and accessing CRUD actions
     """
     model: Page = Page
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'page_list.html')
     permission: str = 'raptormc.view_page'
     model_name: str = 'Page'
 
@@ -764,6 +839,7 @@ class PanelPageUpdate(PanelUpdateView):
     """
     model: Page = Page
     form_class = PanelPageForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'page_update.html')
     permission: str = 'raptormc.change_page'
     model_classpath: str = 'raptormc.Page'
     image_fields = [
@@ -783,10 +859,20 @@ class PanelPageCreate(PanelCreateView):
     """
     model: Page = Page
     form_class = PanelPageForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'page_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'page_create.html')
     redirect_url: str = '/panel/api/html/panel/content/page/list'
     permission: str = 'raptormc.add_page'
     
+    
+class PanelPageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Pages
+    """
+    model = Page
+    permission = 'raptormc.delete_page'
+    redirect_url = '/panel/api/html/panel/content/page/list'
+    
+# Notification Toast
 
 class PanelToastList(PanelListView):
     """
@@ -794,6 +880,7 @@ class PanelToastList(PanelListView):
     """
     model: NotificationToast = NotificationToast
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'toast_list.html')
     permission: str = 'raptormc.view_notificationtoast'
     model_name: str = 'Toast'
 
@@ -807,6 +894,7 @@ class PanelToastUpdate(PanelUpdateView):
     """
     model: NotificationToast = NotificationToast
     form_class = PanelToastForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'toast_update.html')
     permission: str = 'raptormc.change_notificationtoast'
     model_classpath: str = 'raptormc.NotificationToast'
     ignored_fields = [
@@ -821,10 +909,20 @@ class PanelToastCreate(PanelCreateView):
     """
     model: NotificationToast = NotificationToast
     form_class = PanelToastForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'toast_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'toast_create.html')
     redirect_url: str = '/panel/api/html/panel/content/toast/list'
     permission: str = 'raptormc.add_notificationtoast'
     
+    
+class PanelToastDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Notification Toasts
+    """
+    model = NotificationToast
+    permission = 'raptormc.delete_notificationtoast'
+    redirect_url = '/panel/api/html/panel/content/toast/list'
+    
+# Navbar Link
     
 class PanelNavbarLinkList(PanelListView):
     """
@@ -832,6 +930,7 @@ class PanelNavbarLinkList(PanelListView):
     """
     model: NavbarLink = NavbarLink
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbarlink_list.html')
     permission: str = 'raptormc.view_navbarlink'
     model_name: str = 'NavbarLink'
 
@@ -844,6 +943,7 @@ class PanelNarbarLinkUpdate(PanelUpdateView):
     Update changed information for a given Navbar Link
     """
     model: NavbarLink = NavbarLink
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbarlink_update.html')
     permission: str = 'raptormc.change_navbarlink'
     model_classpath: str = 'raptormc.NavbarLink'
     ignored_fields = [
@@ -865,7 +965,7 @@ class PanelNarbarLinkCreate(PanelCreateView):
     Return a form to create/add a new Navbar Link
     """
     model: NavbarLink = NavbarLink
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navbarlink_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbarlink_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navbarlink/list'
     permission: str = 'raptormc.add_navbarlink'
     fields = [
@@ -879,12 +979,23 @@ class PanelNarbarLinkCreate(PanelCreateView):
     ]
     
     
+class PanelNavbarLinkDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Navbar Links
+    """
+    model = NavbarLink
+    permission = 'raptormc.delete_navbarlink'
+    redirect_url = '/panel/api/html/panel/content/navbarlink/list'
+    
+# Navbar Dropdown
+    
 class PanelNavbarDropdownList(PanelListView):
     """
     Return a list of Navbar Dropdowns for viewing and accessing CRUD actions
     """
     model: NavbarDropdown = NavbarDropdown
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbardropdown_list.html')
     permission: str = 'raptormc.view_navbardropdown'
     model_name: str = 'NavbarDropdown'
 
@@ -897,6 +1008,7 @@ class PanelNavbarDropdownUpdate(PanelUpdateView):
     Update changed information for a given Navbar Dropdowns
     """
     model: NavbarDropdown = NavbarDropdown
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbardropdown_update.html')
     permission: str = 'raptormc.change_navbardropdown'
     model_classpath: str = 'raptormc.NavbarDropdown'
     ignored_fields = [
@@ -914,7 +1026,7 @@ class PanelNavbarDropdownCreate(PanelCreateView):
     Return a form to create/add a new Navbar Dropdown
     """
     model: NavbarDropdown = NavbarDropdown
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navbardropdown_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbardropdown_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navbardropdown/list'
     permission: str = 'raptormc.add_navbardropdown'
     fields = [
@@ -924,12 +1036,23 @@ class PanelNavbarDropdownCreate(PanelCreateView):
     ]
     
     
+class PanelNavbarDropdownDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Navbar Dropdowns
+    """
+    model = NavbarDropdown
+    permission = 'raptormc.delete_navbardropdown'
+    redirect_url = '/panel/api/html/panel/content/navbardropdown/list'
+    
+# Nav Widget
+    
 class PanelNavWidgetList(PanelListView):
     """
     Return a list of Nav Widgets for viewing and accessing CRUD actions
     """
     model: NavWidget = NavWidget
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidget_list.html')
     permission: str = 'raptormc.view_navwidget'
     model_name: str = 'NavWidget'
 
@@ -943,6 +1066,7 @@ class PanelNavWidgetUpdate(PanelUpdateView):
     """
     model: NavWidget = NavWidget
     form_class: PanelNavWidgetUpdateForm = PanelNavWidgetUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidget_update.html')
     permission: str = 'raptormc.change_navwidget'
     model_classpath: str = 'raptormc.NavWidget'
     image_fields = [
@@ -959,10 +1083,20 @@ class PanelNavWidgetCreate(PanelCreateView):
     """
     model: NavWidget = NavWidget
     form_class: PanelNavWidgetCreateForm = PanelNavWidgetCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navwidget_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidget_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navwidget/list'
     permission: str = 'raptormc.add_navwidget'
     
+    
+class PanelNavWidgetDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Nav Widgets
+    """
+    model = NavWidget
+    permission = 'raptormc.delete_navwidget'
+    redirect_url = '/panel/api/html/panel/content/navwidget/list'
+    
+# Nav Widget Bar
     
 class PanelNavWidgetBarList(PanelListView):
     """
@@ -970,6 +1104,7 @@ class PanelNavWidgetBarList(PanelListView):
     """
     model: NavWidgetBar = NavWidgetBar
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidgetbar_list.html')
     permission: str = 'raptormc.view_navwidgetbar'
     model_name: str = 'NavWidgetBar'
 
@@ -982,6 +1117,7 @@ class PanelNavWidgetBarUpdate(PanelUpdateView):
     Update changed information for a given Nav Widget Bar
     """
     model: NavWidgetBar = NavWidgetBar
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidgetbar_update.html')
     permission: str = 'raptormc.change_navwidgetbar'
     model_classpath: str = 'raptormc.NavWidgetBar'
     ignored_fields = [
@@ -999,7 +1135,7 @@ class PanelNavWidgetBarCreate(PanelCreateView):
     Return a form to create/add a new Nav Widget Bar
     """
     model: NavWidgetBar = NavWidgetBar
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'navwidgetbar_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidgetbar_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navwidgetbar/list'
     permission: str = 'raptormc.add_navwidgetbar'
     fields = [
@@ -1009,15 +1145,26 @@ class PanelNavWidgetBarCreate(PanelCreateView):
     ]
     
     
+class PanelNavWidgetBarDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Nav Widget Bars
+    """
+    model = NavWidgetBar
+    permission = 'raptormc.delete_navwidgetbar'
+    redirect_url = '/panel/api/html/panel/content/navwidgetbar/list'
+    
+# Global Announcement
+    
 class PanelGlobalAnnouncementList(PanelListViewSearchable):
     """
     Return a list of Global Announcements for viewing and accessing CRUD actions
     """
     model: GlobalAnnouncement = GlobalAnnouncement
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'globalannouncement_list.html')
     permission: str = 'raptorbot.view_globalannouncement'
     model_name: str = 'GlobalAnnouncement'
-    default_ordering: str = 'date'
+    default_ordering: str = '-date'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1032,8 +1179,19 @@ class PanelGlobalAnnouncementView(PanelDetailView):
     Return details about a given Global Announcement
     """
     model: GlobalAnnouncement = GlobalAnnouncement
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'globalannouncement_view.html')
     permission: str = 'raptorbot.view_globalannouncement'
     
+
+class PanelGlobalAnnouncementDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Global Announcements
+    """
+    model = GlobalAnnouncement
+    permission = 'raptorbot.delete_globalannouncement'
+    redirect_url = '/panel/api/html/panel/bot/globalannouncement/list'
+    
+# Server Announcement
     
 class PanelServerAnnouncementList(PanelListViewSearchable):
     """
@@ -1041,9 +1199,10 @@ class PanelServerAnnouncementList(PanelListViewSearchable):
     """
     model: ServerAnnouncement = ServerAnnouncement
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'serverannouncement_list.html')
     permission: str = 'raptorbot.view_serverannouncement'
     model_name: str = 'ServerAnnouncement'
-    default_ordering: str = 'date'
+    default_ordering: str = '-date'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1058,8 +1217,19 @@ class PanelServerAnnouncementView(PanelDetailView):
     Return details about a given Server Announcement
     """
     model: ServerAnnouncement = ServerAnnouncement
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'serverannouncement_view.html')
     permission: str = 'raptorbot.view_serverannouncement'
     
+    
+class PanelServerAnnouncementDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Server Announcements
+    """
+    model = ServerAnnouncement
+    permission = 'raptorbot.delete_serverannouncement'
+    redirect_url = '/panel/api/html/panel/bot/serverannouncement/list'
+    
+# Sent Embed Message
     
 class PanelSentEmbedMessageList(PanelListView):
     """
@@ -1067,6 +1237,7 @@ class PanelSentEmbedMessageList(PanelListView):
     """
     model: SentEmbedMessage = SentEmbedMessage
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'sentembedmessage_list.html')
     permission: str = 'raptorbot.view_sentembedmessage'
     model_name: str = 'SentEmbedMessage'
 
@@ -1074,12 +1245,23 @@ class PanelSentEmbedMessageList(PanelListView):
         return SentEmbedMessage.objects.all()
     
     
+class PanelSentEmbedMessageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Sent Embed Messages
+    """
+    model = SentEmbedMessage
+    permission = 'raptorbot.delete_sentembedmessage'
+    redirect_url = '/panel/api/html/panel/bot/sentembedmessage/list'
+    
+# Donation Package
+    
 class PanelDonationPackageList(PanelListView):
     """
     Return a list of Donation Packages for viewing and accessing CRUD actions
     """
     model: DonationPackage = DonationPackage
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationpackage_list.html')
     permission: str = 'donations.view_donationpackage'
     model_name: str = 'DonationPackage'
 
@@ -1093,6 +1275,7 @@ class PanelDonationPackageUpdate(PanelUpdateView):
     """
     model: DonationPackage = DonationPackage
     form_class = PanelDonationPackageUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationpackage_update.html')
     permission: str = 'donations.change_donationpackage'
     model_classpath: str = 'donations.DonationPackage'
     image_fields = [
@@ -1109,10 +1292,20 @@ class PanelDonationPackageCreate(PanelCreateView):
     """
     model: DonationPackage = DonationPackage
     form_class = PanelDonationPackageCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationpackage_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationpackage_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationpackage/list'
     permission: str = 'donations.add_donationpackage'
     
+    
+class PanelDonationPackageDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Packages
+    """
+    model = DonationPackage
+    permission = 'donations.delete_donationpackage'
+    redirect_url = '/panel/api/html/panel/donations/donationpackage/list'
+    
+# Donation Server Command
     
 class PanelDonationServerCommandList(PanelListView):
     """
@@ -1120,6 +1313,7 @@ class PanelDonationServerCommandList(PanelListView):
     """
     model: DonationServerCommand = DonationServerCommand
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationservercommand_list.html')
     permission: str = 'donations.view_donationservercommand'
     model_name: str = 'DonationServerCommand'
 
@@ -1132,6 +1326,7 @@ class PanelDonationServerCommandUpdate(PanelUpdateView):
     Update changed information for a given Donation Server Command
     """
     model: DonationServerCommand = DonationServerCommand
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationservercommand_update.html')
     permission: str = 'donations.change_donationservercommand'
     model_classpath: str = 'donations.DonationServerCommand'
     ignored_fields = [
@@ -1147,7 +1342,7 @@ class PanelDonationServerCommandCreate(PanelCreateView):
     Return a form to create/add a new Donation Server Command.
     """
     model: DonationServerCommand = DonationServerCommand
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationservercommand_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationservercommand_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationservercommand/list'
     permission: str = 'donations.add_donationservercommand'
     fields = [
@@ -1155,12 +1350,23 @@ class PanelDonationServerCommandCreate(PanelCreateView):
     ]
     
     
+class PanelDonationServerCommandDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Server Commands
+    """
+    model = DonationServerCommand
+    permission = 'donations.delete_donationservercommand'
+    redirect_url = '/panel/api/html/panel/donations/donationservercommand/list'
+    
+# Donation Discord Role
+
 class PanelDonationDiscordRoleList(PanelListView):
     """
     Return a list of Donation Discord Roles for viewing and accessing CRUD actions
     """
     model: DonationDiscordRole = DonationDiscordRole
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationdiscordrole_list.html')
     permission: str = 'donations.view_donationdiscordrole'
     model_name: str = 'DonationDiscordRole'
 
@@ -1173,6 +1379,7 @@ class PanelDonationDiscordRoleUpdate(PanelUpdateView):
     Update changed information for a given Donation Discord Role
     """
     model: DonationDiscordRole = DonationDiscordRole
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationdiscordrole_update.html')
     permission: str = 'donations.change_donationdiscordrole'
     model_classpath: str = 'donations.DonationDiscordRole'
     ignored_fields = [
@@ -1189,7 +1396,7 @@ class PanelDonationDiscordRoleCreate(PanelCreateView):
     Return a form to create/add a new Donation Discord Role.
     """
     model: DonationDiscordRole = DonationDiscordRole
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'donationdiscordrole_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationdiscordrole_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationdiscordrole/list'
     permission: str = 'donations.add_donationdiscordrole'
     fields = [
@@ -1198,12 +1405,23 @@ class PanelDonationDiscordRoleCreate(PanelCreateView):
     ]
     
     
+class PanelDonationDiscordRoleDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Donation Discord Roles
+    """
+    model = DonationDiscordRole
+    permission = 'donations.delete_donationdiscordrole'
+    redirect_url = '/panel/api/html/panel/donations/donationdiscordrole/list'
+    
+# Completed Donation
+    
 class PanelCompletedDonationList(PanelListViewSearchable):
     """
     Return a list of Completed Donations for viewing and accessing CRUD actions
     """
     model: CompletedDonation = CompletedDonation
     paginate_by = 15
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'completeddonation_list.html')
     permission: str = 'donations.view_completeddonation'
     model_name: str = 'CompletedDonation'
     default_ordering: str = '-donation_datetime'
@@ -1216,12 +1434,23 @@ class PanelCompletedDonationList(PanelListViewSearchable):
         return context
     
     
+class PanelCompletedDonationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Completed Donations
+    """
+    model = CompletedDonation
+    permission = 'donations.delete_completeddonation'
+    redirect_url = '/panel/api/html/panel/donations/completeddonation/list'
+    
+# Submitted Staff Application
+    
 class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
     """
     Return a list of Submitted Staff Applications for viewing and accessing CRUD actions
     """
     model: SubmittedStaffApplication = SubmittedStaffApplication
     paginate_by = 15
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'submittedstaffapplication_list.html')
     permission: str = 'staffapps.view_submittedstaffapplication'
     model_name: str = 'SubmittedStaffApplication'
     default_ordering: str = '-submitted_date'
@@ -1239,8 +1468,19 @@ class PanelSubmittedStaffApplicationView(PanelDetailView):
     Return details about a given Submitted Staff Application
     """
     model: SubmittedStaffApplication = SubmittedStaffApplication
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'submittedstaffapplication_view.html')
     permission: str = 'staffapps.view_submittedstaffapplication'
+
+
+class PanelSubmittedStaffApplicationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Submitted Staff Applications
+    """
+    model = SubmittedStaffApplication
+    permission = 'staffapps.delete_submittedstaffapplication'
+    redirect_url = '/panel/api/html/panel/staffapps/submittedstaffapplication/list'
     
+# Created Staff Application
     
 class PanelCreatedStaffApplicationList(PanelListView):
     """
@@ -1248,6 +1488,7 @@ class PanelCreatedStaffApplicationList(PanelListView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'createdstaffapplication_list.html')
     permission: str = 'staffapps.view_createdstaffapplication'
     model_name: str = 'CreatedStaffApplication'
 
@@ -1261,6 +1502,7 @@ class PanelCreatedStaffApplicationUpdate(PanelUpdateView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     form_class = PanelCreatedStaffApplicationForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'createdstaffapplication_update.html')
     permission: str = 'staffapps.change_createdstaffapplication'
     model_classpath: str = 'staffapps.CreatedStaffApplication'
     ignored_fields = [
@@ -1274,10 +1516,20 @@ class PanelCreatedStaffApplicationCreate(PanelCreateView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     form_class = PanelCreatedStaffApplicationForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'createdstaffapplication_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'createdstaffapplication_create.html')
     redirect_url: str = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
     permission: str = 'staffapps.add_createdstaffapplication'
+
+
+class PanelCreatedStaffApplicationDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Created Staff Applications
+    """
+    model = CreatedStaffApplication
+    permission = 'staffapps.delete_createdstaffapplication'
+    redirect_url = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
     
+# Staff Application Field
     
 class PanelStaffApplicationFieldList(PanelListView):
     """
@@ -1285,6 +1537,7 @@ class PanelStaffApplicationFieldList(PanelListView):
     """
     model: StaffApplicationField = StaffApplicationField
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'staffapplicationfield_list.html')
     permission: str = 'staffapps.view_staffapplicationfield'
     model_name: str = 'StaffApplicationField'
 
@@ -1297,6 +1550,7 @@ class PanelStaffApplicationFieldUpdate(PanelUpdateView):
     Update changed information for a given Staff Application Field
     """
     model: StaffApplicationField = StaffApplicationField
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'staffapplicationfield_update.html')
     permission: str = 'staffapps.change_staffapplicationfield'
     model_classpath: str = 'staffapps.StaffApplicationField'
     ignored_fields = [
@@ -1315,7 +1569,7 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
     Return a form to create/add a new Staff Application Field
     """
     model: StaffApplicationField = StaffApplicationField
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'staffapplicationfield_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'staffapplicationfield_create.html')
     redirect_url: str = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
     permission: str = 'staffapps.add_staffapplicationfield'
     fields = [
@@ -1324,7 +1578,17 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
         'widget',
         'priority'
     ]
+
+
+class PanelStaffApplicationFieldDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Staff Application Fields
+    """
+    model = StaffApplicationField
+    permission = 'staffapps.delete_staffapplicationfield'
+    redirect_url = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
     
+# Raptor User
     
 class PanelUserList(PanelListViewSearchable):
     """
@@ -1333,6 +1597,7 @@ class PanelUserList(PanelListViewSearchable):
     """
     model: RaptorUser = RaptorUser
     paginate_by = 50
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptoruser_list.html')
     permission: str = 'authprofiles.view_raptoruser'
     model_name: str = "RaptorUser"
     default_ordering: str = '-date_joined'
@@ -1365,6 +1630,7 @@ class PanelUserUpdate(PanelUpdateView):
     """
     model: RaptorUser = RaptorUser
     form_class = PanelUserUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptoruser_update.html')
     permission: str = 'authprofiles.change_raptoruser'
     model_classpath: str = 'authprofiles.RaptorUser'
     ignored_fields = [
@@ -1388,6 +1654,7 @@ class PanelUserProfileInfoUpdate(PanelUpdateView):
     """
     model: UserProfileInfo = UserProfileInfo
     form_class = PanelUserProfileInfoUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'userprofileinfo_update.html')
     permission: str = 'authprofiles.change_userprofileinfo'
     model_classpath: str = 'authprofiles.UserProfileInfo'
     image_fields = ['profile_picture']
@@ -1403,6 +1670,7 @@ class PanelDiscordUserInfoUpdate(PanelUpdateView):
     """
     model: DiscordUserInfo = DiscordUserInfo
     form_class = PanelDiscordUserInfoUpdateForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'discorduserinfo_update.html')
     permission: str = 'authprofiles.change_discorduserinfo'
     model_classpath: str = 'authprofiles.DiscordUserInfo'
     ignored_fields = [
@@ -1413,6 +1681,17 @@ class PanelDiscordUserInfoUpdate(PanelUpdateView):
         'locale',
         'mfa_enabled'
     ]
+    
+    
+class PanelUserDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Raptor Users
+    """
+    model = RaptorUser
+    permission = 'authprofiles.delete_raptoruser'
+    redirect_url = '/panel/api/html/panel/users/raptoruser/list'
+    
+# Raptor User Group
 
 class PanelRaptorUserGroupList(PanelListView):
     """
@@ -1420,6 +1699,7 @@ class PanelRaptorUserGroupList(PanelListView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptorusergroup_list.html')
     permission: str = 'authprofiles.view_raptorusergroup'
     model_name: str = 'RaptorUserGroup'
 
@@ -1433,6 +1713,7 @@ class PanelRaptorUserGroupUpdate(PanelUpdateView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     form_class = PanelRaptorUserGroupForm
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptorusergroup_update.html')
     permission: str = 'authprofiles.change_raptorusergroup'
     model_classpath: str = 'staffapps.RaptorUserGroup'
     ignored_fields = [
@@ -1450,10 +1731,20 @@ class PanelRaptorUserGroupCreate(PanelCreateView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     form_class = PanelRaptorUserGroupForm
-    template_name: str = join(TEMPLATE_DIR_PANEL, join('crud', 'raptorusergroup_create.html'))
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptorusergroup_create.html')
     redirect_url: str = '/panel/api/html/panel/users/raptorusergroup/list'
     permission: str = 'authprofiles.add_raptorusergroup'
     
+    
+class PanelRaptorUserGroupDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Raptor User Groups
+    """
+    model = RaptorUserGroup
+    permission = 'authprofiles.delete_raptorusergroup'
+    redirect_url = '/panel/api/html/panel/users/raptorusergroup/list'
+    
+# Deletion Queue For User
     
 class PanelDeletionQueueForUserList(PanelListView):
     """
@@ -1461,8 +1752,18 @@ class PanelDeletionQueueForUserList(PanelListView):
     """
     model: DeletionQueueForUser = DeletionQueueForUser
     paginate_by = 10
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'deletionqueue_list.html')
     permission: str = 'authprofiles.view_deletionqueueforuser'
     model_name: str = 'DeletionQueueForUser'
 
     def get_queryset(self) -> QuerySet[Any]:
         return DeletionQueueForUser.objects.all()
+    
+    
+class PanelDeletionQueueForUserDelete(PanelDeleteView):
+    """
+    Permanently delete a given list of Queue users
+    """
+    model = DeletionQueueForUser
+    permission = 'authprofiles.delete_deletionqueueforuser'
+    redirect_url = '/panel/api/html/panel/users/deletionqueue/list'

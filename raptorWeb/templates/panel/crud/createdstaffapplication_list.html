@@ -17,8 +17,18 @@
     </div>
     <hr class='text-white'>
 
-    {% if perms.staffapps.add_createdstaffapplication %}
-    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+        {% if perms.staffapps.delete_createdstaffapplication %}
+        <a role='button' id='delete_bulk' class='btn btn-danger'
+                hx-post="{% url 'panel:staffapps/createdstaffapplication/delete'%}"
+                hx-include='next .table'
+                hx-target='#content_table_wrapper'
+                hx-swap'outerHTML'
+        >
+            Delete Selected
+        </a>
+        {% endif %}
+        {% if perms.staffapps.add_createdstaffapplication %}
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/staffapps/createdstaffapplication/create'
                 hx-get="{% url 'panel:staffapps/createdstaffapplication/create'%} "
@@ -28,13 +38,15 @@
         >
             Add Staff Application
         </a>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class='table-responsive-md'>
         <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
             <thead>
                 <tr>
+                <th class='text-white' scope="col"></th>
                 <th class='text-white' scope="col">#</th>
                 <th class='text-white' scope="col">Name</th>
                 <th class='text-white text-center' scope="col">Actions</th>
@@ -43,6 +55,9 @@
             {% for createdstaffapplication in page_obj %}
             <tbody>
                 <tr>
+                <th>
+                    <input name="{{createdstaffapplication.pk}}" class='form-check-input' type='checkbox'></input>
+                </th>
                 <th scope="row">{{createdstaffapplication.pk}}</th>
                 <td>{{createdstaffapplication.name}}</td>
                 <td>
@@ -57,18 +72,6 @@
                         >
                             Edit
                         </a>
-                        {% endif %}
-                        {% if perms.staffapps.delete_createdstaffapplication %}
-                        <form>
-                            {% csrf_token %}
-                            <button class='btn btn-danger'
-                                    hx-get="{% url 'staffapps:createdstaffapplication_delete' createdstaffapplication.pk%}"
-                                    hx-target='#content_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Permanently Delete
-                            </button>
-                        </form>
                         {% endif %}
                     </div>
                 </td>

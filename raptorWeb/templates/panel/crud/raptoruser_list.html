@@ -17,6 +17,20 @@
             </div>
         </div>
         <hr class='text-white'>
+
+        <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+            {% if perms.authprofiles.delete_raptoruser %}
+            <a role='button' id='delete_bulk' class='btn btn-danger'
+                    hx-post="{% url 'panel:users/raptoruser/delete'%}"
+                    hx-include='next .table'
+                    hx-target='#user_table_wrapper'
+                    hx-swap'outerHTML'
+            >
+                Delete Selected
+            </a>
+            {% endif %}
+        </div>
+
         <div class='d-flex justify-content-center'>
             <div class='m-2 text-white'>
                 <form class='form'
@@ -33,9 +47,10 @@
 
         <div class='table-responsive-xl'>
             <table class="table table-dark table-hover text-white border border-black border-2">
+                {% csrf_token %}
                 <thead>
                     <tr>
-                    <form>
+                        <th scope="col"></th>
                         <th class='text-white htmxLink' scope="col"
                             hx-get="{% url 'panel:users/raptoruser/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=username&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
                             hx-target='#user_table_wrapper'
@@ -85,12 +100,14 @@
                             Date Joined<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
                         </th>
                         <th>Actions</th>
-                    </form>
                     </tr>
                 </thead>
                 {% for user in page_obj %}
                 <tbody class="item">
                     <tr>
+                    <th>
+                        <input name="{{user.pk}}" class='form-check-input' type='checkbox'></input>
+                    </th>
                     <th scope="row">{{user.username}}</th>
                     <td>{{user.email}}</td>
                     <td>{%if user.is_discord_user%}<div class='badge bg-success'>Yes</div>{%else%}<div class='badge bg-danger'>No</div>{%endif%}</td>

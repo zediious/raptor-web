@@ -1,5 +1,5 @@
 {% for server in object_list %}
-<div class="accordion-item">
+<div id="serverAccordion{{server.pk}}" class="accordion-item">
     <h2 class="accordion-header" id="{{ server.pk }}Announcements">
         <a id="{{ server.pk }}"></a>
         <div class="d-flex">

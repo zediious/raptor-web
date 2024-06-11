@@ -18,7 +18,7 @@ class PanelLogEntry(models.Model):
     )
     
     changed_model = models.CharField(
-        max_length=500
+        max_length=15000
     )
     
     action = models.CharField(
