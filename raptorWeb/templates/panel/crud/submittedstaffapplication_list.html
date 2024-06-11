@@ -6,7 +6,7 @@
     <title>{{ site_info_model.brand_name }} | Submitted Staff Applications</title>
 </head>
 
-<div id='content_table_wrapper'>
+<div id='content_table_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
     <div class="m-2 mt-0 p-3">
         <div class="text-white">
             <header class="fs-3">Submitted Applications</header>
@@ -19,7 +19,7 @@
 
     <div class='d-flex justify-content-start gap-2 w-100 mb-3'>
         {% if perms.staffapps.delete_staffapplicationfield %}
-        <a role='button' id='delete_bulk' class='btn btn-danger'
+        <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
                 hx-post="{% url 'panel:staffapps/submittedstaffapplication/delete'%}"
                 hx-include='next .table'
                 hx-target='#content_table_wrapper'
@@ -53,7 +53,11 @@
             <tbody>
                 <tr>
                 <th>
-                    <input name="{{submittedstaffapplication.pk}}" class='form-check-input' type='checkbox'></input>
+                    <input id="select_{{submittedstaffapplication.pk}}" class='form-check-input'
+                           name="{{submittedstaffapplication.pk}}" value="{{submittedstaffapplication.pk}}" type='checkbox'
+                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                    >
+                    </input>
                 </th>
                 <th scope="row">{{submittedstaffapplication.pk}}</th>
                 <td class='text-nowrap'>{{submittedstaffapplication.submitted_date}}</td>
@@ -75,6 +79,12 @@
             </tbody>
             {% endfor %}
         </table>
+        <div>
+            <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
+                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}"
+            >
+            <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
+        </div>
         {% if page_obj.has_next or page_obj.has_previous%}
         <div class="pagination d-flex align-items-center justify-content-center m-3">
             <span class="step-links">

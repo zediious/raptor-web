@@ -7,7 +7,7 @@
     <title>{{ site_info_model.brand_name }} | Server Announcements</title>
 </head>
 
-<div id='data_wrapper'>
+<div id='data_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
     <div id='announcement_table_wrapper'>
         <div class="m-2 mt-0 p-3">
             <div class="text-white">
@@ -21,7 +21,7 @@
 
         <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
             {% if perms.raptorbot.delete_serverannouncement %}
-            <a role='button' id='delete_bulk' class='btn btn-danger'
+            <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
                     hx-post="{% url 'panel:bot/serverannouncement/delete'%}"
                     hx-include='next .table'
                     hx-target='#announcement_table_wrapper'
@@ -70,7 +70,11 @@
                 <tbody class="item">
                     <tr>
                     <th>
-                        <input name="{{serverannouncement.pk}}" class='form-check-input' type='checkbox'></input>
+                        <input id="select_{{serverannouncement.pk}}" class='form-check-input'
+                           name="{{serverannouncement.pk}}" value="{{serverannouncement.pk}}" type='checkbox'
+                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                    >
+                    </input>
                     </th>
                     <td>{{serverannouncement.author}}</td>
                     <td class='text-nowrap'>{{serverannouncement.date}}</td>
@@ -93,6 +97,12 @@
                 </tbody>
                 {% endfor %}
             </table>
+            <div>
+                <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
+                       @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}"
+                >
+                <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
+            </div>
         </div>
         {% if page_obj.has_next or page_obj.has_previous%}
             <div class="pagination d-flex align-items-center justify-content-center m-3">
