@@ -38,7 +38,7 @@
             <tbody>
                 <tr>
                 <th scope="row">{{logentry.pk}}</th>
-                <td>{{logentry.date}}</td>
+                <td class='text-nowrap'>{{logentry.date}}</td>
                 <td>{{logentry.changed_model}}</td>
                 <td>{%if logentry.action == 'Created'%}<div class='badge bg-success'>Created</div>{%elif logentry.action == 'Deleted'%}<div class='badge bg-danger'>Deleted</div>{%else%}<div class='badge bg-warning text-black'>Updated</div>{%endif%}</td>
                 <td>{{logentry.changing_user}}</td>
