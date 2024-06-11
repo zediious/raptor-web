@@ -2,7 +2,14 @@
 
 <div class="offcanvas panelOffcanvas bg-dark offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNav">
     <div class="offcanvas-header text-white">
-        <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">Panel Navigation</h5>
+        <h5 class="offcanvas-title text-center" id="offcanvasNavLabel">
+            Panel Navigation
+            <span class='ms-2 mt-0' data-bs-toggle="tooltip"
+                  data-bs-title="Use ALT+A as a shortcut to open and close the Navigation sidebar!"
+            >
+                <img class="sortIcon filter-white ms-2" src="{% static 'image/question.svg' %}" alt="Help">
+            </span>
+        </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <nav class="offcanvas-body text-white">
@@ -481,3 +488,12 @@
         </div>
     </nav>
 </div>
+
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>
