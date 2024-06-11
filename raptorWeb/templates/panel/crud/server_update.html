@@ -15,21 +15,31 @@
     </div>
 </div>
 
-<div class='card bg-dark m-0 p-3'>
+<div class='card bg-dark m-0 p-3' x-data='{selected: 1}'>
     <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
-        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 1'
+                :class="{'btn-primary': selected == 1, 'btn-secondary': selected != 1}"
+        >
             General
         </button>
-        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 2'
+                :class="{'btn-primary': selected == 2, 'btn-secondary': selected != 2}"
+        >
             Information
         </button>
-        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 3'
+                :class="{'btn-primary': selected == 3, 'btn-secondary': selected != 3}"
+        >
             Querying
         </button>
-        <button id='select-button-4' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 4'
+                :class="{'btn-primary': selected == 4, 'btn-secondary': selected != 4}"
+        >
             Discord Announcements
         </button>
-        <button id='select-button-5' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 5'
+                :class="{'btn-primary': selected == 5, 'btn-secondary': selected != 5}"
+        >
             Donations
         </button>
     </div>
@@ -43,28 +53,28 @@
             hx-swap="none"
         >
             {% csrf_token %}
-            <div id='server_general' style='display: block'>
+            <div x-show='selected == 1'>
                 {% bootstrap_field form.modpack_name %}
                 {% bootstrap_field form.modpack_version %}
                 {% bootstrap_field form.modpack_url %}
                 {% bootstrap_field form.modpack_picture %}
             </div>
-            <div id='server_information' style='display: none'>
+            <div x-show='selected == 2'>
                 {% bootstrap_field form.modpack_description %}
                 {% bootstrap_field form.server_description %}
                 {% bootstrap_field form.server_rules %}
                 {% bootstrap_field form.server_banned_items %}
                 {% bootstrap_field form.server_vote_links %}
             </div>
-            <div id='server_querying' style='display: none'>
+            <div x-show='selected == 3'>
                 {% bootstrap_field form.server_address %}
                 {% bootstrap_field form.server_port %}
             </div>
-            <div id='server_discord_announcements' style='display: none'>
+            <div x-show='selected == 4'>
                 {% bootstrap_field form.discord_announcement_channel_id %}
                 {% bootstrap_field form.discord_modpack_role_id %}
             </div>
-            <div id='server_donations' style='display: none'>
+            <div x-show='selected == 5'>
                 {% bootstrap_field form.rcon_address %}
                 {% bootstrap_field form.rcon_port %}
                 {% bootstrap_field form.rcon_password %}
@@ -76,5 +86,3 @@
         </form>
     </div>
 </div>
-
-<script src="{% static 'javascript/src/serverSelectButton.js' %}"></script>

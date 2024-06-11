@@ -6,7 +6,7 @@
     <title>{{ site_info_model.brand_name }} | Global Announcements</title>
 </head>
 
-<div id='data_wrapper'>
+<div id='data_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
     <div id='announcement_table_wrapper'>
         <div class="m-2 mt-0 p-3">
             <div class="text-white">
@@ -18,11 +18,26 @@
         </div>
         <hr class='text-white'>
 
+        <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+            {% if perms.raptorbot.delete_globalannouncement %}
+            <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
+                    hx-post="{% url 'panel:bot/globalannouncement/delete'%}"
+                    hx-include='next .table'
+                    hx-target='#announcement_table_wrapper'
+                    hx-swap'outerHTML'
+            >
+                Delete Selected
+            </a>
+            {% endif %}
+        </div>
+
         <div class='table-responsive-md'>
             <table class="table table-dark table-hover text-white border border-black border-2">
+                {% csrf_token %}
                 <thead>
                     <tr>
                     <form>
+                        <th class='text-white' scope="col"></th>
                         <th class='text-white htmxLink' scope="col"
                             hx-get="{% url 'panel:bot/globalannouncement/list' %}?paginate_by={{paginate_by}}&order_by=author&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
                             hx-target='#announcement_table_wrapper'
@@ -47,6 +62,14 @@
                 {% for globalannouncement in page_obj %}
                 <tbody class="item">
                     <tr>
+                    <th>
+                        <input id="select_{{globalannouncement.pk}}" class='form-check-input'
+                           name="{{globalannouncement.pk}}" value="{{globalannouncement.pk}}" type='checkbox'
+                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
+                    >
+                    </input>
+                    </th>
                     <td>{{globalannouncement.author}}</td>
                     <td class='text-nowrap'>{{globalannouncement.date}}</td>
                     <td>{{globalannouncement.message|truncatechars:50}}</td>
@@ -61,24 +84,18 @@
                             >
                                 View
                             </a>
-                            {% if perms.raptorbot.delete_globalannouncement %}
-                            <form>
-                                {% csrf_token %}
-                                <button id='panel_archive_button' class='btn btn-danger'
-                                        hx-get="{% url 'raptorbot:globalannouncement_delete' globalannouncement.pk%}"
-                                        hx-target='#announcement_table_wrapper'
-                                        hx-swap'outerHTML'
-                                >
-                                    Permanently Delete
-                                </button>
-                            </form>
-                            {% endif %}
                         </div>
                     </td>
                     </tr>
                 </tbody>
                 {% endfor %}
             </table>
+            <div>
+                <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
+                       @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
+                >
+                <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
+            </div>
         </div>
         {% if page_obj.has_next or page_obj.has_previous%}
             <div class="pagination d-flex align-items-center justify-content-center m-3">
@@ -110,7 +127,7 @@
                             Next
                         </a>
                         <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
                             hx-target="#announcement_table_wrapper"
                         >
                             Last &raquo;
@@ -137,3 +154,9 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>

@@ -4,7 +4,7 @@
     <title>{{ site_info_model.brand_name }} | Archived Server List</title>
 </head>
 
-<div id='server_table_wrapper'>
+<div id='server_table_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
     <div class="m-2 mt-0 p-3">
         <div class="text-white">
             <header class="fs-3">Archived Servers</header>
@@ -18,7 +18,71 @@
         </div>
     </div>
     <hr class='text-white'>
-    {% if page_obj.has_next or page_obj.has_previous%}
+
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+        {% if perms.gameservers.delete_server %}
+        <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
+                hx-post="{% url 'panel:server/delete'%}"
+                hx-include='next .table'
+                hx-target='#server_table_wrapper'
+                hx-swap'outerHTML'
+        >
+            Delete Selected
+        </a>
+        {% endif %}
+    </div>
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
+            <thead>
+                <tr>
+                <th class='text-white' scope="col"></th>
+                <th class='text-white' scope="col">#</th>
+                <th class='text-white' scope="col">Modpack Name</th>
+                <th class='text-white text-center' scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for server in page_obj %}
+            <tbody>
+                <tr>
+                <th>
+                    <input id="select_{{server.pk}}" class='form-check-input'
+                           name="{{server.pk}}" value="{{server.pk}}" type='checkbox'
+                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
+                    >
+                    </input>
+                </th>
+                <th scope="row">{{server.pk}}</th>
+                <td>{{server.modpack_name}}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        {% if perms.gameservers.archive_server %}
+                        <form>
+                            {% csrf_token %}
+                            <button id='panel_unarchive_button' class='btn btn-success'
+                                    hx-get="{% url 'gameservers:update_archive' server.pk%}"
+                                    hx-target='#server_table_wrapper'
+                                    hx-swap'outerHTML'
+                            >
+                                Unarchive
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        <div>
+            <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
+                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
+            >
+            <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
+        </div>
+        {% if page_obj.has_next or page_obj.has_previous%}
         <div class="pagination d-flex align-items-center justify-content-center m-3">
             <span class="step-links">
                 {% if page_obj.has_previous %}
@@ -57,55 +121,14 @@
             </span>
         </div>
     {% endif %}
-
-    <div class='table-responsive-md'>
-        <table class="table table-dark table-hover text-white border border-black border-2">
-            <thead>
-                <tr>
-                <th class='text-white' scope="col">#</th>
-                <th class='text-white' scope="col">Modpack Name</th>
-                <th class='text-white text-center' scope="col">Actions</th>
-                </tr>
-            </thead>
-            {% for server in page_obj %}
-            <tbody>
-                <tr>
-                <th scope="row">{{server.pk}}</th>
-                <td>{{server.modpack_name}}</td>
-                <td>
-                    <div class='d-flex justify-content-evenly gap-1 w-100'>
-                        {% if perms.gameservers.archive_server %}
-                        <form>
-                            {% csrf_token %}
-                            <button id='panel_unarchive_button' class='btn btn-success'
-                                    hx-get="{% url 'gameservers:update_archive' server.pk%}"
-                                    hx-target='#server_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Unarchive
-                            </button>
-                        </form>
-                        {% endif %}
-                        {% if perms.gameservers.delete_server %}
-                        <form>
-                            {% csrf_token %}
-                            <button id='panel_delete_button' class='btn btn-danger'
-                                    hx-get="{% url 'gameservers:delete' server.pk%}"
-                                    hx-target='#server_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Permanently Delete
-                            </button>
-                        </form>
-                        {% endif %}
-                    </div>
-                </td>
-                </tr>
-            </tbody>
-            {% endfor %}
-        </table>
     </div>
 </div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>
 
 <script>
     try {

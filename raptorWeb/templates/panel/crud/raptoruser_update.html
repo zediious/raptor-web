@@ -16,15 +16,21 @@
     </div>
 </div>
 
-<div class='card bg-dark m-0 p-3'>
+<div class='card bg-dark m-0 p-3' x-data='{selected: 1}'>
     <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
-        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 1'
+                :class="{'btn-primary': selected == 1, 'btn-secondary': selected != 1}"
+        >
             General
         </button>
-        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 2'
+                :class="{'btn-primary': selected == 2, 'btn-secondary': selected != 2}"
+        >
             Permissions
         </button>
-        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 3'
+                :class="{'btn-primary': selected == 3, 'btn-secondary': selected != 3}"
+        >
             Sensitive
         </button>
     </div>
@@ -39,7 +45,7 @@
         >
             {% csrf_token %}
 
-            <div id='user_general' style='display: block'>
+            <div x-show='selected == 1'>
                 {% bootstrap_field form.username %}
                 <div class='m-4 ms-0'>
                     <span class='fs-5'>User Slug: </span>{{raptoruser.user_slug}}
@@ -79,13 +85,13 @@
                 {% bootstrap_field form.toasts_seen %}
             </div>
 
-            <div id='user_permissions' style='display: none'>
+            <div x-show='selected == 2'>
                 {% bootstrap_field form.groups %}
                 <hr class='text-white mt-0 mb-4'>
                 {% bootstrap_field form.user_permissions %}
             </div>
 
-            <div id='user_sensitive' style='display: none'>
+            <div x-show='selected == 3'>
                 {% bootstrap_field form.is_superuser %}
                 {% bootstrap_field form.is_staff %}
                 {% bootstrap_field form.mfa_enabled %}
@@ -122,5 +128,3 @@
         </div>
     {% endif %}
 {% endif %}
-
-<script src="{% static 'javascript/src/userSelectButton.js' %}"></script>

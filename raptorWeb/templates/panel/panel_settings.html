@@ -4,7 +4,7 @@
     <title>{{ site_info_model.brand_name }} | Settings</title>
 </head>
 
-<div class="container">
+<div class="container" x-data='{selected: 1}'>
     <div class="m-2 mt-3 p-3">
         <div class="text-white">
             <header class="fs-3">Settings</header>
@@ -13,12 +13,60 @@
             </p>
         </div>
     </div>
+    <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
+        <button class='btn btn-sm selection-button' @click='selected = 1'
+                :class="{'btn-primary': selected == 1, 'btn-secondary': selected != 1}"
+        >
+            General
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 2'
+                :class="{'btn-primary': selected == 2, 'btn-secondary': selected != 2}"
+        >
+            SEO
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 3'
+                :class="{'btn-primary': selected == 3, 'btn-secondary': selected != 3}"
+        >
+            Auth
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 4'
+                :class="{'btn-primary': selected == 4, 'btn-secondary': selected != 4}"
+        >
+            Game Servers
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 5'
+                :class="{'btn-primary': selected == 5, 'btn-secondary': selected != 5}"
+        >
+            Discord Bot
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 6'
+                :class="{'btn-primary': selected == 6, 'btn-secondary': selected != 6}"
+        >
+            Donations
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 7'
+                :class="{'btn-primary': selected == 7, 'btn-secondary': selected != 7}"
+        >
+            Colors
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 8'
+                :class="{'btn-primary': selected == 8, 'btn-secondary': selected != 8}"
+        >
+            Images
+        </button>
+        <button class='btn btn-sm selection-button' @click='selected = 9'
+                :class="{'btn-primary': selected == 9, 'btn-secondary': selected != 9}"
+        >
+            Default Pages
+        </button>
+    </div>
     <form class="form"
           enctype="multipart/form-data" 
           hx-post="{% url 'panel:settings'%}"
+          hx-include="#imageConfigInput"
           hx-swap='none'
     >
-        <div class="m-3">
+        <div x-show='selected == 1' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -41,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 2' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -59,7 +107,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 3' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -76,7 +124,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 4' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -99,7 +147,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 5' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -118,7 +166,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 6' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -141,7 +189,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div x-show='selected == 7' class="m-3">
             <div class="card bg-dark p-2">
                 <div class="card-body">
                     <div class="m-3 mt-1 p-1">
@@ -161,33 +209,8 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
-            <div class="card bg-dark p-2">
-                <div class="card-body">
-                    <div class="m-3 mt-1 p-1">
-                        <div class="text-white">
-                            <header class="fs-5">Image Configuration</header>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center text-white">
-                        <div class="w-50">
-                            <div class="mb-3">
-                                <div class="form-check form-switch">
-                                    <input type="checkbox" type="submit" name="use_svg_brand"
-                                           {%if site_information.use_svg_brand%}checked=""{%endif%}
-                                           class="form-check-input is-valid" id="id_use_svg_brand" onclick='switchBrandField()'>
-                                    <label class="form-check-label" for="id_use_svg_brand">Use SVG Branding Image</label>
-                                    <div class="form-text text-white">If this is checked, the SVG Branding Image will be used instead of the uploaded raster Branding Image.</div>
-                                </div>
-                            </div>
-                            {% bootstrap_button button_type="submit" content="Update" %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </form>
-    <div class="m-3">
+    <div x-show='selected == 8' class="m-3">
         <div class="card bg-dark p-2">
             <div class="card-body">
                 <div class="m-3 mt-1 p-1">
@@ -197,6 +220,13 @@
                 </div>
                 <div class="d-flex justify-content-center text-white">
                     <div class="w-50">
+                        <div id='imageConfigInput' class="form-check form-switch mb-3 mt-3">
+                            <input type="checkbox" type="submit" name="use_svg_brand"
+                                   {%if site_information.use_svg_brand%}checked=""{%endif%}
+                                   class="form-check-input is-valid" id="id_use_svg_brand" onclick='switchBrandField()'>
+                            <label class="form-check-label" for="id_use_svg_brand">Use SVG Branding Image</label>
+                            <div class="form-text text-white">If this is checked, the SVG Branding Image will be used instead of the uploaded raster Branding Image.</div>
+                        </div>
                         <form class="form"
                             enctype="multipart/form-data" 
                             hx-post="{% url 'panel:settings_files_update'%}"
@@ -254,7 +284,7 @@
             </div>
         </div>
     </div>
-    <div class="m-3">
+    <div x-show='selected == 9' class="m-3">
         <div class="card bg-dark p-2">
             <div class="card-body">
                 <div class="m-3 mt-1 p-1">

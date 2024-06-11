@@ -15,15 +15,21 @@
     </div>
 </div>
 
-<div class='card bg-dark m-0 p-3'>
+ <div class='card bg-dark m-0 p-3' x-data='{selected: 1}'>
     <div class='d-flex flex-wrap justify-content-center gap-1 mb-0'>
-        <button id='select-button-1' class='btn btn-sm btn-primary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 1'
+                :class="{'btn-primary': selected == 1, 'btn-secondary': selected != 1}"
+        >
             Package Information
         </button>
-        <button id='select-button-2' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 2'
+                :class="{'btn-primary': selected == 2, 'btn-secondary': selected != 2}"
+        >
             Pricing
         </button>
-        <button id='select-button-3' class='btn btn-sm btn-secondary selection-button'>
+        <button class='btn btn-sm selection-button' @click='selected = 3'
+                :class="{'btn-primary': selected == 3, 'btn-secondary': selected != 3}"
+        >
             Benefits
         </button>
     </div>
@@ -35,18 +41,18 @@
             hx-swap="none"
         >
             {% csrf_token %}
-            <div id='donationpackage_information' style='display: block;'>
+            <div x-show='selected == 1'>
                 {% bootstrap_field form.name %}
                 {% bootstrap_field form.priority %}
                 {% bootstrap_field form.package_description %}
                 {% bootstrap_field form.package_picture %}
             </div>
-            <div id='donationpackage_pricing' style='display: none;'>
+            <div x-show='selected == 2'>
                 {% bootstrap_field form.price %}
                 {% bootstrap_field form.variable_price %}
                 {% bootstrap_field form.allow_repeat %}
             </div>
-            <div id='donationpackage_benefits' style='display: none;'>
+            <div x-show='selected == 3'>
                 {% bootstrap_field form.servers %}
                 {% bootstrap_field form.commands %}
                 {% bootstrap_field form.discord_roles %}
@@ -58,5 +64,3 @@
         </form>
     </div>
 </div>
-
-<script src="{% static 'javascript/src/donationPackageSelectButton.js' %}"></script>

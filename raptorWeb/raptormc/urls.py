@@ -45,12 +45,6 @@ urlpatterns: list[URLPattern] = [
     path('404', views.View_404.as_view(), name='404_view'),
     # API
     path('raptormc/api/action/session/headerbox/update', views.Update_Headerbox_State.as_view(), name='update_headerbox_state'),
-    path('raptormc/api/crud/pages/delete/<int:pk>/', views.PageDelete.as_view(), name="page_delete"),
-    path('raptormc/api/crud/toasts/delete/<int:pk>/', views.NotificationToastDelete.as_view(), name="toast_delete"),
-    path('raptormc/api/crud/navbarlink/delete/<int:pk>/', views.NavbarLinkDelete.as_view(), name="navbarlink_delete"),
-    path('raptormc/api/crud/navbardropdown/delete/<int:pk>/', views.NavbarDropdownDelete.as_view(), name="navbardropdown_delete"),
-    path('raptormc/api/crud/navwidget/delete/<int:pk>/', views.NavWidgetDelete.as_view(), name="navwidget_delete"),
-    path('raptormc/api/crud/navwidgetbar/delete/<int:pk>/', views.NavWidgetBarDelete.as_view(), name="navwidgetbar_delete"),
     # Base View
     re_path(r'\S*', views.BaseView.as_view(), name="base")
 

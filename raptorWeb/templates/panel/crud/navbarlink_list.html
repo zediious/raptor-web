@@ -6,7 +6,7 @@
     <title>{{ site_info_model.brand_name }} | Navigation Links</title>
 </head>
 
-<div id='content_table_wrapper'>
+<div id='content_table_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
     <div class="m-2 mt-0 p-3">
         <div class="text-white">
             <header class="fs-3">Navigation Links</header>
@@ -17,8 +17,18 @@
     </div>
     <hr class='text-white'>
 
-    {% if perms.raptormc.add_navbarlink %}
-    <div class='d-flex justify-content-end gap-1 w-100 mb-5'>
+    <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+        {% if perms.raptormc.delete_navbarlink %}
+        <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
+                hx-post="{% url 'panel:content/navbarlink/delete'%}"
+                hx-include='next .table'
+                hx-target='#content_table_wrapper'
+                hx-swap'outerHTML'
+        >
+            Delete Selected
+        </a>
+        {% endif %}
+        {% if perms.raptormc.add_navbarlink %}
         <a role='button' id='add_page_button' class='btn btn-primary'
                 href='/panel/content/navbarlink/create'
                 hx-get="{% url 'panel:content/navbarlink/create'%} "
@@ -28,13 +38,15 @@
         >
             Add Navbar Link
         </a>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class='table-responsive-xl'>
         <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
             <thead>
                 <tr>
+                <th class='text-white' scope="col"></th>
                 <th class='text-white' scope="col">#</th>
                 <th class='text-white' scope="col">Name</th>
                 <th class='text-white' scope="col">URL</th>
@@ -49,6 +61,14 @@
             {% for navlink in page_obj %}
             <tbody>
                 <tr>
+                <th>
+                    <input id="select_{{navlink.pk}}" class='form-check-input'
+                           name="{{navlink.pk}}" value="{{navlink.pk}}" type='checkbox'
+                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
+                    >
+                    </input>
+                </th>
                 <th scope="row">{{navlink.pk}}</th>
                 <td>{{navlink.name}}</td>
                 <td><a href="{{navlink.url}}" target='_blank'>{{navlink.url}}<img class="new_tab_icon filter-white ms-2" src="{% static 'image/new_tab_white.svg' %}" alt="Opens in new tab"></a></td>
@@ -70,24 +90,18 @@
                             Edit
                         </a>
                         {% endif %}
-                        {% if perms.raptormc.delete_navbarlink %}
-                        <form>
-                            {% csrf_token %}
-                            <button class='btn btn-danger'
-                                    hx-get="{% url 'raptormc:navbarlink_delete' navlink.pk%}"
-                                    hx-target='#content_table_wrapper'
-                                    hx-swap'outerHTML'
-                            >
-                                Permanently Delete
-                            </button>
-                        </form>
-                        {% endif %}
                     </div>
                 </td>
                 </tr>
             </tbody>
             {% endfor %}
         </table>
+        <div>
+            <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
+                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
+            >
+            <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
+        </div>
         {% if page_obj.has_next or page_obj.has_previous%}
         <div class="pagination d-flex align-items-center justify-content-center m-3">
             <span class="step-links">
@@ -127,4 +141,10 @@
             </span>
         </div>
     {% endif %}
-    </div>
+</div>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>s

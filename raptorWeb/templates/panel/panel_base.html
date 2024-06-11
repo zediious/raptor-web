@@ -13,6 +13,7 @@
     <title>{{site_info.brand_name}} | Control Panel</title>
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
     <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}" hx-preserve="true"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}" hx-preserve="true">
     <link rel="shortcut icon" type="image/x-icon"
           href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}"
@@ -32,7 +33,7 @@
 
     <div class="d-flex justify-content-center">
         <img id="panelLoadingspinner"
-            class="htmx-indicator w-50 pt-5"
+            class="htmx-indicator loadingSpinnerMain mt-5 pt-5"
             src="{% static 'image/tail-spin.svg' %}"
             alt="Loading...">
     </div>
@@ -72,10 +73,9 @@
     </footer>
 
     {% comment %} JS Imports {% endcomment %}
-    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
-    <script src="{% static 'javascript/src/dep/alpine.min.js' %}"></script>
-    <script src="{% static 'javascript/src/modalClose.js' %}"></script>
+    <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/alpine.min.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/modalClose.js' %}" hx-preserve="true"></script>
 
 
     <script>
