@@ -13,9 +13,8 @@ from django.conf import settings
 from stripe import Webhook
 from stripe.error import SignatureVerificationError
 
-from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.raptormc.models import DefaultPages, SiteInformation
-from raptorWeb.donations.models import DonationPackage, CompletedDonation, DonationServerCommand, DonationDiscordRole
+from raptorWeb.donations.models import DonationPackage, CompletedDonation
 from raptorWeb.donations.forms import SubmittedDonationForm, DonationDiscordUsernameForm, DonationPriceForm, DonationGatewayForm
 from raptorWeb.donations.tasks import send_server_commands, add_discord_bot_roles, send_donation_email
 from raptorWeb.donations.mojang import verify_minecraft_username
@@ -243,120 +242,6 @@ class DonationCancel(View):
         
         except CompletedDonation.DoesNotExist:
             return HttpResponseRedirect('/donations/failure')
-        
-        
-class DonationDelete(View):
-    """
-    Delete a created donation
-    """
-    def post(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
-            return HttpResponseRedirect('/404')
-        
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/404')
-        
-        if not request.user.has_perm('donations.delete_completeddonation'):
-            messages.error(request, 'You do not have permission to delete Completed Donations.')
-            return HttpResponse(status=200)
-        
-        try:
-            deleted_donation = CompletedDonation.objects.get(
-                pk=request.GET.get('pk')
-            )
-            deleted_donation.delete()
-            
-            model_string = str(CompletedDonation).split('.')[3].replace("'", "").replace('>', '')
-            PanelLogEntry.objects.create(
-                changing_user=request.user,
-                changed_model=str(f'{model_string} - {deleted_donation.donation_datetime}'),
-                action='Deleted'
-            )
-            
-            messages.success(request, 'Donation has been permanently deleted!')
-            return HttpResponseRedirect('/panel/api/html/panel/donations/completeddonation/list')
-        
-        except CompletedDonation.DoesNotExist:
-            messages.error(request, 'There was an error processing this package deletion')
-            return HttpResponse(status=200)
-        
-        
-class DonationPackageDelete(View):
-    """
-    Permanently delete a given Donation Package
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('donations.delete_donationpackage'):
-            messages.error(request, 'You do not have permission to delete Donation Packages.')
-            return HttpResponse(status=200)
-        
-        changing_donationpackage = DonationPackage.objects.get(pk=self.kwargs['pk'])
-        changing_donationpackage.delete()
-        
-        model_string = str(DonationPackage).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_donationpackage}'),
-            action='Deleted'
-        )
-            
-        messages.success(request, f'{changing_donationpackage} has been permanently deleted!')
-        return HttpResponseRedirect('/panel/api/html/panel/donations/donationpackage/list')
-    
-    
-class DonationServerCommandDelete(View):
-    """
-    Permanently delete a given Donation Server Command
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('donations.delete_donationservercommand'):
-            messages.error(request, 'You do not have permission to delete Donation Server Commands.')
-            return HttpResponse(status=200)
-        
-        changing_donationservercommand = DonationServerCommand.objects.get(pk=self.kwargs['pk'])
-        changing_donationservercommand.delete()
-        
-        model_string = str(DonationServerCommand).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_donationservercommand}'),
-            action='Deleted'
-        )
-            
-        messages.success(request, f'{changing_donationservercommand} has been permanently deleted!')
-        return HttpResponseRedirect('/panel/api/html/panel/donations/donationservercommand/list')
-    
-    
-class DonationDiscordRoleDelete(View):
-    """
-    Permanently delete a given Donation Discord Role
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('donations.delete_donationdiscordrole'):
-            messages.error(request, 'You do not have permission to delete Donation Discord Roles.')
-            return HttpResponse(status=200)
-        
-        changing_donationdiscordrole = DonationDiscordRole.objects.get(pk=self.kwargs['pk'])
-        changing_donationdiscordrole.delete()
-        
-        model_string = str(DonationDiscordRole).split('.')[3].replace("'", "").replace('>', '')
-        PanelLogEntry.objects.create(
-            changing_user=request.user,
-            changed_model=str(f'{model_string} - {changing_donationdiscordrole}'),
-            action='Deleted'
-        )
-            
-        messages.success(request, f'{changing_donationdiscordrole} has been permanently deleted!')
-        return HttpResponseRedirect('/panel/api/html/panel/donations/donationdiscordrole/list')
         
         
 class DonationBenefitResend(View):

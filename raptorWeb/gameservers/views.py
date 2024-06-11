@@ -9,7 +9,6 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.conf import settings
 
-from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.gameservers.models import ServerManager, ServerStatistic, Server, Player, PlayerCountHistoric
 from raptorWeb.gameservers.forms import StatisticFilterForm, StatisticFilterFormFireFox
 from raptorWeb.raptormc.models import SiteInformation
@@ -271,37 +270,6 @@ class SetArchive(View):
             return HttpResponseRedirect('/panel/api/html/panel/server/archivedlist')
         
         return HttpResponseRedirect('/panel/api/html/panel/server/list/')
-    
-    
-class DeleteServer(View):
-    """
-    Permanently delete a given server
-    """
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if not request.user.is_staff:
-            return HttpResponseRedirect('/')
-        
-        if not request.user.has_perm('gameservers.delete_server'):
-            messages.error(request, 'You do not have permission to delete servers.')
-            return HttpResponse(status=200)
-        
-        changing_server = Server.objects.get(pk=self.kwargs['pk'])
-        if changing_server.archived:
-            messages.success(request, f'{changing_server} has been permanently deleted!')
-            changing_server.delete()
-            
-            model_string = str(Server).split('.')[3].replace("'", "").replace('>', '')
-            PanelLogEntry.objects.create(
-                changing_user=request.user,
-                changed_model=str(f'{model_string} - {changing_server}'),
-                action='Deleted'
-            )
-            
-            return HttpResponseRedirect('/panel/api/html/panel/server/archivedlist')
-            
-        else:
-            messages.error(request, f'There was an error attempting to delete {changing_server}!')
-            return HttpResponse(status=200)
 
 
 class Import_Servers(TemplateView):

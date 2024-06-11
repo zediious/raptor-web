@@ -17,11 +17,6 @@ urlpatterns: list[URLPattern] = [
     path('payment/webhook', views.donation_payment_webhook, name="payment_webook"),
     path('payment/webhook/', views.donation_payment_webhook, name="payment_webook"),
     path('payment/paypal_webhook', include('paypal.standard.ipn.urls')),
-    # Model Deletion
-    path('donation/delete/', views.DonationDelete.as_view(), name="donation_delete"),
-    path('crud/donationpackage/delete/<int:pk>', views.DonationPackageDelete.as_view(), name="donationpackage_delete"),
-    path('crud/donationservercommand/delete/<int:pk>', views.DonationServerCommandDelete.as_view(), name="donationservercommand_delete"),
-    path('crud/donationdiscordrole/delete/<int:pk>', views.DonationDiscordRoleDelete.as_view(), name="donationdiscordrole_delete"),
-    # Admin
+    # Panel Action
     path('donation/resend/', views.DonationBenefitResend.as_view(), name="resend"),
 ]
