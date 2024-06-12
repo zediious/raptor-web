@@ -90,8 +90,13 @@
                             alt="Package Picture">
                         {% endif %}
                     </div>
-                    <div class="col-10 w-100 mt-3 text-center">
-                        <strong>{{package.name}}</strong>
+                     <div class="col-10 w-100 mt-3 text-center">
+                        <div class='badge bg-dark' style="text-decoration: none !important;">
+                            {{package.price}} {{donation_currency|upper}}
+                        </div>
+                        <div>
+                            <strong class="fs-5 text-center">{{package.name}}</strong>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -107,7 +112,7 @@
                         {% if package.variable_price %}
                         {% else %}
                         <p class='fs-3'>
-                            ${{package.price}}
+                            {{package.price}} {{donation_currency|upper}}
                         </p>
                         {% endif %}
                     </div>
