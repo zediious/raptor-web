@@ -27,7 +27,7 @@ class Server_List_Base(ListView):
     model: Server = Server
 
     def get_queryset(self) -> ServerManager:
-        if 'loading' not in self.template_name:
+        if 'loading' not in self.template_name and '_NOWAIT' not in self.template_name:
             return Server.objects.get_servers()
         
         return Server.objects.get_servers(wait=False)

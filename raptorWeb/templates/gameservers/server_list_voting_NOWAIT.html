@@ -1,0 +1,23 @@
+{% for server in object_list %}
+<div id="serverAccordion{{server.pk}}" class="accordion-item">
+    <h2 class="accordion-header" id="{{ server.pk }}Voting">
+    <a id="{{ server.pk }}"></a>
+    <button class="accordion-button collapsed pageHeader text-center"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse{{ server.pk }}"
+            aria-expanded="true"
+            aria-controls="collapse{{ server.pk }}"
+    >
+        {{ server.modpack_name }} Vote Links
+    </button>
+    </h2>
+    <div id="collapse{{ server.pk }}"
+         class="accordion-collapse collapse{% if server.pk == opened_server_pk %} show{% endif %}"
+         aria-labelledby="collapse{{ server.pk }}"
+    >
+        <div class="accordion-body pageContent p-4">
+            {{ server.server_vote_links|safe }}
+        </div>
+    </div>
+</div>
+{% endfor %}
