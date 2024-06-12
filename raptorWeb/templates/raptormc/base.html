@@ -18,6 +18,7 @@
     <meta property="og:image" content="{{ og_image }}" hx-preserve="true"/>
     <script src="{% static 'javascript/src/dep/htmx.min.js' %}" hx-preserve="true"></script>
     <script src="{% static 'javascript/src/dep/head-support.js' %}" hx-preserve="true"></script>
+    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/raptormc.css' %}" hx-preserve="true">
     <link rel="shortcut icon" type="image/x-icon"
           href="{% if small_site_info.ico_image %}{{small_site_info.ico_image.url}}{% endif %}"
@@ -90,7 +91,6 @@
     </main>
 
     {% comment %} JS Imports {% endcomment %}
-    <script src="{% static 'javascript/src/dep/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/jquery-3.6.1.min.js' %}"></script>
     <script src="{% static 'javascript/src/dep/clipboard.min.js' %}"></script>
     <script src="{% static 'javascript/src/backgroundScroll.js' %}"></script>

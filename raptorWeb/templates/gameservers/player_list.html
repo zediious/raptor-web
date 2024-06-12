@@ -1,43 +1,35 @@
 {% load static %}
 
 {% if server_query_enabled %}
-<div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content bg-dark text-white">
-      <button class="btn-close btn-close-white p-3 mb-0 fs-6" data-bs-dismiss="modal" aria-label="Close"></button>
-      <div class="modal-body pt-0">
 
-        {% for server in server_list reversed %}
-          {% if forloop.counter0 != 0 %}
-          <hr>
-          {% endif %}
-          <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server.modpack_name}}</h5>
-          <span class="fs-6 d-block text-center">
-          {% for player in object_list %}
-            {% if player.server == server %}
-            {{ player.name }}, 
-            {% endif %}
-          {% endfor %}
-          </span>
-        {% endfor %}
+  <div id='player_count_modal' hx-swap-oob="innerHTML: #player_count_modal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content bg-dark text-white">
+        <button class="btn-close btn-close-white p-3 mb-0 fs-6" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-body pt-0">
+          <div id='current_player_list'>
+            {% for server in server_list reversed %}
+              {% if forloop.counter0 != 0 %}
+              <hr>
+              {% endif %}
+              <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server.modpack_name}}</h5>
+              <span class="fs-6 d-block text-center">
+              {% for player in object_list %}
+                {% if player.server == server %}
+                {{ player.name }}{% if forloop.counter0 != 0 %},{% endif %}
+                {% endif %}
+              {% endfor %}
+              </span>
+            {% endfor %}
+          </div>
 
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<button id="totalPlayers" class="mt-auto btn btn-lg btn-dark mb-3 d-block mb-auto"
-        data-bs-toggle="modal"
-        data-bs-target="#playerNames"
->
-  <div class="fs-4 text-white opacity-75 p-3 pt-0 pb-0" >
-    Currently Playing: 
-    <span id="total_count" class="fs-1">
-      {{ stat_object.total_player_count }}
-    </span>
-  </div>
-  <div class="fs-6 text-white opacity-75 p-3 pt-0 pb-0">
-    Click to view players!
-  </div>
-</button>
+  <span id="total_count" hx-swap-oob="innerHTML: #total_count">
+    {{ stat_object.total_player_count }}
+  </span>
+
 {% endif %}
