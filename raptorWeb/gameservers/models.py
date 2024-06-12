@@ -69,8 +69,9 @@ class ServerManager(models.Manager):
             if do_query == True:
                 try:
                     serverJSON: QueryResponse = JavaServer(
-                        server.server_address,
-                        server.server_port
+                        host=server.server_address,
+                        port=server.server_port,
+                        timeout=0.5
                         ).query()
 
                     server.player_count = serverJSON.players.online
