@@ -114,6 +114,7 @@ class DonationCheckout(TemplateView):
         context['donation_price_form'] = DonationPriceForm({'chosen_price': bought_package.price})
         context['discord_username_form'] = DonationDiscordUsernameForm()
         context['donation_details_form'] = SubmittedDonationForm()
+        context['donation_currency'] = site_info.donation_currency.upper()
         
         if site_info.paypal_enabled and site_info.stripe_enabled:
             context['donation_gateway_form'] = DonationGatewayForm({'payment_gateway': 'stripe'})
