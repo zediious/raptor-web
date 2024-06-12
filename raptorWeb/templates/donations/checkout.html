@@ -34,11 +34,6 @@
                         {{buying_package.package_description|safe}}
                     </div>
                     <hr>
-                    {% if not single_gateway %}
-                    <div class="d-flex flex-column">
-                        {% bootstrap_field donation_gateway_form.payment_gateway %}
-                    </div>
-                    {% endif %}
                     {% if buying_package.servers.count > 0 %}
                         {% if request.user.discord_user_info %}
                         <p class="text-center text-white fs-3">
@@ -68,6 +63,11 @@
                     <div class="d-flex flex-column">
                         {% if buying_package.variable_price %}
                         {% bootstrap_field donation_price_form.chosen_price %}
+                        {% endif %}
+                        {% if not single_gateway %}
+                        <div class="d-flex flex-column">
+                            {% bootstrap_field donation_gateway_form.payment_gateway %}
+                        </div>
                         {% endif %}
                         <button class="btn btn-success" type='submit'>
                             Checkout
