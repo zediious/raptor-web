@@ -116,7 +116,7 @@ class DonationCheckout(TemplateView):
         context['donation_details_form'] = SubmittedDonationForm()
         
         if site_info.paypal_enabled and site_info.stripe_enabled:
-            context['donation_gateway_form'] = DonationGatewayForm()
+            context['donation_gateway_form'] = DonationGatewayForm({'payment_gateway': 'stripe'})
             context['single_gateway'] = False
             
         else:
