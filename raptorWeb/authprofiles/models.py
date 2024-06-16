@@ -522,6 +522,11 @@ def pre_save_raptor_user(sender, instance, *args, **kwargs):
     If a Raptoruser's Username is changed, update their User Slug to a slufigied
     version of the new username
     """
-    if instance.username != RaptorUser.objects.get(pk=instance.pk).username:
-        instance.user_slug = slugify(instance.username)
-        
+    
+    try:
+        changed_user = RaptorUser.objects.get(pk=instance.pk)
+        if instance.username != changed_user.username:
+            instance.user_slug = slugify(instance.username)
+            
+    except RaptorUser.DoesNotExist:
+        pass     
