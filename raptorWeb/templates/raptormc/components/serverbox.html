@@ -15,31 +15,19 @@
         {% if server_query_enabled %}
         <div class="modal fade" id="playerNames" tabindex="-1" aria-labelledby="Online Player Names" aria-hidden="true">
             <div id='player_count_modal'>
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog modal-md">
                     <div class="modal-content bg-dark text-white">
                     <button class="btn-close btn-close-white p-3 mb-0 fs-6" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="modal-body pt-0">
                         <div id='current_player_list'>
-                        {% for server in server_list reversed %}
-                            {% if forloop.counter0 != 0 %}
-                            <hr>
-                            {% endif %}
-                            <h5 class="fs-4 text-center text-decoration-underline mb-3">{{ server.modpack_name}}</h5>
-                            <span class="fs-6 d-block text-center">
-                            {% for player in object_list %}
-                            {% if player.server == server %}
-                            {{ player.name }}{% if forloop.counter0 != 0 %},{% endif %}
-                            {% endif %}
-                            {% endfor %}
-                            </span>
-                        {% endfor %}
+                            <img class="w-100 p-5" src="{% static 'image/tail-spin.svg' %}" alt="...">
                         </div>
-                
                     </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <header class="row m-2 mt-0 w-100">
             <section id="playerCountBox"
                     class="col-lg col-12 fs-2 mt-lg-2 mt-4 d-flex align-items-center flex-column"
