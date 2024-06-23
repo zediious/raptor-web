@@ -16,7 +16,7 @@
               <span class="fs-6 d-block text-center">
               {% for player in object_list %}
                 {% if player.server == server %}
-                {{ player.name }}{% if forloop.counter0 != 0 %},{% endif %}
+                {{ player.name }}{% if not forloop.last %},{% endif %}
                 {% endif %}
               {% endfor %}
               </span>
