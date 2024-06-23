@@ -2,8 +2,8 @@
 
 {% if server_query_enabled %}
 
-  <div id='player_count_modal' hx-swap-oob="innerHTML: #player_count_modal">
-    <div class="modal-dialog modal-sm">
+  <div hx-swap-oob="innerHTML: #playerNames">
+    <div class="modal-dialog modal-md">
       <div class="modal-content bg-dark text-white">
         <button class="btn-close btn-close-white p-3 mb-0 fs-6" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-body pt-0">
@@ -16,7 +16,7 @@
               <span class="fs-6 d-block text-center">
               {% for player in object_list %}
                 {% if player.server == server %}
-                {{ player.name }}{% if forloop.counter0 != 0 %},{% endif %}
+                {{ player.name }}{% if not forloop.last %},{% endif %}
                 {% endif %}
               {% endfor %}
               </span>
