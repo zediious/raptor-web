@@ -7,7 +7,7 @@ from tinymce.widgets import TinyMCE
 
 from raptorWeb.raptormc.models import SiteInformation, DefaultPages, InformativeText, Page, NotificationToast, NavWidget
 from raptorWeb.donations.models import DonationPackage
-from raptorWeb.staffapps.models import CreatedStaffApplication
+from raptorWeb.staffapps.models import CreatedStaffApplication, StaffApplicationField
 from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, RaptorUserGroup
 from raptorWeb.gameservers.models import Server
 
@@ -267,7 +267,11 @@ class PanelDonationPackageCreateForm(forms.ModelForm):
         }
         
         
-class PanelCreatedStaffApplicationForm(forms.ModelForm): 
+class PanelCreatedStaffApplicationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['form_fields'].queryset = StaffApplicationField.objects.all().order_by('priority')
+                                                           
     class Meta:
         model = CreatedStaffApplication
         fields: str = "__all__"

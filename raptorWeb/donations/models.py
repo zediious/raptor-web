@@ -17,7 +17,7 @@ class DonationServerCommand(models.Model):
     """
     A command to be sent to a server. Use {{minecraft_username}}
     and {{package_name}} as placeholders for the package that the
-    player bought when creation commands.
+    player bought when creating commands.
     """
     command = models.CharField(
         default="",
