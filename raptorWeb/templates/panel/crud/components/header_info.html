@@ -1,0 +1,10 @@
+{% load adminDoc %}
+
+<div class="m-2 mt-0 p-3">
+    <div class="text-white">
+        <header class="fs-3">{% get_verbose_name model %}s</header>
+        <p class="fs-5">
+            {% get_admin_documentation model %}
+        </p>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
+    hx-confirm="These items will be permanently deleted! Are you sure you want to do this?"
+    hx-post="/panel/api/html/panel/{{crud_url}}/delete"
+    hx-include='next .table'
+    hx-target='#content_table_wrapper'
+    hx-swap'outerHTML'
+>
+    Delete Selected
+</a>
+
+<script>
+
+    htmx.find('#delete_bulk').classList.add('disabled')
+
+</script>

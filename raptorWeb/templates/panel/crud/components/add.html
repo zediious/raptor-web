@@ -1,0 +1,9 @@
+<a role='button' id='add_page_button' class='btn btn-primary'
+        href='/panel/{{crud_url}}/create'
+        hx-get="/panel/api/html/panel/{{crud_url}}/create"
+        hx-push-url='/panel/{{crud_url}}/create'
+        hx-target='#panel_main'
+        hx-indicator="#panelLoadingspinner,.loaded-content"
+>
+    Add
+</a>

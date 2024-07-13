@@ -277,5 +277,9 @@ class CompletedDonation(models.Model):
         permissions = [
             ("resendbenefits_completeddonation", "Can re-send benefits for Completed Donations"),
         ]
+
+    class Meta:
+        verbose_name = "Completed Donation"
+        verbose_name_plural = "Completion Donations"
         
     

@@ -695,7 +695,7 @@ class PanelLogEntryList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-                'total_panellogentry_count': PanelLogEntry.objects.count()
+                'total_model_count': PanelLogEntry.objects.count()
             })
 
         return context
@@ -783,7 +783,7 @@ class PanelPlayerList(PanelListViewSearchable):
         context = super().get_context_data(**kwargs)
         context.update({
                 'player_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
-                'total_player_count': Player.objects.count()
+                'total_model_count': Player.objects.count()
             })
         
         if self.request.GET.get('username') != None:
@@ -1172,7 +1172,7 @@ class PanelGlobalAnnouncementList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_globalannouncement_count': GlobalAnnouncement.objects.count()
+            'total_model_count': GlobalAnnouncement.objects.count()
         })
         return context
     
@@ -1210,7 +1210,7 @@ class PanelServerAnnouncementList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_serverannouncement_count': ServerAnnouncement.objects.count()
+            'total_model_count': ServerAnnouncement.objects.count()
         })
         return context
     
@@ -1432,7 +1432,7 @@ class PanelCompletedDonationList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_completeddonation_count': CompletedDonation.objects.count()
+            'total_model_count': CompletedDonation.objects.count()
         })
         return context
     
@@ -1461,7 +1461,7 @@ class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_submittedstaffapplication_count': SubmittedStaffApplication.objects.count()
+            'total_model_count': SubmittedStaffApplication.objects.count()
         })
         return context
     
@@ -1616,7 +1616,7 @@ class PanelUserList(PanelListViewSearchable):
         context = super().get_context_data(**kwargs)
         context.update({
                 'user_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
-                'total_user_count': RaptorUser.objects.count()
+                'total_model_count': RaptorUser.objects.count()
             })
         
         if self.request.GET.get('username') != None:
