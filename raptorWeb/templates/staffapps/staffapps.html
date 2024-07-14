@@ -39,6 +39,11 @@
                                 <input class="form-control" name={{form_field.name|add_underscore}} type="text" required>
                                 <div class="form-text text-white">{{form_field.help_text}}</div>
                             {% endif %}
+                            {% if form_field.widget == 'large_text' %}
+                                <label class="form-label" for="{{form_field.name|add_underscore}}">{{form_field.name}}</label>
+                                <textarea value='' class="form-control" name={{form_field.name|add_underscore}} type="text" required></textarea>
+                                <div class="form-text text-white">{{form_field.help_text}}</div>
+                            {% endif %}
                             {% if form_field.widget == 'int' %}
                                 <label class="form-label" for="{{form_field.name|add_underscore}}">{{form_field.name}}</label>
                                 <input class="form-control" name={{form_field.name|add_underscore}} type="number" required>

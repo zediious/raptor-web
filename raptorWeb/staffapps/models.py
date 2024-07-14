@@ -137,6 +137,7 @@ class StaffApplicationField(models.Model):
     
     class StaffApplicationFieldWidgetChoices(models.TextChoices):
         TEXT = 'text', _('Text'),
+        LARGE_TEXT = 'large_text', _('Large Text'),
         INT = 'int', _('Number')
         BOOL = 'bool', _('Yes or No')
         
@@ -153,7 +154,7 @@ class StaffApplicationField(models.Model):
     )
     
     widget = models.CharField(
-        max_length=5,
+        max_length=10,
         verbose_name='Form Widget',
         help_text='The widget type used for this form',
         choices=StaffApplicationFieldWidgetChoices.choices,
