@@ -1,0 +1,15 @@
+{% load django_bootstrap5 %}
+
+<div class='d-flex justify-content-center'>
+    <div class='m-2 text-white'>
+        <form class='form'
+            hx-get="/panel/api/html/panel/{{crud_url}}/list?paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+            hx-target='#content_table_wrapper'
+            hx-swap='innerHTML'
+            hx-trigger='keyup delay:1s'
+        >
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+            {% bootstrap_field current_form_object.username %}
+        </form>
+    </div>
+</div>
