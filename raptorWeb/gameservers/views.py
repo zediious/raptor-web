@@ -239,7 +239,7 @@ class SetMaintenanceMode(View):
         
         changing_server.save()
         messages.success(request, f'Maintenance status set to {changing_server.in_maintenance} for {changing_server}.')
-        return render(request, template_name=join(PANEL_TEMPLATE_DIR, 'crud/panel_maintenance_button.html'), context={
+        return render(request, template_name=join(PANEL_TEMPLATE_DIR, 'crud/components/panel_maintenance_button.html'), context={
             'maintenance_status': changing_server.in_maintenance,
             'server': changing_server
         })
