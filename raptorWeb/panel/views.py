@@ -646,8 +646,13 @@ class PanelDeleteView(View):
         deleting_objects = self.model.objects.filter(pk__in=form_data.keys())
 
         changed_string: str = ''
-        for model in deleting_objects:
-            changed_string += f'{model}, '
+        deleting_objects_count = deleting_objects.count()
+        if deleting_objects_count > 1:
+            for model in deleting_objects:
+                changed_string += f'{model}, '
+                
+        else:
+            changed_string += f'{deleting_objects[0]}'
             
         if changed_string == '':
             messages.error(request, 'There were no objects to delete!')
@@ -660,7 +665,11 @@ class PanelDeleteView(View):
             action='Deleted'
         )
         
-        messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        if deleting_objects_count > 1:
+            messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        else:
+            messages.success(request, f'{model_string}: {changed_string[:-2]} has been permanently deleted!')
+            
         return HttpResponseRedirect(self.redirect_url)
 
     
