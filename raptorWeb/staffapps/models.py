@@ -169,6 +169,10 @@ class StaffApplicationField(models.Model):
     def __str__(self) -> str:
         return self.name
     
+    class Meta:
+        verbose_name = 'Form Field'
+        verbose_name_plural = 'Form Fields'
+    
     
 class CreatedStaffApplication(models.Model):
     """
@@ -192,6 +196,10 @@ class CreatedStaffApplication(models.Model):
     
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        verbose_name = 'Created Staff Application'
+        verbose_name_plural = 'Created Staff Applications'
     
     
 class SubmittedStaffApplication(models.Model):
@@ -230,3 +238,5 @@ class SubmittedStaffApplication(models.Model):
         permissions = [
             ("approval_submittedstaffapplication", "Can approve or deny Submitted Staff Applications"),
         ]
+        verbose_name = 'Submitted Staff Application'
+        verbose_name_plural = 'Submitted Staff Applications'
