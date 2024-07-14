@@ -39,29 +39,29 @@
     </div>
 
     <div class="m-5 mt-4 p-3">
-        <div id='panel_main' class='container fade-in-main loaded-content' hx-history-elt>
+        <main id='panel_main' class='container fade-in-main loaded-content' hx-history-elt>
 
-        {% if is_404 == 'true' %}
-            {% include "raptormc/404.html" %}
-        {% else %}
-            {% if request.path == '/panel/' %}
-                <div hx-get='{% url "panel:home" %}'
-                    hx-trigger='load'
-                    hx-target='#panel_main'
-                    hx-swap="innerHTML"
-                    hx-push-url="home/"
-                    hx-indicator="#panelLoadingspinner"></div>
+            {% if is_404 == 'true' %}
+                {% include "raptormc/404.html" %}
             {% else %}
-                <div hx-get="/panel/api/html/{{request.path|strip_slash}}"
-                    hx-trigger='load'
-                    hx-target='#panel_main'
-                    hx-swap="innerHTML"
-                    hx-indicator="#panelLoadingspinner">
-                </div>
+                {% if request.path == '/panel/' %}
+                    <div hx-get='{% url "panel:home" %}'
+                        hx-trigger='load'
+                        hx-target='#panel_main'
+                        hx-swap="innerHTML"
+                        hx-push-url="home/"
+                        hx-indicator="#panelLoadingspinner"></div>
+                {% else %}
+                    <div hx-get="/panel/api/html/{{request.path|strip_slash}}"
+                        hx-trigger='load'
+                        hx-target='#panel_main'
+                        hx-swap="innerHTML"
+                        hx-indicator="#panelLoadingspinner">
+                    </div>
+                {% endif %}
             {% endif %}
-        {% endif %}
 
-        </div>
+        </main>
     </div>
 
     <footer>

@@ -29,3 +29,7 @@ class PanelLogEntry(models.Model):
         auto_now_add=True
     )
     
+    class Meta:
+        verbose_name = 'Change List'
+        verbose_name_plural = 'Changes'
+    

@@ -6,157 +6,80 @@
     <title>{{ site_info_model.brand_name }} | Global Announcements</title>
 </head>
 
-<div id='data_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
-    <div id='announcement_table_wrapper'>
-        <div class="m-2 mt-0 p-3">
-            <div class="text-white">
-                <header class="fs-3">Global Announcement List</header>
-                <p class="fs-5">
-                    {% get_admin_documentation model %}
-                </p>
-            </div>
-        </div>
-        <hr class='text-white'>
+<div id='content_table_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
 
-        <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
-            {% if perms.raptorbot.delete_globalannouncement %}
-            <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
-                    hx-post="{% url 'panel:bot/globalannouncement/delete'%}"
-                    hx-include='next .table'
-                    hx-target='#announcement_table_wrapper'
-                    hx-swap'outerHTML'
-            >
-                Delete Selected
-            </a>
-            {% endif %}
-        </div>
+    {% include 'panel/crud/components/header_info.html'%}
 
-        <div class='table-responsive-md'>
-            <table class="table table-dark table-hover text-white border border-black border-2">
-                {% csrf_token %}
-                <thead>
-                    <tr>
-                    <form>
-                        <th class='text-white' scope="col"></th>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?paginate_by={{paginate_by}}&order_by=author&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#announcement_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            Author<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?paginate_by={{paginate_by}}&order_by=date&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#announcement_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            Date<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                        <th class='text-white' scope="col">Message</th>
-                        <th class='text-white' scope="col">Actions</th>
-                    </form>
-                    </tr>
-                </thead>
-                {% for globalannouncement in page_obj %}
-                <tbody class="item">
-                    <tr>
-                    <th>
-                        <input id="select_{{globalannouncement.pk}}" class='form-check-input'
-                           name="{{globalannouncement.pk}}" value="{{globalannouncement.pk}}" type='checkbox'
-                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
-                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
-                    >
-                    </input>
-                    </th>
-                    <td>{{globalannouncement.author}}</td>
-                    <td class='text-nowrap'>{{globalannouncement.date}}</td>
-                    <td>{{globalannouncement.message|truncatechars:50}}</td>
-                    <td>
-                        <div class='d-flex justify-content-evenly gap-1 w-100'>
-                            <a role='button' id='panel_edit_button' class='btn btn-primary'
-                                    href='/panel/bot/globalannouncement/view/{{globalannouncement.pk}}'
-                                    hx-get="{% url 'panel:bot/globalannouncement/view_IR' pk=globalannouncement.pk %} "
-                                    hx-push-url='/panel/bot/globalannouncement/view/{{globalannouncement.pk}}'
-                                    hx-target='#panel_main'
-                                    hx-indicator="#panelLoadingspinner,.loaded-content"
-                            >
-                                View
-                            </a>
-                        </div>
-                    </td>
-                    </tr>
-                </tbody>
-                {% endfor %}
-            </table>
-            <div>
-                <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
-                       @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
-                >
-                <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
-            </div>
-        </div>
-        {% if page_obj.has_next or page_obj.has_previous%}
-            <div class="pagination d-flex align-items-center justify-content-center m-3">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page=1&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#announcement_table_wrapper"
-                        >
-                            &laquo; First
-                        </a>
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page={{ page_obj.previous_page_number }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#announcement_table_wrapper"
-                        >
-                            Previous
-                        </a>
-                    {% endif %}
+    <hr class='text-white'>
 
-                    <span class="current text-white">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
+    <div class='d-flex justify-content-start gap-2 w-100 mb-3'>
 
-                    {% if page_obj.has_next %}
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page={{ page_obj.next_page_number }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#announcement_table_wrapper"
-                        >
-                            Next
-                        </a>
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:bot/globalannouncement/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#announcement_table_wrapper"
-                        >
-                            Last &raquo;
-                        </a>
-                    {% endif %}
-                </span>
-            </div>
+        {% if perms.raptorbot.delete_globalannouncement %}
+            {% include 'panel/crud/components/deletion/delete_selected.html' with crud_url='bot/globalannouncement' %}
         {% endif %}
-        <div class='d-flex justify-content-around'>
-            <div class='m-2 text-white'>
-                {{total_globalannouncement_count}} Total Global Announcements
-            </div>
-            <div class='m-2 text-white'>
-                <form class='form'
-                    hx-get="{% url 'panel:bot/globalannouncement/list' %}?{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                    hx-target='#announcement_table_wrapper'
-                    hx-swap='innerHTML'
-                    hx-trigger='keyup delay:1s'
-                >
-                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-                    {% bootstrap_field paginate_form.paginate_by %}
-                </form>
-            </div>
-        </div>
+
     </div>
+
+    <div class='table-responsive-md'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            {% csrf_token %}
+            <thead>
+                <tr>
+                <form>
+                    <th class='text-white' scope="col"></th>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:bot/globalannouncement/list' %}?paginate_by={{paginate_by}}&order_by=author&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        Author<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:bot/globalannouncement/list' %}?paginate_by={{paginate_by}}&order_by=date&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        Date<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
+                    <th class='text-white' scope="col">Message</th>
+                    <th class='text-white' scope="col">Actions</th>
+                </form>
+                </tr>
+            </thead>
+            {% for globalannouncement in page_obj %}
+            <tbody class="item">
+                <tr>
+                <th>
+                    {% include 'panel/crud/components/deletion/selection.html' with current_object=globalannouncement %}
+                </th>
+                <td>{{globalannouncement.author}}</td>
+                <td class='text-nowrap'>{{globalannouncement.date}}</td>
+                <td>{{globalannouncement.message|truncatechars:50}}</td>
+                <td>
+                    <div class='d-flex justify-content-evenly gap-1 w-100'>
+                        <a role='button' id='panel_edit_button' class='btn btn-primary'
+                                href='/panel/bot/globalannouncement/view/{{globalannouncement.pk}}'
+                                hx-get="{% url 'panel:bot/globalannouncement/view_IR' pk=globalannouncement.pk %} "
+                                hx-push-url='/panel/bot/globalannouncement/view/{{globalannouncement.pk}}'
+                                hx-target='#panel_main'
+                                hx-indicator="#panelLoadingspinner,.loaded-content"
+                        >
+                            View
+                        </a>
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+
+    {% include 'panel/crud/components/deletion/select_all.html' %}
+
+    {% include 'panel/crud/components/pagination.html' with crud_url="bot/globalannouncement"%}
+
+    {% include 'panel/crud/components/pagination_choose.html' with crud_url='bot/globalannouncement'%}
+
 </div>
-
-<script>
-
-    htmx.find('#delete_bulk').classList.add('disabled')
-
-</script>

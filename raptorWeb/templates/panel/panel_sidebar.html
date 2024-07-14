@@ -165,21 +165,21 @@
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                                 onclick='closeOffCanvas()'
                                 >
-                                    <p>Server List</p>
+                                    <p>Servers</p>
                                 </a>
                             </button>
                             {% endif%}
                             {% if perms.gameservers.view_player %}
                             <button class="nav-item btn btn-secondary text-white">
                                 <a class="nav-link"
-                                href="/panel/player/list/"
+                                href="/panel/player/list"
                                 hx-get="{% url 'panel:player/list' %}"
                                 hx-target='#panel_main'
-                                hx-push-url="/panel/player/list/"
+                                hx-push-url="/panel/player/list"
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                                 onclick='closeOffCanvas()'
                                 >
-                                    <p>Player List</p>
+                                    <p>Players</p>
                                 </a>
                             </button>
                             {% endif%}
@@ -289,7 +289,7 @@
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                                 onclick='closeOffCanvas()'
                                 >
-                                    <p>Sent Embed Messages</p>
+                                    <p>Embed Messages</p>
                                 </a>
                             </button>
                             {% endif%}
@@ -434,7 +434,7 @@
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                                 onclick='closeOffCanvas()'
                                 >
-                                    <i class="nav-icon fa fa-check-double"></i> <p>User List</p>
+                                    <i class="nav-icon fa fa-check-double"></i> <p>Users</p>
                                 </a>
                             </button>
                             {% endif%}
@@ -448,7 +448,7 @@
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                                 onclick='closeOffCanvas()'
                                 >
-                                    <i class="nav-icon fa fa-check-double"></i> <p>User Groups</p>
+                                    <i class="nav-icon fa fa-check-double"></i> <p>Permission Groups</p>
                                 </a>
                             </button>
                             {% endif%}

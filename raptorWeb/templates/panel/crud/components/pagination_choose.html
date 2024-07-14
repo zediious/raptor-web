@@ -1,0 +1,19 @@
+{% load adminDoc %}
+{% load django_bootstrap5 %}
+
+<div class='d-flex justify-content-around'>
+    <div class='m-2 text-white'>
+        {{total_model_count}} Total {% get_verbose_name model %}s
+    </div>
+    <div class='m-2 text-white'>
+        <form class='form'
+            hx-get="/panel/api/html/panel/{{crud_url}}/list?{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
+            hx-target='#content_table_wrapper'
+            hx-swap='innerHTML'
+            hx-trigger='keyup delay:1s'
+        >
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+            {% bootstrap_field paginate_form.paginate_by %}
+        </form>
+    </div>
+</div>

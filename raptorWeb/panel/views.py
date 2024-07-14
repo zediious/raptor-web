@@ -582,7 +582,7 @@ class PanelCreateView(CreateView):
     """
     Abstract CreateView used in Panel CRUD views
     """
-    template_name_suffix = "_create_form"
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'generic_create.html')
     permission: str = ''
     redirect_url: str = ''
     
@@ -622,6 +622,14 @@ class PanelCreateView(CreateView):
         )
         return HttpResponse(status=400)
     
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'crud_url': self.crud_url,
+            'model': self.model
+        })
+        return context
+    
 
 class PanelDeleteView(View):
     """
@@ -646,8 +654,13 @@ class PanelDeleteView(View):
         deleting_objects = self.model.objects.filter(pk__in=form_data.keys())
 
         changed_string: str = ''
-        for model in deleting_objects:
-            changed_string += f'{model}, '
+        deleting_objects_count = deleting_objects.count()
+        if deleting_objects_count > 1:
+            for model in deleting_objects:
+                changed_string += f'{model}, '
+                
+        else:
+            changed_string += f'{deleting_objects[0]}'
             
         if changed_string == '':
             messages.error(request, 'There were no objects to delete!')
@@ -660,7 +673,11 @@ class PanelDeleteView(View):
             action='Deleted'
         )
         
-        messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        if deleting_objects_count > 1:
+            messages.success(request, f'{model_string}s: {changed_string[:-2]} have been permanently deleted!')
+        else:
+            messages.success(request, f'{model_string}: {changed_string[:-2]} has been permanently deleted!')
+            
         return HttpResponseRedirect(self.redirect_url)
 
     
@@ -695,7 +712,7 @@ class PanelLogEntryList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-                'total_panellogentry_count': PanelLogEntry.objects.count()
+                'total_model_count': PanelLogEntry.objects.count()
             })
 
         return context
@@ -725,8 +742,8 @@ class PanelServerCreate(PanelCreateView):
     """
     model: Server = Server
     form_class = PanelServerCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'server_create.html')
     redirect_url: str = '/panel/api/html/panel/server/list/'
+    crud_url: str = 'server'
     permission: str = 'gameservers.add_server'
         
 
@@ -783,7 +800,7 @@ class PanelPlayerList(PanelListViewSearchable):
         context = super().get_context_data(**kwargs)
         context.update({
                 'player_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
-                'total_player_count': Player.objects.count()
+                'total_model_count': Player.objects.count()
             })
         
         if self.request.GET.get('username') != None:
@@ -862,8 +879,8 @@ class PanelPageCreate(PanelCreateView):
     """
     model: Page = Page
     form_class = PanelPageForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'page_create.html')
     redirect_url: str = '/panel/api/html/panel/content/page/list'
+    crud_url: str = 'content/page'
     permission: str = 'raptormc.add_page'
     
     
@@ -912,8 +929,8 @@ class PanelToastCreate(PanelCreateView):
     """
     model: NotificationToast = NotificationToast
     form_class = PanelToastForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'toast_create.html')
     redirect_url: str = '/panel/api/html/panel/content/toast/list'
+    crud_url: str = 'content/toast'
     permission: str = 'raptormc.add_notificationtoast'
     
     
@@ -968,8 +985,8 @@ class PanelNarbarLinkCreate(PanelCreateView):
     Return a form to create/add a new Navbar Link
     """
     model: NavbarLink = NavbarLink
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbarlink_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navbarlink/list'
+    crud_url: str = 'content/navbarlink'
     permission: str = 'raptormc.add_navbarlink'
     fields = [
         'name',
@@ -1029,8 +1046,8 @@ class PanelNavbarDropdownCreate(PanelCreateView):
     Return a form to create/add a new Navbar Dropdown
     """
     model: NavbarDropdown = NavbarDropdown
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navbardropdown_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navbardropdown/list'
+    crud_url: str = 'content/navbardropdown'
     permission: str = 'raptormc.add_navbardropdown'
     fields = [
         'name',
@@ -1086,8 +1103,8 @@ class PanelNavWidgetCreate(PanelCreateView):
     """
     model: NavWidget = NavWidget
     form_class: PanelNavWidgetCreateForm = PanelNavWidgetCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidget_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navwidget/list'
+    crud_url: str = 'content/navwidget'
     permission: str = 'raptormc.add_navwidget'
     
     
@@ -1138,8 +1155,8 @@ class PanelNavWidgetBarCreate(PanelCreateView):
     Return a form to create/add a new Nav Widget Bar
     """
     model: NavWidgetBar = NavWidgetBar
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'navwidgetbar_create.html')
     redirect_url: str = '/panel/api/html/panel/content/navwidgetbar/list'
+    crud_url: str = 'content/navwidgetbar'
     permission: str = 'raptormc.add_navwidgetbar'
     fields = [
         'name',
@@ -1172,7 +1189,7 @@ class PanelGlobalAnnouncementList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_globalannouncement_count': GlobalAnnouncement.objects.count()
+            'total_model_count': GlobalAnnouncement.objects.count()
         })
         return context
     
@@ -1210,7 +1227,7 @@ class PanelServerAnnouncementList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_serverannouncement_count': ServerAnnouncement.objects.count()
+            'total_model_count': ServerAnnouncement.objects.count()
         })
         return context
     
@@ -1295,8 +1312,8 @@ class PanelDonationPackageCreate(PanelCreateView):
     """
     model: DonationPackage = DonationPackage
     form_class = PanelDonationPackageCreateForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationpackage_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationpackage/list'
+    crud_url: str = 'donations/donationpackage'
     permission: str = 'donations.add_donationpackage'
     
     
@@ -1345,8 +1362,8 @@ class PanelDonationServerCommandCreate(PanelCreateView):
     Return a form to create/add a new Donation Server Command.
     """
     model: DonationServerCommand = DonationServerCommand
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationservercommand_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationservercommand/list'
+    crud_url: str = 'donations/donationservercommand'
     permission: str = 'donations.add_donationservercommand'
     fields = [
         'command'
@@ -1399,8 +1416,8 @@ class PanelDonationDiscordRoleCreate(PanelCreateView):
     Return a form to create/add a new Donation Discord Role.
     """
     model: DonationDiscordRole = DonationDiscordRole
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'donationdiscordrole_create.html')
     redirect_url: str = '/panel/api/html/panel/donations/donationdiscordrole/list'
+    crud_url: str = 'donations/donationdiscordrole'
     permission: str = 'donations.add_donationdiscordrole'
     fields = [
         'name',
@@ -1432,7 +1449,7 @@ class PanelCompletedDonationList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_completeddonation_count': CompletedDonation.objects.count()
+            'total_model_count': CompletedDonation.objects.count()
         })
         return context
     
@@ -1461,7 +1478,7 @@ class PanelSubmittedStaffApplicationList(PanelListViewSearchable):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'total_submittedstaffapplication_count': SubmittedStaffApplication.objects.count()
+            'total_model_count': SubmittedStaffApplication.objects.count()
         })
         return context
     
@@ -1519,8 +1536,8 @@ class PanelCreatedStaffApplicationCreate(PanelCreateView):
     """
     model: CreatedStaffApplication = CreatedStaffApplication
     form_class = PanelCreatedStaffApplicationForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'createdstaffapplication_create.html')
     redirect_url: str = '/panel/api/html/panel/staffapps/createdstaffapplication/list'
+    crud_url: str = 'staffapps/createdstaffapplication'
     permission: str = 'staffapps.add_createdstaffapplication'
 
 
@@ -1572,8 +1589,8 @@ class PanelStaffApplicationFieldCreate(PanelCreateView):
     Return a form to create/add a new Staff Application Field
     """
     model: StaffApplicationField = StaffApplicationField
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'staffapplicationfield_create.html')
     redirect_url: str = '/panel/api/html/panel/staffapps/staffapplicationfield/list'
+    crud_url: str = 'staffapps/staffapplicationfield'
     permission: str = 'staffapps.add_staffapplicationfield'
     fields = [
         'name',
@@ -1616,7 +1633,7 @@ class PanelUserList(PanelListViewSearchable):
         context = super().get_context_data(**kwargs)
         context.update({
                 'user_filter_form': PanelPlayerFilterForm({'username': self.request.GET.get('username')}),
-                'total_user_count': RaptorUser.objects.count()
+                'total_model_count': RaptorUser.objects.count()
             })
         
         if self.request.GET.get('username') != None:
@@ -1734,8 +1751,8 @@ class PanelRaptorUserGroupCreate(PanelCreateView):
     """
     model: RaptorUserGroup = RaptorUserGroup
     form_class = PanelRaptorUserGroupForm
-    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'raptorusergroup_create.html')
     redirect_url: str = '/panel/api/html/panel/users/raptorusergroup/list'
+    crud_url: str = 'users/raptorusergroup'
     permission: str = 'authprofiles.add_raptorusergroup'
     
     

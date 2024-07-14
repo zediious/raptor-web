@@ -7,38 +7,21 @@
 </head>
 
 <div id='content_table_wrapper' x-data="{selected: [],allVisible: [],selectall: false}">
-    <div class="m-2 mt-0 p-3">
-        <div class="text-white">
-            <header class="fs-3">User Groups</header>
-            <p class="fs-5">
-                {% get_admin_documentation model %}
-            </p>
-        </div>
-    </div>
+
+    {% include 'panel/crud/components/header_info.html'%}
+
     <hr class='text-white'>
 
     <div class='d-flex justify-content-between gap-2 w-100 mb-3'>
+
         {% if perms.authprofiles.delete_raptorusergroup %}
-        <a role='button' id='delete_bulk' class='btn btn-danger' :class="selected < 1 && 'disabled'"
-                hx-post="{% url 'panel:users/raptorusergroup/delete'%}"
-                hx-include='next .table'
-                hx-target='#content_table_wrapper'
-                hx-swap'outerHTML'
-        >
-            Delete Selected
-        </a>
+            {% include 'panel/crud/components/deletion/delete_selected.html' with crud_url='users/raptorusergroup' %}
         {% endif %}
+
         {% if perms.authprofiles.add_raptorusergroup %}
-        <a role='button' id='add_page_button' class='btn btn-primary'
-                href='/panel/users/raptorusergroup/create/{{raptorusergroup.pk}}'
-                hx-get="{% url 'panel:users/raptorusergroup/create'%} "
-                hx-push-url='/panel/users/raptorusergroup/create/{{raptorusergroup.pk}}'
-                hx-target='#panel_main'
-                hx-indicator="#panelLoadingspinner,.loaded-content"
-        >
-            Add User Group
-        </a>
+            {% include 'panel/crud/components/add.html' with crud_url='users/raptorusergroup'%}
         {% endif %}
+
     </div>
 
     <div class='table-responsive-md'>
@@ -56,12 +39,7 @@
             <tbody>
                 <tr>
                 <th>
-                    <input id="select_{{raptorusergroup.pk}}" class='form-check-input'
-                           name="{{raptorusergroup.pk}}" value="{{raptorusergroup.pk}}" type='checkbox'
-                           x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
-                           @click='htmx.find("#delete_bulk").classList.remove("disabled")'
-                    >
-                    </input>
+                    {% include 'panel/crud/components/deletion/selection.html' with current_object=raptorusergroup %}
                 </th>
                 <th scope="row">{{navlink.pk}}</th>
                 <td>{{raptorusergroup.name}}</td>
@@ -84,55 +62,10 @@
             </tbody>
             {% endfor %}
         </table>
-        <div>
-            <input id='check_all_input' class='form-check-input' name='check_all' type="checkbox" x-model='selectall'
-                   @click="selectall=!selectall; if (!selectall) {selected = []} else {selected = allVisible}; htmx.find('#delete_bulk').classList.remove('disabled')"
-            >
-            <label class='form-control-label text-white ' for="check_all">Select All on Page</label>
-        </div>
-        {% if page_obj.has_next or page_obj.has_previous%}
-        <div class="pagination d-flex align-items-center justify-content-center m-3">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a role="button" class="btn btn-dark opacity-75"
-                        hx-get="{% url 'panel:users/raptorusergroup/list' %}?page=1"
-                        hx-target="#server_table_wrapper"
-                    >
-                        &laquo; First
-                    </a>
-                    <a role="button" class="btn btn-dark opacity-75"
-                        hx-get="{% url 'panel:users/raptorusergroup/list' %}?page={{ page_obj.previous_page_number }}"
-                        hx-target="#server_table_wrapper"
-                    >
-                        Previous
-                    </a>
-                {% endif %}
+    </div>
 
-                <span class="current text-white">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
+    {% include 'panel/crud/components/deletion/select_all.html' %}
 
-                {% if page_obj.has_next %}
-                    <a role="button" class="btn btn-dark opacity-75"
-                        hx-get="{% url 'panel:users/raptorusergroup/list' %}?page={{ page_obj.next_page_number }}"
-                        hx-target="#server_table_wrapper"
-                    >
-                        Next
-                    </a>
-                    <a role="button" class="btn btn-dark opacity-75"
-                        hx-get="{% url 'panel:users/raptorusergroup/list' %}?page={{ page_obj.paginator.num_pages }}"
-                        hx-target="#server_table_wrapper"
-                    >
-                        Last &raquo;
-                    </a>
-                {% endif %}
-            </span>
-        </div>
-    {% endif %}
+    {% include 'panel/crud/components/pagination.html' with crud_url="users/raptorusergroup"%}
+
 </div>
-
-<script>
-
-    htmx.find('#delete_bulk').classList.add('disabled')
-
-</script>

@@ -491,6 +491,10 @@ class RaptorUser(AbstractUser):
             
         return super(self.__class__, self).delete(*args, **kwargs)
     
+    class Meta:
+        verbose_name = "User"
+        verbose_name_plural = "Users"
+    
     
 class RaptorUserGroup(Group):
     """

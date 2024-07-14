@@ -23,10 +23,10 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/server/list/', views.PanelServerList.as_view(), name="server/list"),
     path('api/html/panel/server/archivedlist', views.PanelServerList.as_view(template_name='panel/crud/server_list_archived.html'), name="server/archivedlist"),
     path('api/html/panel/server/update/<int:pk>', views.PanelServerUpdate.as_view(), name="server/update_IR"),
-    path('api/html/panel/server/create/', views.PanelServerCreate.as_view(), name="server/create"),
+    path('api/html/panel/server/create', views.PanelServerCreate.as_view(), name="server/create"),
     path('api/html/panel/server/delete', views.PanelServerDelete.as_view(), name="server/delete"),
     # Player
-    path('api/html/panel/player/list/', views.PanelPlayerList.as_view(), name="player/list"),
+    path('api/html/panel/player/list', views.PanelPlayerList.as_view(), name="player/list"),
     # Informative Text
     path('api/html/panel/content/informativetext/list', views.PanelInformativeTextList.as_view(), name="content/informativetext/list"),
     path('api/html/panel/content/informativetext/update/<int:pk>', views.PanelInformativeTextUpdate.as_view(), name="content/informativetext/update_IR"),

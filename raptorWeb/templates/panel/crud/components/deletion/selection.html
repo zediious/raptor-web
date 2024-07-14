@@ -1,0 +1,6 @@
+<input id="select_{{current_object.pk}}" class='form-check-input'
+        name="{{current_object.pk}}" value="{{current_object.pk}}" type='checkbox'
+        x-bind:checked="selectall" x-model="selected" x-init="allVisible.push($el.value)"
+        @click='htmx.find("#delete_bulk").classList.remove("disabled")'
+>
+</input>
