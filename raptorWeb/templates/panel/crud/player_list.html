@@ -6,141 +6,72 @@
     <title>{{ site_info_model.brand_name }} | Player List</title>
 </head>
 
-<div id='data_wrapper'>
-    <div id='player_table_wrapper'>
-        <div class="m-2 mt-0 p-3">
-            <div class="text-white">
-                <header class="fs-3">Player List</header>
-                <p class="fs-5">
-                    {% get_admin_documentation model %}
-                </p>
-            </div>
-        </div>
-        <hr class='text-white'>
-        
-        <div class='d-flex justify-content-center'>
-            <div class='m-2 text-white'>
-                <form class='form'
-                    hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                    hx-target='#player_table_wrapper'
-                    hx-swap='innerHTML'
-                    hx-trigger='keyup delay:1s'
-                >
-                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-                    {% bootstrap_field player_filter_form.username %}
+<div id='content_table_wrapper'>
+
+    {% include 'panel/crud/components/header_info.html'%}
+
+    <hr class='text-white'>
+
+    {% include 'panel/crud/components/string_filter_form.html' with crud_url='player' current_form_object=player_filter_form %}
+
+    <div class='table-responsive-xl'>
+        <table class="table table-dark table-hover text-white border border-black border-2">
+            <thead>
+                <tr>
+                <form>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=name&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        Player Name<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=first_joined&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        First Joined<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=last_online&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        Last Online<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
+                    <th class='text-white' scope="col">Currently Online</th>
+                    <th class='text-white htmxLink' scope="col"
+                        hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=server&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
+                        hx-target='#content_table_wrapper'
+                        hx-swap='innerHTML'
+                        hx-trigger='click'
+                    >
+                        Server<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
+                    </th>
                 </form>
-            </div>
-        </div>
+                </tr>
+            </thead>
+            {% for player in page_obj %}
+            <tbody class="item">
+                <tr>
+                <th scope="row">{{player.name}}</th>
+                <td class='text-nowrap'>{{player.first_joined}}</td>
+                <td class='text-nowrap'>{{player.last_online}}</td>
+                <td>{%if player.online%}<div class='badge bg-success'>Online</div>{%else%}<div class='badge bg-danger'>Offline</div>{%endif%}</td>
+                <td><a href="{{player.server.get_absolute_url}}">{{player.server}}</a></td>
+                </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div> 
 
-        <div class='table-responsive-xl'>
-            <table class="table table-dark table-hover text-white border border-black border-2">
-                <thead>
-                    <tr>
-                    <form>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=name&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#player_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            Player Name<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=first_joined&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#player_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            First Joined<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=last_online&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#player_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            Last Online<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                        <th class='text-white' scope="col">Currently Online</th>
-                        <th class='text-white htmxLink' scope="col"
-                            hx-get="{% url 'panel:player/list' %}?paginate_by={{paginate_by}}&username={{form_data.username}}&order_by=server&direction={%if direction == None%}asc{%elif direction == 'desc'%}asc{%else%}desc{%endif%}"
-                            hx-target='#player_table_wrapper'
-                            hx-swap='innerHTML'
-                            hx-trigger='click'
-                        >
-                            Server<img class="sortIcon filter-white ms-2" src="{% static 'image/sort.svg' %}" alt="Sort">
-                        </th>
-                    </form>
-                    </tr>
-                </thead>
-                {% for player in page_obj %}
-                <tbody class="item">
-                    <tr>
-                    <th scope="row">{{player.name}}</th>
-                    <td class='text-nowrap'>{{player.first_joined}}</td>
-                    <td class='text-nowrap'>{{player.last_online}}</td>
-                    <td>{%if player.online%}<div class='badge bg-success'>Online</div>{%else%}<div class='badge bg-danger'>Offline</div>{%endif%}</td>
-                    <td><a href="{{player.server.get_absolute_url}}">{{player.server}}</a></td>
-                    </td>
-                    </tr>
-                </tbody>
-                {% endfor %}
-            </table>
-        </div>
-        {% if page_obj.has_next or page_obj.has_previous%}
-            <div class="pagination d-flex align-items-center justify-content-center m-3">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:player/list' %}?page=1&paginate_by={{paginate_by}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#player_table_wrapper"
-                        >
-                            &laquo; First
-                        </a>
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:player/list' %}?page={{ page_obj.previous_page_number }}&paginate_by={{paginate_by}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#player_table_wrapper"
-                        >
-                            Previous
-                        </a>
-                    {% endif %}
+    {% include 'panel/crud/components/pagination.html' with crud_url="player"%}
 
-                    <span class="current text-white">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
+    {% include 'panel/crud/components/pagination_choose.html' with crud_url='player'%}
 
-                    {% if page_obj.has_next %}
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:player/list' %}?page={{ page_obj.next_page_number }}&paginate_by={{paginate_by}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#player_table_wrapper"
-                        >
-                            Next
-                        </a>
-                        <a role="button" class="btn btn-dark opacity-75"
-                            hx-get="{% url 'panel:player/list' %}?page={{ page_obj.paginator.num_pages }}&paginate_by={{paginate_by}}&username={{ form_data.username }}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                            hx-target="#player_table_wrapper"
-                        >
-                            Last &raquo;
-                        </a>
-                    {% endif %}
-                </span>
-            </div>
-        {% endif %}
-        <div class='d-flex justify-content-around'>
-            <div class='m-2 text-white'>
-                {{total_player_count}} Total Players
-            </div>
-            <div class='m-2 text-white'>
-                <form class='form'
-                    hx-get="{% url 'panel:player/list' %}?username={{form_data.username}}{%if order_by != None %}&order_by={{order_by}}&direction={{direction}}{%endif%}"
-                    hx-target='#player_table_wrapper'
-                    hx-swap='innerHTML'
-                    hx-trigger='keyup delay:1s'
-                >
-                    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-                    {% bootstrap_field paginate_form.paginate_by %}
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
