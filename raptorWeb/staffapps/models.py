@@ -170,6 +170,18 @@ class StaffApplicationField(models.Model):
     def __str__(self) -> str:
         return self.name
     
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/staffapps/staffapplicationfield/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'staffapplicationfield'
+    
     class Meta:
         verbose_name = 'Form Field'
         verbose_name_plural = 'Form Fields'
@@ -197,6 +209,18 @@ class CreatedStaffApplication(models.Model):
     
     def __str__(self) -> str:
         return self.name
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/staffapps/createdstaffapplication/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'createdstaffapplication'
     
     class Meta:
         verbose_name = 'Created Staff Application'
@@ -234,6 +258,18 @@ class SubmittedStaffApplication(models.Model):
     
     def __str__(self) -> str:
         return f'Submitted: {self.submitted_date.strftime("%B %d %Y")} at {self.submitted_date.strftime("%H:%M")}'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/staffapps/submittedstaffapplication/view/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'submittedstaffapplication'
     
     class Meta:
         permissions = [

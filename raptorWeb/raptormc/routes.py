@@ -4,132 +4,86 @@ from django.utils.text import slugify
 from django.utils.html import strip_tags
 from django.conf import settings
 
-from raptorWeb.raptormc.models import Page, SiteInformation, InformativeText, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
-from raptorWeb.raptorbot.models import GlobalAnnouncement, ServerAnnouncement
-from raptorWeb.authprofiles.models import RaptorUser, UserProfileInfo, DiscordUserInfo, RaptorUserGroup
-from raptorWeb.gameservers.models import Server
-from raptorWeb.donations.models import DonationPackage, DonationServerCommand, DonationDiscordRole
-from raptorWeb.staffapps.models import StaffApplicationField, SubmittedStaffApplication, CreatedStaffApplication
+from raptorWeb.raptormc.models import SiteInformation, InformativeText
 
 LOGGER = getLogger('raptormc.routes')
 DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 CURRENT_URLPATTERNS = []
+ALL_ROUTED_MODELS = []
+
 
 class Route:
     
-    def __init__(self, name, route_type, informative_text=None, user=None, page=None, server=None,
-                 package=None, informativetext=None, toast=None, navbarlink=None, navbardropdown=None, navwidget=None,
-                 navwidgetbar=None, globalannouncement=None, serverannouncement=None, donationservercommand=None,
-                 donationdiscordrole=None, staffapplicationfield=None, submittedstaffapplication=None,
-                 createdstaffapplication=None, useredit=None, userprofileinfo=None, discorduserinfo=None,
-                 raptorusergroup=None) -> None:
+    def __init__(self, name, route_type, model=None) -> None:
         
         self.name: str = name
         self.route_type: str = route_type
-        self.informative_text = informative_text
-        self.user: RaptorUser = user
-        self.page: Page = page
-        self.server: Server = server
-        self.package: DonationPackage = package
-        self.informativetext: InformativeText = informativetext
-        self.toast: NotificationToast = toast
-        self.navbarlink: NavbarLink = navbarlink
-        self.navbardropdown: NavbarDropdown = navbardropdown
-        self.navwidget: NavWidget = navwidget
-        self.navwidgetbar: NavWidgetBar = navwidgetbar
-        self.globalannouncement: GlobalAnnouncement = globalannouncement
-        self.serverannouncement: ServerAnnouncement = serverannouncement
-        self.donationservercommand: DonationServerCommand = donationservercommand
-        self.donationdiscordrole: DonationDiscordRole = donationdiscordrole
-        self.staffapplicationfield: StaffApplicationField = staffapplicationfield
-        self.submittedstaffapplication: SubmittedStaffApplication = submittedstaffapplication
-        self.createdstaffapplication: CreatedStaffApplication = createdstaffapplication
-        self.useredit: RaptorUser = useredit
-        self.userprofileinfo: UserProfileInfo = userprofileinfo
-        self.discorduserinfo: DiscordUserInfo = discorduserinfo
-        self.raptorusergroup: DiscordUserInfo = raptorusergroup
+        self.model = model
           
     def __str__(self) -> str:
         return self.name
+    
 
-def check_route(request):
+def check_route(request, patterns, app):
     """
     Check all baked-in URLPatterns as well as
     variations for created objects. Return context
-    with OpenGraph information about the route
-    if the route exists, False if it does not.
-    """
-    def _get_user_routes():
-        """
-        Iterate all users and create a Route for
-        each user. If a user has an active password
-        reset token, create a route for that as well.
-        """
-        all_users = RaptorUser.objects.all()
-        for user in all_users:
-            current_routes.append(
-                Route(
-                    name=f'user/{user.user_slug}',
-                    route_type="user",
-                    user=user,
-                )
-            )
-            
-            if user.password_reset_token:
-                current_routes.append(
-                    Route(
-                        name=f'user/reset/{user.user_slug}/{user.password_reset_token}',
-                        route_type="user_reset",
-                        user=user,
+    with information about the route or True if the
+    route exists, False if it does not.
+    """      
+    def _get_models_routes(app=app):
+        
+        def _get_model_routes(routable_model, app):
+            """
+            Iterate all of a given routable model and create a Route for
+            each object based on it's routing information
+            """
+            all_models = routable_model.objects.all()
+            for model in all_models:
+                if model.routes(app) == None:
+                    continue
+                
+                if len(model.routes(app)) > 1:
+                    for route in model.routes(app):
+                        if len(route) > 1:
+                            if not route[1]:
+                                continue
+                            
+                        current_routes.append(
+                            Route(
+                                name=route[0],
+                                route_type=model.route_name(),
+                                model=model,
+                            )
+                        )
+                        
+                        if _verify_route(current_routes[-1]) != False:
+                            found_route.append(current_routes[-1])
+                            return current_routes[-1]
+                                
+                else:
+                    if len(model.routes(app)[0]) > 1:
+                        if not model.routes(app)[0][1]:
+                            continue
+                        
+                    current_routes.append(
+                        Route(
+                            name=model.routes(app)[0][0],
+                            route_type=model.route_name(),
+                            model=model,
+                        )
                     )
-            )
-    
-    def _get_page_routes():
-        """
-        Iterate all pages and create a Route for
-        each page.
-        """
-        all_pages = Page.objects.all()
-        for page in all_pages:
-            current_routes.append(
-                Route(
-                    name=f'pages/{slugify(page.name)}',
-                    route_type="page",
-                    page=page,
-                )
-            )
-            
-    def _get_server_routes():
-        """
-        Iterate all servers and create a Route for
-        each page's onboarding process.
-        """
-        all_servers = Server.objects.filter(archived=False)
-        for server in all_servers:
-            current_routes.append(
-                Route(
-                    name=f'onboarding/{slugify(server.modpack_name)}',
-                    route_type="server",
-                    server=server,
-                )
-            )
-            
-    def _get_package_routes():
-        """
-        Iterate all packages and create a Route for
-        each packages's checkout page
-        """
-        all_packages = DonationPackage.objects.all()
-        for package in all_packages:
-            current_routes.append(
-                Route(
-                    name=f'donations/checkout/{slugify(package.pk)}',
-                    route_type="package",
-                    package=package,
-                )
-            )
+
+                    if _verify_route(current_routes[-1]) != False:
+                        found_route.append(current_routes[-1])
+                        return current_routes[-1]
+                
+        for model in ALL_ROUTED_MODELS:
+            route = _get_model_routes(model, app)
+            if route != None:
+                return route
             
     def _get_main_routes():
         """
@@ -140,16 +94,23 @@ def check_route(request):
         """          
         informative_texts = InformativeText.objects.all()
         
-        for pattern in CURRENT_URLPATTERNS[0]:
+        current_patterns = patterns[0]
+        for pattern in current_patterns:
+            if '_IR' in pattern.name:
+                    continue
+            
             gathered_text = informative_texts.filter(name=f'{str(pattern.name).title()} Information')
             if gathered_text is not None:
                 current_routes.append(
                     Route(
                         name=pattern.name,
                         route_type="main_with_text",
-                        informative_text=gathered_text.first()
+                        model=gathered_text.first()
                     )
                 )
+                if _verify_route(current_routes[-1]) != False:
+                    found_route.append(current_routes[-1])
+                    return current_routes[-1]
             else: 
                 current_routes.append(
                     Route(
@@ -157,9 +118,31 @@ def check_route(request):
                         route_type="main"
                     )
                 )
+                if _verify_route(current_routes[-1]) != False:
+                    found_route.append(current_routes[-1])
+                    return current_routes[-1]
                 
-    site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+    def _verify_route(current_route):
+        """
+        Check if a given route matches the request path
+        """
+        current_checking_route = current_route
+        if app == 'panel':
+            if current_checking_route.route_type == 'main' or current_checking_route.route_type == 'main_with_text':
+                current_checking_route.name = f'panel/{current_checking_route.name}'
+                
+        if (str(current_checking_route.name) == str(request_path)
+        or str(f'{current_checking_route.name}/') == str(request_path)):
+            return True
+       
+        return False
     
+    # Begin route check      
+    site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+    first_slash = request.path.index('/')
+    request_path = request.path[:first_slash]+request.path[first_slash+1:]
+    
+    # Get Site Avatar URL if possible, use no user image if unavailable
     try:
         site_avatar_url = f"{WEB_PROTO}://{DOMAIN_NAME}{site_info.avatar_image.url}"
     except ValueError:
@@ -176,80 +159,79 @@ def check_route(request):
         }
                 
     current_routes: list = []
+    found_route: list = []
     
-    _get_main_routes()
-    _get_user_routes()
-    _get_page_routes()
-    _get_server_routes()
-    _get_package_routes()
-    
-    for route in current_routes:
-        first_slash = request.path.index('/')
-        path = request.path[:first_slash]+request.path[first_slash+1:]
-        if (str(route.name) == str(path)
-        or str(f'{route.name}/') == str(path)):
+    # Check routes from Django URLPatterns
+    main_routes = _get_main_routes()
+    if len(found_route) > 0:
             
-            if route.user != None:
-                try:
-                    user_avatar =  f"{WEB_PROTO}://{DOMAIN_NAME}{route.user.user_profile_info.profile_picture.url}"
-                except ValueError:
-                    user_avatar = site_avatar_url
-                    
-                return {
-                    "og_user": route.user,
-                    "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/{route.user.user_slug}",
-                    "og_image": f"{user_avatar}",
-                    "og_title": f"{site_info.brand_name} | {route.user.username}",
-                    "og_desc": f"User Profile for {route.user.username}"
-                }
-                
-            if route.page != None:
-                return {
-                    "og_page": route.page,
-                    "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{route.page.get_absolute_url()}",
-                    "og_image": f"{site_avatar_url}",
-                    "og_title": f"{site_info.brand_name} | {route.page.name}",
-                    "og_desc": route.page.meta_description
-                }
-                
-            if route.server != None:
-                return {
-                    "og_server": route.server,
-                    "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/onboarding/{slugify(route.server.modpack_name)}",
-                    "og_image": f"{site_avatar_url}",
-                    "og_title": f"{site_info.brand_name} | {route.server.modpack_name} Onboarding",
-                    "og_desc": strip_tags(route.server.modpack_description)
-                }
-                
-            if route.package != None:
-                return {
-                    "og_package": route.package,
-                    "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/donations/checkout{slugify(route.package.pk)}",
-                    "og_image": f"{site_avatar_url}",
-                    "og_title": f"{site_info.brand_name} | {route.package.name}",
-                    "og_desc": strip_tags(route.package.package_description)
-                }
-                
-            if route.informative_text != None:              
-                return {
-                    "og_color": site_info.main_color,
-                    "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
-                    "og_image": f"{site_avatar_url}",
-                    "og_title": f"{site_info.brand_name} | {path.title()}",
-                    "og_desc": strip_tags(route.informative_text.content)
-                }
-                
+        if main_routes.name == 'main_with_text':
             return {
                 "og_color": site_info.main_color,
-                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{path}",
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{request_path}",
                 "og_image": f"{site_avatar_url}",
-                "og_title": f"{site_info.brand_name} | {path.title()}",
-                "og_desc": site_info.meta_description
+                "og_title": f"{site_info.brand_name} | {request_path.title()}",
+                "og_desc": strip_tags(main_routes.model.content)
             }
         
+        return {
+            "og_color": site_info.main_color,
+            "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{request_path}",
+            "og_image": f"{site_avatar_url}",
+            "og_title": f"{site_info.brand_name} | {request_path.title()}",
+            "og_desc": site_info.meta_description
+        }
+    
+    # Check routes from models with defined routes
+    model_routes = _get_models_routes()
+    if len(found_route) > 0:
         
+        if model_routes.route_type == 'user':
+            try:
+                user_avatar =  f"{WEB_PROTO}://{DOMAIN_NAME}{model_routes.model.user_profile_info.profile_picture.url}"
+            except ValueError:
+                user_avatar = site_avatar_url
+                
+            return {
+                "og_user": model_routes.model,
+                "og_color": site_info.main_color,
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{BASE_USER_URL}/{model_routes.model.user_slug}",
+                "og_image": f"{user_avatar}",
+                "og_title": f"{site_info.brand_name} | {model_routes.model.username}",
+                "og_desc": f"User Profile for {model_routes.model.username}"
+            }
+            
+        if model_routes.route_type == 'page':
+            return {
+                "og_page": model_routes.model,
+                "og_color": site_info.main_color,
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{model_routes.model.get_absolute_url()}",
+                "og_image": f"{site_avatar_url}",
+                "og_title": f"{site_info.brand_name} | {model_routes.model.name}",
+                "og_desc": model_routes.model.meta_description
+            }
+            
+        if model_routes.route_type == 'server':
+            return {
+                "og_server": model_routes.model,
+                "og_color": site_info.main_color,
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/onboarding/{slugify(model_routes.model.modpack_name)}",
+                "og_image": f"{site_avatar_url}",
+                "og_title": f"{site_info.brand_name} | {model_routes.model.modpack_name} Onboarding",
+                "og_desc": strip_tags(model_routes.model.modpack_description)
+            }
+            
+        if model_routes.route_type == 'donationpackage':
+            return {
+                "og_package": model_routes.model,
+                "og_color": site_info.main_color,
+                "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/donations/checkout{slugify(model_routes.model.pk)}",
+                "og_image": f"{site_avatar_url}",
+                "og_title": f"{site_info.brand_name} | {model_routes.model.name}",
+                "og_desc": strip_tags(model_routes.model.package_description)
+            }
+            
+        return True
+    
     return False
+    

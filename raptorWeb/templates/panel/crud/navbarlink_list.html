@@ -59,9 +59,9 @@
                     <div class='d-flex justify-content-evenly gap-1 w-100'>
                         {% if perms.raptormc.change_navbarlink %}
                         <a role='button' class='btn btn-primary'
-                                href='/panel/content/navbarlink/{{navbarlink.pk}}'
+                                href='/panel/content/navbarlink/{{navlink.pk}}'
                                 hx-get="{% url 'panel:content/navbarlink/update_IR' pk=navlink.pk %}"
-                                hx-push-url='/panel/content/navbarlink/update/{{toast.pk}}'
+                                hx-push-url='/panel/content/navbarlink/update/{{navlink.pk}}'
                                 hx-target='#panel_main'
                                 hx-indicator="#panelLoadingspinner,.loaded-content"
                         >

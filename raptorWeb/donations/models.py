@@ -2,6 +2,7 @@ from logging import Logger, getLogger
 
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.utils.text import slugify
 
 from rcon.source import Client
 from django_resized import ResizedImageField
@@ -27,6 +28,18 @@ class DonationServerCommand(models.Model):
     
     def __str__(self) -> str:
         return f'`{self.command}`'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/donations/donationservercommand/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'donationservercommand'
 
     class Meta:
         verbose_name = "Server Command"
@@ -51,6 +64,18 @@ class DonationDiscordRole(models.Model):
     
     def __str__(self) -> str:
         return f'`{self.name}`'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/donations/donationdiscordrole/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'donationdiscordrole'
 
     class Meta:
         verbose_name = "Discord Role"
@@ -136,6 +161,18 @@ class DonationPackage(models.Model):
     
     def get_absolute_url(self):
         return f'/panel/donations/donationpackage/update/{self.pk}'
+    
+    def routes(self, app):
+        if app == 'main':
+            return ((f'donations/checkout/{slugify(self.pk)}',),)
+        
+        if app == 'panel':
+            return ((f'panel/donations/donationpackage/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'donationpackage'
 
     class Meta:
         verbose_name = "Donation Package"

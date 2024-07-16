@@ -8,6 +8,7 @@ from dns.resolver import LifetimeTimeout
 
 from django.db import models
 from django.utils.timezone import localtime, now
+from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.conf import settings
@@ -436,7 +437,18 @@ class Server(models.Model):
     
     def get_absolute_url(self):
         return f'/panel/server/update/{self.pk}'
+     
+    def routes(self, app):
+        if app == 'main':
+            return ((f'onboarding/{slugify(self.modpack_name)}',),)
+        
+        if app == 'panel':
+            return ((f'panel/server/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
     
+    def route_name(self):
+        return 'server'
 
     class Meta:
         permissions = [
