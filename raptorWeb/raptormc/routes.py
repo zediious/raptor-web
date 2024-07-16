@@ -16,6 +16,8 @@ DOMAIN_NAME: str = getattr(settings, 'DOMAIN_NAME')
 WEB_PROTO: str = getattr(settings, 'WEB_PROTO')
 BASE_USER_URL: str = getattr(settings, 'BASE_USER_URL')
 CURRENT_URLPATTERNS = []
+ALL_ROUTED_MODELS = []
+
 
 class Route:
     

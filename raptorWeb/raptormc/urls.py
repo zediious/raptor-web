@@ -1,7 +1,8 @@
 from django.urls import URLPattern, path, re_path
+from django import apps
 
 from raptorWeb.raptormc import views
-from raptorWeb.raptormc.routes import CURRENT_URLPATTERNS
+from raptorWeb.raptormc.routes import CURRENT_URLPATTERNS, ALL_ROUTED_MODELS
 
 app_name: str = "raptormc"
 
@@ -49,5 +50,13 @@ urlpatterns: list[URLPattern] = [
     re_path(r'\S*', views.BaseView.as_view(), name="base_IR")
 
 ]
+
+for model in apps.registry.apps.get_models():
+    try:
+        if model.route_name:
+            ALL_ROUTED_MODELS.append(model)
+            
+    except AttributeError:
+        continue
 
 CURRENT_URLPATTERNS.append(urlpatterns)
