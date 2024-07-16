@@ -4,16 +4,14 @@ from typing import Any
 
 from django.views.generic import View, TemplateView, DetailView
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 
-from raptorWeb.panel.models import PanelLogEntry
 from raptorWeb.raptormc.util.informative_text_factory import (
     get_or_create_informative_text
     )
-from raptorWeb.raptormc.models import Page, DefaultPages, SiteInformation, NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar
-from raptorWeb.raptormc.routes import check_route
+from raptorWeb.raptormc.models import Page, DefaultPages, SiteInformation
+from raptorWeb.raptormc.routes import check_route, CURRENT_URLPATTERNS
 
 LOGGER = getLogger('raptormc.views')
 TEMPLATE_DIR_RAPTORMC = getattr(settings, 'RAPTORMC_TEMPLATE_DIR')
@@ -26,7 +24,7 @@ class BaseView(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        route_result = check_route(request)
+        route_result = check_route(request, CURRENT_URLPATTERNS, 'main')
         if route_result != False:
             return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context=route_result)
         

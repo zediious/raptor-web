@@ -10,20 +10,23 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.conf import settings
 
-from raptorWeb.panel.routes import check_route
-from raptorWeb.panel.forms import (PanelSettingsInformation, PanelSettingsFiles,
-                                   PanelDefaultPages, PanelServerUpdateForm,
-                                   PanelServerCreateForm, PanelPlayerFilterForm,
-                                   PanelPlayerPaginateForm, PanelInformativeTextUpdateForm,
-                                   PanelPageForm, PanelToastForm, PanelNavWidgetUpdateForm,
-                                   PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
-                                   PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
-                                   PanelUserUpdateForm, PanelUserProfileInfoUpdateForm,
-                                   PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,
-                                   )
-from raptorWeb.raptormc.models import (SiteInformation, DefaultPages, InformativeText, Page, PageManager,
-                                       NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar,
-                                       )
+from raptorWeb.raptormc.routes import check_route
+from raptorWeb.panel.routes import CURRENT_URLPATTERNS
+from raptorWeb.panel.forms import (
+    PanelSettingsInformation, PanelSettingsFiles,
+    PanelDefaultPages, PanelServerUpdateForm,
+    PanelServerCreateForm, PanelPlayerFilterForm,
+    PanelPlayerPaginateForm, PanelInformativeTextUpdateForm,
+    PanelPageForm, PanelToastForm, PanelNavWidgetUpdateForm,
+    PanelNavWidgetCreateForm, PanelDonationPackageUpdateForm,
+    PanelDonationPackageCreateForm, PanelCreatedStaffApplicationForm,
+    PanelUserUpdateForm, PanelUserProfileInfoUpdateForm,
+    PanelDiscordUserInfoUpdateForm, PanelRaptorUserGroupForm,
+)
+from raptorWeb.raptormc.models import (
+    SiteInformation, DefaultPages, InformativeText, Page, PageManager,
+    NotificationToast, NavbarLink, NavbarDropdown, NavWidget, NavWidgetBar,
+)
 from raptorWeb.raptorbot.models import DiscordGuild, GlobalAnnouncement, ServerAnnouncement, SentEmbedMessage
 from raptorWeb.donations.models import CompletedDonation, DonationPackage, DonationServerCommand, DonationDiscordRole
 from raptorWeb.staffapps.models import SubmittedStaffApplication, CreatedStaffApplication, StaffApplicationField
@@ -53,7 +56,7 @@ class BaseView(TemplateView):
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if not request.user.has_perm('raptormc.panel'):
             return HttpResponseRedirect('/')
-        route_result = check_route(request)
+        route_result = check_route(request, CURRENT_URLPATTERNS, 'panel')
         if route_result != False:
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_base.html'))
         
