@@ -43,6 +43,18 @@ class GlobalAnnouncement(Announcement):
     """
     Announcements that have been made to the entire network.
     """
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/bot/globalannouncement/view/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'globalannouncement'
+    
     class Meta:
         verbose_name = "Global Announcement"
         verbose_name_plural = "Global Announcements"
@@ -61,6 +73,18 @@ class ServerAnnouncement(Announcement):
 
     def get_server(self):
         return self.server
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/bot/serverannouncement/view/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'serverannouncement'
 
     class Meta:
         verbose_name = "Server Announcement"

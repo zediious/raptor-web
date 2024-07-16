@@ -256,6 +256,18 @@ class DiscordUserInfo(models.Model):
 
     def __str__(self):
         return f"{RaptorUser.objects.get(discord_user_info=self).username}'s Discord User Info"
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/users/discorduserinfo/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'discorduserinfo'
 
     class Meta:
         verbose_name = "User - Discord Information"
@@ -377,6 +389,18 @@ class UserProfileInfo(models.Model):
 
     def __str__(self):
         return f"{RaptorUser.objects.get(user_profile_info=self).username}'s Extra Profile Info"
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/users/userprofileinfo/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'userprofileinfo'
 
     class Meta:
         verbose_name = "User - Extra Information"
@@ -473,6 +497,21 @@ class RaptorUser(AbstractUser):
 
     def get_absolute_url(self):
         return f"/{BASE_USER_URL}/{self.user_slug}"
+    
+    def routes(self, app):
+        if app == 'main':
+            return (
+                    (f'user/{self.user_slug}',),
+                    (f'user/reset/{self.user_slug}/{self.password_reset_token}', False if self.password_reset_token == None else True)
+            )
+        
+        if app == 'panel':
+            return ((f'panel/users/raptoruser/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'user'
 
     def delete(self, *args, **kwargs): 
         """
@@ -500,6 +539,18 @@ class RaptorUserGroup(Group):
     """
     A group for assigning permissions to Users.
     """
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/users/raptorusergroup/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+    
+    def route_name(self):
+        return 'raptorusergroup'
+    
     class Meta:
         verbose_name = "Permission Group"
         verbose_name_plural = "Permission Groups"

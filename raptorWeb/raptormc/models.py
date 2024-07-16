@@ -107,6 +107,18 @@ class Page(models.Model):
 
     def get_absolute_url(self):
         return f"/pages/{slugify(self.name)}"
+    
+    def routes(self, app):
+        if app == 'main':
+            return ((f'pages/{slugify(self.name)}',),)
+        
+        if app == 'panel':
+            return ((f'panel/content/page/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'page'
 
     class Meta:
         verbose_name = "Page",
@@ -149,6 +161,18 @@ class NotificationToast(models.Model):
     
     def get_absolute_url(self):
         return f'/panel/content/toast/update/{self.pk}'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/toast/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'notificationtoast'
 
     class Meta:
         verbose_name = "Notification Toast",
@@ -187,6 +211,18 @@ class NavWidgetBar(models.Model):
     
     def get_absolute_url(self):
         return f'/panel/content/navwidgetbar/update/{self.pk}'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/navwidgetbar/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'navwidgetbar'
 
     class Meta:
         verbose_name = "Nav Widget Bar",
@@ -274,6 +310,18 @@ class NavWidget(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/navwidget/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'navwidget'
 
     class Meta:
         verbose_name = "Nav Widget",
@@ -312,6 +360,18 @@ class NavbarDropdown(models.Model):
     
     def get_absolute_url(self):
         return f'/panel/content/navbardropdown/update/{self.pk}'
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/navbardropdown/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'navbardropdown'
 
     class Meta:
         verbose_name = "Navigation Drodown",
@@ -380,6 +440,18 @@ class NavbarLink(models.Model):
 
     def get_linked_page_url(self):
         return self.linked_page.get_absolute_url()
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/navbarlink/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'navbarlink'
 
     class Meta:
         verbose_name = "Navigation Link",
@@ -761,6 +833,18 @@ class InformativeText(models.Model):
     
     def __repr__(self) -> str:
         return str(self.name)
+    
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/content/informativetext/update/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'informativetext'
 
     class Meta:
         verbose_name = "Informative Text",
