@@ -9,17 +9,17 @@ urlpatterns: list[URLPattern] = [
 
     # Panel Homepage
     path('api/html/panel/home', views.HomePanel.as_view(), name="home"),
-    path('api/html/panel/home/', views.HomePanel.as_view(), name="home"),
+    path('api/html/panel/home/', views.HomePanel.as_view(), name="home_IR"),
     # Discord Bot Control Panel
     path('api/html/panel/discordbot', views.DiscordBotPanel.as_view(), name="discordbot"),
-    path('api/html/panel/discordbot/', views.DiscordBotPanel.as_view(), name="discordbot"),
+    path('api/html/panel/discordbot/', views.DiscordBotPanel.as_view(), name="discordbot_IR"),
     # Panel Log Entry
     path('api/html/panel/logentry/list', views.PanelLogEntryList.as_view(), name="logentry/list"),
     # Server
     path('api/html/panel/reporting', views.ReportingPanel.as_view(), name="reporting"),
-    path('api/html/panel/reporting/', views.ReportingPanel.as_view(), name="reporting"),
+    path('api/html/panel/reporting/', views.ReportingPanel.as_view(), name="reporting_IR"),
     path('api/html/panel/server/importexport', views.ServerActionsPanel.as_view(), name="server/importexport"),
-    path('api/html/panel/server/importexport/', views.ServerActionsPanel.as_view(), name="server/importexport"),
+    path('api/html/panel/server/importexport/', views.ServerActionsPanel.as_view(), name="server/importexport_IR"),
     path('api/html/panel/server/list/', views.PanelServerList.as_view(), name="server/list"),
     path('api/html/panel/server/archivedlist', views.PanelServerList.as_view(template_name='panel/crud/server_list_archived.html'), name="server/archivedlist"),
     path('api/html/panel/server/update/<int:pk>', views.PanelServerUpdate.as_view(), name="server/update_IR"),
@@ -119,11 +119,11 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/users/deletionqueue/delete', views.PanelDeletionQueueForUserDelete.as_view(), name="users/deletionqueue/delete"),
     # Site Settings
     path('api/html/panel/settings', views.SettingsPanel.as_view(), name="settings"),
-    path('api/html/panel/settings/', views.SettingsPanel.as_view(), name="settings"),
+    path('api/html/panel/settings/', views.SettingsPanel.as_view(), name="settings_IR"),
     path('api/html/panel/settings/files/update', views.SettingsPanelFilePost.as_view(), name="settings_files_update"),
     path('api/html/panel/settings/defaultpages/update', views.SettingsPanelDefaultPagesPost.as_view(), name="settings_default_pages"),
     # Admin Panel Base View
-    re_path(r'\S*', views.BaseView.as_view(), name='admin_panel_base'),
+    re_path(r'\S*', views.BaseView.as_view(), name='admin_panel_base_IR'),
 
 ]
 
