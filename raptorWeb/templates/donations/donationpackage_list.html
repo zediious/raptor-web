@@ -71,9 +71,9 @@
     </div>
     {% endif %}
 
-    <div class="row justify-content-evenly">
+    <div class="row justify-content-evenly mb-3">
         {% for package in page_obj %}
-        <div class="col-md-4 col-12 user_card">
+        <div class="user_card m-3">
             <a class="htmxLink d-block h-100"
                 data-bs-toggle="modal"
                 data-bs-target="#packageModal{{package.pk}}"
