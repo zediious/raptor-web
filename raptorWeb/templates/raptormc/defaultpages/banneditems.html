@@ -8,7 +8,7 @@
   {% if Banneditems_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">
-      {{ site_info_model.brand_name }} Banned Items
+      {% if Banneditems_Information.content_header %}{{ Banneditems_Information.content_header }}{% else %}{{ site_info_model.brand_name }} Banned Items{% endif %}
     </h3>
     <hr>
     <div class="pageContent">

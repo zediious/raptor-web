@@ -10,7 +10,7 @@
   {% if Announcements_Information.enabled %}
     <header class="card bg-dark opacity-75 text-white p-4">
       <h3 class="pageHeader fw-bold text-center mb-2">
-        Announcements
+        {% if Announcements_Information.content_header %}{{ Announcements_Information.content_header }}{% else %}Announcements{% endif %}
       </h3>
       <hr>
       <div class="pageContent">

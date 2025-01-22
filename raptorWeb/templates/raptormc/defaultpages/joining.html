@@ -7,7 +7,9 @@
 
   {% if Howtojoin_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">Joining {{ site_info_model.brand_name }} Servers</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      {% if Howtojoin_Information.content_header %}{{ Howtojoin_Information.content_header }}{% else %}Joining {{ site_info_model.brand_name }} Servers{% endif %}
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Howtojoin_Information.content|safe }}
@@ -22,7 +24,9 @@
 
   {% if Using_the_CurseForge_Launcher.enabled %}
   <div class="card bg-light mt-4 opacity-75">
-    <h3 class="pageHeader card-header fw-bold text-center text-break">CurseForge Launcher</h3>
+    <h3 class="pageHeader card-header fw-bold text-center text-break">
+      {% if Using_the_CurseForge_Launcher.content_header %}{{ Using_the_CurseForge_Launcher.content_header }}{% else %}CurseForge Launcher{% endif %}
+    </h3>
     <div class="pageContent p-4">
       {{ Using_the_CurseForge_Launcher.content|safe }}
     </div>
@@ -32,7 +36,9 @@
 
   {% if Using_the_FTB_Launcher.enabled %}
   <div class="card bg-light mt-4 opacity-75">
-    <h3 class="pageHeader card-header fw-bold text-center text-break">Feed the Beast App</h3>
+    <h3 class="pageHeader card-header fw-bold text-center text-break">
+      {% if Using_the_FTB_Launcher.content_header %}{{ Using_the_FTB_Launcher.content_header }}{% else %}Feed the Beast App{% endif %}
+    </h3>
     <div class="pageContent p-4">
       {{ Using_the_FTB_Launcher.content|safe }}
     </div>
@@ -42,7 +48,9 @@
 
   {% if Using_the_Technic_Launcher.enabled %}
   <div class="card bg-light mt-4 opacity-75">
-    <h3 class="pageHeader card-header fw-bold text-center text-break">Technic Launcher</h3>
+    <h3 class="pageHeader card-header fw-bold text-center text-break">
+      {% if Using_the_Technic_Launcher.content_header %}{{ Using_the_Technic_Launcher.content_header }}{% else %}Technic Launcher{% endif %}
+    </h3>
     <div class="pageContent p-4">
       {{ Using_the_Technic_Launcher.content|safe }}
     </div>

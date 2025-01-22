@@ -170,6 +170,7 @@ class PanelInformativeTextUpdateForm(forms.ModelForm):
     class Meta:
         model = InformativeText
         fields = (
+        'content_header',
         'content',
         'enabled',)
         widgets = {

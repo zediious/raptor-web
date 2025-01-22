@@ -821,6 +821,15 @@ class InformativeText(models.Model):
         default="Default",
         verbose_name="Content Name"
     )
+    
+    content_header = models.CharField(
+        max_length=100,
+        default="",
+        blank=True,
+        null=True,
+        verbose_name="Header",
+        help_text="If left blank, the default header will be used."
+    )
 
     content = models.CharField(
         max_length=15000,

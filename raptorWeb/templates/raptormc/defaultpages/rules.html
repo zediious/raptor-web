@@ -7,7 +7,9 @@
 
   {% if Rules_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
-    <h3 class="pageHeader fw-bold text-center mb-2">{{ site_info_model.brand_name }} Rules</h3>
+    <h3 class="pageHeader fw-bold text-center mb-2">
+      {% if Rules_Information.content_header %}{{ Rules_Information.content_header }}{% else %}{{ site_info_model.brand_name }} Rules{% endif %}
+    </h3>
     <hr>
     <div class="pageContent">
       {{ Rules_Information.content|safe }}
@@ -30,7 +32,7 @@
                 aria-expanded="true"
                 aria-controls="collapseNetwork"
         >
-          Network-Wide Rules
+          {% if Network_Rules.content_header %}{{ Network_Rules.content_header }}{% else %}Network-Wide Rules{% endif %}
         </button>
       </h2>
       <div id="collapseNetwork" class="accordion-collapse collapse{% if collapse_network and request.GET %}{% else %} show{% endif %}"

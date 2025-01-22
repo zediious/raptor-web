@@ -12,7 +12,7 @@
   {% if Homepage_Information.enabled %}
   <header class="card bg-dark opacity-75 text-white p-4">
     <h3 class="pageHeader fw-bold text-center mb-2">
-      Welcome to {{ site_info_model.brand_name }}
+      {% if Homepage_Information.content_header %}{{ Homepage_Information.content_header }}{% else %}Welcome to {{ site_info_model.brand_name }}{% endif %}
     </h3>
     <hr>
     <div class="pageContent">
