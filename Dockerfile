@@ -27,6 +27,7 @@ FROM debian:buster AS runtime_image
 # Install mariadb dev tools
 RUN apt update
 RUN apt install libmariadb-dev -y
+RUN apt install gcc -y
 
 # Copy /venv from the previous stage:
 COPY --from=build_image /venv /venv
