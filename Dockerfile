@@ -23,7 +23,7 @@ RUN conda-pack -n djangoWork -o /tmp/env.tar && \
 RUN /venv/bin/conda-unpack
 
 # The Runtime Image
-FROM debian:buster AS runtime_image
+FROM ubuntu:22.04 AS runtime_image
 
 # Install necessary host dependencies
 RUN apt update
