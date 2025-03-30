@@ -5,6 +5,7 @@ FROM continuumio/miniconda3:latest as build_image
 RUN apt update
 RUN apt install libmariadb-dev -y
 RUN apt install gcc -y
+RUN apt install libc6 -y
 
 # Copy and install environment
 COPY environment.yml environment.yml
@@ -24,10 +25,11 @@ RUN /venv/bin/conda-unpack
 # The Runtime Image
 FROM debian:buster AS runtime_image
 
-# Install mariadb dev tools
+# Install necessary host dependencies
 RUN apt update
 RUN apt install libmariadb-dev -y
 RUN apt install gcc -y
+RUN apt install libc6 -y
 
 # Copy /venv from the previous stage:
 COPY --from=build_image /venv /venv
