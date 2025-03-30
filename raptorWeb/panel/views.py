@@ -1455,7 +1455,14 @@ class PanelCompletedDonationList(PanelListViewSearchable):
             'total_model_count': CompletedDonation.objects.count()
         })
         return context
-    
+
+class PanelCompletedDonationView(PanelDetailView):
+    """
+    Return details about a given Completed Donation
+    """
+    model: CompletedDonation = CompletedDonation
+    template_name: str = join(TEMPLATE_DIR_PANEL_CRUD, 'completeddonation_view.html')
+    permission: str = 'donations.view_completeddonation'
     
 class PanelCompletedDonationDelete(PanelDeleteView):
     """

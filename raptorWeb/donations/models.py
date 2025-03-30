@@ -270,6 +270,18 @@ class CompletedDonation(models.Model):
     def __str__(self) -> str:
         return f'Donation from {self.minecraft_username} for {self.bought_package}'
     
+    def routes(self, app):
+        if app == 'main':
+            return None
+        
+        if app == 'panel':
+            return ((f'panel/donations/completeddonation/view/{self.pk}',),)
+        
+        return Exception('Either "app" or "main" must be passed as an argument')
+            
+    def route_name(self):
+        return 'completeddonation'
+    
     def send_server_commands(self):
         """
         Send commands to servers

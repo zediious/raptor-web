@@ -88,6 +88,7 @@ urlpatterns: list[URLPattern] = [
     path('api/html/panel/donations/donationdiscordrole/delete', views.PanelDonationDiscordRoleDelete.as_view(), name="donations/donationdiscordrole/delete"),
     # Completed Donation
     path('api/html/panel/donations/completeddonation/list', views.PanelCompletedDonationList.as_view(), name="donations/completeddonation/list"),
+    path('api/html/panel/donations/completeddonation/view/<int:pk>', views.PanelCompletedDonationView.as_view(), name="donations/completeddonation/view_IR"),
     path('api/html/panel/donations/completeddonation/delete', views.PanelCompletedDonationDelete.as_view(), name="donations/completeddonation/delete"),
     # Submitted Staff Application
     path('api/html/panel/staffapps/submittedstaffapplication/list', views.PanelSubmittedStaffApplicationList.as_view(), name="staffapps/submittedstaffapplication/list"),
