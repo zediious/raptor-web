@@ -165,7 +165,7 @@ def check_route(request, patterns, app):
     main_routes = _get_main_routes()
     if len(found_route) > 0:
             
-        if main_routes.name == 'main_with_text':
+        if main_routes.route_type == 'main_with_text':
             return {
                 "og_color": site_info.main_color,
                 "og_url": f"{WEB_PROTO}://{DOMAIN_NAME}/{request_path}",
