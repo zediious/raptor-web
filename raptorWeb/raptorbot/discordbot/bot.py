@@ -82,6 +82,9 @@ class BotProcessManager:
                 task_check.check_tasks.start(raptor_bot)
                 LOGGER.info("Started task check loop")
 
+                await presence.update_member_count(raptor_bot)
+                LOGGER.info('Updated Discord Guild to currently set guild.')
+
             except Exception as e:
                 LOGGER.error(e)
 

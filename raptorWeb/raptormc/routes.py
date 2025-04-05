@@ -100,7 +100,7 @@ def check_route(request, patterns, app):
                     continue
             
             gathered_text = informative_texts.filter(name=f'{str(pattern.name).title()} Information')
-            if gathered_text is not None:
+            if gathered_text.exists():
                 current_routes.append(
                     Route(
                         name=pattern.name,
