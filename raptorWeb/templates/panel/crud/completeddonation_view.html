@@ -2,41 +2,51 @@
     <title>{{ site_info_model.brand_name }} | Completed Donation from {{object.minecraft_username}} on {{object.donation_datetime}}</title>
 </head>
 
+<div class="card bg-dark text-center text-white p-3 mb-2">
+    <p class='fs-5 text-wrap' data-bs-toggle="tooltip" data-bs-title="{{ object.donation_datetime|date }} at {{ object.donation_datetime|time }}">
+        <span class="fs-3">{{ object.donation_datetime|timesince }} ago</span>
+    </p>
+</div>
+
 <div class='card bg-dark text-white p-3'>
     <div class='d-flex flex-wrap justify-content-evenly m-3 text-center gap-1'>
-        {% if completeddonation.donating_user %}
-        <p class='fs-5 badge bg-secondary'>
-            <a style="color: #ffffff" target="_blank" href="{{completeddonation.donating_user.get_absolute_url}}">{{completeddonation.donating_user}}</a>
-        </p>
-        {% endif %}
-        <p class='fs-5 badge bg-secondary'>
-            Minecraft Username: {{ object.minecraft_username }}
-        </p>
-        <p class='fs-5 badge bg-secondary'>
-            Discord Username: {%if object.discord_username%}{{object.discord_username}}{%else%}Discord Username: None{%endif%}
-        </p>
-        <p class='fs-5 badge bg-primary'>
-            Date: {{ object.donation_datetime|date }} | {{ object.donation_datetime|time }}
-        </p>
+        <div class="card-header">
+            {% if completeddonation.donating_user %}
+            <p class='fs-5 badge bg-secondary text-wrap'>
+                <a style="color: #ffffff" target="_blank" href="{{completeddonation.donating_user.get_absolute_url}}">Site User: <span class="fs-3">{{completeddonation.donating_user}}</span></a>
+            </p>
+            {% endif %}
+            <p class='fs-5 badge bg-secondary text-wrap'>
+                Minecraft Username: <span class="fs-3">{{ object.minecraft_username }}</span>
+            </p>
+            {% if completeddonation.discord_username %}
+            <p class='fs-5 badge bg-secondary text-wrap'>
+                Discord Username: <span class="fs-3">{{object.discord_username}}</span>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <div class='d-flex flex-wrap justify-content-evenly m-3 text-center gap-1'>
         {% if completeddonation.completed %}
         <p class='fs-5 badge bg-success'>
         {% else %}
         <p class='fs-5 badge bg-warning'>
         {% endif %}
-            <a style="color: #ffffff" target="_blank" href="{{completeddonation.bought_package.get_absolute_url}}">Package: {{completeddonation.bought_package}}</a>
+            <a style="color: #ffffff" target="_blank" href="{{completeddonation.bought_package.get_absolute_url}}">Package: <span class="fs-3">{{completeddonation.bought_package}}</span></a>
         </p>
         {% if completeddonation.completed %}
         <p class='fs-5 badge bg-success'>
-            Spent: {{completeddonation.spent}}
+            Spent: <span class="fs-3 text-wrap">{{completeddonation.spent}}</span>
         </p>
         {% endif %}
         {% if completeddonation.completed %}
         <p class='fs-5 badge bg-success'>
-            Status: Complete
+            Status: <span class="fs-3 text-wrap">Complete</span>
         </p>
         {% else %}
         <p class='fs-5 badge bg-danger'>
-            Status: Incomplete
+            Status: <span class="fs-3 text-wrap">Incomplete</span>
+            
         </p>
         {% endif %}
     </div>
@@ -45,8 +55,10 @@
         {% if perms.donations.resendbenefits_completeddonation %}
         <form>
             {% csrf_token %}
-            <a role='button' class='btn btn-warning'
+            <a role='button' class='btn btn-warning' data-bs-toggle="tooltip" data-bs-title="Re-send the commands given for this donation to the assigned gameservers.&#013;WARNING: This can potentially be destructive!"
                     hx-post="{% url 'donations:resend' %}?pk={{object.pk}}&do_commands=true&do_roles=false"
+                    hx-confirm="Are you sure you want to re-send gameserver commands for this donation?"
+                    hx-disabled-elt="this"
                     hx-swap='none'
             >
                 Re-send Commands
@@ -54,8 +66,10 @@
         </form>
         <form>
             {% csrf_token %}
-            <a role='button' class='btn btn-warning'
+            <a role='button' class='btn btn-warning' data-bs-toggle="tooltip" data-bs-title="Re-give the Discord roles given for this donation to the assigned Discord users.&#013;WARNING: This can potentially be destructive!"
                     hx-post="{% url 'donations:resend' %}?pk={{object.pk}}&do_commands=false&do_roles=true"
+                    hx-confirm="Are you sure you want to re-give Discord roles for this donation?"
+                    hx-disabled-elt="this"
                     hx-swap='none'
             >
                 Re-give Roles
@@ -63,4 +77,21 @@
         </form>
         {% endif %}
     </div>
+    <div class='d-flex flex-wrap justify-content-evenly m-3 text-center gap-1'>
+        <p class='fs-5 badge bg-success text-wrap'>
+            Times commands sent: <span class="fs-3 text-wrap">{{completeddonation.sent_commands_count}}</span>
+        </p>
+        <p class='fs-5 badge bg-success text-wrap'>
+            Times roles given: <span class="fs-3 text-wrap">{{completeddonation.gave_roles_count}}</span>
+        </p>
+    </div>
 </div>
+
+<script>
+    try {
+        tooltipTriggerList
+    } catch (error) {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    }
+</script>

@@ -215,5 +215,6 @@ class Update_Members(TemplateView):
             messages.error(request, "You cannot send commands to the Discord Bot when it is not running.")
             return HttpResponse(status=204)
         
+        botware.send_command_update_members()
         messages.success(request, "Member counts for the Discord Guild have been updated.")
         return HttpResponse(status=204)

@@ -10,6 +10,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django_resized import ResizedImageField
 
+from raptorWeb.raptorbot.models import DiscordBotTasks
+
 LOGGER: Logger = getLogger('raptormc.models')
 
 class DonationCurrencyChoices(models.TextChoices):
@@ -952,6 +954,11 @@ def post_save_site_info(sender, instance, *args, **kwargs):
                 instance.avatar_image)
             small_site_info.save()
             LOGGER.info("New Avatar Image detected, new favicon created from it.")
+
+    if instance.discord_global_announcement_channel or instance.discord_staff_role or instance.discord_guild:
+        tasks: DiscordBotTasks = DiscordBotTasks.objects.get_or_create(pk=1)[0]
+        tasks.update_members = True
+        tasks.save()
             
 @receiver(pre_save, sender=NotificationToast)
 def strip_script_tags(sender, instance, *args, **kwargs):
