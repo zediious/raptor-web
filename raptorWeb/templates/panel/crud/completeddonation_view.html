@@ -36,16 +36,16 @@
         </p>
         {% if completeddonation.completed %}
         <p class='fs-5 badge bg-success'>
-            Spent: <span class="fs-3">{{completeddonation.spent}}</span>
+            Spent: <span class="fs-3 text-wrap">{{completeddonation.spent}}</span>
         </p>
         {% endif %}
         {% if completeddonation.completed %}
         <p class='fs-5 badge bg-success'>
-            Status: <span class="fs-3">Complete</span>
+            Status: <span class="fs-3 text-wrap">Complete</span>
         </p>
         {% else %}
         <p class='fs-5 badge bg-danger'>
-            Status: <span class="fs-3">Incomplete</span>
+            Status: <span class="fs-3 text-wrap">Incomplete</span>
             
         </p>
         {% endif %}
@@ -76,6 +76,14 @@
             </a>
         </form>
         {% endif %}
+    </div>
+    <div class='d-flex flex-wrap justify-content-evenly m-3 text-center gap-1'>
+        <p class='fs-5 badge bg-success text-wrap'>
+            Times commands sent: <span class="fs-3 text-wrap">{{completeddonation.sent_commands_count}}</span>
+        </p>
+        <p class='fs-5 badge bg-success text-wrap'>
+            Times roles given: <span class="fs-3 text-wrap">{{completeddonation.gave_roles_count}}</span>
+        </p>
     </div>
 </div>
 
