@@ -58,7 +58,7 @@ async def update_member_count(bot_instance: commands.Bot) -> None:
             online_members += 1
     
     try:
-        await DiscordGuild.objects.afirst().aupdate(
+        await DiscordGuild.objects.filter(guild_id=server.id).aupdate(
             total_members = member_total,
             online_members = online_members,
             guild_name = server.name,
