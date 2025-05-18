@@ -33,9 +33,15 @@
         </div>
       </div>
       <div class="modal-body" id="{{ server.pk }}Desc">
+        {% if server.use_modpack_description and server.use_server_description %}
         {{ server.modpack_description|safe }}
         <hr>
         {{ server.server_description|safe }}
+        {% elif server.use_modpack_description and not server.use_server_description%}
+        {{ server.modpack_description|safe }}
+        {% elif server.use_server_description and not server.use_modpack_description%}
+        {{ server.server_description|safe }}
+        {% endif %}
         <p class="text-center">
           <div class="pageContent d-flex justify-content-center flex-wrap">
             <div class="badge rounded-pill bg-light text-dark text-wrap">
