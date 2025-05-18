@@ -19,13 +19,13 @@
             </a>
           </h3>
           <div class="text-center">
-            <button class="col-12 mt-3 btn btn-outline-success w-75 copy{{ server.pk }}Address"
+            <button class="p-5 pb-0 pt-2 text-wrap text-center btn btn-success copy{{ server.pk }}Address"
                     data-clipboard-text={{ server.server_address }}
                     data-bs-toggle="tooltip"
                     data-bs-title="Click to copy address!">
-              <p class="fs-4">
+              <p class="fs-6 fw-bold text-dark">
                 Join at:
-                <span id="{{ server.pk }}Address" 
+                <span class="fs-3 fw-bold" id="{{ server.pk }}Address" 
                       class="serverAddressCopy fw-semibold">{{ server.server_address }}</span>
               </p>
             </button>
