@@ -96,7 +96,8 @@ MIDDLEWARE: list[str] = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'raptorWeb.raptorbot.botware.RaptorBotWare',
-    'raptorWeb.panel.middleware.PanelMessages'
+    'raptorWeb.panel.middleware.PanelMessages',
+    'raptorWeb.raptormc.hx_reroute_middleware.HxReroute'
 ]
 
 ROOT_URLCONF: str = 'config.urls'

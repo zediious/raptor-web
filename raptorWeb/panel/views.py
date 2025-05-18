@@ -70,10 +70,6 @@ class PanelApiBaseView(TemplateView):
     template_name: str
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.is_staff:
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
             
@@ -143,9 +139,6 @@ class SettingsPanel(PanelApiBaseView):
         if not request.user.has_perm('raptormc.settings'):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         site_info = SiteInformation.objects.get_or_create(pk=1)[0]
         site_data = {}
         for field in site_info._meta.fields:
@@ -172,9 +165,6 @@ class SettingsPanel(PanelApiBaseView):
         })
         
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
@@ -240,9 +230,6 @@ class SettingsPanelFilePost(PanelApiBaseView):
     Endpoint to submit files in the control panel
     """      
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
@@ -321,9 +308,6 @@ class SettingsPanelDefaultPagesPost(PanelApiBaseView):
     Endpoint to submit boolean data about whether default pages are enabled
     """      
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.is_staff:
             return HttpResponseRedirect('/')
         
@@ -399,15 +383,11 @@ class PanelUpdateView(UpdateView):
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
+        
         
         return super().get(request, *args, **kwargs)
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
@@ -506,9 +486,6 @@ class PanelListView(ListView):
     model_name: str = ''
     
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
         
@@ -592,9 +569,6 @@ class PanelCreateView(CreateView):
     def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))
-        
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
         
         return super().get(request, *args, **kwargs)
     
@@ -691,8 +665,6 @@ class PanelDetailView(DetailView):
     permission: str = ''
     
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:     
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
         
         if not request.user.has_perm(self.permission):
             return render(request, template_name=join(TEMPLATE_DIR_PANEL, 'panel_no_access.html'))

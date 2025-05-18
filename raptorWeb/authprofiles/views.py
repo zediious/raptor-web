@@ -48,13 +48,9 @@ class RegisterUser(TemplateView):
     register_form: UserRegisterForm = UserRegisterForm
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('../')
-
-        else:
-            return render(request, self.template_name, context={
-                "register_form": self.register_form,
-                "registered": self.registered})
+        return render(request, self.template_name, context={
+            "register_form": self.register_form,
+            "registered": self.registered})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         register_form: UserRegisterForm = self.register_form(request.POST)
@@ -125,9 +121,6 @@ class DisableOtpAuth(TemplateView):
         disable_mfa_form: MFARequestQR = self.disable_mfa_form(request.POST)
         dictionary: dict = {"disable_mfa_form": disable_mfa_form}
         
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if request.user.is_anonymous:
             return HttpResponseRedirect('/')
         
@@ -166,9 +159,6 @@ class GenerateTotpQr(TemplateView):
         otp_form: MFATotpCodeSubmit = self.otp_form()
         dictionary: dict = {"qr_code_form": qr_code_form}
         
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
         if request.user.is_discord_user:
             return HttpResponseRedirect('/')
         
@@ -202,9 +192,6 @@ class VerifyOtpCodeSetup(TemplateView):
     def post(self, request: HttpRequest) -> HttpResponse:
         otp_form: MFATotpCodeSubmit = self.otp_form(request.POST)
         dictionary: dict = {"otp_form": otp_form}
-        
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
         
         if request.user.is_anonymous:
             return HttpResponseRedirect('/')
@@ -282,11 +269,7 @@ class UserResetPasswordForm(TemplateView):
     template_name: str = join(AUTH_TEMPLATE_DIR, 'password_reset_email_form.html')
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('../')
-
-        else:
-            return render(request, self.template_name, context={
+        return render(request, self.template_name, context={
                 "password_reset_form": self.password_reset_form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
@@ -314,22 +297,18 @@ class UserResetPasswordConfirm(TemplateView):
     template_name: str = join(AUTH_TEMPLATE_DIR, 'password_reset_form.html')
 
     def get(self, request: HttpRequest, user_reset_token: str) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('../')
-
-        else:
-            try:
-                resetting_user: RaptorUser = RaptorUser.objects.get(
-                                        password_reset_token=user_reset_token)
-                if resetting_user.password_reset_token == "":
-                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
-
-                return render(request, self.template_name, context={
-                    "final_password_reset_form": self.final_password_reset_form,
-                    "resetting_user_token": resetting_user.password_reset_token})
-
-            except RaptorUser.DoesNotExist:
+        try:
+            resetting_user: RaptorUser = RaptorUser.objects.get(
+                                    password_reset_token=user_reset_token)
+            if resetting_user.password_reset_token == "":
                 return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
+
+            return render(request, self.template_name, context={
+                "final_password_reset_form": self.final_password_reset_form,
+                "resetting_user_token": resetting_user.password_reset_token})
+
+        except RaptorUser.DoesNotExist:
+            return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
 
     def post(self, request: HttpRequest, user_reset_token: str) -> HttpResponse:
         final_password_reset_form: UserPasswordResetForm = self.final_password_reset_form(request.POST)
@@ -358,11 +337,7 @@ class User_Login_Form(TemplateView):
     mfa_template: str = join(AUTH_TEMPLATE_DIR, 'mfa_entry.html')
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('HX-Request') == "true":
-            return render(request, self.template_name, context={"login_form": self.login_form})
-
-        else:
-            return HttpResponseRedirect('../')
+        return render(request, self.template_name, context={"login_form": self.login_form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         login_form: UserLoginForm = UserLoginForm(request.POST)
@@ -452,16 +427,12 @@ class User_Dropdown(TemplateView):
     template_name: str = join(AUTH_TEMPLATE_DIR, 'profile_dropdown.html')
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        if request.headers.get('HX-Request') == "true":
-            instance_dict: dict = {}
-            if request.user.is_authenticated:
-                instance_dict['loaded_user']: RaptorUser = RaptorUser.objects.get(
-                    user_slug = RaptorUser.objects.find_slugged_user(str(request.user)).user_slug)
+        instance_dict: dict = {}
+        if request.user.is_authenticated:
+            instance_dict['loaded_user'] = RaptorUser.objects.get(
+                user_slug = RaptorUser.objects.find_slugged_user(str(request.user)).user_slug)
 
-            return render(request, self.template_name, context=instance_dict)
-
-        else:
-            return HttpResponseRedirect('/')
+        return render(request, self.template_name, context=instance_dict)
 
 
 class All_User_Profile(ListView):
@@ -488,17 +459,14 @@ class All_User_Profile(ListView):
         except ModuleNotFoundError:
             pass
         
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
-        else:
-            if request.GET.get('is_staff') == 'on':
-                self.queryset = self.queryset.filter(is_staff=True)
-                
-            if request.GET.get('username'):
-                self.queryset = self.queryset.filter(username__icontains=request.GET.get('username'))
+
+        if request.GET.get('is_staff') == 'on':
+            self.queryset = self.queryset.filter(is_staff=True)
             
-            return super().get(request, *args, **kwargs)
+        if request.GET.get('username'):
+            self.queryset = self.queryset.filter(username__icontains=request.GET.get('username'))
+        
+        return super().get(request, *args, **kwargs)
         
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]:
         context: dict[str, Any] = super().get_context_data(**kwargs)
@@ -539,8 +507,7 @@ class User_Profile(DetailView):
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
         try:
             if not DefaultPages.objects.get_or_create(pk=1)[0].members:
-                if (request.headers.get('HX-Request') == "true"
-                and request.user.user_slug == self.kwargs['user_slug']
+                if (request.user.user_slug == self.kwargs['user_slug']
                 or request.user.is_staff):
                     return super().get(request, *args, **kwargs)
                 
@@ -552,16 +519,12 @@ class User_Profile(DetailView):
             
         except ModuleNotFoundError:
             pass
+            
+        if (RaptorUser.objects.filter(user_slug=self.kwargs['user_slug'])[0].user_profile_info.hidden_from_public and
+        request.user.user_slug != self.kwargs['user_slug']):
+            return HttpResponseRedirect('/404')
         
-        if request.headers.get('HX-Request') == "true":
-            
-            if (RaptorUser.objects.filter(user_slug=self.kwargs['user_slug'])[0].user_profile_info.hidden_from_public and
-            request.user.user_slug != self.kwargs['user_slug']):
-                return HttpResponseRedirect('/404')
-            
-            return super().get(request, *args, **kwargs)
-        else:
-            return HttpResponseRedirect('/')
+        return super().get(request, *args, **kwargs)
 
     def get_object(self):
         try:
@@ -591,30 +554,26 @@ class User_Profile_Edit(LoginRequiredMixin, TemplateView):
     extra_edit_form: UserProfileEditForm
 
     def get(self, request: HttpRequest, profile_name: str) -> HttpResponse:
-        if request.headers.get('HX-Request') == "true":
-            if slugify(str(request.user)) == slugify(profile_name):
-                displayed_user: RaptorUser = RaptorUser.objects.find_slugged_user(profile_name)
-                if displayed_user != None:
-                    self.extra_edit_form: UserProfileEditForm = UserProfileEditForm({
-                        'hidden_from_public': displayed_user.user_profile_info.hidden_from_public,
-                        'minecraft_username': displayed_user.user_profile_info.minecraft_username,
-                        'favorite_modpack': displayed_user.user_profile_info.favorite_modpack,
-                        'email': displayed_user.email
-                    })
-                    instance_dict: dict = {
-                        "extra_edit_form": self.extra_edit_form,
-                        "displayed_profile": displayed_user
-                    }
-                    return render(request, self.template_name, context=instance_dict)
+        if slugify(str(request.user)) == slugify(profile_name):
+            displayed_user: RaptorUser = RaptorUser.objects.find_slugged_user(profile_name)
+            if displayed_user != None:
+                self.extra_edit_form: UserProfileEditForm = UserProfileEditForm({
+                    'hidden_from_public': displayed_user.user_profile_info.hidden_from_public,
+                    'minecraft_username': displayed_user.user_profile_info.minecraft_username,
+                    'favorite_modpack': displayed_user.user_profile_info.favorite_modpack,
+                    'email': displayed_user.email
+                })
+                instance_dict: dict = {
+                    "extra_edit_form": self.extra_edit_form,
+                    "displayed_profile": displayed_user
+                }
+                return render(request, self.template_name, context=instance_dict)
 
-                else:
-                    return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
+            else:
+                return render(request, join(AUTH_TEMPLATE_DIR, 'no_user.html'), context={})
 
-            else: 
-                return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
-
-        else:
-            return HttpResponseRedirect('/')
+        else: 
+            return render(request, join(AUTH_TEMPLATE_DIR, 'no_access.html'), context={})
 
     def post(self, request: HttpRequest, profile_name: str) -> HttpResponse:
         extra_edit_form: UserProfileEditForm = UserProfileEditForm(request.POST, request.FILES)
