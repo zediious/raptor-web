@@ -39,7 +39,7 @@
         <p class="text-center">
           <div class="pageContent d-flex justify-content-center flex-wrap">
             <div class="badge rounded-pill bg-light text-dark text-wrap">
-            The server is running: <strong>v{{ server.modpack_version}}</strong>
+              The server is running: <strong>v{{ server.modpack_version}}</strong>
             </div>
           </div>
         </p>
@@ -47,7 +47,7 @@
       <div class="modal-footer justify-content-center">
 
         {% if default_pages.announcements %}
-        <a role="button" class="btn btn-outline-secondary"
+        <a role="button" class="btn btn-secondary text-dark"
            href="/announcements?server={{server.pk}}"
            hx-get="{% url 'raptormc:announcements' %}?server={{server.pk}}"
            hx-target='#home'
@@ -61,7 +61,7 @@
         {% endif %}
         
         {% if default_pages.rules %}
-          <a role="button" class="btn btn-outline-secondary"
+          <a role="button" class="btn btn-secondary text-dark"
              href="/rules?server={{server.pk}}"
              hx-get="{% url 'raptormc:rules' %}?server={{server.pk}}"
              hx-target='#home'
@@ -75,7 +75,7 @@
         {% endif %}
 
         {% if default_pages.banned_items %}
-          <a role="button" class="btn btn-outline-secondary"
+          <a role="button" class="btn btn-secondary text-dark"
              href="/banneditems?server={{server.pk}}"
              hx-get="{% url 'raptormc:banneditems' %}?server={{server.pk}}"
              hx-target='#home'
@@ -89,7 +89,7 @@
         {% endif %}
 
         {% if default_pages.voting %}
-          <a role="button" class="btn btn-outline-secondary"
+          <a role="button" class="btn btn-secondary text-dark"
              href='/voting?server={{server.pk}}'
              hx-get="{% url 'raptormc:voting' %}?server={{server.pk}}"
              hx-target='#home'
