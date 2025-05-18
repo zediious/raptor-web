@@ -37,9 +37,11 @@
         <hr>
         {{ server.server_description|safe }}
         <p class="text-center">
-          <span class="pageContent">
+          <div class="pageContent d-flex justify-content-center flex-wrap">
+            <div class="badge rounded-pill bg-light text-dark text-wrap">
             The server is running: <strong>v{{ server.modpack_version}}</strong>
-          </span>
+            </div>
+          </div>
         </p>
       </div>
       <div class="modal-footer justify-content-center">
