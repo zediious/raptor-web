@@ -314,7 +314,7 @@ class UserResetPasswordConfirm(TemplateView):
         final_password_reset_form: UserPasswordResetForm = self.final_password_reset_form(request.POST)
         resetting_user = RaptorUser.objects.get(password_reset_token=str(user_reset_token))
         dictionary: dict = {"final_password_reset_form": final_password_reset_form}
-        dictionary["resetting_user_token"]: str = resetting_user.password_reset_token
+        dictionary["resetting_user_token"] = resetting_user.password_reset_token
 
         if final_password_reset_form.is_valid():
             resetting_user.set_password(final_password_reset_form.cleaned_data["password"])

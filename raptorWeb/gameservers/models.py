@@ -108,7 +108,7 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
-            site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            site_info = SiteInformation.objects.get_or_create(pk=1)[0]
             
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()

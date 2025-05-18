@@ -962,7 +962,7 @@ def post_save_site_info(sender, instance, *args, **kwargs):
     the .ico filename, which is set to the Avatar Image hash on
     creation. It will only run if those two values differ.
     """
-    small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
+    small_site_info = SmallSiteInformation.objects.get_or_create(pk=1)[0]
     
     if instance.avatar_image:
         if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":

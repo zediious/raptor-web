@@ -64,7 +64,7 @@ class Player_List(ListView):
     """
     model: Player = Player
     
-    def get_queryset(self) -> Player.objects:
+    def get_queryset(self):
         return Player.objects.filter(online=True)
 
     def get_context_data(self, **kwargs):
