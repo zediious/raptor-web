@@ -35,6 +35,21 @@ class PageManager(models.Manager):
         for page in self.all():
             if slugify(page.name) == slugify(page_name):
                 return page
+            
+
+class DefaultPagesManager(models.Manager):
+    """
+    Manager for DefaultPages object
+    """
+    def get_enabled(self, page_name: str):
+        """
+        Given a string form of a page name attribute, return
+        whether the page is enabled or not.
+        """
+        try:
+            return getattr(self.first(), page_name)
+        except:
+            return False
 
 
 class Page(models.Model):
@@ -868,6 +883,8 @@ class DefaultPages(models.Model):
     not appear in the navigation sidebar, and attempts to manually access the URL will lead to the 404
     page.
     """
+    objects = DefaultPagesManager()
+
     announcements = models.BooleanField(
         default=True,
         verbose_name="Announcements Page",
