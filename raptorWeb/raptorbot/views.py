@@ -44,11 +44,7 @@ class Global_Announcements(ListView):
         except ModuleNotFoundError:
             pass
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
+        return super().get(request, *args, **kwargs)
 
 class Server_Announcements(ListView):
         """
@@ -74,10 +70,7 @@ class Server_Announcements(ListView):
             except ModuleNotFoundError:
                 pass
             
-            if request.headers.get('HX-Request') == "true":
-                return super().get(request, *args, **kwargs)
-            else:
-                return HttpResponseRedirect('/')
+            return super().get(request, *args, **kwargs)
             
             
 class Get_Bot_Status(TemplateView):

@@ -39,11 +39,7 @@ class CompletedDonationsPublic(ListView):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
+        return super().get(request, *args, **kwargs)
         
     def get_queryset(self) -> QuerySet[Any]:
         return CompletedDonation.objects.all().order_by('-donation_datetime')[:5]
@@ -63,11 +59,7 @@ class DonationPackages(ListView):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
+        return super().get(request, *args, **kwargs)
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -97,11 +89,7 @@ class DonationCheckout(TemplateView):
         if not DefaultPages.objects.get_or_create(pk=1)[0].donations:
             return HttpResponseRedirect('/404')
         
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
+        return super().get(request, *args, **kwargs)
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)

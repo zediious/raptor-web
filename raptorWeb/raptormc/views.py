@@ -22,6 +22,7 @@ class BaseView(TemplateView):
     Base view for SPA
     """
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'base.html')
+    non_htmx: bool = True
     
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         route_result = check_route(request, CURRENT_URLPATTERNS, 'main')
@@ -30,20 +31,10 @@ class BaseView(TemplateView):
         
         return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context={"is_404": 'true'})
     
-class HxTemplateView(TemplateView):
-    """
-    Return 404 when "HX-Request" header is not true
-    """
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect(request.path.replace('raptormc/api/html/', ''))
-            
-        return super().get(request, *args, **kwargs)
-    
 
-class HxDefaultPageTemplateView(HxTemplateView):
+class DefaultPageTemplateView(TemplateView):
     """
-    Return 404 when "HX-Request" header is not true
+    Take a DefaultPages attribute, return 404 if attribute is false on DefaultPages object
     """
     page_name: str = ''
 
@@ -53,7 +44,7 @@ class HxDefaultPageTemplateView(HxTemplateView):
             
         return super().get(request, *args, **kwargs)
     
-class HxInformativeTemplateView(HxTemplateView):
+class InformativeTemplateView(TemplateView):
     """
     Add list of passed informative texts to context, creating if non-existent.
     """
@@ -66,7 +57,7 @@ class HxInformativeTemplateView(HxTemplateView):
             informative_text_names=self.informative_texts)
     
 
-class HxDefaultPageInformativeTemplateView(HxDefaultPageTemplateView):
+class DefaultPageInformativeTemplateView(DefaultPageTemplateView):
     """
     Add list of passed informative texts to context, creating if non-existent.
     """
@@ -79,7 +70,7 @@ class HxDefaultPageInformativeTemplateView(HxDefaultPageTemplateView):
             informative_text_names=self.informative_texts)
 
 
-class HomeServers(HxInformativeTemplateView):
+class HomeServers(InformativeTemplateView):
     """
     Homepage with general information
     """
@@ -87,7 +78,7 @@ class HomeServers(HxInformativeTemplateView):
     informative_texts = ["Homepage Information"]
 
 
-class Announcements(HxDefaultPageInformativeTemplateView):
+class Announcements(DefaultPageInformativeTemplateView):
     """
     Page containing the last 30 announcements from Discord
     """
@@ -96,7 +87,7 @@ class Announcements(HxDefaultPageInformativeTemplateView):
     page_name = 'announcements'
 
 
-class Rules(HxDefaultPageInformativeTemplateView):
+class Rules(DefaultPageInformativeTemplateView):
     """
     Rules page containing general and server-specific rules
     """
@@ -105,7 +96,7 @@ class Rules(HxDefaultPageInformativeTemplateView):
     page_name = 'rules'
 
 
-class BannedItems(HxDefaultPageInformativeTemplateView):
+class BannedItems(DefaultPageInformativeTemplateView):
     """
     Contains lists of items that are banned on each server
     """
@@ -114,7 +105,7 @@ class BannedItems(HxDefaultPageInformativeTemplateView):
     page_name = 'banned_items'
 
 
-class Voting(HxDefaultPageInformativeTemplateView):
+class Voting(DefaultPageInformativeTemplateView):
     """
     Contains lists links for each server's voting sites
     """
@@ -123,7 +114,7 @@ class Voting(HxDefaultPageInformativeTemplateView):
     page_name = 'voting'
 
 
-class HowToJoin(HxDefaultPageInformativeTemplateView):
+class HowToJoin(DefaultPageInformativeTemplateView):
     """
     Contains guides for downloading modpacks and joining servers.
     """
@@ -137,7 +128,16 @@ class HowToJoin(HxDefaultPageInformativeTemplateView):
     page_name = 'joining'
 
 
-class StaffApps(HxDefaultPageInformativeTemplateView):
+class Onboarding(DefaultPageInformativeTemplateView):
+    """
+    Onboarding page containing all info about a specific server
+    """
+    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/onboarding.html')
+    informative_texts = ["Rules Information", "Network Rules"]
+    page_name = 'onboarding'
+
+
+class StaffApps(DefaultPageInformativeTemplateView):
     """
     Provide links to each staff application
     """
@@ -146,7 +146,7 @@ class StaffApps(HxDefaultPageInformativeTemplateView):
     page_name = 'staff_apps'
         
         
-class Donations(HxDefaultPageInformativeTemplateView):
+class Donations(DefaultPageInformativeTemplateView):
     """
     Donation packages list
     """
@@ -155,7 +155,7 @@ class Donations(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
         
         
-class DonationsCheckout(HxDefaultPageInformativeTemplateView):
+class DonationsCheckout(DefaultPageInformativeTemplateView):
     """
     Donation package checkout
     """
@@ -164,7 +164,7 @@ class DonationsCheckout(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
     
         
-class DonationsSuccess(HxDefaultPageInformativeTemplateView):
+class DonationsSuccess(DefaultPageInformativeTemplateView):
     """
     Donation success page
     """
@@ -173,7 +173,7 @@ class DonationsSuccess(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
     
     
-class DonationsFailure(HxDefaultPageInformativeTemplateView):
+class DonationsFailure(DefaultPageInformativeTemplateView):
     """
     Donation failure page
     """
@@ -182,7 +182,7 @@ class DonationsFailure(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
         
         
-class DonationsFailureInvalidUsername(HxDefaultPageInformativeTemplateView):
+class DonationsFailureInvalidUsername(DefaultPageInformativeTemplateView):
     """
     Donation failure page when Minecraft username is invalid
     """
@@ -191,7 +191,7 @@ class DonationsFailureInvalidUsername(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
         
         
-class DonationsFailureInvalidPrice(HxDefaultPageInformativeTemplateView):
+class DonationsFailureInvalidPrice(DefaultPageInformativeTemplateView):
     """
     Donation failure page when chosen price is below minimum
     """
@@ -200,7 +200,7 @@ class DonationsFailureInvalidPrice(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
 
     
-class DonationsAlreadyDonated(HxDefaultPageInformativeTemplateView):
+class DonationsAlreadyDonated(DefaultPageInformativeTemplateView):
     """
     Donation already made page
     """
@@ -209,7 +209,7 @@ class DonationsAlreadyDonated(HxDefaultPageInformativeTemplateView):
     page_name = 'donations'
 
 
-class SiteMembers(HxDefaultPageInformativeTemplateView):
+class SiteMembers(DefaultPageInformativeTemplateView):
     """
     Provide links to each Site Member's profile
     """
@@ -240,7 +240,7 @@ class SiteMembers(HxDefaultPageInformativeTemplateView):
             informative_text_names=["User Information"])
 
 
-class User_Page(HxTemplateView):
+class User_Page(TemplateView):
     """
     Info about a User
     """
@@ -255,7 +255,7 @@ class User_Page(HxTemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class User_Pass_Reset(HxTemplateView):
+class User_Pass_Reset(TemplateView):
     """
     Page to reset user password
     """
@@ -268,15 +268,6 @@ class User_Pass_Reset(HxTemplateView):
             "active_user_password_reset_token": self.request.path.split('/')[7]
         })
         return context
-    
-    
-class Onboarding(HxDefaultPageInformativeTemplateView):
-    """
-    Onboarding page containing all info about a specific server
-    """
-    template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/onboarding.html')
-    informative_texts = ["Rules Information", "Network Rules"]
-    page_name = 'onboarding'
 
 
 class PageView(DetailView):
@@ -284,12 +275,6 @@ class PageView(DetailView):
     Generic view for user created pages
     """
     model: Page = Page
-    
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/404')
-        
-        return super().get(request, *args, **kwargs)
 
     def get_object(self):
         return Page.objects.get_slugged_page(self.kwargs['page_name'])
@@ -301,8 +286,6 @@ class Update_Headerbox_State(View):
     expansion state.
     """
     def post(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            HttpResponseRedirect('/404')
 
         try:
             if request.session['headerbox_expanded'] == 'false':
@@ -323,9 +306,6 @@ class View_404(TemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, join('404.html'))
     
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict[str, Any]) -> HttpResponse:
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-        
         return render(request, template_name=join(TEMPLATE_DIR_RAPTORMC, 'base.html'), context={"is_404": 'true'})
 
 

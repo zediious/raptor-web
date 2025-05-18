@@ -35,13 +35,9 @@ class AllApps(TemplateView):
         except ModuleNotFoundError:
             pass
         
-        if request.headers.get('HX-Request') == "true":
-            return render(request, self.template_name, context={
-                'created_applications': CreatedStaffApplication.objects.all()
-            })
-            
-        else:
-            return HttpResponseRedirect('/')
+        return render(request, self.template_name, context={
+            'created_applications': CreatedStaffApplication.objects.all()
+        })
         
         
 class AllAppsSubmit(TemplateView):
@@ -57,9 +53,6 @@ class AllAppsSubmit(TemplateView):
             
         except ModuleNotFoundError:
             pass
-        
-        if request.headers.get('HX-Request') != "true":
-                return HttpResponseRedirect('/')
             
         form_data = request.POST
         if form_data['99342193074109'] != '':
