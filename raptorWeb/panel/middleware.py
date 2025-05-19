@@ -15,6 +15,10 @@ class PanelMessages(MiddlewareMixin):
         if "HX-Request" not in request.headers:
             return response
         
+        # Do not add messages on requests with NoToastNotification header
+        if request.headers.get('Notoastnotifications') == 'true':
+            return response
+        
         # Only get messages if request is to api endpoints
         if "api" not in request.path:
             return response
