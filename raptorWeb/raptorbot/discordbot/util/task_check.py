@@ -24,7 +24,7 @@ async def check_tasks(bot_instance):
         await announcements.update_all_server_announce(bot_instance, site_info)
 
     if tasks[0].update_members:
-        await presence.update_member_count(bot_instance, site_info)
+        await presence.update_member_count(bot_instance)
         
     if tasks[0].update_embeds:
         await embed.update_embeds(bot_instance)
