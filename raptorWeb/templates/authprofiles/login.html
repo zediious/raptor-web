@@ -3,8 +3,21 @@
 
 <link rel="stylesheet" href="{% static 'css/raptormc.css' %}">
 
-<div class="bg-dark text-white p-1 mt-0 mb-0 opacity-75 container">
-  <form action="{% url 'authprofiles:login' %}" method="POST">
+<div class="bg-dark text-white p-1 mt-0 mb-0 opacity-100 container">
+  {% if messages %}
+  <div class="messages d-flex flex-column gap-2 mb-2">
+      {% for message in messages %}
+      <div class="badge bg-warning text-black">
+          {{message}}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  <form hx-post="{% url 'authprofiles:login' %}"
+        hx-target="#user_login_form"
+        hx-swap="innerHTML"
+        hx-headers='{"NoToastNotifications": "true"}'
+  >
 
     {% csrf_token %}
     {% bootstrap_form login_form %}
@@ -15,10 +28,21 @@
     
     <a role="button" type="button"
        class="btn btn-discord mt-2 opacity-100"
-       href="{% url 'authprofiles:login_oauth' %}"
+       hx-get="{% url 'authprofiles:login_oauth' %}"
+       hx-headers='{"NoProcessHxRedirect": "true"}'
     >
       Login with Discord
     </a>
 
   </form>
 </div>
+
+{% if showDropdown %}
+
+<script>
+    if (!$('#profile_dropdown_toggle').hasClass("show")){
+      $('#profile_dropdown_toggle').dropdown('toggle');
+    }
+</script>
+
+{% endif %}

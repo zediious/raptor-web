@@ -1,7 +1,11 @@
 import json
+from logging import Logger, getLogger
+
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpRequest, HttpResponse
 from django.contrib.messages import get_messages
+
+LOGGER: Logger = getLogger('panel.middleware')
 
 class PanelMessages(MiddlewareMixin):
 
@@ -9,6 +13,10 @@ class PanelMessages(MiddlewareMixin):
 
         # The HX-Request header indicates that the request was made with HTMX
         if "HX-Request" not in request.headers:
+            return response
+        
+        # Do not add messages on requests with NoToastNotification header
+        if request.headers.get('Notoastnotifications') == 'true':
             return response
         
         # Only get messages if request is to api endpoints

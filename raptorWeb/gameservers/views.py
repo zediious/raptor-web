@@ -31,13 +31,6 @@ class Server_List_Base(ListView):
             return Server.objects.get_servers()
         
         return Server.objects.get_servers(wait=False)
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if request.headers.get('HX-Request') == "true":
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,7 +64,7 @@ class Player_List(ListView):
     """
     model: Player = Player
     
-    def get_queryset(self) -> Player.objects:
+    def get_queryset(self):
         return Player.objects.filter(online=True)
 
     def get_context_data(self, **kwargs):
@@ -81,12 +74,8 @@ class Player_List(ListView):
         return context
 
     def get(self, request, *args, **kwargs):
-        if request.headers.get('HX-Request') == "true":
-            Server.objects.update_servers()
-            return super().get(request, *args, **kwargs)
-
-        else:
-            return HttpResponseRedirect('/')
+        Server.objects.update_servers()
+        return super().get(request, *args, **kwargs)
         
         
 class Server_Onboarding(DetailView):
@@ -95,13 +84,6 @@ class Server_Onboarding(DetailView):
     Contains all information regarding a server
     """
     model: Server = Server
-
-    def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:     
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-        
-        else:
-            return super().get(request, *args, **kwargs)
 
     def get_object(self):
         for server in Server.objects.filter(archived=False):
@@ -116,9 +98,6 @@ class Server_Description(TemplateView):
     Return the server description of a requested server
     """
     def get(self, request: HttpRequest, *args: tuple, **kwargs: dict) -> HttpResponse:
-        if request.headers.get('HX-Request') != "true":
-            return HttpResponseRedirect('/')
-            
         requested_server = request.GET.get('server').replace('onboarding/', '')
         all_servers = Server.objects.filter(archived=False)
         for server in all_servers:
