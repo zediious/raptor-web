@@ -1,7 +1,10 @@
-import json
+from logging import Logger, getLogger
+
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.contrib.messages import get_messages
+
+LOGGER: Logger = getLogger('raptormc.hx_reroute_middleware')
 
 class HxReroute(MiddlewareMixin):
 

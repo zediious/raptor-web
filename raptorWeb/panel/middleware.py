@@ -1,7 +1,11 @@
 import json
+from logging import Logger, getLogger
+
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpRequest, HttpResponse
 from django.contrib.messages import get_messages
+
+LOGGER: Logger = getLogger('panel.middleware')
 
 class PanelMessages(MiddlewareMixin):
 
