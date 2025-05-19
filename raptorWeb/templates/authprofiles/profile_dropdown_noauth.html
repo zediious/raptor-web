@@ -23,7 +23,8 @@
                     <section>
                         <div class="p-3 container">
                         <a role="button"
-                           href="{% url 'authprofiles:login_oauth' %}"
+                           hx-get="{% url 'authprofiles:login_oauth' %}"
+                           hx-headers='{"NoProcessHxRedirect": "true"}'
                            class="btn btn-discord w-100"
                         >
                             Register with Discord
@@ -66,16 +67,6 @@
                             After clicking "Send Reset Link", wait for confirmation message to appear.
                         </p>
                     </header>
-
-                    <section>
-                        {% if messages %}
-                        <ul class="messages alert alert-warning">
-                        {% for message in messages %}
-                            {{message}}
-                        {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </section>
                     
                     <section>
                         <div class="bg-dark p-3 opacity-75 container">
@@ -95,7 +86,7 @@
 </div>
 <div class="float-end">
     <div class="dropstart">
-        <button class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button id="profile_dropdown_toggle" class="btn dropdown-toggle d-flex" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <div id="profile_picture_box">
             <img id="noProfilePicture" class="filter-white border border-secondary border-2 p-2 w-100" 
                  src="{% static 'image/no_user.svg' %}"
@@ -118,7 +109,7 @@
                  hx-get="{% url 'authprofiles:login' %}"
                  hx-trigger="load"
                  hx-target="#user_login_form"
-                 hx-swap="outerHTML">
+                 hx-swap="innerHTML">
             </div>
 
             <div class="p-1 mb-0 text-center">

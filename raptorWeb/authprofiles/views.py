@@ -241,22 +241,32 @@ class VerifyOtpCodeLogin(TemplateView):
             user = RaptorUser.objects.get(username=clean_data['username'])
             if check_totp_token(user, clean_data['totp']):
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return render(request, self.template_name, context={
+                response = render(request, self.template_name, context={
                     'mfa_complete': True
                 })
+                response.headers['HX-Redirect'] = self.request.META.get('HTTP_REFERER')
+                response.headers['NoToastNotification'] = 'true'
+                return response
                 
             messages.error(request, 'The entered OTP was incorrect.')
             dictionary.update({
                 'signin_mfa_form': otp_form,
-                'otp_username': clean_data['username']
+                'otp_username': clean_data['username'],
+                "showDropdown": True
             })
-            return render(request, self.template_name, context=dictionary)
+            response =  render(request, self.template_name, context=dictionary)
+            response.headers['NoToastNotification'] = 'true'
+            return response
                 
         messages.error(request, [str(message[1][0]) for message in otp_form.errors.items()])
         dictionary.update({
-                'otp_form': otp_form
+                'otp_form': otp_form,
+                "showDropdown": True
             })
-        return render(request, self.template_name, context=dictionary)
+        
+        response =  render(request, self.template_name, context=dictionary)
+        response.headers['NoToastNotification'] = 'true'
+        return response
 
 
 class UserResetPasswordForm(TemplateView):
@@ -349,10 +359,14 @@ class User_Login_Form(TemplateView):
             if user:
                 
                 if user.mfa_enabled:
-                    return render(request, self.mfa_template, context={
+                    messages.error(request, "Please enter your 2FA code")
+                    response = render(request, self.mfa_template, context={
                         "otp_username": user.username,
-                        'signin_mfa_form': self.signin_mfa_form()
+                        'signin_mfa_form': self.signin_mfa_form(),
+                        "showDropdown": True
                     })
+                    response.headers['NoToastNotification'] = 'true'
+                    return response
                     
                 LOGGER.info(f"{username} logged in!")
                 login(request, user)
@@ -365,14 +379,22 @@ class User_Login_Form(TemplateView):
                     
                     user.save()
 
-                return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+                response = render(request, self.template_name, context={"login_form": self.login_form})
+                response.headers['HX-Redirect'] = self.request.META.get('HTTP_REFERER')  
+                response.headers['NoToastNotification'] = 'true'
+                return response             
 
             else:
-                return HttpResponse("Account does not exist")
+                messages.error(request, "Account does not exist")
+                response =  render(request, self.template_name, context={"login_form": self.login_form, "showDropdown": True})
+                response.headers['NoToastNotification'] = 'true'
+                return response
 
         else:
             messages.error(request, login_form.errors.as_text().replace('* __all__', ''))
-            return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+            response =  render(request, self.template_name, context={"login_form": self.login_form, "showDropdown": True})
+            response.headers['NoToastNotification'] = 'true'
+            return response
 
 
 class UserLogin_OAuth(TemplateView):
@@ -380,7 +402,10 @@ class UserLogin_OAuth(TemplateView):
     View to redirect users to Discord OAuth2 endpoint.
     """
     def get(self, request: HttpRequest) -> HttpResponse:
-        return redirect(DISCORD_AUTH_URL)
+        response =  HttpResponse()
+        response.headers['NoProcessHxRedirect'] = 'true'
+        response.headers['HX-Redirect'] = DISCORD_AUTH_URL
+        return response
 
 
 class UserLogin_OAuth_Success(TemplateView):

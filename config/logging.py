@@ -100,6 +100,11 @@ LOGGING_DEFINITION = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'raptormc.hx_reroute_middleware': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'panel.routes': {
             'handlers': ['console', 'log_file', 'mail_admins'],
             'level': 'DEBUG',
@@ -116,6 +121,11 @@ LOGGING_DEFINITION = {
             'propagate': False,
         },
         'panel.forms': {
+            'handlers': ['console', 'log_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'panel.middleware': {
             'handlers': ['console', 'log_file', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,
