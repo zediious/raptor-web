@@ -16,6 +16,7 @@ class HxReroute(MiddlewareMixin):
 
         # 404 the request if HX-Request is not true
         if ((request.headers.get('HX-Request') != "true") and ('/api/' in request.path)):
-            return HttpResponseRedirect('/404')
+            if ('/login' not in request.path) and ('/logout' not in request.path):
+                return HttpResponseRedirect('/404')
 
         return response
