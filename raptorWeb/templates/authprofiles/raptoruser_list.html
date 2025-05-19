@@ -9,10 +9,9 @@
             hx-get="{% url 'authprofiles:all_user_profile' %}"
             hx-swap="innerHTML"
             hx-target="#all_profiles"
-            hx-trigger='click,keyup delay:1s'
+            hx-trigger='change,keyup delay:1s'
         >     
             {% csrf_token %} 
-            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
             <div class="d-flex justify-content-evenly align-items-center">
                 {% bootstrap_field user_filter_form.is_staff %}
                 {% bootstrap_field user_filter_form.username %}

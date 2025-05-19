@@ -108,7 +108,7 @@ class ServerManager(models.Manager):
             return online_players
 
         def poll_servers(self, servers: list['Server'], statistic_model: 'ServerStatistic') -> None:
-            site_info: SiteInformation.objects = SiteInformation.objects.get_or_create(pk=1)[0]
+            site_info = SiteInformation.objects.get_or_create(pk=1)[0]
             
             if statistic_model.time_last_polled == None:
                 statistic_model.time_last_polled = localtime()
@@ -343,12 +343,26 @@ class Server(models.Model):
         verbose_name="Modpack Description",
         help_text="A description of the modpack you are hosting on this server. Generally should describe the gameplay of the modpack itself.",
         default="Modpack Description")
+    
+    use_modpack_description = models.BooleanField(
+        verbose_name="Use Modpack Description",
+        help_text=("If this is unchecked, the Modpack Description element will not appear in the server "
+                   "modal at all."),
+        default=True
+    )
 
     server_description = models.CharField(
         max_length=1500, 
         verbose_name="Server Description",
         help_text="A description of the features that this particular server has.",
         default="Server Description")
+    
+    use_server_description = models.BooleanField(
+        verbose_name="Use Server Description",
+        help_text=("If this is unchecked, the Server Description element will not appear in the server "
+                   "modal at all."),
+        default=True
+    )
 
     server_rules = models.CharField(
         max_length=1500,

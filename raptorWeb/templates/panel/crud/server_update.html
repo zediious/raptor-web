@@ -61,7 +61,9 @@
             </div>
             <div x-show='selected == 2'>
                 {% bootstrap_field form.modpack_description %}
+                {% bootstrap_field form.use_modpack_description %}
                 {% bootstrap_field form.server_description %}
+                {% bootstrap_field form.use_server_description %}
                 {% bootstrap_field form.server_rules %}
                 {% bootstrap_field form.server_banned_items %}
                 {% bootstrap_field form.server_vote_links %}

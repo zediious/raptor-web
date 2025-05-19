@@ -507,8 +507,8 @@ class SiteInformation(models.Model):
         max_length=7,
         verbose_name="Secondary Color",
         help_text=("The hex color code used for the upper body of the website, layered "
-                    "underneath server buttons. If using a Background Image, that will "
-                    "always override this color."),
+                    "underneath server buttons. If you are using a Background Image, that will "
+                    "be overridden by this color."),
         default="#00233c"
     )
     
@@ -544,7 +544,7 @@ class SiteInformation(models.Model):
         upload_to='background',
         verbose_name="Background Image",
         help_text=("The image displayed layered behind server buttons. This image will "
-                    "cover the defined Secondary Color if used. Image will be resized to "
+                    "be covered by the defined Secondary Color if used. Image resized to "
                     "1920x1080 after uploading."),
         blank=True,
         size=[1920,1080],
@@ -593,7 +593,7 @@ class SiteInformation(models.Model):
     use_secondary_color = models.BooleanField(
         verbose_name="Use Secondary Color",
         help_text=("If this is checked, the Secondary Color chosen above will be used on the website. "
-                   "If you are using a Background Image, that will always take precedence."),
+                   "If you are using a Background Image, that will be overridden by this color."),
         default=True
     )
     
@@ -962,7 +962,7 @@ def post_save_site_info(sender, instance, *args, **kwargs):
     the .ico filename, which is set to the Avatar Image hash on
     creation. It will only run if those two values differ.
     """
-    small_site_info: SmallSiteInformation.objects = SmallSiteInformation.objects.get_or_create(pk=1)[0]
+    small_site_info = SmallSiteInformation.objects.get_or_create(pk=1)[0]
     
     if instance.avatar_image:
         if f"ico/{hash(instance.avatar_image)}.ico" != f"{small_site_info.ico_image}":

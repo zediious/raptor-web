@@ -131,7 +131,9 @@ class PanelServerUpdateForm(forms.ModelForm):
         'rcon_port',
         'rcon_password',
         'modpack_description',
+        'use_modpack_description',
         'server_description',
+        'use_server_description',
         'server_rules',
         'server_banned_items',
         'server_vote_links',)

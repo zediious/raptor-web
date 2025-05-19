@@ -40,9 +40,10 @@
     </div>
 
     <div id="backgroundWrapper" 
-         style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
          {% if site_info_model.use_secondary_color %}
-         background-color: {{ site_info_model.secondary_color }};
+         style="background-color: {{ site_info_model.secondary_color }}";
+         {% else %}
+         style="background-image: url({% if site_info_model.background_image %}{{site_info_model.background_image.url}}{% endif %});
          {% endif %}">
 
       {% comment %} topBox containing Navigation elements {% endcomment %}
