@@ -5,7 +5,7 @@ dependencies:
   - python=3.11.5
   - pip
   - pip:
-    - django==4.2.7
+    - django==5.2.1
     - requests==2.31.0
     - argon2-cffi==21.3.0
     - argon2-cffi-bindings==21.2.0
