@@ -86,6 +86,11 @@ class Announcements(DefaultPageInformativeTemplateView):
     informative_texts = ["Announcements Information"]
     page_name = 'announcements'
 
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context.update({"opened_server_pk": self.request.GET.get('server')})
+        return context
+
 
 class Rules(DefaultPageInformativeTemplateView):
     """
@@ -94,6 +99,11 @@ class Rules(DefaultPageInformativeTemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/rules.html')
     informative_texts = ["Rules Information", "Network Rules"]
     page_name = 'rules'
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context.update({"opened_server_pk": self.request.GET.get('server')})
+        return context
 
 
 class BannedItems(DefaultPageInformativeTemplateView):
@@ -104,6 +114,11 @@ class BannedItems(DefaultPageInformativeTemplateView):
     informative_texts = ["Banneditems Information"]
     page_name = 'banned_items'
 
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context.update({"opened_server_pk": self.request.GET.get('server')})
+        return context
+
 
 class Voting(DefaultPageInformativeTemplateView):
     """
@@ -112,6 +127,11 @@ class Voting(DefaultPageInformativeTemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/voting.html')
     informative_texts = ["Voting Information"]
     page_name = 'voting'
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        context.update({"opened_server_pk": self.request.GET.get('server')})
+        return context
 
 
 class HowToJoin(DefaultPageInformativeTemplateView):
@@ -135,6 +155,10 @@ class Onboarding(DefaultPageInformativeTemplateView):
     template_name: str = join(TEMPLATE_DIR_RAPTORMC, 'defaultpages/onboarding.html')
     informative_texts = ["Rules Information", "Network Rules"]
     page_name = 'onboarding'
+
+    def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, Any]: 
+        context: dict[str, Any] = super().get_context_data(**kwargs)
+        return context.update({"opened_server_pk": self.request.GET.get('server')})
 
 
 class StaffApps(DefaultPageInformativeTemplateView):
