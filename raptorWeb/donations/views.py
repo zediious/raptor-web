@@ -123,11 +123,12 @@ class DonationCheckoutRedirect(View):
             return HttpResponseRedirect('/404')
         
         try:
-            minecraft_username: str = request.POST.get('minecraft_username')
-            discord_username: str = request.POST.get('discord_username')
-            
+            minecraft_username: str = request.POST.get('minecraft_username') 
         except:
             minecraft_username: str = ''
+        try:
+            discord_username: str = request.POST.get('discord_username')    
+        except:
             discord_username: str = ''
             
         if not request.POST.get('minecraft_username'):
